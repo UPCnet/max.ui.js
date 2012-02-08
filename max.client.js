@@ -48,7 +48,7 @@ MaxClient.prototype.POST = function(route, query, callback) {
     resource_uri = '{0}{1}'.format(this.url, route)
     if (this.mode=='jquery')
     {
-	    $.ajax( {url: route,
+	    $.ajax( {url: resource_uri,
 		         success: function(result) { callback.call(result.data) },
 			     type: 'POST',
 			     data: JSON.stringify(query),
@@ -78,10 +78,10 @@ MaxClient.prototype.POST = function(route, query, callback) {
 
 MaxClient.prototype.GET = function(route, callback) {
     resource_uri = '{0}{1}'.format(this.url, route)
-
+    console.log(resource_uri)
     if (this.mode=='jquery')
     {
-	    $.ajax( {url: route,
+	    $.ajax( {url: resource_uri,
 		         success: function(result) { callback.call(result) },
 			     type: 'GET',
 			     async: true,
