@@ -1,0 +1,74 @@
+#maxui-container {
+padding:5px;
+height:800px;
+}
+
+#maxui-activities .maxui-activity {
+border-bottom: 1px #bbb solid;
+width:100%;
+float:left;
+padding:5px;
+padding-left:50px;
+}
+
+#maxui-timeline  .wrapper{
+    overflow-x: hidden;
+    overflow-y: scroll;
+    height:100%;
+
+}
+
+
+#maxui-newactivity {
+margin:10px 0;
+}
+
+#maxui-newactivity:after {
+content: "";
+display: block;
+height: 0;
+clear: both;
+}
+
+#maxui-newactivity textarea {
+width:100%;
+height:50px;
+border: 1px #bbb solid;
+}
+
+#maxui-newactivity input.send {
+float:right;
+margin:5px 0;
+}
+
+#maxui-timeline {
+clear:both;
+margin:10px 0;
+border-top: 1px #bbb solid;
+}
+
+#maxui-activities .maxui-avatar {
+    float:left;
+    margin-left:-50px;
+}
+
+#maxui-activities .maxui-avatar img{
+width:48px;
+-moz-border-radius: 5px;
+-webkit-border-radius:5px;
+border-radius:5px;
+float:left;
+}
+
+#maxui-activities .maxui-activity-content {
+float:left;
+margin-left:10px;
+margin-right:50px;
+}
+
+#maxui-activities .maxui-footer {
+float:left;
+text-align: right;
+margin-right:50px;
+}
+
