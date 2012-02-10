@@ -135,7 +135,7 @@ MaxClient.prototype.addComment = function(comment, activity, callback) {
     query.object.content = comment
 
 	route = this.ROUTES['comments'].format(activity);
-    this.POST(route,query)
+    this.POST(route,query,callback)
 
 };
 

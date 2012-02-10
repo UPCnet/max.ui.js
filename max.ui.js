@@ -24,10 +24,31 @@
         self.maxClient.setActor(settings.username)
 
         // render main interface using partials
-        var partials = { activities : MAXUI_ACTIVITIES}
-        var mainui = MAXUI_MAIN_UI.render(settings,partials)
+        var mainui = MAXUI_MAIN_UI.render(settings)
         self.html(mainui)
         self.printTimeline()
+
+        //Assign click to post action
+        $('#maxui-newactivity .send').click(function () {
+            self.sendActivity()
+            })
+
+        //Assign Commentbox toggling via delegating the click to the activities container
+        $('#maxui-activities').on('click','.maxui-commentaction',function () {
+            $(this).closest('.maxui-activity').find('.maxui-comments').toggle()
+            })
+
+
+        //Assign Commentbox send comment via delegating the click to the activities container
+       $('#maxui-activities').on('click','.maxui-comments .send',function(){
+           var text = $(this).closest('.maxui-comments').find('textarea').val()
+           var activityid = $(this).closest('.maxui-activity').attr('activityid')
+
+           self.maxClient.addComment(text, activityid, function() {
+                        $('#activityContainer textarea').val('')
+                         })
+
+          });
 
         // allow jQuery chaining
         return self;
@@ -41,6 +62,26 @@
         }
 
     /*
+    *    Sends a post when user clicks `post activity` button with
+    *    the current contents of the `maxui-newactivity` textarea
+    */
+    $.fn.sendActivity = function () {
+        var text = $('#maxui-newactivity textarea').val()
+        this.maxClient.addActivity(text, function() {
+            $('#maxui-newactivity textarea').val('')
+            })
+    }
+
+    /*
+    *    Returns an human readable date from a timestamp
+    *    @param {String} timestamp    A date represented as a string iun the form '2012-02-09T13:06:43Z'
+    */
+    $.fn.formatDate = function(timestamp) {
+        var date = new Date()
+        return $.easydate.format_date(date)
+    }
+
+    /*
     *    Renders the timeline of the current user, defined in settings.username
     */
     $.fn.printTimeline = function() {
@@ -52,41 +93,37 @@
                 // When receiving the list of activities from max
                 // construct the object for Hogan
                 // `activities `contain the list of activity objects
+                // `formatedDate` contain a function that will be rendered inside the template
+                //             to obtain the published date in a "human readable" way
                 // `avatarURL` contain a function that will be rendered inside the template
                 //             to obtain the avatar url for the activity's actor
+
                 var params = {activities: this.items,
+                              formattedDate: function() {
+                                 return function(date) {
+                                     // Here, `this` refers to the activity object
+                                     // currently being processed by the hogan template
+                                     var date = this.published
+                                     return self.formatDate(date)
+                                 }
+                              },
                               avatarURL: function () {
                                  return function(text) {
                                      // Here, `this` refers to the activity object
                                      // currently being processed by the hogan template
-
-                                     var username = this.actor.displayName
+                                     if (this.hasOwnProperty('actor')) { var username = this.actor.displayName }
+                                     else { var username = this.author.displayName }
                                      return self.maxClient.getUserAvatarURL(username)
                                  }
                               }
                              }
+
                 // Render the activities template and insert it into the timeline
-                var activity_items = MAXUI_ACTIVITY.render(params)
+                var activity_items = MAXUI_ACTIVITIES.render(params)
                 $('#maxui-activities').html(activity_items)
-            }
+            })
 
-                )
 
-               //  $(".date").easydate(easydateOptions);
-               //  $('.commentaction').click(function()
-               //    {
-               //        $(this).closest('.activity').find('.comments').toggle()
-               //    }
-               //  )
-
-               // $('.sendcomment').click(function(){
-               //     text = $(this).closest('.comments').find('textarea').val()
-               //     activityid = $(this).closest('.activity').attr('activityid')
-               //     console.log(text)
-               //     sendComment(text,activityid,maxdn)
-               //     //$('#timeline').html('')
-               //     //printTimeline(maxdn)
-               // });
 
 
         }

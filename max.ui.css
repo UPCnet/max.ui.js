@@ -1,10 +1,12 @@
+
+
 #maxui-container {
-padding:5px;
-height:800px;
+font:13px/20px "HelveticaNeue","Helvetica Neue",Helvetica,Arial,sans-serif;
+color:#222;
 }
 
 #maxui-activities .maxui-activity {
-border-bottom: 1px #bbb solid;
+border-bottom: 1px #ddd solid;
 width:100%;
 float:left;
 padding:5px;
@@ -12,15 +14,14 @@ padding-left:50px;
 }
 
 #maxui-timeline  .wrapper{
-    overflow-x: hidden;
-    overflow-y: scroll;
+    overflow: hidden;
     height:100%;
 
 }
 
 
 #maxui-newactivity {
-margin:10px 0;
+    padding:5px;
 }
 
 #maxui-newactivity:after {
@@ -30,10 +31,21 @@ height: 0;
 clear: both;
 }
 
-#maxui-newactivity textarea {
+#maxui-newactivity textarea, .maxui-comments textarea {
 width:100%;
 height:50px;
-border: 1px #bbb solid;
+border: 1px #ccc solid;
+border-radius: 4px;
+font:inherit;
+-webkit-box-shadow:inset 0 1px 3px rgba(0,0,0,.05),0 1px 0 #fff;
+box-shadow:inset 0 1px 3px rgba(0,0,0,.05),0 1px 0 #fff;
+font-size: 13px;
+line-height: 18px;
+
+}
+
+.maxui-comments textarea {
+width:60%;
 }
 
 #maxui-newactivity input.send {
@@ -44,12 +56,13 @@ margin:5px 0;
 #maxui-timeline {
 clear:both;
 margin:10px 0;
-border-top: 1px #bbb solid;
+border-top: 1px #ddd solid;
 }
 
 #maxui-activities .maxui-avatar {
     float:left;
     margin-left:-50px;
+    padding-left:5px;
 }
 
 #maxui-activities .maxui-avatar img{
@@ -61,14 +74,76 @@ float:left;
 }
 
 #maxui-activities .maxui-activity-content {
-float:left;
 margin-left:10px;
 margin-right:50px;
 }
 
 #maxui-activities .maxui-footer {
-float:left;
+float:right;
 text-align: right;
 margin-right:50px;
 }
 
+.maxui-clear {
+clear:both;
+float:none;
+}
+
+.maxui-displayname {
+font-weight: bold;
+color: #333;
+}
+
+.maxui-username {
+color: #aaa;
+}
+
+p.maxui-body {
+margin:0;
+font-size:14px;
+}
+
+
+.maxui-publisheddate{
+font-style: italic;
+font-size:11px;
+color:  #999;
+}
+
+
+.maxui-actions ul {
+margin:0;
+}
+
+.maxui-actions ul li{
+display:inline;
+}
+
+.maxui-actions ul li {
+padding-right:10px;
+}
+.maxui-actions ul li a.maxui-commentaction{
+font-size:12px;
+background: url('http://beta.upcnet.es/igas/comments.png') no-repeat 0 3px;
+color:#444;
+text-decoration:none;
+padding-left:15px;
+}
+
+.maxui-comments {
+margin-left:70px;
+width:100%;
+margin-top:10px;
+
+}
+
+.maxui-comments .maxui-avatar {
+margin-left:-30px!important;
+padding-top:5px;
+
+}
+
+.maxui-comments .maxui-avatar img {
+width:30px!important;
+
+}
