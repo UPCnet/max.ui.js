@@ -40,7 +40,8 @@
 
 
         //Assign Commentbox send comment via delegating the click to the activities container
-       $('#maxui-activities').on('click','.maxui-comments .send',function(){
+       $('#maxui-activities').on('click','.maxui-comments .send',function(event){
+           event.preventDefault()
            var text = $(this).closest('.maxui-comments').find('textarea').val()
            var activityid = $(this).closest('.maxui-activity').attr('activityid')
 

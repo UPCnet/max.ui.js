@@ -8,13 +8,13 @@ java -jar closure-compiler-v1346.jar --js ../max.client.js --compilation_level S
 echo "compiling max.templates.js"
 java -jar closure-compiler-v1346.jar --js ../max.templates.js --compilation_level SIMPLE_OPTIMIZATIONS --js_output_file max.templates-min.js
 echo "Compiling jquery.easydate.js"
-java -jar closure-compiler-v1346.jar --js ../jquery.easydate.js --compilation_level SIMPLE_OPTIMIZATIONS --js_output_file jquery.easydate-min.js
+java -jar closure-compiler-v1346.jar --js ../libs/jquery.easydate.js --compilation_level SIMPLE_OPTIMIZATIONS --js_output_file jquery.easydate-min.js
 echo "Compiling hogan.js"
-java -jar closure-compiler-v1346.jar --js ../hogan.js --compilation_level SIMPLE_OPTIMIZATIONS --js_output_file hogan-min.js
+java -jar closure-compiler-v1346.jar --js ../libs/hogan.js --compilation_level SIMPLE_OPTIMIZATIONS --js_output_file hogan-min.js
 echo "Compiling jquery.iecors.js"
-java -jar closure-compiler-v1346.jar --js ../jquery.iecors.js --compilation_level SIMPLE_OPTIMIZATIONS --js_output_file jquery.iecors-min.js
+java -jar closure-compiler-v1346.jar --js ../libs/jquery.iecors.js --compilation_level SIMPLE_OPTIMIZATIONS --js_output_file jquery.iecors-min.js
 echo "Compiling json2.js"
-java -jar closure-compiler-v1346.jar --js ../json2.js --compilation_level SIMPLE_OPTIMIZATIONS --js_output_file json2-min.js
+java -jar closure-compiler-v1346.jar --js ../libs/json2.js --compilation_level SIMPLE_OPTIMIZATIONS --js_output_file json2-min.js
 
 VERSION=`cat ../version`
 FILENAME="max.ui-$VERSION.js"

@@ -42,7 +42,7 @@ var MSTCH_MAXUI_ACTIVITIES = '\
     <div class="maxui-footer">\
         <div class="maxui-actions">\
             <ul>\
-                <li><a class="maxui-commentaction" href="#">Comentaris  {{#replies}}({{replies.totalItems}}){{/replies}}</a></li>\
+                <li><span class="maxui-commentaction">Comentaris  {{#replies}}({{replies.totalItems}}){{/replies}}</span></li>\
             </ul>\
         </div>\
     </div>\

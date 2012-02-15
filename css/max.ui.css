@@ -122,12 +122,13 @@ display:inline;
 .maxui-actions ul li {
 padding-right:10px;
 }
-.maxui-actions ul li a.maxui-commentaction{
+.maxui-actions ul li span.maxui-commentaction{
 font-size:12px;
 background: url('http://beta.upcnet.es/igas/comments.png') no-repeat 0 3px;
 color:#444;
 text-decoration:none;
 padding-left:15px;
+cursor:pointer;
 }
 
 .maxui-comments {

@@ -6,12 +6,14 @@
 * Other calculations that needs maxui to be loaded MAY be done also in the onReady function body
 */
 
-window._MAXUI = window._MAXUI || {
-onReady: function() {
+if (!window._MAXUI) {window._MAXUI = {}; }
+window._MAXUI.onReady = function() {
     // This is called when the code has loaded.
-    settings = {'newActivityText' : 'Escriu alguna cosa ...', 'username' : 'carles', 'token' : 'oauth_token' }
-    $('#container').maxUI(settings)
-}
+    settings = {'newActivityText' : 'Escriu alguna cosa ...',
+                'username' : 'carles',
+               }
+
+    $('#maxui-widget-container').maxUI(settings)
 };
 
 /*
