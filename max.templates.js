@@ -62,7 +62,7 @@ var MSTCH_MAXUI_ACTIVITIES = '\
                     <div>\
                         <p class="maxui-body">{{content}}</p>\
                     </div>\
-                    <div class="maxui-publisheddate">{{#formattedDate}}{{published}}{{/formattedDate}}</div>\
+                    <!--div class="maxui-publisheddate"></div-->\
                 </div>\
             </div>\
             {{/replies.items}}\

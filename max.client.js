@@ -5,31 +5,30 @@ String.prototype.format = function(){
     }
 
 function MaxClient (url) {
-	this.url = url;
-	this.mode = 'jquery'
+    this.url = url;
+    this.mode = 'jquery'
 
     this.ROUTES = {   users : '/people',
-		              user : '/people/{0}',
-		              avatar : '/people/{0}/avatar',
-		              user_activities : '/people/{0}/activities',
-		              timeline : '/people/{0}/timeline',
-		              user_comments : '/people/{0}/comments',
-		              user_shares : '/people/{0}/shares',
-		              user_likes : '/people/{0}/likes',
-		              follows : '/people/{0}/follows',
-		              follow : '/people/{0}/follows/{1}',
-		              subscriptions : '/people/{0}/subscriptions',
-		              activities : '/activities',
-		              activity : '/activities/{0}',
-		              comments : '/activities/{0}/comments',
-		              comment : '/activities/{0}/comments/{1}',
-		              likes : '/activities/{0}/likes',
-		              like : '/activities/{0}/likes/{1}',
-		              shares : '/activities/{0}/shares',
-		              share : '/activities/{0}/shares/{1}'
-		           }
+                      user : '/people/{0}',
+                      avatar : '/people/{0}/avatar',
+                      user_activities : '/people/{0}/activities',
+                      timeline : '/people/{0}/timeline',
+                      user_comments : '/people/{0}/comments',
+                      user_shares : '/people/{0}/shares',
+                      user_likes : '/people/{0}/likes',
+                      follows : '/people/{0}/follows',
+                      follow : '/people/{0}/follows/{1}',
+                      subscriptions : '/people/{0}/subscriptions',
+                      activities : '/activities',
+                      activity : '/activities/{0}',
+                      comments : '/activities/{0}/comments',
+                      comment : '/activities/{0}/comments/{1}',
+                      likes : '/activities/{0}/likes',
+                      like : '/activities/{0}/likes/{1}',
+                      shares : '/activities/{0}/shares',
+                      share : '/activities/{0}/shares/{1}'
+                   }
 };
-
 
 MaxClient.prototype.setMode = function(mode) {
 	this.mode = mode
@@ -39,7 +38,7 @@ MaxClient.prototype.setMode = function(mode) {
 MaxClient.prototype.setActor = function(displayName) {
 	this.actor = {
             "objectType": "person",
-            "displayName": displayName,
+            "displayName": displayName
         }
 
 };
@@ -53,7 +52,7 @@ MaxClient.prototype.POST = function(route, query, callback) {
 			     type: 'POST',
 			     data: JSON.stringify(query),
 			     async: true,
-			     dataType: 'json'
+			     dataType: 'jsonj'
 			    }
 			   );
     }
@@ -78,11 +77,11 @@ MaxClient.prototype.POST = function(route, query, callback) {
 
 MaxClient.prototype.GET = function(route, callback) {
     resource_uri = '{0}{1}'.format(this.url, route)
-    console.log(resource_uri)
     if (this.mode=='jquery')
     {
 	    $.ajax( {url: resource_uri,
 		         success: function(result) { callback.call(result) },
+//                 success: function(result) { alert(result.items.length) },
 			     type: 'GET',
 			     async: true,
 			     dataType: 'json'
