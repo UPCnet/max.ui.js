@@ -81,7 +81,12 @@ MaxClient.prototype.GET = function(route, callback) {
     {
 	    $.ajax( {url: resource_uri,
 		         success: function(result) { callback.call(result) },
-//                 success: function(result) { alert(result.items.length) },
+             beforeSend: function(xhr) {
+                 console.log('hola');
+                 xhr.setRequestHeader("X-Oauth-Token", settings.oAuthToken);
+                 xhr.setRequestHeader("X-Oauth-Username", settings.username);
+                 xhr.setRequestHeader("X-Oauth-Scope", 'widgetcli');
+             },
 			     type: 'GET',
 			     async: true,
 			     dataType: 'json'
