@@ -112,6 +112,22 @@
     }
 
 
+    $.fn.formatText = function (text){
+        if (text) {
+            text = text.replace(
+                /((https?\:\/\/)|(www\.))(\S+)(\w{2,4})(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/gi,
+                function(url){
+                    var full_url = url;
+                    if (!full_url.match('^https?:\/\/')) {
+                        full_url = 'http://' + full_url;
+                    }
+                    return '<a href="' + full_url + '">' + url + '</a>';
+                }
+            );
+        }
+        return text;
+    }
+
 
     /*
     *    Renders the timeline of the current user, defined in settings.username
@@ -137,6 +153,13 @@
                                      // currently being processed by the hogan template
                                      var date = this.published
                                      return self.formatDate(date)
+                                 }
+                              },
+                              formattedText: function () {
+                                 return function(text) {
+                                    // Look for links and linkify them
+                                    var text = this.object.content
+                                    return self.formatText(text)
                                  }
                               },
                               avatarURL: function () {

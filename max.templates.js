@@ -35,7 +35,7 @@ var MSTCH_MAXUI_ACTIVITIES = '\
           <span class="maxui-username">{{actor.displayName}}</span>\
         </div>\
         <div>\
-            <p class="maxui-body">{{object.content}}</p>\
+            <p class="maxui-body">{{#formattedText}}{{object.content}}{{/formattedText}}</p>\
         </div>\
         <div class="maxui-publisheddate">{{#formattedDate}}{{published}}{{/formattedDate}}</div>\
     </div>\

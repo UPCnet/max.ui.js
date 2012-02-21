@@ -9,7 +9,7 @@ $().ready(function() {
     settings = {
            'newActivityText' : 'Escriu alguna cosa ...',
            'username' : 'carles.bruguera',
-           'oAuthToken' : '36cc5b5f390b5d256f73a692eed3fb79',
+           'oAuthToken' : 'acba0f28179cfc405b8bc9faa9796843',
            'oAuthGrantType' : 'password',
            'maxServerURL' : 'http://localhost:8081'
            }
