@@ -17,7 +17,7 @@
         var defaults = {'maxRequestsAPI' : 'jquery',
                         'newActivityText' : 'Write something ...',
                         'newActivitySendButton' : 'Post activity',
-                        'maxServerURL' : 'http://max.beta.upcnet.es',
+                        'maxServerURL' : 'http://max.beta.upcnet.es'
                         }
         // extend defaults with user-defined settings
         // and store in the global _MAXUI namespace
