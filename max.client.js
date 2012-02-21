@@ -49,6 +49,11 @@ MaxClient.prototype.POST = function(route, query, callback) {
     {
 	    $.ajax( {url: resource_uri,
 		         success: function(result) { callback.call(result.data) },
+             beforeSend: function(xhr) {
+                 xhr.setRequestHeader("X-Oauth-Token", _MAXUI.settings.oAuthToken);
+                 xhr.setRequestHeader("X-Oauth-Username", _MAXUI.settings.username);
+                 xhr.setRequestHeader("X-Oauth-Scope", 'widgetcli');
+             },
 			     type: 'POST',
 			     data: JSON.stringify(query),
 			     async: true,
@@ -82,9 +87,8 @@ MaxClient.prototype.GET = function(route, callback) {
 	    $.ajax( {url: resource_uri,
 		         success: function(result) { callback.call(result) },
              beforeSend: function(xhr) {
-                 console.log('hola');
-                 xhr.setRequestHeader("X-Oauth-Token", settings.oAuthToken);
-                 xhr.setRequestHeader("X-Oauth-Username", settings.username);
+                 xhr.setRequestHeader("X-Oauth-Token", _MAXUI.settings.oAuthToken);
+                 xhr.setRequestHeader("X-Oauth-Username", _MAXUI.settings.username);
                  xhr.setRequestHeader("X-Oauth-Scope", 'widgetcli');
              },
 			     type: 'GET',
@@ -110,14 +114,6 @@ MaxClient.prototype.GET = function(route, callback) {
    //return {json:ajax_result,statuscode:xhr['statusText']}
    return true
 	}
-
-
-MaxClient.prototype.getUserAvatarURL = function(displayName) {
-	route = this.ROUTES['avatar'].format(displayName);
-	imageurl = '{0}{1}'.format(this.url, route )
-	return imageurl
-
-};
 
 MaxClient.prototype.getUserTimeline = function(displayName, callback) {
 	route = this.ROUTES['timeline'].format(displayName);

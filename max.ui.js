@@ -7,24 +7,37 @@
 
         // Keep a reference of the context object
         var self = this
-
         // define defaults
+
+
+        // create namespace global variable if it doesn't exists
+        if (!window.hasOwnProperty('_MAXUI'))
+            { window._MAXUI = {}}
+
         var defaults = {'maxRequestsAPI' : 'jquery',
                         'newActivityText' : 'Write something ...',
                         'newActivitySendButton' : 'Post activity',
-                        'maxServerURL' : 'http://max.beta.upcnet.es'
+                        'maxServerURL' : 'http://max.beta.upcnet.es',
                         }
         // extend defaults with user-defined settings
-        var settings = jQuery.extend(defaults,options)
+        // and store in the global _MAXUI namespace
+        _MAXUI.settings = jQuery.extend(defaults,options)
+
+        // construct avatar pattern if user didn't define it
+        if (!_MAXUI.settings.hasOwnProperty('avatarURLpattern'))
+            {
+
+               _MAXUI.settings['avatarURLpattern'] = _MAXUI.settings.maxServerURL+'/people/{0}/avatar'
+            }
 
         // Init MAX CLient
 
-        self.maxClient = new MaxClient(settings.maxServerURL)
-        self.maxClient.setMode(settings.maxRequestsAPI)
-        self.maxClient.setActor(settings.username)
+        self.maxClient = new MaxClient(_MAXUI.settings.maxServerURL)
+        self.maxClient.setMode(_MAXUI.settings.maxRequestsAPI)
+        self.maxClient.setActor(_MAXUI.settings.username)
 
         // render main interface using partials
-        var mainui = MAXUI_MAIN_UI.render(settings)
+        var mainui = MAXUI_MAIN_UI.render(_MAXUI.settings)
         self.html(mainui)
         self.printTimeline()
 
@@ -59,7 +72,7 @@
     *    Returns the current settings of the plugin
     */
     $.fn.Settings = function() {
-        return settings
+        return this.settings
         }
 
     /*
@@ -136,7 +149,7 @@
         // save a reference to the container object to be able to access it
         // from callbacks defined in inner levels
         var self = this
-        this.maxClient.getUserTimeline(settings.username, function() {
+        this.maxClient.getUserTimeline(_MAXUI.settings.username, function() {
 
                 // When receiving the list of activities from max
                 // construct the object for Hogan
@@ -168,7 +181,7 @@
                                      // currently being processed by the hogan template
                                      if (this.hasOwnProperty('actor')) { var username = this.actor.displayName }
                                      else { var username = this.author.displayName }
-                                     return self.maxClient.getUserAvatarURL(username)
+                                     return _MAXUI.settings.avatarURLpattern.format(username)
                                  }
                               }
                              }
