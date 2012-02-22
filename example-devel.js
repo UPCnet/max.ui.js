@@ -9,10 +9,10 @@ $().ready(function() {
     var settings = {
            'newActivityText' : 'Escriu alguna cosa ...',
            'username' : 'carles.bruguera',
-           'oAuthToken' : 'acba0f28179cfc405b8bc9faa9796843',
+           'oAuthToken' : '4a99904b2b79ec903cca905d3dfa582a',
            'oAuthGrantType' : 'password',
            'maxServerURL' : 'http://localhost:8081',
-           'avatarURLpattern' : 'http://foo.com/{0}/bar'
+           'avatarURLpattern' : 'http://localhost:8080/clubs/avatar/{0}'
            }
 
     $('#container').maxUI(settings)

@@ -35,10 +35,10 @@ MaxClient.prototype.setMode = function(mode) {
 
 };
 
-MaxClient.prototype.setActor = function(displayName) {
+MaxClient.prototype.setActor = function(username) {
 	this.actor = {
             "objectType": "person",
-            "displayName": displayName
+            "username": username
         }
 
 };
@@ -115,8 +115,8 @@ MaxClient.prototype.GET = function(route, callback) {
    return true
 	}
 
-MaxClient.prototype.getUserTimeline = function(displayName, callback) {
-	route = this.ROUTES['timeline'].format(displayName);
+MaxClient.prototype.getUserTimeline = function(username, callback) {
+	route = this.ROUTES['timeline'].format(username);
     this.GET(route,callback)
 };
 
@@ -151,21 +151,21 @@ MaxClient.prototype.addActivity = function(text,callback) {
 
     query.object.content = text
 
-	route = this.ROUTES['user_activities'].format(this.actor.displayName);
+	route = this.ROUTES['user_activities'].format(this.actor.username);
     this.POST(route,query,callback)
 };
 
-MaxClient.prototype.follow = function(displayName, callback ) {
+MaxClient.prototype.follow = function(username, callback ) {
     query = {
         "verb": "follow",
         "object": {
             "objectType": "person",
-            "displayName": ""
+            "username": ""
             }
         }
 
-    query.object.displayName = displayName
+    query.object.username = username
 
-	route = this.ROUTES['follow'].format(this.actor.displayName,displayName);
+	route = this.ROUTES['follow'].format(this.actor.username,username);
     resp = this.POST(route,query)
 };

@@ -179,8 +179,8 @@
                                  return function(text) {
                                      // Here, `this` refers to the activity object
                                      // currently being processed by the hogan template
-                                     if (this.hasOwnProperty('actor')) { var username = this.actor.displayName }
-                                     else { var username = this.author.displayName }
+                                     if (this.hasOwnProperty('actor')) { var username = this.actor.username }
+                                     else { var username = this.author.username }
                                      return _MAXUI.settings.avatarURLpattern.format(username)
                                  }
                               }
