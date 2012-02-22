@@ -124,7 +124,6 @@ MaxClient.prototype.addComment = function(comment, activity, callback) {
 
     query = {
         "actor": {},
-        "verb": "post",
         "object": {
             "objectType": "comment",
             "content": ""
@@ -142,7 +141,6 @@ MaxClient.prototype.addComment = function(comment, activity, callback) {
 
 MaxClient.prototype.addActivity = function(text,callback) {
     query = {
-        "verb": "post",
         "object": {
             "objectType": "note",
             "content": ""
@@ -157,7 +155,6 @@ MaxClient.prototype.addActivity = function(text,callback) {
 
 MaxClient.prototype.follow = function(username, callback ) {
     query = {
-        "verb": "follow",
         "object": {
             "objectType": "person",
             "username": ""
