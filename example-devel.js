@@ -12,7 +12,9 @@ $().ready(function() {
            'oAuthToken' : '4a99904b2b79ec903cca905d3dfa582a',
            'oAuthGrantType' : 'password',
            'maxServerURL' : 'http://localhost:8081',
-           'avatarURLpattern' : 'http://localhost:8080/clubs/avatar/{0}'
+           'avatarURLpattern' : 'http://localhost:8080/clubs/avatar/{0}',
+           'contextFilter': ['http://localhost:8080/clubs'],
+           'activitySource': 'activities'
            }
 
     $('#container').maxUI(settings)
