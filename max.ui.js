@@ -83,7 +83,7 @@
     */
     $.fn.sendActivity = function () {
         var text = $('#maxui-newactivity textarea').val()
-        this.maxClient.addActivity(text, function() {
+        this.maxClient.addActivity(text, _MAXUI.settings.contextFilter, function() {
             $('#maxui-newactivity textarea').val('')
             })
     }
