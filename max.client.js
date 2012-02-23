@@ -40,7 +40,6 @@ MaxClient.prototype.setActor = function(username) {
             "objectType": "person",
             "username": username
         }
-
 };
 
 MaxClient.prototype.POST = function(route, query, callback) {
@@ -80,8 +79,12 @@ MaxClient.prototype.POST = function(route, query, callback) {
     return true
 };
 
-MaxClient.prototype.GET = function(route, callback) {
+MaxClient.prototype.GET = function(route, query, callback) {
     resource_uri = '{0}{1}'.format(this.url, route)
+    if (Object.keys(query).length >0)
+    {
+        resource_uri+='?'+$.param(query, true)
+    }
     if (this.mode=='jquery')
     {
 	    $.ajax( {url: resource_uri,
@@ -117,8 +120,21 @@ MaxClient.prototype.GET = function(route, callback) {
 
 MaxClient.prototype.getUserTimeline = function(username, callback) {
 	route = this.ROUTES['timeline'].format(username);
-    this.GET(route,callback)
+  this.GET(route,{},callback)
 };
+
+
+MaxClient.prototype.getActivities = function(username, contexts, callback) {
+  route = this.ROUTES['activities'];
+  query={}
+  if (contexts.length>0)
+      { //construir la query string
+        query.contexts = contexts
+       }
+  this.GET(route,query,callback)
+};
+
+
 
 MaxClient.prototype.addComment = function(comment, activity, callback) {
 
@@ -139,14 +155,15 @@ MaxClient.prototype.addComment = function(comment, activity, callback) {
 };
 
 
-MaxClient.prototype.addActivity = function(text,callback) {
+MaxClient.prototype.addActivity = function(text,contexts,callback) {
     query = {
         "object": {
             "objectType": "note",
             "content": ""
             }
         }
-
+    if (contexts.length>0)
+       { query.contexts = contexts }
     query.object.content = text
 
 	route = this.ROUTES['user_activities'].format(this.actor.username);
