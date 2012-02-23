@@ -17,7 +17,9 @@
         var defaults = {'maxRequestsAPI' : 'jquery',
                         'newActivityText' : 'Write something ...',
                         'newActivitySendButton' : 'Post activity',
-                        'maxServerURL' : 'http://max.beta.upcnet.es'
+                        'maxServerURL' : 'http://max.beta.upcnet.es',
+                        'contextFilter': [],
+                        'activitySource': 'timeline'
                         }
         // extend defaults with user-defined settings
         // and store in the global _MAXUI namespace
@@ -39,7 +41,7 @@
         // render main interface using partials
         var mainui = MAXUI_MAIN_UI.render(_MAXUI.settings)
         self.html(mainui)
-        self.printTimeline()
+        self.printActivities()
 
         //Assign click to post action
         $('#maxui-newactivity .send').click(function () {
@@ -125,6 +127,47 @@
     }
 
 
+    $.fn.formatActivity = function(items) {
+            // When receiving the list of activities from max
+            // construct the object for Hogan
+            // `activities `contain the list of activity objects
+            // `formatedDate` contain a function that will be rendered inside the template
+            //             to obtain the published date in a "human readable" way
+            // `avatarURL` contain a function that will be rendered inside the template
+            //             to obtain the avatar url for the activity's actor
+            self = this
+            var params = {activities: items,
+                          formattedDate: function() {
+                             return function(date) {
+                                 // Here, `this` refers to the activity object
+                                 // currently being processed by the hogan template
+                                 var date = this.published
+                                 return self.formatDate(date)
+                             }
+                          },
+                          formattedText: function () {
+                             return function(text) {
+                                // Look for links and linkify them
+                                var text = this.object.content
+                                return self.formatText(text)
+                             }
+                          },
+                          avatarURL: function () {
+                             return function(text) {
+                                 // Here, `this` refers to the activity object
+                                 // currently being processed by the hogan template
+                                 if (this.hasOwnProperty('actor')) { var username = this.actor.username }
+                                 else { var username = this.author.username }
+                                 return _MAXUI.settings.avatarURLpattern.format(username)
+                             }
+                          }
+                         }
+
+            // Render the activities template and insert it into the timeline
+            var activity_items = MAXUI_ACTIVITIES.render(params)
+            $('#maxui-activities').html(activity_items)
+        }
+
     $.fn.formatText = function (text){
         if (text) {
             text = text.replace(
@@ -145,50 +188,25 @@
     /*
     *    Renders the timeline of the current user, defined in settings.username
     */
-    $.fn.printTimeline = function() {
+    $.fn.printActivities = function() {
         // save a reference to the container object to be able to access it
         // from callbacks defined in inner levels
         var self = this
-        this.maxClient.getUserTimeline(_MAXUI.settings.username, function() {
+        var func_params = []
+        if (_MAXUI.settings.activitySource=='timeline')
+        {
+            var activityRetriever = this.maxClient.getUserTimeline
+            func_params.push(_MAXUI.settings.username)
+            func_params.push( function() {self.formatActivity(this.items)})
+        }
+        else if (_MAXUI.settings.activitySource=='activities')
+        {
+            var activityRetriever = this.maxClient.getActivities
+            func_params.push(_MAXUI.settings.username)
+            func_params.push(_MAXUI.settings.contextFilter)
+            func_params.push( function() {self.formatActivity(this.items)})
+        }
 
-                // When receiving the list of activities from max
-                // construct the object for Hogan
-                // `activities `contain the list of activity objects
-                // `formatedDate` contain a function that will be rendered inside the template
-                //             to obtain the published date in a "human readable" way
-                // `avatarURL` contain a function that will be rendered inside the template
-                //             to obtain the avatar url for the activity's actor
-
-                var params = {activities: this.items,
-                              formattedDate: function() {
-                                 return function(date) {
-                                     // Here, `this` refers to the activity object
-                                     // currently being processed by the hogan template
-                                     var date = this.published
-                                     return self.formatDate(date)
-                                 }
-                              },
-                              formattedText: function () {
-                                 return function(text) {
-                                    // Look for links and linkify them
-                                    var text = this.object.content
-                                    return self.formatText(text)
-                                 }
-                              },
-                              avatarURL: function () {
-                                 return function(text) {
-                                     // Here, `this` refers to the activity object
-                                     // currently being processed by the hogan template
-                                     if (this.hasOwnProperty('actor')) { var username = this.actor.username }
-                                     else { var username = this.author.username }
-                                     return _MAXUI.settings.avatarURLpattern.format(username)
-                                 }
-                              }
-                             }
-
-                // Render the activities template and insert it into the timeline
-                var activity_items = MAXUI_ACTIVITIES.render(params)
-                $('#maxui-activities').html(activity_items)
-            })
+        activityRetriever.apply(this.maxClient,func_params)
         }
 })(jQuery);
