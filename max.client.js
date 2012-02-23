@@ -46,8 +46,7 @@ MaxClient.prototype.POST = function(route, query, callback) {
     resource_uri = '{0}{1}'.format(this.url, route)
     if (this.mode=='jquery')
     {
-	    $.ajax( {url: resource_uri,
-		         success: function(result) { callback.call(result.data) },
+           $.ajax( {url: resource_uri,
              beforeSend: function(xhr) {
                  xhr.setRequestHeader("X-Oauth-Token", _MAXUI.settings.oAuthToken);
                  xhr.setRequestHeader("X-Oauth-Username", _MAXUI.settings.username);
@@ -56,9 +55,12 @@ MaxClient.prototype.POST = function(route, query, callback) {
 			     type: 'POST',
 			     data: JSON.stringify(query),
 			     async: true,
-			     dataType: 'jsonj'
+			     dataType: 'json'
 			    }
-			   );
+			   ).always(function(result,status,xhr) {
+              if (xhr.status==200 | xhr.status==201)
+                  callback.call(result)
+         });
     }
     else
     {
@@ -120,13 +122,25 @@ MaxClient.prototype.GET = function(route, query, callback) {
 
 MaxClient.prototype.getUserTimeline = function(username, callback) {
 	route = this.ROUTES['timeline'].format(username);
-  this.GET(route,{},callback)
+  if (arguments.length>2)
+      query=arguments[3]
+  else
+      query={}
+
+  this.GET(route,query,callback)
 };
 
 
 MaxClient.prototype.getActivities = function(username, contexts, callback) {
   route = this.ROUTES['activities'];
-  query={}
+  if (arguments.length>3)
+    {
+      query=arguments[3]
+    }
+  else
+    {
+      query={}
+    }
   if (contexts.length>0)
       { //construir la query string
         query.contexts = contexts

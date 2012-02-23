@@ -82,9 +82,11 @@
     *    the current contents of the `maxui-newactivity` textarea
     */
     $.fn.sendActivity = function () {
+        self=this
         var text = $('#maxui-newactivity textarea').val()
         this.maxClient.addActivity(text, _MAXUI.settings.contextFilter, function() {
             $('#maxui-newactivity textarea').val('')
+            self.printActivities()
             })
     }
 
@@ -165,7 +167,7 @@
 
             // Render the activities template and insert it into the timeline
             var activity_items = MAXUI_ACTIVITIES.render(params)
-            $('#maxui-activities').html(activity_items)
+            $('#maxui-activities').prepend(activity_items)
         }
 
     $.fn.formatText = function (text){
