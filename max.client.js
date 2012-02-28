@@ -90,7 +90,6 @@ MaxClient.prototype.GET = function(route, query, callback) {
     if (this.mode=='jquery')
     {
 	    $.ajax( {url: resource_uri,
-		         success: function(result) { callback.call(result) },
              beforeSend: function(xhr) {
                  xhr.setRequestHeader("X-Oauth-Token", _MAXUI.settings.oAuthToken);
                  xhr.setRequestHeader("X-Oauth-Username", _MAXUI.settings.username);
@@ -100,7 +99,10 @@ MaxClient.prototype.GET = function(route, query, callback) {
 			     async: true,
 			     dataType: 'json'
 			    }
-			   );
+			   ).always(function(result,status,xhr) {
+              if (xhr.status==200 | xhr.status==201)
+                  callback.call(result)
+         });
 	}
 	else
 	{
