@@ -31,7 +31,7 @@ var MSTCH_MAXUI_ACTIVITIES = '\
     </div>\
     <div class="maxui-activity-content">\
         <div>\
-          <span class="maxui-displayname">{{actor.username}}</span>\
+          <span class="maxui-displayname">{{actor.displayName}}</span>\
           <span class="maxui-username">{{actor.username}}</span>\
         </div>\
         <div>\
