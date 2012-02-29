@@ -26,6 +26,12 @@
         // and store in the global _MAXUI namespace
         _MAXUI.settings = jQuery.extend(defaults,options)
 
+        // Configure maxui without CORS if CORS not available
+        if (!this.isCORSCapable())
+            {
+                _MAXUI.settings.maxServerURL = _MAXUI.settings.maxServerURLAlias
+            }
+
         // construct avatar pattern if user didn't define it
         if (!_MAXUI.settings.avatarURLpattern)
             {
@@ -70,6 +76,24 @@
         // allow jQuery chaining
         return maxui;
     };
+
+    /*
+    *    Identifies cors funcionalities
+    */
+    $.fn.isCORSCapable = function() {
+        var xhrObject = new XMLHttpRequest();
+            //check if the XHR tobject has CORS functionalities
+            if (xhrObject.withCredentials!=undefined){
+                return true;
+              }
+            else {
+                return false;
+              }
+    }
+
+
+
+
 
     /*
     *    Returns the current settings of the plugin
