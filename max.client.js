@@ -1,3 +1,16 @@
+if (!Object.keys) {
+    Object.keys = function (obj) {
+        var keys = [],
+            k;
+        for (k in obj) {
+            if (Object.prototype.hasOwnProperty.call(obj, k)) {
+                keys.push(k);
+            }
+        }
+        return keys;
+    };
+}
+
 String.prototype.format = function(){
     var pattern = /\{\d+\}/g;
     var args = arguments;
@@ -70,6 +83,13 @@ MaxClient.prototype.POST = function(route, query, callback) {
 	    params[gadgets.io.RequestParameters.REFRESH_INTERVAL] = 1
 	    params[gadgets.io.RequestParameters.POST_DATA] = JSON.stringify(query)
 
+      var headers = {"X-Oauth-Token": _MAXUI.settings.oAuthToken,
+                     "X-Oauth-Username": _MAXUI.settings.username,
+                     "X-Oauth-Scope": 'widgetcli'}
+      params[gadgets.io.RequestParameters.HEADERS] = headers
+
+      console.log(params)
+
 	    gadgets.io.makeRequest(
 	                   resource_uri,
 	                   function(result) { callback.call(result.data) },
@@ -111,9 +131,14 @@ MaxClient.prototype.GET = function(route, query, callback) {
 	    params[gadgets.io.RequestParameters.METHOD] = gadgets.io.MethodType.GET
 	    params[gadgets.io.RequestParameters.REFRESH_INTERVAL] = 1
 
+      var headers = {"X-Oauth-Token": _MAXUI.settings.oAuthToken,
+                     "X-Oauth-Username": _MAXUI.settings.username,
+                     "X-Oauth-Scope": 'widgetcli'}
+      params[gadgets.io.RequestParameters.HEADERS] = headers
+
 	    gadgets.io.makeRequest(
 	                   resource_uri,
-	                   function(result) { callback.call(result.data) },
+	                   function(result) { console.log(data);callback.call(result.data) },
 	                   params
 	                    )
 
