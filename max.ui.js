@@ -6,12 +6,13 @@
     $.fn.maxUI = function(options) {
 
         // Keep a reference of the context object
-        var self = this
+        var maxui = this
         // define defaults
 
 
         // create namespace global variable if it doesn't exists
-        if (!window.hasOwnProperty('_MAXUI'))
+
+        if (!window._MAXUI)
             { window._MAXUI = {}}
 
         var defaults = {'maxRequestsAPI' : 'jquery',
@@ -26,7 +27,7 @@
         _MAXUI.settings = jQuery.extend(defaults,options)
 
         // construct avatar pattern if user didn't define it
-        if (!_MAXUI.settings.hasOwnProperty('avatarURLpattern'))
+        if (!_MAXUI.settings.avatarURLpattern)
             {
 
                _MAXUI.settings['avatarURLpattern'] = _MAXUI.settings.maxServerURL+'/people/{0}/avatar'
@@ -34,18 +35,18 @@
 
         // Init MAX CLient
 
-        self.maxClient = new MaxClient(_MAXUI.settings.maxServerURL)
-        self.maxClient.setMode(_MAXUI.settings.maxRequestsAPI)
-        self.maxClient.setActor(_MAXUI.settings.username)
+        this.maxClient = new MaxClient(_MAXUI.settings.maxServerURL)
+        this.maxClient.setMode(_MAXUI.settings.maxRequestsAPI)
+        this.maxClient.setActor(_MAXUI.settings.username)
 
         // render main interface using partials
         var mainui = MAXUI_MAIN_UI.render(_MAXUI.settings)
-        self.html(mainui)
-        self.printActivities()
+        this.html(mainui)
+        this.printActivities()
 
         //Assign click to post action
         $('#maxui-newactivity .send').click(function () {
-            self.sendActivity()
+            maxui.sendActivity()
             })
 
         //Assign Commentbox toggling via delegating the click to the activities container
@@ -60,21 +61,21 @@
            var text = $(this).closest('.maxui-comments').find('textarea').val()
            var activityid = $(this).closest('.maxui-activity').attr('activityid')
 
-           self.maxClient.addComment(text, activityid, function() {
+           maxui.maxClient.addComment(text, activityid, function() {
                         $('#activityContainer textarea').val('')
                          })
 
           });
 
         // allow jQuery chaining
-        return self;
+        return maxui;
     };
 
     /*
     *    Returns the current settings of the plugin
     */
     $.fn.Settings = function() {
-        return this.settings
+        return maxui.settings
         }
 
     /*
@@ -82,11 +83,11 @@
     *    the current contents of the `maxui-newactivity` textarea
     */
     $.fn.sendActivity = function () {
-        self=this
+        maxui=this
         var text = $('#maxui-newactivity textarea').val()
         this.maxClient.addActivity(text, _MAXUI.settings.contextFilter, function() {
             $('#maxui-newactivity textarea').val('')
-            self.printActivities()
+            maxui.printActivities()
             })
     }
 
@@ -133,25 +134,25 @@
             // When receiving the list of activities from max
             // construct the object for Hogan
             // `activities `contain the list of activity objects
-            // `formatedDate` contain a function that will be rendered inside the template
+            // `formatedDate` contain a function maxui will be rendered inside the template
             //             to obtain the published date in a "human readable" way
-            // `avatarURL` contain a function that will be rendered inside the template
+            // `avatarURL` contain a function maxui will be rendered inside the template
             //             to obtain the avatar url for the activity's actor
-            self = this
+            maxui = this;
             var params = {activities: items,
                           formattedDate: function() {
                              return function(date) {
                                  // Here, `this` refers to the activity object
                                  // currently being processed by the hogan template
                                  var date = this.published
-                                 return self.formatDate(date)
+                                 return maxui.formatDate(date)
                              }
                           },
                           formattedText: function () {
                              return function(text) {
                                 // Look for links and linkify them
                                 var text = this.object.content
-                                return self.formatText(text)
+                                return maxui.formatText(text)
                              }
                           },
                           avatarURL: function () {
@@ -193,20 +194,20 @@
     $.fn.printActivities = function() {
         // save a reference to the container object to be able to access it
         // from callbacks defined in inner levels
-        var self = this
+        var maxui = this
         var func_params = []
         if (_MAXUI.settings.activitySource=='timeline')
         {
             var activityRetriever = this.maxClient.getUserTimeline
             func_params.push(_MAXUI.settings.username)
-            func_params.push( function() {self.formatActivity(this.items)})
+            func_params.push( function() {maxui.formatActivity(this.items)})
         }
         else if (_MAXUI.settings.activitySource=='activities')
         {
             var activityRetriever = this.maxClient.getActivities
             func_params.push(_MAXUI.settings.username)
             func_params.push(_MAXUI.settings.contextFilter)
-            func_params.push( function() {self.formatActivity(this.items)})
+            func_params.push( function() {maxui.formatActivity(this.items)})
         }
 
         activityRetriever.apply(this.maxClient,func_params)
