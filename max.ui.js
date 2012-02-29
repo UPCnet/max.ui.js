@@ -29,6 +29,8 @@
         // Configure maxui without CORS if CORS not available
         if (!this.isCORSCapable())
             {
+                // IF it has been defined an alias a fallback
+                if (_MAXUI.settings.maxServerURLAlias)
                 _MAXUI.settings.maxServerURL = _MAXUI.settings.maxServerURLAlias
             }
 
@@ -111,7 +113,8 @@
         var text = $('#maxui-newactivity textarea').val()
         this.maxClient.addActivity(text, _MAXUI.settings.contextFilter, function() {
             $('#maxui-newactivity textarea').val('')
-            maxui.printActivities()
+            filter = {since:$('.maxui-activity:first').attr('activityid')}
+            maxui.printActivities(filter)
             })
     }
 
@@ -218,7 +221,8 @@
     $.fn.printActivities = function() {
         // save a reference to the container object to be able to access it
         // from callbacks defined in inner levels
-        var maxui = this
+        var maxui = this           
+
         var func_params = []
         if (_MAXUI.settings.activitySource=='timeline')
         {
@@ -232,7 +236,16 @@
             func_params.push(_MAXUI.settings.username)
             func_params.push(_MAXUI.settings.contextFilter)
             func_params.push( function() {maxui.formatActivity(this.items)})
+
         }
+
+        // if passed as param, assume an object with search filtering params
+        // one or all of [limit, since]
+        if (arguments.length>0) 
+           {
+             func_params.push(arguments[0])
+           }
+
 
         activityRetriever.apply(this.maxClient,func_params)
         }
