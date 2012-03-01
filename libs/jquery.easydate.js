@@ -32,6 +32,30 @@
         "in": "in"
     };
 
+    $.easydate.locales.esCA = {
+        "future_format": "%s %t",
+        "past_format": "%s %t",
+        "second": "segon",
+        "seconds": "segons",
+        "minute": "minut",
+        "minutes": "minuts",
+        "hour": "hora",
+        "hours": "hores",
+        "day": "dia",
+        "days": "dies",
+        "week": "setmana",
+        "weeks": "setmanes",
+        "month": "mes",
+        "months": "mesos",
+        "year": "any",
+        "years": "anys",
+        "yesterday": "ahir",
+        "tomorrow": "demà",
+        "now": "fa un moment",
+        "ago": "fa",
+        "in": "en"
+    };
+
     var defaults = {
         live: true,
         set_title: true,
@@ -53,7 +77,7 @@
         {
             return date.toLocaleDateString();
         },
-        locale: $.easydate.locales.enUS
+        locale: $.easydate.locales.esCA
     };
 
     function __(str, value, settings)
