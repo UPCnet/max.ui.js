@@ -7,21 +7,32 @@
 
         // Keep a reference of the context object
         var maxui = this
-        // define defaults
-
 
         // create namespace global variable if it doesn't exists
 
         if (!window._MAXUI)
             { window._MAXUI = {}}
 
+        // Define default english literals
+        var literals_en = {'new_activity_text': 'Write something',
+                           'new_activity_post': "Post activity",
+                           'toggle_comments': "Comments",
+                           'new_comment_post': "Post comment",
+            }
+
+        // Update the default EN literals and delete from the options,
+        // to allow partial extending of literals
+
+        var literals = jQuery.extend(literals_en,options.literals)
+        delete options.literals
+
         var defaults = {'maxRequestsAPI' : 'jquery',
-                        'newActivityText' : 'Write something ...',
-                        'newActivitySendButton' : 'Post activity',
                         'maxServerURL' : 'http://max.beta.upcnet.es',
                         'contextFilter': [],
-                        'activitySource': 'timeline'
+                        'activitySource': 'timeline',
+                        'literals': literals,
                         }
+
         // extend defaults with user-defined settings
         // and store in the global _MAXUI namespace
         _MAXUI.settings = jQuery.extend(defaults,options)
@@ -34,7 +45,7 @@
                 _MAXUI.settings.maxServerURL = _MAXUI.settings.maxServerURLAlias
             }
 
-        // construct avatar pattern if user didn't define it
+        // set default avatar url pattern if user didn't provide it
         if (!_MAXUI.settings.avatarURLpattern)
             {
 
@@ -72,8 +83,23 @@
            maxui.maxClient.addComment(text, activityid, function() {
                         $('#activityContainer textarea').val('')
                          })
-
           });
+
+
+       $('#maxui-newactivity textarea').focusin(function() {
+                  if ( $(this).val()==_MAXUI.settings.literals.new_activity_text )
+                      {$(this).val('')
+                  $(this).attr('class','')}
+        });
+
+       $('#maxui-newactivity textarea').focusout(function() {
+                  if ( $(this).val()=='' )
+                      {$(this).val(_MAXUI.settings.literals.new_activity_text)
+                       $(this).attr('class','empty')}
+                  else {
+                       $(this).attr('class','')
+                  }
+        });
 
         // allow jQuery chaining
         return maxui;
@@ -166,7 +192,8 @@
             // `avatarURL` contain a function maxui will be rendered inside the template
             //             to obtain the avatar url for the activity's actor
             maxui = this;
-            var params = {activities: items,
+            var params = {literals:_MAXUI.settings.literals,
+                          activities: items,
                           formattedDate: function() {
                              return function(date) {
                                  // Here, `this` refers to the activity object
@@ -221,7 +248,7 @@
     $.fn.printActivities = function() {
         // save a reference to the container object to be able to access it
         // from callbacks defined in inner levels
-        var maxui = this           
+        var maxui = this
 
         var func_params = []
         if (_MAXUI.settings.activitySource=='timeline')
@@ -241,7 +268,7 @@
 
         // if passed as param, assume an object with search filtering params
         // one or all of [limit, since]
-        if (arguments.length>0) 
+        if (arguments.length>0)
            {
              func_params.push(arguments[0])
            }

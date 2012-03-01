@@ -5,8 +5,8 @@ var MSTCH_MAXUI_MAIN_UI = '\
 <div id="maxui-container">\
 {{#username}}\
    <div id="maxui-newactivity">\
-       <textarea>{{newActivityText}}</textarea>\
-       <input type="button" class="send" value="{{newActivitySendButton}}">\
+       <textarea>{{literals.new_activity_text}}</textarea>\
+       <input type="button" class="send" value="{{literals.new_activity_post}}">\
    </div>\
    <div id="maxui-timeline">\
       <div class="wrapper">\
@@ -42,7 +42,7 @@ var MSTCH_MAXUI_ACTIVITIES = '\
     <div class="maxui-footer">\
         <div class="maxui-actions">\
             <ul>\
-                <li><span class="maxui-commentaction">Comentaris  {{#replies}}({{replies.totalItems}}){{/replies}}</span></li>\
+                <li><span class="maxui-commentaction">{{literals.toggle_comments}}  {{#replies}}({{replies.totalItems}}){{/replies}}</span></li>\
             </ul>\
         </div>\
     </div>\
@@ -72,7 +72,7 @@ var MSTCH_MAXUI_ACTIVITIES = '\
                 <textarea class="maxui-commentBox"></textarea>\
             </div>\
             <div class="maxui-newcommentbutton">\
-                <input type="button" class="send" value="Envia comentari"/>\
+                <input type="button" class="send" value="{{literals.new_comment_post}}"/>\
             </div>\
         </div>\
     </div>\
