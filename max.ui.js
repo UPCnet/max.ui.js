@@ -18,6 +18,7 @@
                            'new_activity_post': "Post activity",
                            'toggle_comments': "Comments",
                            'new_comment_post': "Post comment",
+                           'load_more': "Load more"
             }
 
         // Update the default EN literals and delete from the options,
@@ -30,7 +31,7 @@
                         'maxServerURL' : 'http://max.beta.upcnet.es',
                         'contextFilter': [],
                         'activitySource': 'timeline',
-                        'literals': literals,
+                        'literals': literals
                         }
 
         // extend defaults with user-defined settings
@@ -66,6 +67,11 @@
         //Assign click to post action
         $('#maxui-newactivity .send').click(function () {
             maxui.sendActivity()
+            })
+
+        //Assign click to loadmore
+        $('#maxui-more-activities .load').click(function () {
+            maxui.loadMoreActivities()
             })
 
         //Assign Commentbox toggling via delegating the click to the activities container
@@ -119,10 +125,6 @@
               }
     }
 
-
-
-
-
     /*
     *    Returns the current settings of the plugin
     */
@@ -139,9 +141,19 @@
         var text = $('#maxui-newactivity textarea').val()
         this.maxClient.addActivity(text, _MAXUI.settings.contextFilter, function() {
             $('#maxui-newactivity textarea').val('')
-            filter = {since:$('.maxui-activity:first').attr('activityid')}
+            filter = {after:$('.maxui-activity:first').attr('activityid')}
             maxui.printActivities(filter)
             })
+    }
+
+    /*
+    *    Loads more activities from max
+    */
+    $.fn.loadMoreActivities = function () {
+        maxui=this
+        filter = {before:$('.maxui-activity:last').attr('activityid')}
+        maxui.printActivities(filter)
+
     }
 
     /*
@@ -183,7 +195,7 @@
     }
 
 
-    $.fn.formatActivity = function(items) {
+    $.fn.formatActivity = function(items, insertAt) {
             // When receiving the list of activities from max
             // construct the object for Hogan
             // `activities `contain the list of activity objects
@@ -222,7 +234,16 @@
 
             // Render the activities template and insert it into the timeline
             var activity_items = MAXUI_ACTIVITIES.render(params)
-            $('#maxui-activities').prepend(activity_items)
+
+            if (insertAt == 'beggining')
+              {
+                $('#maxui-activities').prepend(activity_items)
+              }
+            else
+              {
+                $('#maxui-activities').append(activity_items)
+              }
+
         }
 
     $.fn.formatText = function (text){
@@ -251,18 +272,27 @@
         var maxui = this
 
         var func_params = []
+        var insert_at = 'beggining'
+
+        if (arguments.length>0)
+           {
+             if (arguments[0].before)
+                 {insert_at = 'end'}
+           }
+
+
         if (_MAXUI.settings.activitySource=='timeline')
         {
             var activityRetriever = this.maxClient.getUserTimeline
             func_params.push(_MAXUI.settings.username)
-            func_params.push( function() {maxui.formatActivity(this.items)})
+            func_params.push( function() {maxui.formatActivity(this.items, insert_at)})
         }
         else if (_MAXUI.settings.activitySource=='activities')
         {
             var activityRetriever = this.maxClient.getActivities
             func_params.push(_MAXUI.settings.username)
             func_params.push(_MAXUI.settings.contextFilter)
-            func_params.push( function() {maxui.formatActivity(this.items)})
+            func_params.push( function() {maxui.formatActivity(this.items, insert_at)})
 
         }
 
