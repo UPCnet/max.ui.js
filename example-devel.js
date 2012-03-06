@@ -15,13 +15,13 @@ jQuery().ready(function() {
 
     var settings = {
            'literals': literals_ca,
-           'username' : 'janet.dura@upcnet.es',
-           'oAuthToken' : '4d53575d0d9582839c510b3302ac1f2c',
-           'oAuthGrantType' : 'alumni',
-           'maxServerURL' : 'http://localhost:8081',
-           'maxServerURLAlias' : 'http://sheldon.upc.es/max',
-           'avatarURLpattern' : 'https://devel.upcnet.es/clubs/avatar/{0}',
-           'contextFilter': ['http://sheldon:8080/club'],
+           'username' : '',
+           'oAuthToken' : '',
+           'oAuthGrantType' : 'password',
+           'maxServerURL' : 'http://max.beta.upcnet.es',
+           'maxServerURLAlias' : '',
+           'avatarURLpattern' : '',
+           'contextFilter': [],
            'activitySource': 'activities'
            }
     //gadgets.io.setProxyURL(settings.maxServerURL+'/makeRequest')
