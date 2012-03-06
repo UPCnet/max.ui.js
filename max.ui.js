@@ -9,7 +9,6 @@
         var maxui = this
 
         // create namespace global variable if it doesn't exists
-
         if (!window._MAXUI)
             { window._MAXUI = {}}
 
@@ -23,7 +22,6 @@
 
         // Update the default EN literals and delete from the options,
         // to allow partial extending of literals
-
         var literals = jQuery.extend(literals_en,options.literals)
         delete options.literals
 
@@ -38,18 +36,17 @@
         // and store in the global _MAXUI namespace
         _MAXUI.settings = jQuery.extend(defaults,options)
 
-
+        // Prepare utf strings to show correctly on browser
         for (key in _MAXUI.settings.literals)
             {
               value = _MAXUI.settings.literals[key]
                _MAXUI.settings.literals[key] = maxui.utf8_decode(value)
             }
 
-
         // Configure maxui without CORS if CORS not available
         if (!this.isCORSCapable())
             {
-                // IF it has been defined an alias a fallback
+                // IF it has been defined an alias, set as max server url
                 if (_MAXUI.settings.maxServerURLAlias)
                 _MAXUI.settings.maxServerURL = _MAXUI.settings.maxServerURLAlias
             }
@@ -57,12 +54,10 @@
         // set default avatar url pattern if user didn't provide it
         if (!_MAXUI.settings.avatarURLpattern)
             {
-
                _MAXUI.settings['avatarURLpattern'] = _MAXUI.settings.maxServerURL+'/people/{0}/avatar'
             }
 
         // Init MAX CLient
-
         this.maxClient = new MaxClient(_MAXUI.settings.maxServerURL)
         this.maxClient.setMode(_MAXUI.settings.maxRequestsAPI)
         this.maxClient.setActor(_MAXUI.settings.username)
@@ -90,7 +85,7 @@
 
 
         //Assign Commentbox send comment via delegating the click to the activities container
-       jQuery('#maxui-activities').on('click','.maxui-comments .send',function(event){
+        jQuery('#maxui-activities').on('click','.maxui-comments .send',function(event){
            event.preventDefault()
            var text = jQuery(this).closest('.maxui-comments').find('textarea').val()
            var activityid = jQuery(this).closest('.maxui-activity').attr('id')
@@ -102,13 +97,16 @@
                         })
           });
 
-       jQuery('#maxui-newactivity textarea').focusin(function() {
+        // Clear textarea when focusing in only if user hasn't typed anything yet
+        jQuery('#maxui-newactivity textarea').focusin(function() {
                   if ( jQuery(this).val()==_MAXUI.settings.literals.new_activity_text )
                       {jQuery(this).val('')
                   jQuery(this).attr('class','')}
         });
 
-       jQuery('#maxui-newactivity textarea').focusout(function() {
+        // Print the default new_activity_text literal when focusing out, only
+        // if user hasn't typed anything yet
+        jQuery('#maxui-newactivity textarea').focusout(function() {
                   if ( jQuery(this).val()=='' )
                       {jQuery(this).val(_MAXUI.settings.literals.new_activity_text)
                        jQuery(this).attr('class','empty')}
@@ -122,7 +120,8 @@
     };
 
     /*
-    *    Identifies cors funcionalities
+    *    Identifies cors funcionalities and returns a boolean
+         indicating wheter the browser is or isn't CORS capable
     */
     jQuery.fn.isCORSCapable = function() {
         var xhrObject = new XMLHttpRequest();
@@ -163,7 +162,8 @@
     }
 
     /*
-    *    Loads more activities from max
+    *    Loads more activities from max posted earlier than
+    *    the oldest loaded activity
     */
     jQuery.fn.loadMoreActivities = function () {
         maxui=this
@@ -210,6 +210,10 @@
           return null;
     }
 
+    /*
+    *    Returns an utf8 decoded string
+    *    @param {String} str_data    an utf-8 String
+    */
     jQuery.fn.utf8_decode = function(str_data) {
         // Converts a UTF-8 encoded string to ISO-8859-1
         //
@@ -254,7 +258,12 @@
         return tmp_arr.join('');
     }
 
-
+    /*
+    *    Renders the N activities passed in items on the timeline slot. This function is
+    *    meant to be called as a callback of a call to a max webservice returning activities
+    *    @param {String} items     a list of objects representing activities, returned by max
+    *    @param {String} insertAt  optional argument indicating were to prepend or append activities
+    */
     jQuery.fn.formatActivity = function(items, insertAt) {
             // When receiving the list of activities from max
             // construct the object for Hogan
@@ -306,7 +315,12 @@
 
         }
 
-
+    /*
+    *    Renders the N comments passed in items on the timeline slot. This function is
+    *    meant to be called as a callback of a call to a max webservice returning comments
+    *    @param {String} items         a list of objects representing comments, returned by max
+    *    @param {String} activity_id   id of the activity where comments belong to
+    */
     jQuery.fn.formatComment = function(items,activity_id) {
             // When receiving the list of activities from max
             // construct the object for Hogan
@@ -350,6 +364,10 @@
 
         }
 
+    /*
+    *    Searches for urls in text and transforms to hyperlinks
+    *    @param {String} text     String containing 0 or more valid links embedded with any other text
+    */
     jQuery.fn.formatText = function (text){
         if (text) {
             text = text.replace(
