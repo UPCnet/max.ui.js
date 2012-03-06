@@ -66,11 +66,14 @@ overflow: hidden;
 }
 
 #maxui-activities .maxui-avatar img{
+float:left;
+}
+
+.maxui-avatar img {
 width:48px;
 -moz-border-radius: 5px;
 -webkit-border-radius:5px;
 border-radius:5px;
-float:left;
 }
 
 #maxui-activities .maxui-activity-content {
@@ -82,6 +85,16 @@ margin-right:50px;
 float:right;
 text-align: right;
 margin-right:50px;
+}
+
+
+#maxui-newactivity div {
+float:left;
+}
+
+#maxui-newactivity .textbox {
+margin-left:5px;
+width:86%; /* FIX THIS !!!*/
 }
 
 .maxui-clear {

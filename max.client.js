@@ -59,7 +59,7 @@ MaxClient.prototype.POST = function(route, query, callback) {
     resource_uri = '{0}{1}'.format(this.url, route)
     if (this.mode=='jquery')
     {
-           $.ajax( {url: resource_uri,
+           jQuery.ajax( {url: resource_uri,
              beforeSend: function(xhr) {
                  xhr.setRequestHeader("X-Oauth-Token", _MAXUI.settings.oAuthToken);
                  xhr.setRequestHeader("X-Oauth-Username", _MAXUI.settings.username);
@@ -105,11 +105,11 @@ MaxClient.prototype.GET = function(route, query, callback) {
     resource_uri = '{0}{1}'.format(this.url, route)
     if (Object.keys(query).length >0)
     {
-        resource_uri+='?'+$.param(query, true)
+        resource_uri+='?'+jQuery.param(query, true)
     }
     if (this.mode=='jquery')
     {
-	    $.ajax( {url: resource_uri,
+	    jQuery.ajax( {url: resource_uri,
              beforeSend: function(xhr) {
                  xhr.setRequestHeader("X-Oauth-Token", _MAXUI.settings.oAuthToken);
                  xhr.setRequestHeader("X-Oauth-Username", _MAXUI.settings.username);
@@ -148,7 +148,7 @@ MaxClient.prototype.GET = function(route, query, callback) {
 	}
 
 MaxClient.prototype.getUserTimeline = function(username, callback) {
-	route = this.ROUTES['timeline'].format(username);
+	var route = this.ROUTES['timeline'].format(username);
   if (arguments.length>2)
       query=arguments[3]
   else
@@ -159,7 +159,7 @@ MaxClient.prototype.getUserTimeline = function(username, callback) {
 
 
 MaxClient.prototype.getActivities = function(username, contexts, callback) {
-  route = this.ROUTES['activities'];
+  var route = this.ROUTES['activities'];
   if (arguments.length>3)
     {
       query=arguments[3]
@@ -176,10 +176,16 @@ MaxClient.prototype.getActivities = function(username, contexts, callback) {
 };
 
 
+MaxClient.prototype.getCommentsForActivity = function(activityid, callback) {
+  route = this.ROUTES['comments'].format(activityid);
+  var query = {}
+  this.GET(route,query,callback)
+};
+
 
 MaxClient.prototype.addComment = function(comment, activity, callback) {
 
-    query = {
+    var query = {
         "actor": {},
         "object": {
             "objectType": "comment",
@@ -190,7 +196,7 @@ MaxClient.prototype.addComment = function(comment, activity, callback) {
     query.actor = this.actor
     query.object.content = comment
 
-	route = this.ROUTES['comments'].format(activity);
+	  route = this.ROUTES['comments'].format(activity);
     this.POST(route,query,callback)
 
 };

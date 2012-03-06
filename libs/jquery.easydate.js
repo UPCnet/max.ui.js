@@ -1,14 +1,14 @@
-(function($)
+(function(jQuery)
 {
     /*
-     * jQuery EasyDate 0.2.4 ($Rev: 54 $)
+     * jQuery EasyDate 0.2.4 (jQueryRev: 54 jQuery)
      * Copyright (c) 2009 Parsha Pourkhomami (parshap@gmail.com)
      * Licensed under the MIT license.
      */
 
-    $.easydate = { };
-    $.easydate.locales = { };
-    $.easydate.locales.enUS = {
+    jQuery.easydate = { };
+    jQuery.easydate.locales = { };
+    jQuery.easydate.locales.enUS = {
         "future_format": "%s %t",
         "past_format": "%t %s",
         "second": "second",
@@ -32,7 +32,7 @@
         "in": "in"
     };
 
-    $.easydate.locales.esCA = {
+    jQuery.easydate.locales.esCA = {
         "future_format": "%s %t",
         "past_format": "%s %t",
         "second": "segon",
@@ -77,7 +77,7 @@
         {
             return date.toLocaleDateString();
         },
-        locale: $.easydate.locales.esCA
+        locale: jQuery.easydate.locales.esCA
     };
 
     function __(str, value, settings)
@@ -95,10 +95,10 @@
     // synchronizing the user's clock with a server-side clock.
 
     // Formats a Date object to a human-readable localized string.
-    $.easydate.format_date = function(date, options)
+    jQuery.easydate.format_date = function(date, options)
     {
 
-        var settings = $.extend({}, defaults, options);
+        var settings = jQuery.extend({}, defaults, options);
         var now = new Date();
         var diff = (( now.getTime() - date.getTime()) / 1000);
         var diff_abs = Math.abs(diff);
