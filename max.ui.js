@@ -17,7 +17,7 @@
                            'new_activity_post': "Post activity",
                            'toggle_comments': "Comments",
                            'new_comment_post': "Post comment",
-                           'load_more': "Load more"
+                           'load_more': "Load more",
             }
 
         // Update the default EN literals and delete from the options,
@@ -79,10 +79,22 @@
             })
 
         //Assign Commentbox toggling via delegating the click to the activities container
-        jQuery('#maxui-activities').on('click','.maxui-commentaction',function () {
+        jQuery('#maxui-activities').on('click','.maxui-commentaction',function (event) {
             jQuery(this).closest('.maxui-activity').find('.maxui-comments').toggle()
             })
 
+        //Assign hashtag filtering via delegating the click to the activities container
+        jQuery('#maxui-activities').on('click','.maxui-hashtag',function () {
+            event.preventDefault()
+            maxui.addFilter({type:'hashtag', value:this.text})
+            })
+
+        //Assign filter closing via delegating the click to the filters container
+        jQuery('#maxui-search-filters').on('click','.close',function () {
+            event.preventDefault()
+            var filter = $(this.parentNode.parentNode)
+            maxui.delFilter({type:filter.attr('type'), value:filter.attr('value')})
+            })
 
         //Assign Commentbox send comment via delegating the click to the activities container
         jQuery('#maxui-activities').on('click','.maxui-comments .send',function(event){
@@ -118,6 +130,56 @@
         // allow jQuery chaining
         return maxui;
     };
+
+    /*
+    *    Reloads the current filters UI and executes the search
+    */
+    jQuery.fn.reloadFilters = function() {
+        params = {filters:window._MAXUI.filters}
+        var activity_items = MAXUI_FILTERS.render(params)
+        jQuery('#maxui-search-filters').html(activity_items)
+   }
+
+
+    /*
+    *    Adds a new filter to the search if its not present
+    *    @param {Object} filter    An object repesenting a filter, with the keys "type" and "value"
+    */
+    jQuery.fn.delFilter = function(filter) {
+        var deleted = false
+        var index = -1
+        for (i=0;i<window._MAXUI.filters.length;i++)
+             if (window._MAXUI.filters[i].value==filter.value & window._MAXUI.filters[i].type==filter.type)
+              {
+                 index = i
+                 deleted = true
+              }
+        if (deleted)
+            delete window._MAXUI.filters[index]
+            this.reloadFilters()
+    }
+
+    /*
+    *    Adds a new filter to the search if its not present
+    *    @param {Object} filter    An object repesenting a filter, with the keys "type" and "value"
+    */
+    jQuery.fn.addFilter = function(filter) {
+
+        if (!window._MAXUI.filters)
+            { window._MAXUI.filters = []}
+
+        var already_filtered = false
+        for (i=0;i<window._MAXUI.filters.length;i++)
+             if (window._MAXUI.filters[i].value==filter.value & window._MAXUI.filters[i].type==filter.type)
+                 already_filtered = true
+
+         if (!already_filtered)
+         {
+            window._MAXUI.filters.push(filter)
+            this.reloadFilters()
+         }
+    }
+
 
     /*
     *    Identifies cors funcionalities and returns a boolean
@@ -365,7 +427,7 @@
         }
 
     /*
-    *    Searches for urls in text and transforms to hyperlinks
+    *    Searches for urls and hashtags in text and transforms to hyperlinks
     *    @param {String} text     String containing 0 or more valid links embedded with any other text
     */
     jQuery.fn.formatText = function (text){
@@ -378,6 +440,14 @@
                         full_url = 'http://' + full_url;
                     }
                     return '<a href="' + full_url + '">' + url + '</a>';
+                }
+            );
+
+            text = text.replace(
+                /(\s|^)#{1}(\w+)/gi,
+                function(hashtag){
+                    var search_url='{0}/{}'
+                    return '<a class="maxui-hashtag" href="' + search_url + '">' + hashtag + '</a>';
                 }
             );
         }

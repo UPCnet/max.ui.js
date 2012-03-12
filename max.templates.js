@@ -4,6 +4,7 @@
 var MSTCH_MAXUI_MAIN_UI = '\
 <div id="maxui-container">\
 {{#username}}\
+ <div id="maxui-mainpanel">\
    <div id="maxui-newactivity">\
       <div class="maxui-avatar">\
            <img src="{{avatar}}">\
@@ -13,16 +14,19 @@ var MSTCH_MAXUI_MAIN_UI = '\
            <input type="button" class="send" value="{{literals.new_activity_post}}">\
       </div>\
    </div>\
+   <div id="maxui-search-filters">\
+   </div>\
    <div id="maxui-timeline">\
       <div class="wrapper">\
           <div id="maxui-activities">\
-              <div id="maxui-more-activities">\
-                  <input type="button" class="load" value="{{literals.load_more}}">\
-              </div>\
           </div>\
       </div>\
    </div>\
+   <div id="maxui-more-activities">\
+        <input type="button" class="load" value="{{literals.load_more}}">\
+   </div>\
   </div>\
+ </div>\
 {{/username}}\
 {{^username}}\
   No s\'ha definit cap usuari\
@@ -112,7 +116,13 @@ var MSTCH_MAXUI_COMMENTS = '\
 ';
 
 
+var MSTCH_MAXUI_FILTERS = '\
+{{#filters}}\
+<div class="maxui-filter" type="{{type}}" value="{{value}}"><span>{{value}}<a class="close" href="">X</a></span></div>\
+{{/filters}}\
+';
 
 var MAXUI_MAIN_UI = Hogan.compile(MSTCH_MAXUI_MAIN_UI);
 var MAXUI_ACTIVITIES = Hogan.compile(MSTCH_MAXUI_ACTIVITIES);
 var MAXUI_COMMENTS = Hogan.compile(MSTCH_MAXUI_COMMENTS);
+var MAXUI_FILTERS = Hogan.compile(MSTCH_MAXUI_FILTERS);

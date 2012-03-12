@@ -15,15 +15,27 @@ jQuery().ready(function() {
 
     var settings = {
            'literals': literals_ca,
-           'username' : '',
-           'oAuthToken' : '',
-           'oAuthGrantType' : 'password',
-           'maxServerURL' : 'http://max.beta.upcnet.es',
-           'maxServerURLAlias' : '',
-           'avatarURLpattern' : '',
-           'contextFilter': [],
+           'username' : 'janet.dura@upcnet.es',
+           'oAuthToken' : '4d53575d0d9582839c510b3302ac1f2c',
+           'oAuthGrantType' : 'alumni',
+           'maxServerURL' : 'http://localhost:8081',
+           'maxServerURLAlias' : 'http://sheldon.upc.es/max',
+           'avatarURLpattern' : 'https://devel.upcnet.es/clubs/avatar/{0}',
+           'contextFilter': ['http://sheldon:8080/club'],
            'activitySource': 'activities'
            }
+
+//  var settings = {
+//  'newActivityText' : 'Escriu alguna cosa ...',
+//                 'username' : 'francesc.bassas-bullich',
+//                 'oAuthToken' : '0310fb63c9014aeb4f888eda768c1c86',
+//                 'maxServerURL' : 'http://max.beta.upcnet.es',
+//                 'maxServerURLAlias' : 'https://devel.upcnet.es/max',
+//                 'avatarURLpattern' : 'https://devel.upcnet.es/clubs/avatar/{0}',
+//                 'activitiesSource' : 'activities',
+//                 'contextFilter' : ['hola'],
+//                 'activitySource': 'activities'
+// }
     //gadgets.io.setProxyURL(settings.maxServerURL+'/makeRequest')
 
     jQuery('#container').maxUI(settings)

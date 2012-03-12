@@ -1,5 +1,10 @@
 
 
+#maxui-container a {
+text-decoration: none;
+font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
 #maxui-container {
 font:13px/20px "HelveticaNeue","Helvetica Neue",Helvetica,Arial,sans-serif;
 color:#222;
@@ -160,4 +165,29 @@ padding-top:5px;
 .maxui-comments .maxui-avatar img {
 width:30px!important;
 
+}
+
+
+#maxui-search-filters .maxui-filter {
+float:left;
+padding:5px;
+}
+
+#maxui-search-filters .maxui-filter span{
+padding:2px 2px 2px 10px;
+-moz-border-radius: 3px;
+-webkit-border-radius: 3px;
+border-radius: 3px;
+font-size:12px;
+
+background-color:#2D6987;
+color:white;
+width:auto;
+
+}
+
+#maxui-search-filters .maxui-filter .close{
+color : #ddd;
+font-weight:bold;
+padding: 0 5px;
 }
