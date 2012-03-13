@@ -17,7 +17,7 @@
                            'new_activity_post': "Post activity",
                            'toggle_comments': "Comments",
                            'new_comment_post': "Post comment",
-                           'load_more': "Load more",
+                           'load_more': "Load more"
             }
 
         // Update the default EN literals and delete from the options,
@@ -37,11 +37,12 @@
         _MAXUI.settings = jQuery.extend(defaults,options)
 
         // Prepare utf strings to show correctly on browser
-        for (key in _MAXUI.settings.literals)
-            {
-              value = _MAXUI.settings.literals[key]
-               _MAXUI.settings.literals[key] = maxui.utf8_decode(value)
-            }
+        // TODO Check if needed on all browsers, sometimes not working...
+        //for (key in _MAXUI.settings.literals)
+        //    {
+        //      value = _MAXUI.settings.literals[key]
+        //       _MAXUI.settings.literals[key] = maxui.utf8_decode(value)
+        //    }
 
         // Configure maxui without CORS if CORS not available
         if (!this.isCORSCapable())
@@ -86,7 +87,7 @@
         //Assign hashtag filtering via delegating the click to the activities container
         jQuery('#maxui-activities').on('click','.maxui-hashtag',function () {
             event.preventDefault()
-            maxui.addFilter({type:'hashtag', value:this.text})
+            maxui.addFilter({type:'hashtag', value:$(this).attr('value')})
             })
 
         //Assign filter closing via delegating the click to the filters container
@@ -135,9 +136,23 @@
     *    Reloads the current filters UI and executes the search
     */
     jQuery.fn.reloadFilters = function() {
-        params = {filters:window._MAXUI.filters}
+
+        var maxui=this
+        var params = {filters:window._MAXUI.filters}
         var activity_items = MAXUI_FILTERS.render(params)
         jQuery('#maxui-search-filters').html(activity_items)
+        var filters = {}
+        // group filters
+        for (f=0;f<params.filters.length;f++)
+            { var filter = params.filters[f]
+
+              if (!filters[filter.type])
+                  filters[filter.type]=[]
+              filters[filter.type].push(filter.value)
+            }
+
+        maxui.printActivities(filters)
+
    }
 
 
@@ -151,11 +166,10 @@
         for (i=0;i<window._MAXUI.filters.length;i++)
              if (window._MAXUI.filters[i].value==filter.value & window._MAXUI.filters[i].type==filter.type)
               {
-                 index = i
                  deleted = true
+                 window._MAXUI.filters.splice(i,1)
               }
         if (deleted)
-            delete window._MAXUI.filters[index]
             this.reloadFilters()
     }
 
@@ -367,13 +381,11 @@
             var activity_items = MAXUI_ACTIVITIES.render(params)
 
             if (insertAt == 'beggining')
-              {
                 jQuery('#maxui-activities').prepend(activity_items)
-              }
-            else
-              {
+            else if (insertAt == 'end')
                 jQuery('#maxui-activities').append(activity_items)
-              }
+            else
+                jQuery('#maxui-activities').html(activity_items)
 
         }
 
@@ -445,9 +457,10 @@
 
             text = text.replace(
                 /(\s|^)#{1}(\w+)/gi,
-                function(hashtag){
+                function(){
+                    var tag = arguments[2]
                     var search_url='{0}/{}'
-                    return '<a class="maxui-hashtag" href="' + search_url + '">' + hashtag + '</a>';
+                    return '<a class="maxui-hashtag" value="'+tag+'" href="' + search_url + '">#' + tag + ' </a>';
                 }
             );
         }
@@ -470,6 +483,9 @@
            {
              if (arguments[0].before)
                  {insert_at = 'end'}
+             if (arguments[0].hashtag)
+                 {insert_at = 'replace'}
+
            }
 
 
@@ -489,7 +505,7 @@
         }
 
         // if passed as param, assume an object with search filtering params
-        // one or all of [limit, since]
+        // one or all of [limit, before, after, hashtag]
         if (arguments.length>0)
            {
              func_params.push(arguments[0])
