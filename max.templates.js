@@ -7,7 +7,9 @@ var MSTCH_MAXUI_MAIN_UI = '\
  <div id="maxui-mainpanel">\
    <div id="maxui-newactivity">\
       <div class="maxui-avatar">\
+         <a href="{{profile}}">\
            <img src="{{avatar}}">\
+         </a>\
       </div>\
       <div class="textbox">\
            <textarea>{{literals.new_activity_text}}</textarea>\
@@ -39,7 +41,9 @@ var MSTCH_MAXUI_ACTIVITIES = '\
 {{#activities}}\
 <div class="maxui-activity" id="{{id}}" userid="{{actor.id}}" username="{{actor.username}}">\
     <div class="maxui-avatar">\
-        <img src="{{#avatarURL}}{{actor.username}}{{/avatarURL}}">\
+        <a href="{{#profileURL}}{{actor.username}}{{/profileURL}}">\
+            <img src="{{#avatarURL}}{{actor.username}}{{/avatarURL}}">\
+        </a>\
     </div>\
     <div class="maxui-activity-content">\
         <div>\
@@ -64,7 +68,9 @@ var MSTCH_MAXUI_ACTIVITIES = '\
             {{#replies.items}}\
             <div class="maxui-comment" id="{{id}}" userid="{{author.id}}" displayname="{{author.username}}">\
                 <div class="maxui-avatar">\
-                    <img src="{{#avatarURL}}{{author.username}}{{/avatarURL}}">\
+                    <a href="{{#profileURL}}{{actor.username}}{{/profileURL}}">\
+                        <img src="{{#avatarURL}}{{author.username}}{{/avatarURL}}">\
+                    </a>\
                 </div>\
                 <div class="maxui-activity-content">\
                     <div>\
@@ -99,7 +105,9 @@ var MSTCH_MAXUI_COMMENTS = '\
 {{#comments}}\
 <div class="maxui-comment" id="{{id}}" userid="{{author.id}}" displayname="{{author.username}}">\
     <div class="maxui-avatar">\
-        <img src="{{#avatarURL}}{{author.username}}{{/avatarURL}}">\
+        <a href="{{#profileURL}}{{actor.username}}{{/profileURL}}">\
+            <img src="{{#avatarURL}}{{author.username}}{{/avatarURL}}">\
+        </a>\
     </div>\
     <div class="maxui-activity-content">\
         <div>\

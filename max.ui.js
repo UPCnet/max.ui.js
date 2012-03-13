@@ -52,11 +52,12 @@
                 _MAXUI.settings.maxServerURL = _MAXUI.settings.maxServerURLAlias
             }
 
-        // set default avatar url pattern if user didn't provide it
+        // set default avatar and profile url pattern if user didn't provide it
         if (!_MAXUI.settings.avatarURLpattern)
-            {
                _MAXUI.settings['avatarURLpattern'] = _MAXUI.settings.maxServerURL+'/people/{0}/avatar'
-            }
+
+        if (!_MAXUI.settings.profileURLpattern)
+               _MAXUI.settings['profileURLpattern'] = _MAXUI.settings.maxServerURL+'/profiles/{0}'
 
         // Init MAX CLient
         this.maxClient = new MaxClient(_MAXUI.settings.maxServerURL)
@@ -64,7 +65,9 @@
         this.maxClient.setActor(_MAXUI.settings.username)
 
         // render main interface using partials
-        var params = jQuery.extend(_MAXUI.settings,{'avatar':_MAXUI.settings.avatarURLpattern.format(_MAXUI.settings.username)})
+        var params = jQuery.extend(_MAXUI.settings,{'avatar':_MAXUI.settings.avatarURLpattern.format(_MAXUI.settings.username),
+                                                    'profile':_MAXUI.settings.profileURLpattern.format(_MAXUI.settings.username)
+                                                   })
         var mainui = MAXUI_MAIN_UI.render(params)
         this.html(mainui)
         this.printActivities()
@@ -374,6 +377,13 @@
                                  else { var username = this.author.username }
                                  return _MAXUI.settings.avatarURLpattern.format(username)
                              }
+                          },
+                          profileURL: function () {
+                             return function(text) {
+                                 if (this.hasOwnProperty('actor')) { var username = this.actor.username }
+                                 else { var username = this.author.username }
+                                 return _MAXUI.settings.profileURLpattern.format(username)
+                             }
                           }
                          }
 
@@ -403,13 +413,14 @@
             //             to obtain the published date in a "human readable" way
             // `avatarURL` contain a function maxui will be rendered inside the template
             //             to obtain the avatar url for the activity's actor
+
+            // Save reference to the maxui class, as inside below defined functions
+            // the this variable will contain the activity item being processed
             maxui = this;
             var params = {literals:_MAXUI.settings.literals,
                           comments: items,
                           formattedDate: function() {
                              return function(date) {
-                                 // Here, `this` refers to the activity object
-                                 // currently being processed by the hogan template
                                  var date = this.published
                                  return maxui.formatDate(date)
                              }
@@ -423,13 +434,19 @@
                           },
                           avatarURL: function () {
                              return function(text) {
-                                 // Here, `this` refers to the activity object
-                                 // currently being processed by the hogan template
                                  if (this.hasOwnProperty('actor')) { var username = this.actor.username }
                                  else { var username = this.author.username }
                                  return _MAXUI.settings.avatarURLpattern.format(username)
                              }
+                          },
+                          profileURL: function () {
+                             return function(text) {
+                                 if (this.hasOwnProperty('actor')) { var username = this.actor.username }
+                                 else { var username = this.author.username }
+                                 return _MAXUI.settings.profileURLpattern.format(username)
+                             }
                           }
+
                          }
 
             // Render the activities template and insert it into the timeline
