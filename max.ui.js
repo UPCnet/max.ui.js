@@ -477,14 +477,14 @@
         var maxui = this
 
         var func_params = []
-        var insert_at = 'beggining'
+        var insert_at = 'replace'
 
         if (arguments.length>0)
            {
              if (arguments[0].before)
                  {insert_at = 'end'}
-             if (arguments[0].hashtag)
-                 {insert_at = 'replace'}
+             if (arguments[0].after)
+                 {insert_at = 'beggining'}
 
            }
 
