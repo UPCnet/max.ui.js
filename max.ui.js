@@ -84,6 +84,8 @@
 
         //Assign Commentbox toggling via delegating the click to the activities container
         jQuery('#maxui-activities').on('click','.maxui-commentaction',function (event) {
+            event.preventDefault()
+            window.status=''
             jQuery(this).closest('.maxui-activity').find('.maxui-comments').toggle()
             })
 

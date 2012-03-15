@@ -6,11 +6,9 @@ var MSTCH_MAXUI_MAIN_UI = '\
 {{#username}}\
  <div id="maxui-mainpanel">\
    <div id="maxui-newactivity">\
-      <!--<span class="maxui-avatar">-->\
-          <a href="{{profile}}"><span class="maxui-avatar">\
-           <img src="{{avatar}}">\
-          </span></a>\
-      <!--</span>-->\
+      <a href="{{profile}}" class="maxui-avatar">\
+          <img src="{{avatar}}">\
+      </a>\
       <div class="textbox">\
            <textarea>{{literals.new_activity_text}}</textarea>\
            <input type="button" class="send" value="{{literals.new_activity_post}}">\
@@ -40,14 +38,9 @@ var MSTCH_MAXUI_MAIN_UI = '\
 var MSTCH_MAXUI_ACTIVITIES = '\
 {{#activities}}\
 <div class="maxui-activity" id="{{id}}" userid="{{actor.id}}" username="{{actor.username}}">\
-    <div class="maxui-avatar">\
-        <!--<a href="{{#profileURL}}{{actor.username}}{{/profileURL}}">-->\
-            <!--<img src="{{#avatarURL}}{{actor.username}}{{/avatarURL}}">-->\
-        <!--</a>-->\
-    </div>\
     <div class="maxui-activity-content">\
         <div class="maxui-publisheddate">{{#formattedDate}}{{published}}{{/formattedDate}}</div>\
-        <div>\
+        <div class="maxui-author">\
           <a href="{{#profileURL}}{{actor.username}}{{/profileURL}}">\
 		<span class="maxui-avatar"><img src="{{#avatarURL}}{{author.username}}{{/avatarURL}}"></span>\
 		<span class="maxui-displayname">{{actor.displayName}}</span></a>\
@@ -60,7 +53,7 @@ var MSTCH_MAXUI_ACTIVITIES = '\
     </div>\
     <div class="maxui-footer">\
         <div class="maxui-actions">\
-            <a href="#"><span class="maxui-commentaction">{{#replies}}<strong>{{replies.totalItems}}</strong>{{/replies}} {{literals.toggle_comments}}</span></a>\
+            <a href="" class="maxui-commentaction">{{#replies}}<strong>{{replies.totalItems}}</strong>{{/replies}} {{literals.toggle_comments}}</a>\
             \
         </div>\
     </div>\
@@ -69,18 +62,13 @@ var MSTCH_MAXUI_ACTIVITIES = '\
         <div class="maxui-commentsbox">\
             {{#replies.items}}\
             <div class="maxui-comment" id="{{id}}" userid="{{author.id}}" displayname="{{author.username}}">\
-                <div class="maxui-avatar">\
-                    <!--<a href="{{#profileURL}}{{actor.username}}{{/profileURL}}">-->\
-                    <!--<img src="{{#avatarURL}}{{author.username}}{{/avatarURL}}">-->\
-                    <!--</a>-->\
-                </div>\
                 <div class="maxui-activity-content">\
                     <div class="maxui-publisheddate">{{#formattedDate}}{{published}}{{/formattedDate}}</div>\
-                    <div>\
+                    <div class="maxui-author">\
                       <a href="{{#profileURL}}{{actor.username}}{{/profileURL}}">\
 			 <span class="maxui-avatar"><img src="{{#avatarURL}}{{author.username}}{{/avatarURL}}"></span>\
-			 <span class="maxui-displayname">{{author.username}}</span></a>\
-                      <span class="maxui-username">{{author.displayName}}</span>\
+			 <span class="maxui-displayname">{{author.displayName}}</span></a>\
+                      <span class="maxui-username">{{author.username}}</span>\
                     </div>\
                     <div>\
                         <p class="maxui-body">{{content}}</p>\
@@ -109,18 +97,13 @@ var MSTCH_MAXUI_ACTIVITIES = '\
 var MSTCH_MAXUI_COMMENTS = '\
 {{#comments}}\
 <div class="maxui-comment" id="{{id}}" userid="{{author.id}}" displayname="{{author.username}}">\
-    <div class="maxui-avatar">\
-        <!--<a href="{{#profileURL}}{{actor.username}}{{/profileURL}}">-->\
-            <!--<img src="{{#avatarURL}}{{author.username}}{{/avatarURL}}">-->\
-        <!--</a>-->\
-    </div>\
     <div class="maxui-activity-content">\
         <div class="maxui-publisheddate">{{#formattedDate}}{{published}}{{/formattedDate}}</div>\
-        <div>\
+        <div class="maxui-author">\
 	   <a href="{{#profileURL}}{{actor.username}}{{/profileURL}}">\
 		<span class="maxui-avatar"><img src="{{#avatarURL}}{{author.username}}{{/avatarURL}}"></span>\
-		<span class="maxui-displayname">{{author.username}}</span></a> \
-	   <span class="maxui-username">{{author.displayName}}</span>\
+		<span class="maxui-displayname">{{author.displayName}}</span></a> \
+	   <span class="maxui-username">{{author.username}}</span>\
         </div>\
         <div>\
             <p class="maxui-body">{{content}}</p>\
