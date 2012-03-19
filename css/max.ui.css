@@ -111,7 +111,7 @@ padding-right:10px;
 }
 .maxui-actions span.maxui-commentaction {
 font-size:11px;
-background: url('img/maxcomm.png') no-repeat 0 2px;
+background: url('../img/maxcomm.png') no-repeat 0 2px;
 color:#007bc0;
 text-decoration:none;
 padding-left:18px;
