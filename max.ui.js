@@ -27,7 +27,8 @@
 
         var defaults = {'maxRequestsAPI' : 'jquery',
                         'maxServerURL' : 'http://max.beta.upcnet.es',
-                        'contextFilter': [],
+                        'readContext': '',
+                        'writeContexts' : [],
                         'activitySource': 'timeline',
                         'literals': literals
                         }
@@ -51,6 +52,8 @@
                 if (_MAXUI.settings.maxServerURLAlias)
                 _MAXUI.settings.maxServerURL = _MAXUI.settings.maxServerURLAlias
             }
+
+        _MAXUI.settings.writeContexts.push(_MAXUI.settings.readContext)
 
         // set default avatar and profile url pattern if user didn't provide it
         if (!_MAXUI.settings.avatarURLpattern)
@@ -229,7 +232,7 @@
     jQuery.fn.sendActivity = function () {
         maxui=this
         var text = jQuery('#maxui-newactivity textarea').val()
-        this.maxClient.addActivity(text, _MAXUI.settings.contextFilter, function() {
+        this.maxClient.addActivity(text, _MAXUI.settings.writeContexts, function() {
             jQuery('#maxui-newactivity textarea').val('')
             var first = jQuery('.maxui-activity:first')
             if (first.length>0)
@@ -545,7 +548,7 @@
         {
             var activityRetriever = this.maxClient.getActivities
             func_params.push(_MAXUI.settings.username)
-            func_params.push(_MAXUI.settings.contextFilter)
+            func_params.push(_MAXUI.settings.readContext)
             func_params.push( function() {maxui.formatActivity(this.items, insert_at)})
 
         }

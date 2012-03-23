@@ -157,7 +157,7 @@ MaxClient.prototype.getUserTimeline = function(username, callback) {
 };
 
 
-MaxClient.prototype.getActivities = function(username, contexts, callback) {
+MaxClient.prototype.getActivities = function(username, context, callback) {
   var route = this.ROUTES['activities'];
   if (arguments.length>3)
     {
@@ -167,9 +167,9 @@ MaxClient.prototype.getActivities = function(username, contexts, callback) {
     {
       query={}
     }
-  if (contexts.length>0)
+  if (context)
       { //construir la query string
-        query.contexts = contexts
+        query.context = context
        }
   this.GET(route,query,callback)
 };
