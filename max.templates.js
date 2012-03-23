@@ -18,7 +18,11 @@ var MSTCH_MAXUI_MAIN_UI = '\
    </div>\
    <div id="maxui-timeline">\
       <div class="wrapper">\
-          <div id="maxui-activities">\
+          <div id="maxui-preload" class="activities" style="height:0px;overflow:hidden">\
+              <div class="wrapper">\
+              </div>\
+          </div>\
+          <div id="maxui-activities" class="activities">\
           </div>\
       </div>\
    </div>\

@@ -393,7 +393,34 @@
             var activity_items = MAXUI_ACTIVITIES.render(params)
 
             if (insertAt == 'beggining')
-                jQuery('#maxui-activities').prepend(activity_items)
+            {
+                jQuery('#maxui-preload .wrapper').html(activity_items)
+                var items = jQuery('#maxui-preload .wrapper .maxui-activity')
+                var heightsum = 0
+                var lastheight = 0
+                for (i=0;i<items.length;i++)
+                    {
+                      lastheight = $(items[i]).height()+18
+                      if (i<items.length-1)
+                          heightsum+= lastheight
+                    }
+
+                console.log(heightsum)
+                console.log(lastheight)
+
+                jQuery('#maxui-preload').height(heightsum)
+                jQuery('#maxui-preload').animate({height:heightsum+lastheight}, 300, function()
+                   {
+                       jQuery('#maxui-preload .wrapper').html("")
+                       jQuery('#maxui-activities').prepend(activity_items)
+                       jQuery('#maxui-preload').height(0)
+
+                   })
+
+
+//                jQuery('#maxui-activities').css({'margin-top':69})
+                //jQuery('#maxui-activities').prepend(activity_items)
+            }
             else if (insertAt == 'end')
                 jQuery('#maxui-activities').append(activity_items)
             else
