@@ -56,6 +56,10 @@ var MSTCH_MAXUI_ACTIVITIES = '\
         <div class="maxui-publisheddate"></div>\
     </div>\
     <div class="maxui-footer">\
+        <div class="maxui-origin">\
+        Publicat a {{#formatContexts}}{{/formatContexts}} via {{context.via}}\
+        <\div>\
+\
         <div class="maxui-actions">\
             <a href="" class="maxui-commentaction">{{#replies}}<strong>{{replies.totalItems}}</strong>{{/replies}} {{literals.toggle_comments}}</a>\
             \

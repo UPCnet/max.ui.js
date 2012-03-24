@@ -389,7 +389,16 @@
                                  else { var username = this.author.username }
                                  return _MAXUI.settings.profileURLpattern.format(username)
                              }
+                          },
+                          formatContexts: function () {
+                             return function(text) {
+                                 return 'context'
+                                 if (this.hasOwnProperty('contexts')) { var username = this.actor.username }
+                                 else { var username = this.author.username }
+                                 return _MAXUI.settings.profileURLpattern.format(username)
+                             }
                           }
+
                          }
 
             // Render the activities template and insert it into the timeline
