@@ -232,17 +232,28 @@
     jQuery.fn.sendActivity = function () {
         maxui=this
         var text = jQuery('#maxui-newactivity textarea').val()
-        this.maxClient.addActivity(text, _MAXUI.settings.writeContexts, function() {
-            jQuery('#maxui-newactivity textarea').val('')
-            var first = jQuery('.maxui-activity:first')
-            if (first.length>0)
-                { filter = {after:first.attr('id')}
-                  maxui.printActivities(filter)
-                }
-            else {
-                  maxui.printActivities()
-                }
-            })
+
+        var func_params = []
+        func_params.push(text)
+        func_params.push(_MAXUI.settings.writeContexts)
+        func_params.push( function() {
+                              jQuery('#maxui-newactivity textarea').val('')
+                              var first = jQuery('.maxui-activity:first')
+                              if (first.length>0)
+                                  { filter = {after:first.attr('id')}
+                                    maxui.printActivities(filter)
+                                  }
+                              else {
+                                    maxui.printActivities()
+                                  }
+                              })
+
+        //Pass generator to activity post if defined
+        if (_MAXUI.settings.generatorName) { func_params.push(_MAXUI.settings.generatorName) }
+
+        var activityAdder = this.maxClient.addActivity
+        activityAdder.apply(this.maxClient, func_params)
+
     }
 
     /*
@@ -348,7 +359,7 @@
     *    @param {String} items     a list of objects representing activities, returned by max
     *    @param {String} insertAt  optional argument indicating were to prepend or append activities
     */
-    jQuery.fn.formatActivity = function(items, insertAt) {
+    jQuery.fn.formatActivities = function(items, insertAt) {
             // When receiving the list of activities from max
             // construct the object for Hogan
             // `activities `contain the list of activity objects
@@ -356,64 +367,87 @@
             //             to obtain the published date in a "human readable" way
             // `avatarURL` contain a function maxui will be rendered inside the template
             //             to obtain the avatar url for the activity's actor
-            maxui = this;
-            var params = {literals:_MAXUI.settings.literals,
-                          activities: items,
-                          formattedDate: function() {
-                             return function(date) {
-                                 // Here, `this` refers to the activity object
-                                 // currently being processed by the hogan template
-                                 var date = this.published
-                                 return maxui.formatDate(date)
-                             }
-                          },
-                          formattedText: function () {
-                             return function(text) {
-                                // Look for links and linkify them
-                                var text = this.object.content
-                                return maxui.formatText(text)
-                             }
-                          },
-                          avatarURL: function () {
-                             return function(text) {
-                                 // Here, `this` refers to the activity object
-                                 // currently being processed by the hogan template
-                                 if (this.hasOwnProperty('actor')) { var username = this.actor.username }
-                                 else { var username = this.author.username }
-                                 return _MAXUI.settings.avatarURLpattern.format(username)
-                             }
-                          },
-                          profileURL: function () {
-                             return function(text) {
-                                 if (this.hasOwnProperty('actor')) { var username = this.actor.username }
-                                 else { var username = this.author.username }
-                                 return _MAXUI.settings.profileURLpattern.format(username)
-                             }
-                          },
-                          formatContexts: function () {
-                             return function(text) {
-                                 return 'context'
-                                 if (this.hasOwnProperty('contexts')) { var username = this.actor.username }
-                                 else { var username = this.author.username }
-                                 return _MAXUI.settings.profileURLpattern.format(username)
-                             }
-                          }
+            var maxui = this;
+            var activities = ''
 
+            for (i=0;i<items.length;i++)
+                {
+                    var activity = items[i]
+
+                    var contexts = undefined
+                    if (activity.hasOwnProperty('contexts')) 
+                         { 
+                             if (activity.contexts.length>0)
+                                 {
+                                      contexts = activity.contexts[0]
+                                 }
                          }
 
-            // Render the activities template and insert it into the timeline
-            var activity_items = MAXUI_ACTIVITIES.render(params)
+                    var generator = undefined
+
+                    if (activity.hasOwnProperty('generator')) 
+                         { 
+                             generator = activity.generator
+                         }
+
+                    var replies = undefined
+                    if (activity.replies)
+                        {
+                            replies = { totalItems: activity.replies.totalItems,
+                                             items: []
+                                      }
+                            if (activity.replies.items.length>0)
+                                {
+                                    for (r=0;r<activity.replies.items.length;r++)
+                                        {
+                                        var comment = activity.replies.items[r]
+                                        console.log(comment)
+                                        reply = {
+                                                           id: comment.id,
+                                                       author: comment.author,  
+                                                         date: maxui.formatDate(comment.published),
+                                                         text: maxui.formatText(comment.content),
+                                                    avatarURL: _MAXUI.settings.avatarURLpattern.format(comment.author.username),
+                                                   profileURL: _MAXUI.settings.profileURLpattern.format(comment.author.username),
+
+                                                }
+                                        replies.items.push(reply)
+                                        }
+                                }
+                        }
+
+
+                    var params = {   
+                                           id: activity.id,
+                                        actor: activity.actor,
+                                     literals:_MAXUI.settings.literals,
+                                         date: maxui.formatDate(activity.published),
+                                         text: maxui.formatText(activity.object.content),
+                                      replies: replies,
+                                    avatarURL: _MAXUI.settings.avatarURLpattern.format(activity.actor.username),
+                                   profileURL: _MAXUI.settings.profileURLpattern.format(activity.actor.username),
+                                  publishedIn: contexts,
+                                          via: generator,
+
+
+                                 }
+                    // Render the activities template and append it at the end of the rendered activities
+                    var partials = {comment: MAXUI_COMMENT}
+                    var activities = activities + MAXUI_ACTIVITY.render(params, partials)
+                }
+
+            
 
             if (insertAt == 'beggining')
             {
                 jQuery('#maxui-preload .wrapper').html(activity_items)
-                var items = jQuery('#maxui-preload .wrapper .maxui-activity')
+                var ritems = jQuery('#maxui-preload .wrapper .maxui-activity')
                 var heightsum = 0
                 var lastheight = 0
-                for (i=0;i<items.length;i++)
+                for (i=0;i<ritems.length;i++)
                     {
-                      lastheight = $(items[i]).height()+18
-                      if (i<items.length-1)
+                      lastheight = $(ritems[i]).height()+18
+                      if (i<ritems.length-1)
                           heightsum+= lastheight
                     }
 
@@ -424,19 +458,18 @@
                 jQuery('#maxui-preload').animate({height:heightsum+lastheight}, 300, function()
                    {
                        jQuery('#maxui-preload .wrapper').html("")
-                       jQuery('#maxui-activities').prepend(activity_items)
+                       jQuery('#maxui-activities').prepend(activities)
                        jQuery('#maxui-preload').height(0)
 
                    })
-
 
 //                jQuery('#maxui-activities').css({'margin-top':69})
                 //jQuery('#maxui-activities').prepend(activity_items)
             }
             else if (insertAt == 'end')
-                jQuery('#maxui-activities').append(activity_items)
+                jQuery('#maxui-activities').append(activities)
             else
-                jQuery('#maxui-activities').html(activity_items)
+                jQuery('#maxui-activities').html(activities)
 
         }
 
@@ -446,7 +479,7 @@
     *    @param {String} items         a list of objects representing comments, returned by max
     *    @param {String} activity_id   id of the activity where comments belong to
     */
-    jQuery.fn.formatComment = function(items,activity_id) {
+    jQuery.fn.formatComment = function(items, activity_id) {
             // When receiving the list of activities from max
             // construct the object for Hogan
             // `activities `contain the list of activity objects
@@ -458,42 +491,29 @@
             // Save reference to the maxui class, as inside below defined functions
             // the this variable will contain the activity item being processed
             maxui = this;
-            var params = {literals:_MAXUI.settings.literals,
-                          comments: items,
-                          formattedDate: function() {
-                             return function(date) {
-                                 var date = this.published
-                                 return maxui.formatDate(date)
-                             }
-                          },
-                          formattedText: function () {
-                             return function(text) {
-                                // Look for links and linkify them
-                                var text = this.object.content
-                                return maxui.formatText(text)
-                             }
-                          },
-                          avatarURL: function () {
-                             return function(text) {
-                                 if (this.hasOwnProperty('actor')) { var username = this.actor.username }
-                                 else { var username = this.author.username }
-                                 return _MAXUI.settings.avatarURLpattern.format(username)
-                             }
-                          },
-                          profileURL: function () {
-                             return function(text) {
-                                 if (this.hasOwnProperty('actor')) { var username = this.actor.username }
-                                 else { var username = this.author.username }
-                                 return _MAXUI.settings.profileURLpattern.format(username)
-                             }
-                          }
+            var comments = ''
 
-                         }
+            for (i=0;i<items.length;i++)
+                {
+                    var comment = items[i]
 
-            // Render the activities template and insert it into the timeline
-            var comment_items = MAXUI_COMMENTS.render(params)
-            jQuery('.maxui-activity#'+activity_id+' .maxui-commentsbox').html(comment_items)
+                    var params = {   literals:_MAXUI.settings.literals,
+                                           id: comment.id,
+                                       author: comment.author,  
+                                         date: maxui.formatDate(comment.published),
+                                         text: maxui.formatText(comment.content),
+                                    avatarURL: _MAXUI.settings.avatarURLpattern.format(comment.author.username),
+                                   profileURL: _MAXUI.settings.profileURLpattern.format(comment.author.username),
 
+                                 }
+                    // Render the comment template and append it at the end of the rendered comments
+                    var comments = comments + MAXUI_COMMENT.render(params)
+                }
+            // Insert new comments by replacing previous comments with all comments
+            jQuery('.maxui-activity#'+activity_id+' .maxui-commentsbox').html(comments)
+            // Update comment count
+            comment_count = jQuery('.maxui-activity#'+activity_id+' .maxui-commentaction strong')
+            $(comment_count).text(eval($(comment_count).text())+1)
         }
 
     /*
@@ -551,14 +571,14 @@
         {
             var activityRetriever = this.maxClient.getUserTimeline
             func_params.push(_MAXUI.settings.username)
-            func_params.push( function() {maxui.formatActivity(this.items, insert_at)})
+            func_params.push( function() {maxui.formatActivities(this.items, insert_at)})
         }
         else if (_MAXUI.settings.activitySource=='activities')
         {
             var activityRetriever = this.maxClient.getActivities
             func_params.push(_MAXUI.settings.username)
             func_params.push(_MAXUI.settings.readContext)
-            func_params.push( function() {maxui.formatActivity(this.items, insert_at)})
+            func_params.push( function() {maxui.formatActivities(this.items, insert_at)})
 
         }
 

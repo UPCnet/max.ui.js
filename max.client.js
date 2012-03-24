@@ -212,7 +212,13 @@ MaxClient.prototype.addActivity = function(text,contexts,callback) {
        { query.contexts = contexts }
     query.object.content = text
 
-	route = this.ROUTES['user_activities'].format(this.actor.username);
+    //We have a generator
+    if (arguments.length>3)
+        {
+          query.generator = arguments[3]
+        }
+
+  	route = this.ROUTES['user_activities'].format(this.actor.username);
     this.POST(route,query,callback)
 };
 
