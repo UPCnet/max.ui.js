@@ -233,26 +233,31 @@
         maxui=this
         var text = jQuery('#maxui-newactivity textarea').val()
 
-        var func_params = []
-        func_params.push(text)
-        func_params.push(_MAXUI.settings.writeContexts)
-        func_params.push( function() {
-                              jQuery('#maxui-newactivity textarea').val('')
-                              var first = jQuery('.maxui-activity:first')
-                              if (first.length>0)
-                                  { filter = {after:first.attr('id')}
-                                    maxui.printActivities(filter)
-                                  }
-                              else {
-                                    maxui.printActivities()
-                                  }
-                              })
+        // Post activity only if has user entered text
+        if (text!=_MAXUI.settings.literals.new_activity_text & text!='')
+            {
+                var func_params = []
+                func_params.push(text)
+                func_params.push(_MAXUI.settings.writeContexts)
+                func_params.push( function() {
+                                      jQuery('#maxui-newactivity textarea').val('')
+                                      var first = jQuery('.maxui-activity:first')
+                                      if (first.length>0)
+                                          { filter = {after:first.attr('id')}
+                                            maxui.printActivities(filter)
+                                          }
+                                      else {
+                                            maxui.printActivities()
+                                          }
+                                      })
 
         //Pass generator to activity post if defined
         if (_MAXUI.settings.generatorName) { func_params.push(_MAXUI.settings.generatorName) }
 
         var activityAdder = this.maxClient.addActivity
         activityAdder.apply(this.maxClient, func_params)
+
+            }
 
     }
 
@@ -440,7 +445,7 @@
 
             if (insertAt == 'beggining')
             {
-                jQuery('#maxui-preload .wrapper').html(activity_items)
+                jQuery('#maxui-preload .wrapper').html(activities)
                 var ritems = jQuery('#maxui-preload .wrapper .maxui-activity')
                 var heightsum = 0
                 var lastheight = 0
