@@ -17,7 +17,9 @@
                            'new_activity_post': "Post activity",
                            'toggle_comments': "Comments",
                            'new_comment_post': "Post comment",
-                           'load_more': "Load more"
+                           'load_more': "Load more",
+                           'context_published_in': "Published in",
+                           'generator_via': "via"
             }
 
         // Update the default EN literals and delete from the options,

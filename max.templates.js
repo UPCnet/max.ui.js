@@ -57,8 +57,8 @@ var MSTCH_MAXUI_ACTIVITY = '\
     </div>\
     <div class="maxui-footer">\
         <div class="maxui-origin">\
-               {{#publishedIn}}Publicat a <a href="{{publishedIn.url}}">{{publishedIn.displayName}}</a> {{/publishedIn}} \
-               {{#via}} via {{via}} {{/via}}\
+               {{#publishedIn}}{{literals.context_published_in}} <a href="{{publishedIn.url}}">{{publishedIn.displayName}}</a> {{/publishedIn}} \
+               {{#via}} {{literals.generator_via}} {{via}} {{/via}}\
         </div>\
         <div class="maxui-actions">\
             <a href="" class="maxui-commentaction">\
