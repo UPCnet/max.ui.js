@@ -69,7 +69,7 @@
         this.maxClient.setMode(_MAXUI.settings.maxRequestsAPI)
         this.maxClient.setActor(_MAXUI.settings.username)
 
-        this.maxClient.getUserData('carles.bruguera', function() {
+        this.maxClient.getUserData(_MAXUI.settings.username, function() {
 
             //Determine if user can write in writeContexts
             var userSubscriptionPermissions = {}
