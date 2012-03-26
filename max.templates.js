@@ -26,10 +26,10 @@ var MSTCH_MAXUI_MAIN_UI = '\
           </div>\
           <div id="maxui-activities" class="activities">\
           </div>\
+          <div id="maxui-more-activities">\
+              <input type="button" class="load" value="{{literals.load_more}}">\
+          </div>\
       </div>\
-   </div>\
-   <div id="maxui-more-activities">\
-        <input type="button" class="load" value="{{literals.load_more}}">\
    </div>\
   </div>\
  </div>\

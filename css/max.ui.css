@@ -5,6 +5,7 @@
 
 #maxui-container {text-shadow: 0 1px #fff; font:13px/18px Arial, "HelveticaNeue","Helvetica Neue",Helvetica,sans-serif;color:#333;}
 
+#maxui-preload {height:0px;}
 .activities .maxui-activity {border-top: 1px #fff solid;border-bottom: 1px #ccc solid;width:100%;float:left;padding:8px 0;padding-left:0; min-height:51px;}
 
 #maxui-timeline  .wrapper {height:100%;}
