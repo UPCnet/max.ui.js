@@ -436,7 +436,7 @@
 
                     if (activity.hasOwnProperty('generator'))
                          {
-                            if (activity.generatorName!=_MAXUI.settings.generator)
+                            if (activity.generator!=_MAXUI.settings.generatorName)
                                 generator = activity.generator
                          }
 
