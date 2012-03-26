@@ -19,7 +19,8 @@
                            'new_comment_post': "Post comment",
                            'load_more': "Load more",
                            'context_published_in': "Published in",
-                           'generator_via': "via"
+                           'generator_via': "via",
+                           'search_text': "Search..."
             }
 
         // Update the default EN literals and delete from the options,
@@ -176,13 +177,66 @@
                       }
             });
 
+            // Execute search if <enter> pressed
+            jQuery('#maxui-search input#maxui-search-text').keyup(function(e) {
+                      if (e.keyCode == 13) {
+                         maxui.textSearch($(this).attr('value'))
+                      }
+            });
 
+            // Clear input when focusing in only if user hasn't typed anything yet
+            jQuery('#maxui-search input#maxui-search-text').focusin(function() {
+                      if ( jQuery(this).val()==_MAXUI.settings.literals.search_text )
+                          {jQuery(this).val('')
+                      jQuery(this).attr('class','')}
+            });
+
+            // Print the default search_text literal when focusing out, only
+            // if user hasn't typed anything yet
+            jQuery('#maxui-search input#maxui-search-text').focusout(function() {
+                      if ( jQuery(this).val()=='' )
+                          {jQuery(this).val(_MAXUI.settings.literals.search_text)
+                           jQuery(this).attr('class','empty')}
+                      else {
+                           jQuery(this).attr('class','')
+                      }
+            });
+
+            //Assign search action
+            jQuery('#maxui-search #maxui-search-box #maxui-search-action').on('click',function () {
+                event.preventDefault()
+
+                var text = $(this).parent().find('#maxui-search-text').attr('value')
+                maxui.textSearch(text)
+                })
         })
 
 
         // allow jQuery chaining
         return maxui;
     };
+
+
+    jQuery.fn.normalizeWhiteSpace = function (s) {
+        s = s.replace(/(^\s*)|(\s*$)/gi,"");
+        s = s.replace(/[ ]{2,}/gi," ");
+        s = s.replace(/\n /,"\n");
+        return s;
+    }
+
+    jQuery.fn.textSearch = function (text) {
+                //Normalize spaces
+                normalized = this.normalizeWhiteSpace(text)
+                var keywords = normalized.split(' ')
+                for (kw=0;kw<keywords.length;kw++)
+                {
+                    var keyword = keywords[kw]
+                    if (keyword.length>=3)
+                        this.addFilter({type:'keyword', value:keyword}, false)
+                }
+                this.reloadFilters()
+    }
+
 
     /*
     *    Reloads the current filters UI and executes the search
@@ -231,6 +285,11 @@
     */
     jQuery.fn.addFilter = function(filter) {
 
+        var reload=true
+        //Reload or not by func argument
+        if (arguments.length>1)
+            reload=arguments[1]
+
         if (!window._MAXUI.filters)
             { window._MAXUI.filters = []}
 
@@ -242,7 +301,8 @@
          if (!already_filtered)
          {
             window._MAXUI.filters.push(filter)
-            this.reloadFilters()
+            if(reload==true)
+                this.reloadFilters()
          }
     }
 
@@ -458,7 +518,7 @@
                                                          date: maxui.formatDate(comment.published),
                                                          text: maxui.formatText(comment.content),
                                                     avatarURL: _MAXUI.settings.avatarURLpattern.format(comment.author.username),
-                                                   profileURL: _MAXUI.settings.profileURLpattern.format(comment.author.username),
+                                                   profileURL: _MAXUI.settings.profileURLpattern.format(comment.author.username)
 
                                                 }
                                         replies.items.push(reply)
@@ -477,9 +537,7 @@
                                     avatarURL: _MAXUI.settings.avatarURLpattern.format(activity.actor.username),
                                    profileURL: _MAXUI.settings.profileURLpattern.format(activity.actor.username),
                                   publishedIn: contexts,
-                                          via: generator,
-
-
+                                          via: generator
                                  }
                     // Render the activities template and append it at the end of the rendered activities
                     var partials = {comment: MAXUI_COMMENT}
@@ -553,8 +611,7 @@
                                          date: maxui.formatDate(comment.published),
                                          text: maxui.formatText(comment.content),
                                     avatarURL: _MAXUI.settings.avatarURLpattern.format(comment.author.username),
-                                   profileURL: _MAXUI.settings.profileURLpattern.format(comment.author.username),
-
+                                   profileURL: _MAXUI.settings.profileURLpattern.format(comment.author.username)
                                  }
                     // Render the comment template and append it at the end of the rendered comments
                     var comments = comments + MAXUI_COMMENT.render(params)

@@ -5,6 +5,7 @@ var MSTCH_MAXUI_MAIN_UI = '\
 <div id="maxui-container">\
 {{#username}}\
  <div id="maxui-mainpanel">\
+\
    {{#allowPosting}}\
    <div id="maxui-newactivity">\
       <a href="{{profile}}" class="maxui-avatar">\
@@ -16,8 +17,16 @@ var MSTCH_MAXUI_MAIN_UI = '\
       </div>\
    </div>\
    {{/allowPosting}}\
-   <div id="maxui-search-filters">\
+\
+   <div id="maxui-search">\
+       <a id="maxui-search-toggle" href="">O</a>\
+       <div id="maxui-search-box">\
+          <input id="maxui-search-text" type="text" value="{{literals.search_text}}"></input>\
+          <input id="maxui-search-action" type="button"></input>\
+       </div>\
+       <div id="maxui-search-filters"></div>\
    </div>\
+\
    <div id="maxui-timeline">\
       <div class="wrapper">\
           <div id="maxui-preload" class="activities" style="height:0px;overflow:hidden">\
