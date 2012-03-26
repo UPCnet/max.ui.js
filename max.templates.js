@@ -53,7 +53,7 @@ var MSTCH_MAXUI_ACTIVITY = '\
           <span class="maxui-username">{{actor.username}}</span>\
         </div>\
         <div>\
-            <p class="maxui-body">{{text}}</p>\
+            <p class="maxui-body">{{&text}}</p>\
         </div>\
         <div class="maxui-publisheddate"></div>\
     </div>\
@@ -104,7 +104,7 @@ var MSTCH_MAXUI_COMMENT = '\
 	   <span class="maxui-username">{{author.username}}</span>\
         </div>\
         <div>\
-            <p class="maxui-body">{{text}}</p>\
+            <p class="maxui-body">{{&text}}</p>\
         </div>\
         <div class="maxui-publisheddate"></div>\
     </div>\
