@@ -150,12 +150,17 @@ MaxClient.prototype.GET = function(route, query, callback) {
 MaxClient.prototype.getUserTimeline = function(username, callback) {
 	var route = this.ROUTES['timeline'].format(username);
   if (arguments.length>2)
-      query=arguments[2]
+      var query=arguments[2]
   else
-      query={}
+      var query={}
   this.GET(route,query,callback)
 };
 
+MaxClient.prototype.getUserData = function(username, callback) {
+    var route = this.ROUTES['user'].format(username);
+    var query = {}
+    this.GET(route,query,callback)
+};
 
 MaxClient.prototype.getActivities = function(username, context, callback) {
   var route = this.ROUTES['activities'];

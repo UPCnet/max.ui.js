@@ -69,74 +69,116 @@
         this.maxClient.setMode(_MAXUI.settings.maxRequestsAPI)
         this.maxClient.setActor(_MAXUI.settings.username)
 
-        // render main interface using partials
-        var params = jQuery.extend(_MAXUI.settings,{'avatar':_MAXUI.settings.avatarURLpattern.format(_MAXUI.settings.username),
-                                                    'profile':_MAXUI.settings.profileURLpattern.format(_MAXUI.settings.username)
-                                                   })
-        var mainui = MAXUI_MAIN_UI.render(params)
-        this.html(mainui)
-        this.printActivities()
+        this.maxClient.getUserData('carles.bruguera', function() {
 
-        //Assign click to post action
-        jQuery('#maxui-newactivity .send').click(function () {
-            maxui.sendActivity()
-            })
+            //Determine if user can write in writeContexts
+            var userSubscriptionPermissions = {}
+            if (this.subscribedTo)
+            {
+                if (this.subscribedTo.items)
+                {
+                    if (this.subscribedTo.items.length>0)
+                    {
+                        for (sc=0;sc<this.subscribedTo.items.length;sc++)
+                        {
+                            var subscription = this.subscribedTo.items[sc]
+                            userSubscriptionPermissions[subscription.url]={}
+                            for (pm=0;pm<subscription.permissions.length;pm++)
+                            {
+                                var permission=subscription.permissions[pm]
+                                userSubscriptionPermissions[subscription.url][permission]=true
+                            }
+                        }
+                    }
+                }
+            }
+            var canwrite = true
 
-        //Assign click to loadmore
-        jQuery('#maxui-more-activities .load').click(function () {
-            maxui.loadMoreActivities()
-            })
+            for (wc=0;wc<_MAXUI.settings.writeContexts.length;wc++)
+                {
+                    var write_context = _MAXUI.settings.writeContexts[wc]
+                    if (userSubscriptionPermissions[write_context])
+                    {
+                      if (userSubscriptionPermissions[write_context].write==false)
+                      {
+                          canwrite = false
+                      }
+                    }
+                    else { canwrite = false }
+                }
+            // render main interface using partials
+            var params = jQuery.extend(_MAXUI.settings,{'avatar':_MAXUI.settings.avatarURLpattern.format(_MAXUI.settings.username),
+                                                        'profile':_MAXUI.settings.profileURLpattern.format(_MAXUI.settings.username),
+                                                        'allowPosting': canwrite
+                                                       })
+            var mainui = MAXUI_MAIN_UI.render(params)
+            maxui.html(mainui)
+            maxui.printActivities()
 
-        //Assign Commentbox toggling via delegating the click to the activities container
-        jQuery('#maxui-activities').on('click','.maxui-commentaction',function (event) {
-            event.preventDefault()
-            window.status=''
-            jQuery(this).closest('.maxui-activity').find('.maxui-comments').toggle()
-            })
+            //Assign click to post action
+            jQuery('#maxui-newactivity .send').click(function () {
+                maxui.sendActivity()
+                })
 
-        //Assign hashtag filtering via delegating the click to the activities container
-        jQuery('#maxui-activities').on('click','.maxui-hashtag',function () {
-            event.preventDefault()
-            maxui.addFilter({type:'hashtag', value:$(this).attr('value')})
-            })
+            //Assign click to loadmore
+            jQuery('#maxui-more-activities .load').click(function () {
+                maxui.loadMoreActivities()
+                })
 
-        //Assign filter closing via delegating the click to the filters container
-        jQuery('#maxui-search-filters').on('click','.close',function () {
-            event.preventDefault()
-            var filter = $(this.parentNode.parentNode)
-            maxui.delFilter({type:filter.attr('type'), value:filter.attr('value')})
-            })
+            //Assign Commentbox toggling via delegating the click to the activities container
+            jQuery('#maxui-activities').on('click','.maxui-commentaction',function (event) {
+                event.preventDefault()
+                window.status=''
+                jQuery(this).closest('.maxui-activity').find('.maxui-comments').toggle()
+                })
 
-        //Assign Commentbox send comment via delegating the click to the activities container
-        jQuery('#maxui-activities').on('click','.maxui-comments .send',function(event){
-           event.preventDefault()
-           var text = jQuery(this).closest('.maxui-comments').find('textarea').val()
-           var activityid = jQuery(this).closest('.maxui-activity').attr('id')
+            //Assign hashtag filtering via delegating the click to the activities container
+            jQuery('#maxui-activities').on('click','.maxui-hashtag',function () {
+                event.preventDefault()
+                maxui.addFilter({type:'hashtag', value:$(this).attr('value')})
+                })
 
-           maxui.maxClient.addComment(text, activityid, function() {
-                        jQuery('#activityContainer textarea').val('')
-                        var activity_id = this.object.inReplyTo[0].id
-                        maxui.printCommentsForActivity(activity_id)
-                        })
-          });
+            //Assign filter closing via delegating the click to the filters container
+            jQuery('#maxui-search-filters').on('click','.close',function () {
+                event.preventDefault()
+                var filter = $(this.parentNode.parentNode)
+                maxui.delFilter({type:filter.attr('type'), value:filter.attr('value')})
+                })
 
-        // Clear textarea when focusing in only if user hasn't typed anything yet
-        jQuery('#maxui-newactivity textarea').focusin(function() {
-                  if ( jQuery(this).val()==_MAXUI.settings.literals.new_activity_text )
-                      {jQuery(this).val('')
-                  jQuery(this).attr('class','')}
-        });
+            //Assign Commentbox send comment via delegating the click to the activities container
+            jQuery('#maxui-activities').on('click','.maxui-comments .send',function(event){
+               event.preventDefault()
+               var text = jQuery(this).closest('.maxui-comments').find('textarea').val()
+               var activityid = jQuery(this).closest('.maxui-activity').attr('id')
 
-        // Print the default new_activity_text literal when focusing out, only
-        // if user hasn't typed anything yet
-        jQuery('#maxui-newactivity textarea').focusout(function() {
-                  if ( jQuery(this).val()=='' )
-                      {jQuery(this).val(_MAXUI.settings.literals.new_activity_text)
-                       jQuery(this).attr('class','empty')}
-                  else {
-                       jQuery(this).attr('class','')
-                  }
-        });
+               maxui.maxClient.addComment(text, activityid, function() {
+                            jQuery('#activityContainer textarea').val('')
+                            var activity_id = this.object.inReplyTo[0].id
+                            maxui.printCommentsForActivity(activity_id)
+                            })
+              });
+
+            // Clear textarea when focusing in only if user hasn't typed anything yet
+            jQuery('#maxui-newactivity textarea').focusin(function() {
+                      if ( jQuery(this).val()==_MAXUI.settings.literals.new_activity_text )
+                          {jQuery(this).val('')
+                      jQuery(this).attr('class','')}
+            });
+
+            // Print the default new_activity_text literal when focusing out, only
+            // if user hasn't typed anything yet
+            jQuery('#maxui-newactivity textarea').focusout(function() {
+                      if ( jQuery(this).val()=='' )
+                          {jQuery(this).val(_MAXUI.settings.literals.new_activity_text)
+                           jQuery(this).attr('class','empty')}
+                      else {
+                           jQuery(this).attr('class','')
+                      }
+            });
+
+
+        })
+
 
         // allow jQuery chaining
         return maxui;
@@ -382,8 +424,8 @@
                     var activity = items[i]
 
                     var contexts = undefined
-                    if (activity.hasOwnProperty('contexts')) 
-                         { 
+                    if (activity.hasOwnProperty('contexts'))
+                         {
                              if (activity.contexts.length>0)
                                  {
                                       contexts = activity.contexts[0]
@@ -392,9 +434,10 @@
 
                     var generator = undefined
 
-                    if (activity.hasOwnProperty('generator')) 
-                         { 
-                             generator = activity.generator
+                    if (activity.hasOwnProperty('generator'))
+                         {
+                            if (activity.generatorName!=_MAXUI.settings.generator)
+                                generator = activity.generator
                          }
 
                     var replies = undefined
@@ -411,7 +454,7 @@
                                         console.log(comment)
                                         reply = {
                                                            id: comment.id,
-                                                       author: comment.author,  
+                                                       author: comment.author,
                                                          date: maxui.formatDate(comment.published),
                                                          text: maxui.formatText(comment.content),
                                                     avatarURL: _MAXUI.settings.avatarURLpattern.format(comment.author.username),
@@ -424,7 +467,7 @@
                         }
 
 
-                    var params = {   
+                    var params = {
                                            id: activity.id,
                                         actor: activity.actor,
                                      literals:_MAXUI.settings.literals,
@@ -443,7 +486,7 @@
                     var activities = activities + MAXUI_ACTIVITY.render(params, partials)
                 }
 
-            
+
 
             if (insertAt == 'beggining')
             {
@@ -506,7 +549,7 @@
 
                     var params = {   literals:_MAXUI.settings.literals,
                                            id: comment.id,
-                                       author: comment.author,  
+                                       author: comment.author,
                                          date: maxui.formatDate(comment.published),
                                          text: maxui.formatText(comment.content),
                                     avatarURL: _MAXUI.settings.avatarURLpattern.format(comment.author.username),

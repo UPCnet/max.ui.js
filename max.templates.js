@@ -5,6 +5,7 @@ var MSTCH_MAXUI_MAIN_UI = '\
 <div id="maxui-container">\
 {{#username}}\
  <div id="maxui-mainpanel">\
+   {{#allowPosting}}\
    <div id="maxui-newactivity">\
       <a href="{{profile}}" class="maxui-avatar">\
           <img src="{{avatar}}">\
@@ -14,6 +15,7 @@ var MSTCH_MAXUI_MAIN_UI = '\
            <input type="button" class="send" value="{{literals.new_activity_post}}">\
       </div>\
    </div>\
+   {{/allowPosting}}\
    <div id="maxui-search-filters">\
    </div>\
    <div id="maxui-timeline">\
