@@ -129,7 +129,7 @@
             jQuery('#maxui-activities').on('click','.maxui-commentaction',function (event) {
                 event.preventDefault()
                 window.status=''
-                jQuery(this).closest('.maxui-activity').find('.maxui-comments').toggle()
+                jQuery(this).closest('.maxui-activity').find('.maxui-comments').toggle(200)
                 })
 
             //Assign hashtag filtering via delegating the click to the activities container
@@ -490,26 +490,26 @@
 
             if (insertAt == 'beggining')
             {
-                jQuery('#maxui-preload .wrapper').html(activities)
+                jQuery('#maxui-preload .wrapper').prepend(activities)
                 var ritems = jQuery('#maxui-preload .wrapper .maxui-activity')
                 var heightsum = 0
-                var lastheight = 0
                 for (i=0;i<ritems.length;i++)
                     {
-                      lastheight = $(ritems[i]).height()+18
-                      if (i<ritems.length-1)
-                          heightsum+= lastheight
+                      heightsum += $(ritems[i]).height()+18
                     }
 
-                console.log(heightsum)
-                console.log(lastheight)
 
-                jQuery('#maxui-preload').height(heightsum)
-                jQuery('#maxui-preload').animate({height:heightsum+lastheight}, 300, function()
+
+                var currentPreloadHeight = jQuery('#maxui-preload').height()
+                jQuery('#maxui-preload').height(heightsum-currentPreloadHeight)
+                console.log((heightsum-currentPreloadHeight)*-1)
+                jQuery('#maxui-preload').css( {"margin-top":(heightsum-currentPreloadHeight)*-1})
+
+                jQuery('#maxui-preload').animate({"margin-top":0}, 200, function()
                    {
-                       jQuery('#maxui-preload .wrapper').html("")
-                       jQuery('#maxui-activities').prepend(activities)
-                       jQuery('#maxui-preload').height(0)
+                        jQuery('#maxui-preload .wrapper').html("")
+                        jQuery('#maxui-activities').prepend(activities)
+                        jQuery('#maxui-preload').height(0)
 
                    })
 
