@@ -15,14 +15,15 @@ jQuery().ready(function() {
 
     var settings = {
            'literals': literals_ca,
-           'username' : 'janet.dura@upcnet.es',
-           'oAuthToken' : '4d53575d0d9582839c510b3302ac1f2c',
-           'oAuthGrantType' : 'alumni',
+           'username' : 'carles.bruguera',
+           'oAuthToken' : 'eb0d4b6c2a44ac90db29d2bbb172cba1',
+           'oAuthGrantType' : 'password',
            'maxServerURL' : 'http://localhost:8081',
-           'maxServerURLAlias' : 'http://sheldon.upc.es/max',
-           'avatarURLpattern' : 'https://devel.upcnet.es/clubs/avatar/{0}',
-           'contextFilter': ['http://sheldon:8080/club'],
-           'activitySource': 'activities'
+//           'maxServerURLAlias' : 'http://sheldon.upc.es/max',
+//           'avatarURLpattern' : '',
+           'readContext': 'http://eider',
+           'activitySource': 'activities',
+           'generatorName': 'EiderApp'
            }
 
 //  var settings = {

@@ -150,14 +150,19 @@ MaxClient.prototype.GET = function(route, query, callback) {
 MaxClient.prototype.getUserTimeline = function(username, callback) {
 	var route = this.ROUTES['timeline'].format(username);
   if (arguments.length>2)
-      query=arguments[2]
+      var query=arguments[2]
   else
-      query={}
+      var query={}
   this.GET(route,query,callback)
 };
 
+MaxClient.prototype.getUserData = function(username, callback) {
+    var route = this.ROUTES['user'].format(username);
+    var query = {}
+    this.GET(route,query,callback)
+};
 
-MaxClient.prototype.getActivities = function(username, contexts, callback) {
+MaxClient.prototype.getActivities = function(username, context, callback) {
   var route = this.ROUTES['activities'];
   if (arguments.length>3)
     {
@@ -167,9 +172,9 @@ MaxClient.prototype.getActivities = function(username, contexts, callback) {
     {
       query={}
     }
-  if (contexts.length>0)
+  if (context)
       { //construir la query string
-        query.contexts = contexts
+        query.context = context
        }
   this.GET(route,query,callback)
 };
@@ -212,7 +217,13 @@ MaxClient.prototype.addActivity = function(text,contexts,callback) {
        { query.contexts = contexts }
     query.object.content = text
 
-	route = this.ROUTES['user_activities'].format(this.actor.username);
+    //We have a generator
+    if (arguments.length>3)
+        {
+          query.generator = arguments[3]
+        }
+
+  	route = this.ROUTES['user_activities'].format(this.actor.username);
     this.POST(route,query,callback)
 };
 
