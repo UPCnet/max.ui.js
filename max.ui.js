@@ -13,9 +13,10 @@
             { window._MAXUI = {}}
 
         // Define default english literals
-        var literals_en = {'new_activity_text': 'Write something',
+        var literals_en = {'new_activity_text': 'Write something...',
                            'new_activity_post': "Post activity",
                            'toggle_comments': "Comments",
+                           'new_comment_text': "Comment something...",
                            'new_comment_post': "Post comment",
                            'load_more': "Load more",
                            'context_published_in': "Published in",
@@ -114,113 +115,155 @@
                                                        })
             var mainui = MAXUI_MAIN_UI.render(params)
             maxui.html(mainui)
-            maxui.printActivities()
+            maxui.printActivities({},function() {
 
-            //Assign click to post action
-            jQuery('#maxui-newactivity .send').click(function () {
-                maxui.sendActivity()
-                })
+                  //Assign click to loadmore
+                  jQuery('#maxui-more-activities .maxui-button').click(function () {
+                      maxui.loadMoreActivities()
+                      })
 
-            //Assign click to loadmore
-            jQuery('#maxui-more-activities .load').click(function () {
-                maxui.loadMoreActivities()
-                })
+                  //Assign Commentbox toggling via delegating the click to the activities container
+                  jQuery('#maxui-activities').on('click','.maxui-commentaction',function (event) {
+                      event.preventDefault()
+                      window.status=''
+                      jQuery(this).closest('.maxui-activity').find('.maxui-comments').toggle(200)
+                      })
 
-            //Assign Commentbox toggling via delegating the click to the activities container
-            jQuery('#maxui-activities').on('click','.maxui-commentaction',function (event) {
-                event.preventDefault()
-                window.status=''
-                jQuery(this).closest('.maxui-activity').find('.maxui-comments').toggle(200)
-                })
+                  //Assign hashtag filtering via delegating the click to the activities container
+                  jQuery('#maxui-activities').on('click','.maxui-hashtag',function () {
+                      event.preventDefault()
+                      maxui.addFilter({type:'hashtag', value:$(this).attr('value')})
+                      })
 
-            //Assign hashtag filtering via delegating the click to the activities container
-            jQuery('#maxui-activities').on('click','.maxui-hashtag',function () {
-                event.preventDefault()
-                maxui.addFilter({type:'hashtag', value:$(this).attr('value')})
-                })
+                  //Assign filter closing via delegating the click to the filters container
+                  jQuery('#maxui-search-filters').on('click','.close',function () {
+                      event.preventDefault()
+                      var filter = $(this.parentNode.parentNode)
+                      maxui.delFilter({type:filter.attr('type'), value:filter.attr('value')})
+                      })
 
-            //Assign filter closing via delegating the click to the filters container
-            jQuery('#maxui-search-filters').on('click','.close',function () {
-                event.preventDefault()
-                var filter = $(this.parentNode.parentNode)
-                maxui.delFilter({type:filter.attr('type'), value:filter.attr('value')})
-                })
+                  //Assign Activity post action And textarea behaviour
+                  maxui.bindActionBehaviourOnce('#maxui-newactivity-box', _MAXUI.settings.literals.new_activity_text, function(text)
+                          {
+                          maxui.sendActivity(text)
+                          })
 
-            //Assign Commentbox send comment via delegating the click to the activities container
-            jQuery('#maxui-activities').on('click','.maxui-comments .send',function(event){
-               event.preventDefault()
-               var text = jQuery(this).closest('.maxui-comments').find('textarea').val()
-               var activityid = jQuery(this).closest('.maxui-activity').attr('id')
+                  //Assign Commentbox send comment action And textarea behaviour
+                  maxui.bindActionBehaviourMany('#maxui-activities', '.maxui-newcommentbox', _MAXUI.settings.literals.new_comment_text, function(text)
+                         {
+                         var activityid = jQuery(this).closest('.maxui-activity').attr('id')
+                         maxui.maxClient.addComment(text, activityid, function() {
+                                      jQuery('#activityContainer textarea').val('')
+                                      var activity_id = this.object.inReplyTo[0].id
+                                      maxui.printCommentsForActivity(activity_id)
+                                      })
+                        })
 
-               maxui.maxClient.addComment(text, activityid, function() {
-                            jQuery('#activityContainer textarea').val('')
-                            var activity_id = this.object.inReplyTo[0].id
-                            maxui.printCommentsForActivity(activity_id)
-                            })
-              });
-
-            // Clear textarea when focusing in only if user hasn't typed anything yet
-            jQuery('#maxui-newactivity textarea').focusin(function() {
-                      if ( jQuery(this).val()==_MAXUI.settings.literals.new_activity_text )
-                          {jQuery(this).val('')
-                      jQuery(this).attr('class','')}
-            });
-
-            // Print the default new_activity_text literal when focusing out, only
-            // if user hasn't typed anything yet
-            jQuery('#maxui-newactivity textarea').focusout(function() {
-                      if ( jQuery(this).val()=='' )
-                          {jQuery(this).val(_MAXUI.settings.literals.new_activity_text)
-                           jQuery(this).attr('class','empty')}
-                      else {
-                           jQuery(this).attr('class','')
-                      }
-            });
-
-            // Execute search if <enter> pressed
-            jQuery('#maxui-search input#maxui-search-text').keyup(function(e) {
-                      if (e.keyCode == 13) {
-                         maxui.textSearch($(this).attr('value'))
-                      }
-            });
-
-            // Clear input when focusing in only if user hasn't typed anything yet
-            jQuery('#maxui-search input#maxui-search-text').focusin(function() {
-                      if ( jQuery(this).val()==_MAXUI.settings.literals.search_text )
-                          {jQuery(this).val('')
-                      jQuery(this).attr('class','')}
-            });
-
-            // Print the default search_text literal when focusing out, only
-            // if user hasn't typed anything yet
-            jQuery('#maxui-search input#maxui-search-text').focusout(function() {
-                      if ( jQuery(this).val()=='' )
-                          {jQuery(this).val(_MAXUI.settings.literals.search_text)
-                           jQuery(this).attr('class','empty')}
-                      else {
-                           jQuery(this).attr('class','')
-                      }
-            });
-
-            //Assign search action
-            jQuery('#maxui-search #maxui-search-box #maxui-search-action').on('click',function () {
-                event.preventDefault()
-
-                var text = $(this).parent().find('#maxui-search-text').attr('value')
-                maxui.textSearch(text)
-                })
+                  //Assign Search box search action And input behaviour
+                  maxui.bindActionBehaviourOnce('#maxui-search-box', _MAXUI.settings.literals.search_text, function(text)
+                         {
+                         maxui.textSearch(text)
+                         })
+                  // Execute search if <enter> pressed
+                  jQuery('#maxui-search .maxui-text-input').keyup(function(e) {
+                            if (e.keyCode == 13) {
+                               maxui.textSearch($(this).attr('value'))
+                            }
+                  });
+              })
         })
-
 
         // allow jQuery chaining
         return maxui;
     };
 
 
-    jQuery.fn.normalizeWhiteSpace = function (s) {
+    jQuery.fn.bindActionBehaviourMany = function(delegate, target, literal, clickFunction) {
+
+        // Clear input when focusing in only if user hasn't typed anything yet
+        var maxui = this
+        var selector = target+' .maxui-text-input'
+        jQuery(delegate)
+
+        .on('focusin',selector, function() {
+                  if ( jQuery(this).val()==literal )
+                      {
+                       jQuery(this).val('')
+                       jQuery(this).attr('class','empty maxui-text-input')
+                     }
+                  else {
+                       jQuery(this).attr('class','maxui-text-input')
+                  }
+
+        })
+
+        .on('focusout',selector, function() {
+                  if ( jQuery(this).val()=='' )
+                      {jQuery(this).val(literal)
+                       jQuery(this).attr('class','empty maxui-text-input')}
+                  else {
+                       jQuery(this).attr('class','maxui-text-input')
+                  }
+        })
+
+        .on('click',target+' .maxui-button',function () {
+            event.preventDefault()
+            var text = $(this).parent().find('.maxui-text-input').val()
+            var normalized = maxui.normalizeWhiteSpace(text,false)
+            if (normalized!=literal & normalized!='')
+                clickFunction.apply(this,[text])
+            })
+
+    }
+
+    jQuery.fn.bindActionBehaviourOnce = function(target, literal, clickFunction) {
+
+        // Clear input when focusing in only if user hasn't typed anything yet
+        var maxui = this
+        jQuery(target+' .maxui-text-input')
+
+        .focusin(function() {
+                  if ( jQuery(this).val()==literal )
+                      {
+                       jQuery(this).val('')
+                       jQuery(this).attr('class','empty maxui-text-input')
+                     }
+                  else {
+                       jQuery(this).attr('class','maxui-text-input')
+                  }
+        })
+
+        .focusout(function() {
+                  if ( jQuery(this).val()=='' )
+                      {jQuery(this).val(literal)
+                       jQuery(this).attr('class','empty maxui-text-input')}
+                  else {
+                       jQuery(this).attr('class','maxui-text-input')
+                  }
+        })
+
+        jQuery(target+' .maxui-button')
+        .click(function () {
+            event.preventDefault()
+
+            var text = $(this).parent().find('.maxui-text-input').val()
+            var normalized = maxui.normalizeWhiteSpace(text,false)
+            if (normalized!=literal & normalized!='')
+                clickFunction.apply(this,[text])
+            })
+
+    }
+
+    jQuery.fn.normalizeWhiteSpace = function (s, multi) {
+
         s = s.replace(/(^\s*)|(\s*$)/gi,"");
-        s = s.replace(/[ ]{2,}/gi," ");
         s = s.replace(/\n /,"\n");
+
+        var trimMulti=true
+        if (arguments.length>1)
+            trimMulti=multi
+        if (trimMulti==true)
+            s = s.replace(/[ ]{2,}/gi," ");
         return s;
     }
 
@@ -336,32 +379,26 @@
     jQuery.fn.sendActivity = function () {
         maxui=this
         var text = jQuery('#maxui-newactivity textarea').val()
-
-        // Post activity only if has user entered text
-        if (text!=_MAXUI.settings.literals.new_activity_text & text!='')
-            {
-                var func_params = []
-                func_params.push(text)
-                func_params.push(_MAXUI.settings.writeContexts)
-                func_params.push( function() {
-                                      jQuery('#maxui-newactivity textarea').val('')
-                                      var first = jQuery('.maxui-activity:first')
-                                      if (first.length>0)
-                                          { filter = {after:first.attr('id')}
-                                            maxui.printActivities(filter)
-                                          }
-                                      else {
-                                            maxui.printActivities()
-                                          }
-                                      })
+        var func_params = []
+        func_params.push(text)
+        func_params.push(_MAXUI.settings.writeContexts)
+        func_params.push( function() {
+                              jQuery('#maxui-newactivity textarea').val('')
+                              var first = jQuery('.maxui-activity:first')
+                              if (first.length>0)
+                                  { filter = {after:first.attr('id')}
+                                    maxui.printActivities(filter)
+                                  }
+                              else {
+                                    maxui.printActivities()
+                                  }
+                              })
 
         //Pass generator to activity post if defined
         if (_MAXUI.settings.generatorName) { func_params.push(_MAXUI.settings.generatorName) }
 
         var activityAdder = this.maxClient.addActivity
         activityAdder.apply(this.maxClient, func_params)
-
-            }
 
     }
 
@@ -511,7 +548,6 @@
                                     for (r=0;r<activity.replies.items.length;r++)
                                         {
                                         var comment = activity.replies.items[r]
-                                        console.log(comment)
                                         reply = {
                                                            id: comment.id,
                                                        author: comment.author,
@@ -560,7 +596,6 @@
 
                 var currentPreloadHeight = jQuery('#maxui-preload').height()
                 jQuery('#maxui-preload').height(heightsum-currentPreloadHeight)
-                console.log((heightsum-currentPreloadHeight)*-1)
                 jQuery('#maxui-preload').css( {"margin-top":(heightsum-currentPreloadHeight)*-1})
 
                 jQuery('#maxui-preload').animate({"margin-top":0}, 200, function()
@@ -578,6 +613,12 @@
                 jQuery('#maxui-activities').append(activities)
             else
                 jQuery('#maxui-activities').html(activities)
+
+          // Has a callback
+          if (arguments.length>2)
+              {
+                arguments[2].call()
+              }
 
         }
 
@@ -656,7 +697,7 @@
     /*
     *    Renders the timeline of the current user, defined in settings.username
     */
-    jQuery.fn.printActivities = function() {
+    jQuery.fn.printActivities = function(filters) {
         // save a reference to the container object to be able to access it
         // from callbacks defined in inner levels
         var maxui = this
@@ -664,38 +705,39 @@
         var func_params = []
         var insert_at = 'replace'
 
-        if (arguments.length>0)
-           {
-             if (arguments[0].before)
-                 {insert_at = 'end'}
-             if (arguments[0].after)
-                 {insert_at = 'beggining'}
+        if (filters.before)
+            {insert_at = 'end'}
+        if (filters.after)
+            {insert_at = 'beggining'}
 
-           }
 
 
         if (_MAXUI.settings.activitySource=='timeline')
         {
             var activityRetriever = this.maxClient.getUserTimeline
             func_params.push(_MAXUI.settings.username)
-            func_params.push( function() {maxui.formatActivities(this.items, insert_at)})
         }
         else if (_MAXUI.settings.activitySource=='activities')
         {
             var activityRetriever = this.maxClient.getActivities
             func_params.push(_MAXUI.settings.username)
             func_params.push(_MAXUI.settings.readContext)
-            func_params.push( function() {maxui.formatActivities(this.items, insert_at)})
-
         }
+
+        if (arguments.length>1)
+        {
+            var callback = arguments[1]
+            func_params.push( function() {maxui.formatActivities(this.items, insert_at, callback)})
+        }
+        else
+        {
+            func_params.push( function() {maxui.formatActivities(this.items, insert_at)})
+        }
+
 
         // if passed as param, assume an object with search filtering params
         // one or all of [limit, before, after, hashtag]
-        if (arguments.length>0)
-           {
-             func_params.push(arguments[0])
-           }
-
+        func_params.push(filters)
 
         activityRetriever.apply(this.maxClient,func_params)
         }

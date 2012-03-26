@@ -32,8 +32,8 @@ overflow: auto;resize: vertical ;
 
 .maxui-comment {padding:1px 0 0;}
 	.maxui-comments textarea {width:100%;}
-.maxui-commentsbox {min-height:32px;}
-.maxui-newcommentbutton {text-align:right;}
+
+.maxui-newcommentbox {text-align:right;}
 
 #maxui-newactivity textarea, .maxui-comments textarea {
 width:97.75% \0/;
@@ -44,8 +44,9 @@ min-height:45px \0/;
 *min-height:45px;
 }
 
-input.load {width:100% !important; margin:10px 0 !important;}
-input.send, input.load {
+#maxui-more-activities input.maxui-button {width:100% !important; margin:10px 0 !important;}
+
+input.maxui-button {
 border:1px solid #b2b2b2;
 border-radius:3px;
 
@@ -59,8 +60,8 @@ filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffff', endC
 background: -webkit-gradient(linear, left top, left bottom, from(#ffffff), to(#f2f2f2)); /* for webkit browsers */
 background: -moz-linear-gradient(top,  #ffffff,  #f2f2f2); /* for firefox 3.6+ */
 }
-input.send:hover, input.load:hover, input.send:focus, input.load:focus {border:1px solid #999; background: #f2f2f2; cursor:pointer; color:#005ea0; box-shadow:0 1px 5px rgba(0,0,0,.1);}
-input.send:active, input.load:active {background: #e5e5e5;filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#e5e5e5', endColorstr='#f2f2f2'); /* for IE */background: -webkit-gradient(linear, left top, left bottom, from(#e5e5e5), to(#f2f2f2)); /* for webkit browsers */background: -moz-linear-gradient(top,  #e5e5e5,  #f2f2f2); /* for firefox 3.6+ */ color:#666;}
+input.maxui-button:hover, input.maxui-button:hover, input.maxui-button:focus, input.maxui-button:focus {border:1px solid #999; background: #f2f2f2; cursor:pointer; color:#005ea0; box-shadow:0 1px 5px rgba(0,0,0,.1);}
+input.maxui-button:active, input.maxui-button:active {background: #e5e5e5;filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#e5e5e5', endColorstr='#f2f2f2'); /* for IE */background: -webkit-gradient(linear, left top, left bottom, from(#e5e5e5), to(#f2f2f2)); /* for webkit browsers */background: -moz-linear-gradient(top,  #e5e5e5,  #f2f2f2); /* for firefox 3.6+ */ color:#666;}
 
 #maxui-timeline {clear:both;margin:0;border-top: 1px #ccc solid;overflow: hidden;}
 
@@ -82,7 +83,7 @@ input.send:active, input.load:active {background: #e5e5e5;filter: progid:DXImage
 .activities .maxui-footer {}
 #maxui-newactivity div {}
 
-#maxui-newactivity .textbox {margin-left:56px;width:auto; text-align:right;}
+#maxui-newactivity #maxui-newactivity-box {margin-left:56px;width:auto; text-align:right;}
 
 .maxui-clear {clear:both;float:none;}
 

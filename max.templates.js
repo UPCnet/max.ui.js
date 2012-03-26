@@ -11,9 +11,9 @@ var MSTCH_MAXUI_MAIN_UI = '\
       <a href="{{profile}}" class="maxui-avatar">\
           <img src="{{avatar}}">\
       </a>\
-      <div class="textbox">\
-           <textarea>{{literals.new_activity_text}}</textarea>\
-           <input type="button" class="send" value="{{literals.new_activity_post}}">\
+      <div id="maxui-newactivity-box">\
+           <textarea class="empty maxui-text-input">{{literals.new_activity_text}}</textarea>\
+           <input type="button" class="maxui-button" value="{{literals.new_activity_post}}">\
       </div>\
    </div>\
    {{/allowPosting}}\
@@ -21,8 +21,8 @@ var MSTCH_MAXUI_MAIN_UI = '\
    <div id="maxui-search">\
        <a id="maxui-search-toggle" href="">O</a>\
        <div id="maxui-search-box">\
-          <input id="maxui-search-text" type="text" value="{{literals.search_text}}"></input>\
-          <input id="maxui-search-action" type="button"></input>\
+          <input id="maxui-search-text" ctype="text" class="empty maxui-text-input" value="{{literals.search_text}}"></input>\
+          <input id="maxui-search-action" type="button" class="maxui-button"></input>\
        </div>\
        <div id="maxui-search-filters"></div>\
    </div>\
@@ -36,7 +36,7 @@ var MSTCH_MAXUI_MAIN_UI = '\
           <div id="maxui-activities" class="activities">\
           </div>\
           <div id="maxui-more-activities">\
-              <input type="button" class="load" value="{{literals.load_more}}">\
+              <input type="button" class="maxui-button" value="{{literals.load_more}}">\
           </div>\
       </div>\
    </div>\
@@ -88,12 +88,8 @@ var MSTCH_MAXUI_ACTIVITY = '\
             {{/replies.items}}\
         </div>\
         <div class="maxui-newcommentbox">\
-            <div class="maxui-newcommentBoxContainer">\
-                <textarea class="maxui-commentBox"></textarea>\
-            </div>\
-            <div class="maxui-newcommentbutton">\
-                <input type="button" class="send" value="{{literals.new_comment_post}}"/>\
-            </div>\
+                <textarea class="empty maxui-text-input" id="maxui-commentBox">{{literals.new_comment_text}}</textarea>\
+                <input type="button" class="maxui-button" value="{{literals.new_comment_post}}"/>\
         </div>\
     </div>\
 \
