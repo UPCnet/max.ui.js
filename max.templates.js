@@ -12,8 +12,8 @@ var MSTCH_MAXUI_MAIN_UI = '\
           <img src="{{avatar}}">\
       </a>\
       <div id="maxui-newactivity-box">\
-           <textarea class="empty maxui-text-input">{{literals.new_activity_text}}</textarea>\
-           <input type="button" class="maxui-button" value="{{literals.new_activity_post}}">\
+           <textarea class="maxui-empty maxui-text-input">{{literals.new_activity_text}}</textarea>\
+           <input disabled="disabled" type="button" class="maxui-button maxui-disabled" value="{{literals.new_activity_post}}">\
       </div>\
    </div>\
    {{/allowPosting}}\
@@ -21,8 +21,8 @@ var MSTCH_MAXUI_MAIN_UI = '\
    <div id="maxui-search" class="folded">\
        <a id="maxui-search-toggle" href="">O</a>\
        <div id="maxui-search-box">\
-          <input id="maxui-search-text" ctype="text" class="empty maxui-text-input" value="{{literals.search_text}}"></input>\
-          <input id="maxui-search-action" type="button" class="maxui-button"></input>\
+          <input id="maxui-search-text" ctype="text" class="maxui-empty maxui-text-input" value="{{literals.search_text}}"></input>\
+          <input disabled="disabled" id="maxui-search-action" type="button" class="maxui-button maxui-disabled"></input>\
        </div>\
        <div id="maxui-search-filters"></div>\
    </div>\
@@ -88,8 +88,8 @@ var MSTCH_MAXUI_ACTIVITY = '\
             {{/replies.items}}\
         </div>\
         <div class="maxui-newcommentbox">\
-                <textarea class="empty maxui-text-input" id="maxui-commentBox">{{literals.new_comment_text}}</textarea>\
-                <input type="button" class="maxui-button" value="{{literals.new_comment_post}}"/>\
+                <textarea class="maxui-empty maxui-text-input" id="maxui-commentBox">{{literals.new_comment_text}}</textarea>\
+                <input disabled="disabled" type="button" class="maxui-button maxui-disabled" value="{{literals.new_comment_post}}"/>\
         </div>\
     </div>\
 \

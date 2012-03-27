@@ -210,13 +210,13 @@
                   button = $(this).parent().find('.maxui-button')
                   normalized = maxui.normalizeWhiteSpace(text,false)
                   if (normalized=='')
-                  {
-                      $(button).attr('disabled', 'disabled')
-                      $(this).attr('class','empty maxui-text-input')
+                  {   $(button).attr('disabled', 'disabled')
+                      $(button).attr('class','maxui-button maxui-disabled')
+                      $(this).attr('class','maxui-empty maxui-text-input')
                   }
                   else
-                  {
-                      $(button).removeAttr('disabled')
+                  {   $(button).removeAttr('disabled')
+                      $(button).attr('class','maxui-button')
                       $(this).attr('class','maxui-text-input')
                   }
 
