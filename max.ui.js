@@ -271,9 +271,15 @@
                 var keywords = normalized.split(' ')
                 for (kw=0;kw<keywords.length;kw++)
                 {
+                    var kwtype = 'keyword'
                     var keyword = keywords[kw]
+                    if (keyword[0]=='#')
+                    {
+                        kwtype='hashtag'
+                        keyword = keyword.substr(1)
+                    }
                     if (keyword.length>=3)
-                        this.addFilter({type:'keyword', value:keyword}, false)
+                        this.addFilter({type:kwtype, value:keyword}, false)
                 }
                 this.reloadFilters()
     }
@@ -337,6 +343,14 @@
 
         if (!window._MAXUI.filters)
             { window._MAXUI.filters = []}
+
+        switch (filter.type)
+        {
+        case "hashtag":
+        filter['prepend']='#';break;
+        default: filter['prepend']='';break;
+        }
+
 
         var already_filtered = false
         for (i=0;i<window._MAXUI.filters.length;i++)

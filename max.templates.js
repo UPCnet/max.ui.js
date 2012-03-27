@@ -68,8 +68,16 @@ var MSTCH_MAXUI_ACTIVITY = '\
     </div>\
     <div class="maxui-footer">\
         <div class="maxui-origin">\
-               {{#publishedIn}}{{literals.context_published_in}} <a href="{{publishedIn.url}}">{{publishedIn.displayName}}</a> {{/publishedIn}} \
-               {{#via}} {{literals.generator_via}} {{via}} {{/via}}\
+               {{#publishedIn}}\
+                   {{literals.context_published_in}}\
+                   <a href="{{publishedIn.url}}">{{publishedIn.displayName}}</a>\
+               {{/publishedIn}}\
+               {{#via}}\
+                   {{literals.generator_via}}\
+                   <span class="maxui-via">\
+                   {{via}}\
+                   </span>\
+               {{/via}}\
         </div>\
         <div class="maxui-actions">\
             <a href="" class="maxui-commentaction">\
@@ -119,7 +127,7 @@ var MSTCH_MAXUI_COMMENT = '\
 
 var MSTCH_MAXUI_FILTERS = '\
 {{#filters}}\
-<div class="maxui-filter" type="{{type}}" value="{{value}}"><span>{{value}}<a class="close" href="">&times;</a></span></div>\
+<div class="maxui-filter maxui-{{type}}" type="{{type}}" value="{{value}}"><span>{{prepend}}{{value}}<a class="close" href="">&times;</a></span></div>\
 {{/filters}}\
 ';
 
