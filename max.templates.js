@@ -18,7 +18,7 @@ var MSTCH_MAXUI_MAIN_UI = '\
    </div>\
    {{/allowPosting}}\
 \
-   <div id="maxui-search">\
+   <div id="maxui-search" class="folded">\
        <a id="maxui-search-toggle" href="">O</a>\
        <div id="maxui-search-box">\
           <input id="maxui-search-text" ctype="text" class="empty maxui-text-input" value="{{literals.search_text}}"></input>\
