@@ -119,7 +119,15 @@
 
                   //Assign click to loadmore
                   $('#maxui-more-activities .maxui-button').click(function () {
-                      maxui.loadMoreActivities()
+                      if ($('#maxui-search').hasClass('folded'))
+                      {
+                          maxui.loadMoreActivities()
+                      }
+                      else
+                      {
+                          last_result_id = $('.maxui-activity:last').attr('id')
+                          maxui.reloadFilters(last_result_id)
+                      }
                       })
 
                   //Assign click to toggle search filters
@@ -143,7 +151,7 @@
                   $('#maxui-activities').on('click','.maxui-hashtag',function () {
                       event.preventDefault()
                       maxui.addFilter({type:'hashtag', value:$(this).attr('value')})
-                      $('#maxui-search').toggleClass('folded',true)
+                      $('#maxui-search').toggleClass('folded',false)
                       })
 
                   //Assign filter closing via delegating the click to the filters container
@@ -285,6 +293,10 @@
                   filters[filter.type]=[]
               filters[filter.type].push(filter.value)
             }
+
+        // Accept a optional parameter indicating search start point
+        if (arguments.length>0)
+            filters['before'] = arguments[0]
 
         maxui.printActivities(filters)
 
