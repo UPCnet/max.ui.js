@@ -143,6 +143,7 @@
                   $('#maxui-activities').on('click','.maxui-hashtag',function () {
                       event.preventDefault()
                       maxui.addFilter({type:'hashtag', value:$(this).attr('value')})
+                      $('#maxui-search').toggleClass('folded',true)
                       })
 
                   //Assign filter closing via delegating the click to the filters container
