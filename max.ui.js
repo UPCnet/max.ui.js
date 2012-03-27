@@ -118,7 +118,8 @@
             maxui.printActivities({},function() {
 
                   //Assign click to loadmore
-                  $('#maxui-more-activities .maxui-button').click(function () {
+                  $('#maxui-more-activities .maxui-button').click(function (event) {
+                      event.preventDefault()
                       if ($('#maxui-search').hasClass('folded'))
                       {
                           maxui.loadMoreActivities()
@@ -131,7 +132,7 @@
                       })
 
                   //Assign click to toggle search filters
-                  $('#maxui-search-toggle').click(function () {
+                  $('#maxui-search-toggle').click(function (event) {
                       event.preventDefault()
                       $('#maxui-search').toggleClass('folded')
                       if ($('#maxui-search').hasClass('folded'))
@@ -148,14 +149,14 @@
                       })
 
                   //Assign hashtag filtering via delegating the click to the activities container
-                  $('#maxui-activities').on('click','.maxui-hashtag',function () {
+                  $('#maxui-activities').on('click','.maxui-hashtag',function (event) {
                       event.preventDefault()
                       maxui.addFilter({type:'hashtag', value:$(this).attr('value')})
                       $('#maxui-search').toggleClass('folded',false)
                       })
 
                   //Assign filter closing via delegating the click to the filters container
-                  $('#maxui-search-filters').on('click','.close',function () {
+                  $('#maxui-search-filters').on('click','.close',function (event) {
                       event.preventDefault()
                       var filter = $(this.parentNode.parentNode)
                       maxui.delFilter({type:filter.attr('type'), value:filter.attr('value')})
@@ -207,14 +208,16 @@
         var selector = target+' .maxui-text-input'
         $(delegate)
 
-        .on('focusin',selector, function() {
+        .on('focusin',selector, function(event) {
+                  event.preventDefault()
                   text = $(this).val()
                   normalized = maxui.normalizeWhiteSpace(text,false)
                   if ( normalized==literal )
                       $(this).val('')
         })
 
-        .on('keyup',selector, function() {
+        .on('keyup',selector, function(event) {
+                  event.preventDefault()
                   text = $(this).val()
                   button = $(this).parent().find('.maxui-button')
                   normalized = maxui.normalizeWhiteSpace(text,false)
@@ -231,14 +234,15 @@
 
         })
 
-        .on('focusout',selector, function() {
+        .on('focusout',selector, function(event) {
+                  event.preventDefault()
                   text = $(this).val()
                   normalized = maxui.normalizeWhiteSpace(text,false)
                   if ( normalized=='' )
                       $(this).val(literal)
         })
 
-        .on('click',target+' .maxui-button',function () {
+        .on('click',target+' .maxui-button',function (event) {
             event.preventDefault()
             var text = $(this).parent().find('.maxui-text-input').val()
             var normalized = maxui.normalizeWhiteSpace(text,false)
@@ -572,6 +576,7 @@
                                    profileURL: _MAXUI.settings.profileURLpattern.format(activity.actor.username),
                                   publishedIn: contexts,
                                           via: generator
+
                                  }
                     // Render the activities template and append it at the end of the rendered activities
                     var partials = {comment: MAXUI_COMMENT}
