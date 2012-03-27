@@ -137,6 +137,9 @@ width:36px!important;
 height:36px!important;
 }
 
+#maxui-search.folded #maxui-search-filters {
+display:none;
+}
 
 #maxui-search-filters .maxui-filter {
 float:left;
