@@ -119,7 +119,7 @@ var MSTCH_MAXUI_COMMENT = '\
 
 var MSTCH_MAXUI_FILTERS = '\
 {{#filters}}\
-<div class="maxui-filter" type="{{type}}" value="{{value}}"><span>{{value}}<a class="close" href="">X</a></span></div>\
+<div class="maxui-filter" type="{{type}}" value="{{value}}"><span>{{value}}<a class="close" href="">&times;</a></span></div>\
 {{/filters}}\
 ';
 
