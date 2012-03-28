@@ -19,7 +19,7 @@ var MSTCH_MAXUI_MAIN_UI = '\
    {{/allowPosting}}\
 \
    <div id="maxui-search" class="folded">\
-       <a id="maxui-search-toggle" href="">O</a>\
+       <a id="maxui-search-toggle" href="#"><img src="img/transparent.gif" alt="obre-tanca" class="obretanca"></a>\
        <div id="maxui-search-box">\
           <input id="maxui-search-text" type="search" placeholder="{{literals.search_text}}" class="maxui-empty maxui-text-input" value="{{literals.search_text}}" />\
           <!--<input disabled="disabled" id="maxui-search-action" type="button" class="maxui-button maxui-disabled"></input>-->\
@@ -127,7 +127,7 @@ var MSTCH_MAXUI_COMMENT = '\
 
 var MSTCH_MAXUI_FILTERS = '\
 {{#filters}}\
-<div class="maxui-filter maxui-{{type}}" type="{{type}}" value="{{value}}"><span>{{prepend}}{{value}}<a class="close" href="">&times;</a></span></div>\
+<div class="maxui-filter maxui-{{type}}" type="{{type}}" value="{{value}}"><span>{{prepend}}{{value}}<a class="close" href=""><img src="img/x.png" alt="tanca"></a></span></div>\
 {{/filters}}\
 ';
 
