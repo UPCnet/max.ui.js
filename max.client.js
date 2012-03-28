@@ -69,11 +69,10 @@ MaxClient.prototype.POST = function(route, query, callback) {
 			     data: JSON.stringify(query),
 			     async: true,
 			     dataType: 'json'
-			    }
-			   ).always(function(result,status,xhr) {
-              if (xhr.status==200 | xhr.status==201)
-                  callback.call(result)
-         });
+			    })
+         .done( function(result) { callback.call(result) } )  
+         .fail( function(xhr) { jQuery(window).trigger('maxclienterror',xhr) })
+
     }
     else
     {
@@ -103,6 +102,7 @@ MaxClient.prototype.POST = function(route, query, callback) {
 
 MaxClient.prototype.GET = function(route, query, callback) {
     resource_uri = '{0}{1}'.format(this.url, route)
+    caca = this
     if (Object.keys(query).length >0)
     {
         resource_uri+='?'+jQuery.param(query, true)
@@ -118,11 +118,10 @@ MaxClient.prototype.GET = function(route, query, callback) {
 			     type: 'GET',
 			     async: true,
 			     dataType: 'json'
-			    }
-			   ).always(function(result,status,xhr) {
-              if (xhr.status==200 | xhr.status==201)
-                  callback.call(result)
-         });
+			    })
+         .done( function(result) { callback.call(result) } )  
+         .fail( function(xhr) { jQuery(window).trigger('maxclienterror',xhr) })
+
 	}
 	else
 	{
@@ -213,8 +212,8 @@ MaxClient.prototype.addActivity = function(text,contexts,callback) {
             "content": ""
             }
         }
-    if (contexts.length>0)
-       { query.contexts = contexts }
+     if (contexts.length>0)
+        { query.contexts = contexts }
     query.object.content = text
 
     //We have a generator
