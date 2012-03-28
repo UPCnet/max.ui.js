@@ -21,8 +21,8 @@ var MSTCH_MAXUI_MAIN_UI = '\
    <div id="maxui-search" class="folded">\
        <a id="maxui-search-toggle" href="">O</a>\
        <div id="maxui-search-box">\
-          <input id="maxui-search-text" ctype="text" class="maxui-empty maxui-text-input" value="{{literals.search_text}}"></input>\
-          <input disabled="disabled" id="maxui-search-action" type="button" class="maxui-button maxui-disabled"></input>\
+          <input id="maxui-search-text" type="search" placeholder="{{literals.search_text}}" class="maxui-empty maxui-text-input" value="{{literals.search_text}}" />\
+          <!--<input disabled="disabled" id="maxui-search-action" type="button" class="maxui-button maxui-disabled"></input>-->\
        </div>\
        <div id="maxui-search-filters"></div>\
    </div>\
