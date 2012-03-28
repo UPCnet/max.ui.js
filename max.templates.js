@@ -19,7 +19,7 @@ var MSTCH_MAXUI_MAIN_UI = '\
    {{/allowPosting}}\
 \
    <div id="maxui-search" class="folded">\
-       <a id="maxui-search-toggle" href="#"><img src="img/transparent.gif" alt="obre-tanca" class="obretanca"></a>\
+       <a id="maxui-search-toggle" class="maxui-disabled" href="#"><img src="img/transparent.gif" alt="obre-tanca" ></a>\
        <div id="maxui-search-box">\
           <input id="maxui-search-text" type="search" placeholder="{{literals.search_text}}" class="maxui-empty maxui-text-input" value="{{literals.search_text}}" />\
           <!--<input disabled="disabled" id="maxui-search-action" type="button" class="maxui-button maxui-disabled"></input>-->\
