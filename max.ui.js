@@ -74,7 +74,7 @@
         this.maxClient.getUserData(_MAXUI.settings.username, function() {
 
             //Determine if user can write in writeContexts
-            var userSubscriptionPermissions = {}
+            var userSubscriptions = {}
             if (this.subscribedTo)
             {
                 if (this.subscribedTo.items)
@@ -84,11 +84,13 @@
                         for (sc=0;sc<this.subscribedTo.items.length;sc++)
                         {
                             var subscription = this.subscribedTo.items[sc]
-                            userSubscriptionPermissions[subscription.url]={}
+                            userSubscriptions[subscription.url]={}
+                            userSubscriptions[subscription.url]['urlHash']= subscription.urlHash
+                            userSubscriptions[subscription.url]['permissions']={}
                             for (pm=0;pm<subscription.permissions.length;pm++)
                             {
                                 var permission=subscription.permissions[pm]
-                                userSubscriptionPermissions[subscription.url][permission]=true
+                                userSubscriptions[subscription.url]['permissions'][permission]=true
                             }
                         }
                     }
@@ -99,15 +101,17 @@
             for (wc=0;wc<_MAXUI.settings.writeContexts.length;wc++)
                 {
                     var write_context = _MAXUI.settings.writeContexts[wc]
-                    if (userSubscriptionPermissions[write_context])
+                    if (userSubscriptions[write_context]['permissions'])
                     {
-                      if (userSubscriptionPermissions[write_context].write==false)
+                      if (userSubscriptions[write_context]['permissions'].write==false)
                       {
                           canwrite = false
                       }
                     }
                     else { canwrite = false }
                 }
+
+            window._MAXUI.settings.subscriptions = userSubscriptions
             // render main interface using partials
             var params = $.extend(_MAXUI.settings,{'avatar':_MAXUI.settings.avatarURLpattern.format(_MAXUI.settings.username),
                                                         'profile':_MAXUI.settings.profileURLpattern.format(_MAXUI.settings.username),
@@ -131,14 +135,17 @@
                       }
                       })
 
-                  //Assign click to toggle search filters
+                  //Assign click to toggle search filters if any search filter defined
                   $('#maxui-search-toggle').click(function (event) {
                       event.preventDefault()
-                      $('#maxui-search').toggleClass('folded')
-                      if ($('#maxui-search').hasClass('folded'))
-                          maxui.printActivities({})
-                      else
-                          maxui.reloadFilters()
+                      if (!$(this).hasClass('maxui-disabled'))
+                      {
+                          $('#maxui-search').toggleClass('folded')
+                          if ($('#maxui-search').hasClass('folded'))
+                              maxui.printActivities({})
+                          else
+                              maxui.reloadFilters()
+                      }
                       })
 
                   //Assign Commentbox toggling via delegating the click to the activities container
@@ -177,6 +184,8 @@
                                       $('#activityContainer textarea').val('')
                                       var activity_id = this.object.inReplyTo[0].id
                                       maxui.printCommentsForActivity(activity_id)
+                                      $('#'+activity_id+' .maxui-newcommentbox textarea').val('')
+                                      $('#'+activity_id+' .maxui-newcommentbox .maxui-button').attr('disabled','disabled')
                                       })
                         })
 
@@ -335,6 +344,9 @@
 
         maxui.printActivities(filters)
 
+        //Enable or disable filter toogle if there are filters defined (or not)
+        $('#maxui-search-toggle').toggleClass('maxui-disabled',window._MAXUI.filters.length==0)
+        $('#maxui-search').toggleClass('folded',window._MAXUI.filters.length==0)
    }
 
 
@@ -425,6 +437,7 @@
         func_params.push(_MAXUI.settings.writeContexts)
         func_params.push( function() {
                               $('#maxui-newactivity textarea').val('')
+                              $('#maxui-newactivity .maxui-button').attr('disabled','disabled')
                               var first = $('.maxui-activity:first')
                               if (first.length>0)
                                   { filter = {after:first.attr('id')}
@@ -765,7 +778,8 @@
         {
             var activityRetriever = this.maxClient.getActivities
             func_params.push(_MAXUI.settings.username)
-            func_params.push(_MAXUI.settings.readContext)
+            write_context_hash = _MAXUI.settings.subscriptions[_MAXUI.settings.readContext]['urlHash']
+            func_params.push(write_context_hash)
         }
 
         if (arguments.length>1)
