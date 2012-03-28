@@ -200,7 +200,16 @@
         return maxui;
     };
 
-
+    /*
+    *    Takes a  button-input pair identified by 'maxui-button' and 'maxui-text-input'
+    *    classes respectively, contained in a container and applies focusin/out
+    *    and clicking behaviour
+    *
+    *    @param {String} delegate         CSS selector identifying the parent container on which to delegate events
+    *    @param {String} target           CSS selector identifying the direct container on which execute events
+    *    @param {String} literal          Text to display when focus is out of input and no text entered
+    *    @param {Function} clickFunction  Function to execute when click on the button
+    */
     $.fn.bindActionBehaviour = function(delegate, target, literal, clickFunction) {
 
         // Clear input when focusing in only if user hasn't typed anything yet
@@ -252,6 +261,12 @@
 
     }
 
+    /*
+    *    Strips whitespace at the beggining and end of a string and optionaly between
+    *
+    *    @param {String} s       A text that may contain whitespaces
+    *    @param {Boolean} multi  If true, reduces multiple consecutive whitespaces to one
+    */
     $.fn.normalizeWhiteSpace = function (s, multi) {
 
         s = s.replace(/(^\s*)|(\s*$)/gi,"");
@@ -265,6 +280,13 @@
         return s;
     }
 
+    /*
+    *    Updates the search filters with a new collection of keywords/hashtags extracted of
+    *    a user-entered text, and reloads the search query. Identifies special characters
+    *    at the first position of each keyword to identify keyword type
+    *
+    *    @param {String} text    A string containing whitespace-separated keywords/#hashtags
+    */
     $.fn.textSearch = function (text) {
                 //Normalize spaces
                 normalized = this.normalizeWhiteSpace(text)
@@ -286,7 +308,10 @@
 
 
     /*
-    *    Reloads the current filters UI and executes the search
+    *    Reloads the current filters UI and executes the search, optionally starting
+    *    at a given point of the timeline
+    *
+    *    @param {String} (optional)    A string containing the id of the last activity loaded
     */
     $.fn.reloadFilters = function() {
 
@@ -517,42 +542,42 @@
 
     /*
     *    Renders the N activities passed in items on the timeline slot. This function is
-    *    meant to be called as a callback of a call to a max webservice returning activities
+    *    meant to be called as a callback of a call to a max webservice returning a list
+    *    of activity objects
+    *
     *    @param {String} items     a list of objects representing activities, returned by max
-    *    @param {String} insertAt  optional argument indicating were to prepend or append activities
+    *    @param {String} insertAt  were to prepend or append activities, 'beginning' or 'end
+    *    @param {Function} (optional)  A function to call when all formatting is finished
     */
     $.fn.formatActivities = function(items, insertAt) {
-            // When receiving the list of activities from max
-            // construct the object for Hogan
-            // `activities `contain the list of activity objects
-            // `formatedDate` contain a function maxui will be rendered inside the template
-            //             to obtain the published date in a "human readable" way
-            // `avatarURL` contain a function maxui will be rendered inside the template
-            //             to obtain the avatar url for the activity's actor
             var maxui = this;
             var activities = ''
 
+            // Iterate throug all the activities
             for (i=0;i<items.length;i++)
                 {
                     var activity = items[i]
 
+                    // Take first context (if exists) to display in the 'published on' field
+                    // XXX TODO Build a coma-separated list of contexts ??
                     var contexts = undefined
                     if (activity.hasOwnProperty('contexts'))
                          {
                              if (activity.contexts.length>0)
-                                 {
-                                      contexts = activity.contexts[0]
-                                 }
+                                 contexts = activity.contexts[0]
                          }
 
+                    // Take generator property (if exists) and set it only if it's different
+                    // from the application name defined in settings
                     var generator = undefined
-
                     if (activity.hasOwnProperty('generator'))
                          {
                             if (activity.generator!=_MAXUI.settings.generatorName)
                                 generator = activity.generator
                          }
 
+                    // Take replies (if exists) and format to be included as a formatted
+                    // subobject ready for hogan
                     var replies = undefined
                     if (activity.replies)
                         {
@@ -578,7 +603,8 @@
                                 }
                         }
 
-
+                    // Take all the latter properties and join them into an object
+                    // containing all the needed params to render the template
                     var params = {
                                            id: activity.id,
                                         actor: activity.actor,
@@ -593,45 +619,46 @@
 
                                  }
                     // Render the activities template and append it at the end of the rendered activities
+                    // partials is used to render each comment found in the activities
                     var partials = {comment: MAXUI_COMMENT}
                     var activities = activities + MAXUI_ACTIVITY.render(params, partials)
                 }
 
 
-
+            // Prepare animation and insert activities at the top of activity stream
             if (insertAt == 'beggining')
             {
+                // Load all the activities in a overflow-hidden div to calculate the height
                 $('#maxui-preload .wrapper').prepend(activities)
                 var ritems = $('#maxui-preload .wrapper .maxui-activity')
                 var heightsum = 0
                 for (i=0;i<ritems.length;i++)
-                    {
                       heightsum += $(ritems[i]).height()+18
-                    }
 
-
-
+                // Move the hidden div to be hidden on top of the last activity and behind the main UI
                 var currentPreloadHeight = $('#maxui-preload').height()
                 $('#maxui-preload').height(heightsum-currentPreloadHeight)
                 $('#maxui-preload').css( {"margin-top":(heightsum-currentPreloadHeight)*-1})
 
+                // Animate it to appear sliding on the bottom of the main UI
                 $('#maxui-preload').animate({"margin-top":0}, 200, function()
                    {
+                        // When the animation ends, move the new activites to its native container
                         $('#maxui-preload .wrapper').html("")
                         $('#maxui-activities').prepend(activities)
                         $('#maxui-preload').height(0)
 
                    })
 
-//                $('#maxui-activities').css({'margin-top':69})
-                //$('#maxui-activities').prepend(activity_items)
             }
+            // Insert at the end
             else if (insertAt == 'end')
                 $('#maxui-activities').append(activities)
+            // Otherwise, replace everything
             else
                 $('#maxui-activities').html(activities)
 
-          // Has a callback
+          // if Has a callback, execute it
           if (arguments.length>2)
               {
                 arguments[2].call()
