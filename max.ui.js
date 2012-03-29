@@ -444,7 +444,7 @@
                                     maxui.printActivities(filter)
                                   }
                               else {
-                                    maxui.printActivities()
+                                    maxui.printActivities({})
                                   }
                               })
 
