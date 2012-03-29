@@ -86,7 +86,7 @@ text-shadow: 0 1px #fff;
 #maxui-more-activities input.maxui-button:hover, #maxui-more-activities input.maxui-button:hover, #maxui-more-activities input.maxui-button:focus, #maxui-more-activities input.maxui-button:focus {border:1px solid #999; background: #f2f2f2; cursor:pointer; color:#005ea0; box-shadow:0 1px 5px rgba(0,0,0,.1);}
 #maxui-more-activities input.maxui-button:active, #maxui-more-activities input.maxui-button:active {background: #e5e5e5;filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#e5e5e5', endColorstr='#f2f2f2'); /* for IE */background: -webkit-gradient(linear, left top, left bottom, from(#e5e5e5), to(#f2f2f2)); /* for webkit browsers */background: -moz-linear-gradient(top,  #e5e5e5,  #f2f2f2); /* for firefox 3.6+ */ color:#666;}
 
-input.maxui-button[disabled] {border:1px solid #b2b2b2; background:#e5e5e5; color:#666; text-shadow:0 1px #fff;  box-shadow:none; cursor: default; filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#e5e5e5', endColorstr='#f2f2f2'); border-radius:3px;}
+input.maxui-button[disabled] {-webkit-appearance: none;border:1px solid #b2b2b2; background:#e5e5e5; color:#666; text-shadow:0 1px #fff;  box-shadow:none; cursor: default; filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#e5e5e5', endColorstr='#f2f2f2'); border-radius:3px;}
 
 
 #maxui-timeline {clear:both;margin:0;overflow: hidden; padding:0 10px; background:#fff;}
@@ -223,6 +223,7 @@ opacity:.8; filter: alpha(opacity=80);
 position: relative;
 top: 3px;
 }
+#maxui-search-filters .maxui-filter .close img{width:14px; height:15px; margin:0;}
 #maxui-search-filters .maxui-filter .close:hover {opacity:1; filter: alpha(opacity=100);}
 
 #maxui-search-text {
@@ -269,6 +270,8 @@ font-size: 13px;line-height: 20px;
 #maxui-search a img {width:14px; height:8px; background: url(../img/maxcomm.png) 2px -60px no-repeat; margin:8px 5px 0; opacity:.8;  filter: alpha(opacity=80);}
 #maxui-search.folded a img {background-position: 2px -40px;}
 #maxui-search a img:hover {opacity:1;  filter: alpha(opacity=100);}
+#maxui-search a.maxui-disabled img {background-position: 2px -100px; }
+#maxui-search a.maxui-disabled {cursor:default;}
 
 img { -ms-interpolation-mode: bicubic; image-rendering: optimizeQuality;}
 
@@ -298,10 +301,10 @@ img { -ms-interpolation-mode: bicubic; image-rendering: optimizeQuality;}
 	only screen and (min-device-pixel-ratio: 1.5) {
 		#maxui-search .obretanca, .maxui-actions a.maxui-commentaction, .maxui-origin 
 			{	background-image:url(../img/maxcomm@2x.png);
-				-moz-background-size: 12px 100px;
-				-o-background-size: 12px 100px;
-				-webkit-background-size: 12px 100px;
-				background-size: 12px 100px;
+				-moz-background-size: 12px 120px;
+				-o-background-size: 12px 120px;
+				-webkit-background-size: 12px 120px;
+				background-size: 12px 120px;
 			}
 
 
