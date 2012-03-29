@@ -66,7 +66,19 @@
         if (!_MAXUI.settings.profileURLpattern)
                _MAXUI.settings['profileURLpattern'] = _MAXUI.settings.maxServerURL+'/profiles/{0}'
 
-        // Init MAX CLient
+        // Catch errors triggered by failed max api calls
+        jq(window).bind('maxclienterror', function(event,xhr) {
+            var error = JSON.parse(xhr.responseText)
+            alert('The server responded with a "{0}" error, with the following message: "{1}". \n\nPlease try again later or contact administrator at admin@max.upc.edu.'.format(error.error,error.error_description))
+        })
+
+        jq(window).unbind('maxclienterror').bind('maxclienterror', function(event,xhr) {
+            event.preventDefault()
+            var error = JSON.parse(xhr.responseText)
+            alert('OVERRIDE The server responded with a "{0}" error, with the following message: "{1}". \n\nPlease try again later or contact administrator at admin@max.upc.edu.'.format(error.error,error.error_description))
+        })
+
+        // Init MAX Client
         this.maxClient = new MaxClient(_MAXUI.settings.maxServerURL)
         this.maxClient.setMode(_MAXUI.settings.maxRequestsAPI)
         this.maxClient.setActor(_MAXUI.settings.username)
