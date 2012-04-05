@@ -6,20 +6,8 @@ var MSTCH_MAXUI_MAIN_UI = '\
 {{#username}}\
  <div id="maxui-mainpanel">\
 \
-   {{#allowPosting}}\
-   <div id="maxui-newactivity">\
-      <a href="{{profile}}" class="maxui-avatar">\
-          <img src="{{avatar}}">\
-      </a>\
-      <div id="maxui-newactivity-box">\
-           <textarea class="maxui-empty maxui-text-input">{{literals.new_activity_text}}</textarea>\
-           <input disabled="disabled" type="button" class="maxui-button maxui-disabled" value="{{literals.new_activity_post}}">\
-      </div>\
-   </div>\
-   {{/allowPosting}}\
-\
    <div id="maxui-search" class="folded">\
-       <a id="maxui-search-toggle" class="maxui-disabled" href="#"><img src="img/transparent.gif" alt="obre-tanca" ></a>\
+       <a id="maxui-search-toggle" class="maxui-disabled" href="#"><img src="https://max.upc.edu/maxui/transparent.gif" alt="obre-tanca" ></a>\
        <div id="maxui-search-box">\
           <input id="maxui-search-text" type="search" placeholder="{{literals.search_text}}" class="maxui-empty maxui-text-input" value="{{literals.search_text}}" />\
           <!--<input disabled="disabled" id="maxui-search-action" type="button" class="maxui-button maxui-disabled"></input>-->\
@@ -49,6 +37,20 @@ var MSTCH_MAXUI_MAIN_UI = '\
 </div>\
 ';
 
+
+var MSTCH_MAXUI_POSTBOX = '\
+   {{#allowPosting}}\
+   <div id="maxui-newactivity">\
+      <a href="{{profile}}" class="maxui-avatar">\
+          <img src="{{avatar}}">\
+      </a>\
+      <div id="maxui-newactivity-box">\
+           <textarea class="maxui-empty maxui-text-input">{{literals.new_activity_text}}</textarea>\
+           <input disabled="disabled" type="button" class="maxui-button maxui-disabled" value="{{literals.new_activity_post}}">\
+      </div>\
+   </div>\
+   {{/allowPosting}}\
+';
 
 var MSTCH_MAXUI_ACTIVITY = '\
 <div class="maxui-activity" id="{{id}}" userid="{{actor.id}}" username="{{actor.username}}">\
@@ -127,11 +129,12 @@ var MSTCH_MAXUI_COMMENT = '\
 
 var MSTCH_MAXUI_FILTERS = '\
 {{#filters}}\
-<div class="maxui-filter maxui-{{type}}" type="{{type}}" value="{{value}}"><span>{{prepend}}{{value}}<a class="close" href=""><img src="img/x.png" alt="tanca"></a></span></div>\
+<div class="maxui-filter maxui-{{type}}" type="{{type}}" value="{{value}}"><span>{{prepend}}{{value}}<a class="close" href=""><img src="https://max.upc.edu/maxui/x.png" alt="tanca"></a></span></div>\
 {{/filters}}\
 ';
 
 var MAXUI_MAIN_UI = Hogan.compile(MSTCH_MAXUI_MAIN_UI);
+var MAXUI_POSTBOX = Hogan.compile(MSTCH_MAXUI_POSTBOX);
 var MAXUI_ACTIVITY = Hogan.compile(MSTCH_MAXUI_ACTIVITY);
 var MAXUI_COMMENT = Hogan.compile(MSTCH_MAXUI_COMMENT);
 var MAXUI_FILTERS = Hogan.compile(MSTCH_MAXUI_FILTERS);

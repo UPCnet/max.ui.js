@@ -5,7 +5,7 @@
 */
 jQuery().ready(function() {
 
-    literals_ca = {'new_activity_text': 'Escriu alguna cosa ...',
+    literals_ca = {'new_activity_text': 'Escriu alguna cosa...',
                    'new_activity_post': "Envia l'activitat",
                    'toggle_comments': "Comentaris",
                    'new_comment_post': "Envia el comentari",
@@ -19,11 +19,13 @@ jQuery().ready(function() {
            'oAuthToken' : 'eb0d4b6c2a44ac90db29d2bbb172cba1',
            'oAuthGrantType' : 'password',
            'maxServerURL' : 'http://localhost:8081',
-//           'maxServerURLAlias' : 'http://sheldon.upc.es/max',
+           'maxServerURLAlias' : 'http://sheldon.upc.es/max',
 //           'avatarURLpattern' : '',
-           'readContext': 'http://eider',
+           'profileURLpattern' : '#',
+           'readContext': 'http://sheldon.upc.es',
+//           'writeContexts': ['http://eider'],
            'activitySource': 'activities',
-           'generatorName': 'EiderApp'
+           'generatorName': 'SheldonApp'
            }
 
 //  var settings = {

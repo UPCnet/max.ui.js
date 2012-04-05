@@ -70,7 +70,7 @@ MaxClient.prototype.POST = function(route, query, callback) {
 			     async: true,
 			     dataType: 'json'
 			    })
-         .done( function(result) { callback.call(result) } )  
+         .done( function(result) { callback.call(result) } )
          .fail( function(xhr) { jQuery(window).trigger('maxclienterror',xhr) })
 
     }
@@ -119,7 +119,7 @@ MaxClient.prototype.GET = function(route, query, callback) {
 			     async: true,
 			     dataType: 'json'
 			    })
-         .done( function(result) { callback.call(result) } )  
+         .done( function(result) { callback.call(result) } )
          .fail( function(xhr) { jQuery(window).trigger('maxclienterror',xhr) })
 
 	}
