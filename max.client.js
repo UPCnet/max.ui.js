@@ -85,8 +85,6 @@ MaxClient.prototype.POST = function(route, query, callback) {
                      "X-Oauth-Scope": 'widgetcli'}
       params[gadgets.io.RequestParameters.HEADERS] = headers
 
-      console.log(params)
-
 	    gadgets.io.makeRequest(
 	                   resource_uri,
 	                   function(result) { callback.call(result.data) },
@@ -135,7 +133,7 @@ MaxClient.prototype.GET = function(route, query, callback) {
 
 	    gadgets.io.makeRequest(
 	                   resource_uri,
-	                   function(result) { console.log(data);callback.call(result.data) },
+	                   function(result) { callback.call(result.data) },
 	                   params
 	                    )
 
