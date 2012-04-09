@@ -10,10 +10,6 @@
         maxui.templates = max.templates()
         maxui.utils = max.utils()
 
-        // create namespace global variable if it doesn't exists
-        if (!window._MAXUI)
-            { window._MAXUI = {}}
-
         // Get language from options or set default. Doing this previously to set other defaults
         // in order to get the default literals in the chosen language
         maxui.language = options.language || 'en'
@@ -29,7 +25,6 @@
                         }
 
         // extend defaults with user-defined settings
-        // and store in the global _MAXUI namespace
         maxui.settings = jq.extend(defaults,options)
 
         // Configure maxui without CORS if CORS not available
@@ -294,7 +289,7 @@
     jq.fn.reloadFilters = function() {
 
         var maxui=this
-        var params = {filters:window._MAXUI.filters}
+        var params = {filters:maxui.filters}
         var activity_items = maxui.templates.filters.render(params)
         jq('#maxui-search-filters').html(activity_items)
         var filters = {}
@@ -314,8 +309,8 @@
         maxui.printActivities(filters)
 
         //Enable or disable filter toogle if there are filters defined (or not)
-        jq('#maxui-search-toggle').toggleClass('maxui-disabled',window._MAXUI.filters.length==0)
-        jq('#maxui-search').toggleClass('folded',window._MAXUI.filters.length==0)
+        jq('#maxui-search-toggle').toggleClass('maxui-disabled', maxui.filters.length==0)
+        jq('#maxui-search').toggleClass('folded',maxui.filters.length==0)
    }
 
 
@@ -326,11 +321,11 @@
     jq.fn.delFilter = function(filter) {
         var deleted = false
         var index = -1
-        for (i=0;i<window._MAXUI.filters.length;i++)
-             if (window._MAXUI.filters[i].value==filter.value & window._MAXUI.filters[i].type==filter.type)
+        for (i=0;i<maxui.filters.length;i++)
+             if (maxui.filters[i].value==filter.value & maxui.filters[i].type==filter.type)
               {
                  deleted = true
-                 window._MAXUI.filters.splice(i,1)
+                 maxui.filters.splice(i,1)
               }
         if (deleted)
             this.reloadFilters()
@@ -347,8 +342,8 @@
         if (arguments.length>1)
             reload=arguments[1]
 
-        if (!window._MAXUI.filters)
-            { window._MAXUI.filters = []}
+        if (!maxui.filters)
+            { maxui.filters = []}
 
         switch (filter.type)
         {
@@ -359,13 +354,13 @@
 
 
         var already_filtered = false
-        for (i=0;i<window._MAXUI.filters.length;i++)
-             if (window._MAXUI.filters[i].value==filter.value & window._MAXUI.filters[i].type==filter.type)
+        for (i=0;i<maxui.filters.length;i++)
+             if (maxui.filters[i].value==filter.value & maxui.filters[i].type==filter.type)
                  already_filtered = true
 
          if (!already_filtered)
          {
-            window._MAXUI.filters.push(filter)
+            maxui.filters.push(filter)
             if(reload==true)
                 this.reloadFilters()
          }
