@@ -7,6 +7,10 @@ echo "Compiling max.client.js"
 java -jar closure-compiler-v1346.jar --js ../max.client.js --compilation_level SIMPLE_OPTIMIZATIONS --js_output_file max.client-min.js
 echo "compiling max.templates.js"
 java -jar closure-compiler-v1346.jar --js ../max.templates.js --compilation_level SIMPLE_OPTIMIZATIONS --js_output_file max.templates-min.js
+echo "compiling max.literals.js"
+java -jar closure-compiler-v1346.jar --js ../max.literals.js --compilation_level SIMPLE_OPTIMIZATIONS --js_output_file max.literals-min.js
+echo "compiling max.utils.js"
+java -jar closure-compiler-v1346.jar --js ../max.utils.js --compilation_level SIMPLE_OPTIMIZATIONS --js_output_file max.utils-min.js
 echo "Compiling jquery.easydate.js"
 java -jar closure-compiler-v1346.jar --js ../libs/jquery.easydate.js --compilation_level SIMPLE_OPTIMIZATIONS --js_output_file jquery.easydate-min.js
 echo "Compiling hogan.js"
@@ -50,6 +54,12 @@ cat hogan-min.js >> $FILENAME
 
 comment "max.templates.js"
 cat max.templates-min.js >> $FILENAME
+
+comment "max.literals.js"
+cat max.literals-min.js >> $FILENAME
+
+comment "max.utils.js"
+cat max.utils-min.js >> $FILENAME
 
 comment "max.client.js"
 cat max.client-min.js >> $FILENAME
