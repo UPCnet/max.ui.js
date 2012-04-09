@@ -7,6 +7,8 @@
 
         // Keep a reference of the context object
         var maxui = this
+        maxui.templates = max.templates()
+        maxui.utils = max.utils()
 
         // create namespace global variable if it doesn't exists
         if (!window._MAXUI)
@@ -28,52 +30,50 @@
 
         // extend defaults with user-defined settings
         // and store in the global _MAXUI namespace
-        _MAXUI.settings = jq.extend(defaults,options)
+        maxui.settings = jq.extend(defaults,options)
 
         // Configure maxui without CORS if CORS not available
-        if (!this.isCORSCapable())
+        if (!maxui.utils.isCORSCapable())
             {
                 // IF it has been defined an alias, set as max server url
-                if (_MAXUI.settings.maxServerURLAlias)
-                _MAXUI.settings.maxServerURL = _MAXUI.settings.maxServerURLAlias
+                if (maxui.settings.maxServerURLAlias)
+                maxui.settings.maxServerURL = maxui.settings.maxServerURLAlias
             }
 
         // Add read context to write contexts
-        _MAXUI.settings.writeContexts.push(_MAXUI.settings.readContext)
+        maxui.settings.writeContexts.push(maxui.settings.readContext)
 
         // Calculate readContextHash
-        _MAXUI.settings.readContextHash = maxui.sha1(_MAXUI.settings.readContext)
+        maxui.settings.readContextHash = maxui.utils.sha1(maxui.settings.readContext)
 
 
 
         // set default avatar and profile url pattern if user didn't provide it
-        if (!_MAXUI.settings.avatarURLpattern)
-               _MAXUI.settings['avatarURLpattern'] = _MAXUI.settings.maxServerURL+'/people/{0}/avatar'
+        if (!maxui.settings.avatarURLpattern)
+               maxui.settings['avatarURLpattern'] = maxui.settings.maxServerURL+'/people/{0}/avatar'
 
-        if (!_MAXUI.settings.contextAvatarURLpattern)
-               _MAXUI.settings['contextAvatarURLpattern'] = _MAXUI.settings.maxServerURL+'/contexts/{0}/avatar'
+        if (!maxui.settings.contextAvatarURLpattern)
+               maxui.settings['contextAvatarURLpattern'] = maxui.settings.maxServerURL+'/contexts/{0}/avatar'
 
-        if (!_MAXUI.settings.profileURLpattern)
-               _MAXUI.settings['profileURLpattern'] = _MAXUI.settings.maxServerURL+'/profiles/{0}'
+        if (!maxui.settings.profileURLpattern)
+               maxui.settings['profileURLpattern'] = maxui.settings.maxServerURL+'/profiles/{0}'
 
         // Catch errors triggered by failed max api calls
-        if (_MAXUI.settings.enableAlerts)
+        if (maxui.settings.enableAlerts)
         jq(window).bind('maxclienterror', function(event,xhr) {
             var error = JSON.parse(xhr.responseText)
             alert('The server responded with a "{0}" error, with the following message: "{1}". \n\nPlease try again later or contact administrator at admin@max.upc.edu.'.format(error.error,error.error_description))
         })
 
-        maxui.templates = max.templates()
-
         // Init MAX Client
         this.maxClient = new MaxClient()
-        var maxclient_config = {  server:    _MAXUI.settings.maxServerURL,
-                                    mode:    _MAXUI.settings.maxRequestsAPI,
-                                   username: _MAXUI.settings.username,
-                                   token:    _MAXUI.settings.oAuthToken
+        var maxclient_config = {  server:    maxui.settings.maxServerURL,
+                                    mode:    maxui.settings.maxRequestsAPI,
+                                   username: maxui.settings.username,
+                                   token:    maxui.settings.oAuthToken
                                }
         this.maxClient.configure(maxclient_config)
-        this.maxClient.getUserData(_MAXUI.settings.username, function() {
+        this.maxClient.getUserData(maxui.settings.username, function() {
 
             //Determine if user can write in writeContexts
             var userSubscriptions = {}
@@ -98,11 +98,11 @@
                 }
             }
 
-            window._MAXUI.settings.subscriptions = userSubscriptions
+            maxui.settings.subscriptions = userSubscriptions
             // render main interface
             var params = {
-                         username: _MAXUI.settings.username,
-                         literals: _MAXUI.settings.literals
+                         username: maxui.settings.username,
+                         literals: maxui.settings.literals
                      }
             var mainui = maxui.templates.mainUI.render(params)
             maxui.html(mainui)
@@ -157,14 +157,14 @@
                       })
 
                   //Assign Activity post action And textarea behaviour
-                  maxui.bindActionBehaviour('#maxui-newactivity','#maxui-newactivity-box', _MAXUI.settings.literals.new_activity_text, function(text)
+                  maxui.bindActionBehaviour('#maxui-newactivity','#maxui-newactivity-box', maxui.settings.literals.new_activity_text, function(text)
                           {
                           maxui.sendActivity(text)
                           jq('#maxui-search').toggleClass('folded',true)
                           })
 
                   //Assign Commentbox send comment action And textarea behaviour
-                  maxui.bindActionBehaviour('#maxui-activities', '.maxui-newcommentbox', _MAXUI.settings.literals.new_comment_text, function(text)
+                  maxui.bindActionBehaviour('#maxui-activities', '.maxui-newcommentbox', maxui.settings.literals.new_comment_text, function(text)
                          {
                          var activityid = jq(this).closest('.maxui-activity').attr('id')
                          maxui.maxClient.addComment(text, activityid, function() {
@@ -177,7 +177,7 @@
                         })
 
                   //Assign Search box search action And input behaviour
-                  maxui.bindActionBehaviour('#maxui-search','#maxui-search-box', _MAXUI.settings.literals.search_text, function(text)
+                  maxui.bindActionBehaviour('#maxui-search','#maxui-search-box', maxui.settings.literals.search_text, function(text)
                          {
                          maxui.textSearch(text)
                          jq('#maxui-search').toggleClass('folded',false)
@@ -216,7 +216,7 @@
         .on('focusin',selector, function(event) {
                   event.preventDefault()
                   text = jq(this).val()
-                  normalized = maxui.normalizeWhiteSpace(text,false)
+                  normalized = maxui.utils.normalizeWhiteSpace(text,false)
                   if ( normalized==literal )
                       jq(this).val('')
         })
@@ -225,7 +225,7 @@
                   event.preventDefault()
                   text = jq(this).val()
                   button = jq(this).parent().find('.maxui-button')
-                  normalized = maxui.normalizeWhiteSpace(text,false)
+                  normalized = maxui.utils.normalizeWhiteSpace(text,false)
                   if (normalized=='')
                   {   jq(button).attr('disabled', 'disabled')
                       jq(button).attr('class','maxui-button maxui-disabled')
@@ -242,7 +242,7 @@
         .on('focusout',selector, function(event) {
                   event.preventDefault()
                   text = jq(this).val()
-                  normalized = maxui.normalizeWhiteSpace(text,false)
+                  normalized = maxui.utils.normalizeWhiteSpace(text,false)
                   if ( normalized=='' )
                       jq(this).val(literal)
         })
@@ -250,30 +250,11 @@
         .on('click',target+' .maxui-button',function (event) {
             event.preventDefault()
             var text = jq(this).parent().find('.maxui-text-input').val()
-            var normalized = maxui.normalizeWhiteSpace(text,false)
+            var normalized = maxui.utils.normalizeWhiteSpace(text,false)
             if (normalized!=literal & normalized!='')
                 clickFunction.apply(this,[text])
             })
 
-    }
-
-    /*
-    *    Strips whitespace at the beggining and end of a string and optionaly between
-    *
-    *    @param {String} s       A text that may contain whitespaces
-    *    @param {Boolean} multi  If true, reduces multiple consecutive whitespaces to one
-    */
-    jq.fn.normalizeWhiteSpace = function (s, multi) {
-
-        s = s.replace(/(^\s*)|(\s*jq)/gi,"");
-        s = s.replace(/\n /,"\n");
-
-        var trimMulti=true
-        if (arguments.length>1)
-            trimMulti=multi
-        if (trimMulti==true)
-            s = s.replace(/[ ]{2,}/gi," ");
-        return s;
     }
 
     /*
@@ -284,8 +265,9 @@
     *    @param {String} text    A string containing whitespace-separated keywords/#hashtags
     */
     jq.fn.textSearch = function (text) {
+                maxui = this
                 //Normalize spaces
-                normalized = this.normalizeWhiteSpace(text)
+                normalized = maxui.utils.normalizeWhiteSpace(text)
                 var keywords = normalized.split(' ')
                 for (kw=0;kw<keywords.length;kw++)
                 {
@@ -391,21 +373,6 @@
 
 
     /*
-    *    Identifies cors funcionalities and returns a boolean
-         indicating wheter the browser is or isn't CORS capable
-    */
-    jq.fn.isCORSCapable = function() {
-        var xhrObject = new XMLHttpRequest();
-            //check if the XHR tobject has CORS functionalities
-            if (xhrObject.withCredentials!=undefined){
-                return true;
-              }
-            else {
-                return false;
-              }
-    }
-
-    /*
     *    Returns the current settings of the plugin
     */
     jq.fn.Settings = function() {
@@ -421,7 +388,7 @@
         var text = jq('#maxui-newactivity textarea').val()
         var func_params = []
         func_params.push(text)
-        func_params.push(_MAXUI.settings.writeContexts)
+        func_params.push(maxui.settings.writeContexts)
         func_params.push( function() {
                               jq('#maxui-newactivity textarea').val('')
                               jq('#maxui-newactivity .maxui-button').attr('disabled','disabled')
@@ -436,7 +403,7 @@
                               })
 
         //Pass generator to activity post if defined
-        if (_MAXUI.settings.generatorName) { func_params.push(_MAXUI.settings.generatorName) }
+        if (maxui.settings.generatorName) { func_params.push(maxui.settings.generatorName) }
 
         var activityAdder = maxui.maxClient.addActivity
         activityAdder.apply(maxui.maxClient, func_params)
@@ -452,92 +419,6 @@
         filter = {before:jq('.maxui-activity:last').attr('id')}
         maxui.printActivities(filter)
 
-    }
-
-    /*
-    *    Returns an human readable date from a timestamp in rfc3339 format (cross-browser)
-    *    @param {String} timestamp    A date represented as a string in rfc3339 format '2012-02-09T13:06:43Z'
-    */
-    jq.fn.formatDate = function(timestamp) {
-        var thisdate = new Date()
-        var match = timestamp.match(
-          "^([-+]?)(\\d{4,})(?:-?(\\d{2})(?:-?(\\d{2})" +
-          "(?:[Tt ](\\d{2})(?::?(\\d{2})(?::?(\\d{2})(?:\\.(\\d{1,3})(?:\\d+)?)?)?)?" +
-          "(?:[Zz]|(?:([-+])(\\d{2})(?::?(\\d{2}))?)?)?)?)?)?$");
-         if (match) {
-          for (var ints = [2, 3, 4, 5, 6, 7, 8, 10, 11], i = ints.length - 1; i >= 0; --i)
-           match[ints[i]] = (typeof match[ints[i]] != "undefined"
-            && match[ints[i]].length > 0) ? parseInt(match[ints[i]], 10) : 0;
-          if (match[1] == '-') // BC/AD
-           match[2] *= -1;
-          var ms = Date.UTC(
-           match[2], // Y
-           match[3] - 1, // M
-           match[4], // D
-           match[5], // h
-           match[6], // m
-           match[7], // s
-           match[8] // ms
-          );
-          if (typeof match[9] != "undefined" && match[9].length > 0) // offset
-           ms += (match[9] == '+' ? -1 : 1) *
-            (match[10]*3600*1000 + match[11]*60*1000); // oh om
-          if (match[2] >= 0 && match[2] <= 99) // 1-99 AD
-           ms -= 59958144000000;
-          thisdate.setTime(ms);
-          formatted = jq.easydate.format_date(thisdate, this.language)
-          return formatted
-         }
-         else
-          return null;
-    }
-
-    /*
-    *    Returns an utf8 decoded string
-    *    @param {String} str_data    an utf-8 String
-    */
-    jq.fn.utf8_decode = function(str_data) {
-        // Converts a UTF-8 encoded string to ISO-8859-1
-        //
-        // version: 1109.2015
-        // discuss at: http://phpjs.org/functions/utf8_decode
-        // +   original by: Webtoolkit.info (http://www.webtoolkit.info/)
-        // +      input by: Aman Gupta
-        // +   improved by: Kevin van Zonneveld (http://kevin.vanzonneveld.net)
-        // +   improved by: Norman "zEh" Fuchs
-        // +   bugfixed by: hitwork
-        // +   bugfixed by: Onno Marsman
-        // +      input by: Brett Zamir (http://brett-zamir.me)
-        // +   bugfixed by: Kevin van Zonneveld (http://kevin.vanzonneveld.net)
-        // *     example 1: utf8_decode('Kevin van Zonneveld');
-        // *     returns 1: 'Kevin van Zonneveld'
-        var tmp_arr = [],
-            i = 0,
-            ac = 0,
-            c1 = 0,
-            c2 = 0,
-            c3 = 0;
-
-        str_data += '';
-
-        while (i < str_data.length) {
-            c1 = str_data.charCodeAt(i);
-            if (c1 < 128) {
-                tmp_arr[ac++] = String.fromCharCode(c1);
-                i++;
-            } else if (c1 > 191 && c1 < 224) {
-                c2 = str_data.charCodeAt(i + 1);
-                tmp_arr[ac++] = String.fromCharCode(((c1 & 31) << 6) | (c2 & 63));
-                i += 2;
-            } else {
-                c2 = str_data.charCodeAt(i + 1);
-                c3 = str_data.charCodeAt(i + 2);
-                tmp_arr[ac++] = String.fromCharCode(((c1 & 15) << 12) | ((c2 & 63) << 6) | (c3 & 63));
-                i += 3;
-            }
-        }
-
-        return tmp_arr.join('');
     }
 
     /*
@@ -572,7 +453,7 @@
                     var generator = undefined
                     if (activity.hasOwnProperty('generator'))
                          {
-                            if (activity.generator!=_MAXUI.settings.generatorName)
+                            if (activity.generator!=maxui.settings.generatorName)
                                 generator = activity.generator
                          }
 
@@ -580,11 +461,11 @@
                     var avatar_url = ''
                     var profile_url = ''
                     if (activity.actor.objectType=='person') {
-                        avatar_url = _MAXUI.settings.avatarURLpattern.format(activity.actor.username)
-                        profile_url = _MAXUI.settings.profileURLpattern.format(activity.actor.username)
+                        avatar_url = maxui.settings.avatarURLpattern.format(activity.actor.username)
+                        profile_url = maxui.settings.profileURLpattern.format(activity.actor.username)
                       }
                     else if (activity.actor.objectType=='context') {
-                        avatar_url = _MAXUI.settings.contextAvatarURLpattern.format(activity.actor.urlHash)
+                        avatar_url = maxui.settings.contextAvatarURLpattern.format(activity.actor.urlHash)
                         profile_url = activity.actor.url
                       }
                     // Take replies (if exists) and format to be included as a formatted
@@ -603,10 +484,10 @@
                                         reply = {
                                                            id: comment.id,
                                                        author: comment.author,
-                                                         date: maxui.formatDate(comment.published),
-                                                         text: maxui.formatText(comment.content),
-                                                    avatarURL: _MAXUI.settings.avatarURLpattern.format(comment.author.username),
-                                                   profileURL: _MAXUI.settings.profileURLpattern.format(comment.author.username)
+                                                         date: maxui.utils.formatDate(comment.published,maxui.language),
+                                                         text: maxui.utils.formatText(comment.content),
+                                                    avatarURL: maxui.settings.avatarURLpattern.format(comment.author.username),
+                                                   profileURL: maxui.settings.profileURLpattern.format(comment.author.username)
 
                                                 }
                                         replies.items.push(reply)
@@ -619,9 +500,9 @@
                     var params = {
                                            id: activity.id,
                                         actor: activity.actor,
-                                     literals:_MAXUI.settings.literals,
-                                         date: maxui.formatDate(activity.published),
-                                         text: maxui.formatText(activity.object.content),
+                                     literals:maxui.settings.literals,
+                                         date: maxui.utils.formatDate(activity.published, maxui.language),
+                                         text: maxui.utils.formatText(activity.object.content),
                                       replies: replies,
                                     avatarURL: avatar_url,
                                    profileURL: profile_url,
@@ -701,13 +582,13 @@
                 {
                     var comment = items[i]
 
-                    var params = {   literals:_MAXUI.settings.literals,
+                    var params = {   literals:maxui.settings.literals,
                                            id: comment.id,
                                        author: comment.author,
-                                         date: maxui.formatDate(comment.published),
-                                         text: maxui.formatText(comment.content),
-                                    avatarURL: _MAXUI.settings.avatarURLpattern.format(comment.author.username),
-                                   profileURL: _MAXUI.settings.profileURLpattern.format(comment.author.username)
+                                         date: maxui.utils.formatDate(comment.published, maxui.language),
+                                         text: maxui.utils.formatText(comment.content),
+                                    avatarURL: maxui.settings.avatarURLpattern.format(comment.author.username),
+                                   profileURL: maxui.settings.profileURLpattern.format(comment.author.username)
                                  }
                     // Render the comment template and append it at the end of the rendered comments
                     var comments = comments + maxui.templates.comment.render(params)
@@ -718,204 +599,6 @@
             comment_count = jq('.maxui-activity#'+activity_id+' .maxui-commentaction strong')
             jq(comment_count).text(eval(jq(comment_count).text())+1)
         }
-
-    /*
-    *    Searches for urls and hashtags in text and transforms to hyperlinks
-    *    @param {String} text     String containing 0 or more valid links embedded with any other text
-    */
-    jq.fn.formatText = function (text){
-        if (text) {
-            text = text.replace(
-                /((https?\:\/\/)|(www\.))(\S+)(\w{2,4})(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/gi,
-                function(url){
-                    var full_url = url;
-                    if (!full_url.match('^https?:\/\/')) {
-                        full_url = 'http://' + full_url;
-                    }
-                    return '<a href="' + full_url + '">' + url + '</a>';
-                }
-            );
-
-            text = text.replace(
-                /(\s|^)#{1}(\w+)/gi,
-                function(){
-                    var tag = arguments[2]
-                    var search_url='{0}/{}'
-                    return '<a class="maxui-hashtag" value="'+tag+'" href="' + search_url + '">#' + tag + ' </a>';
-                }
-            );
-        }
-        return text;
-    }
-
-
-    jq.fn.sha1 = function(msg) {
-
-  function rotate_left(n,s) {
-    var t4 = ( n<<s ) | (n>>>(32-s));
-    return t4;
-  };
-
-  function lsb_hex(val) {
-    var str="";
-    var i;
-    var vh;
-    var vl;
-
-    for( i=0; i<=6; i+=2 ) {
-      vh = (val>>>(i*4+4))&0x0f;
-      vl = (val>>>(i*4))&0x0f;
-      str += vh.toString(16) + vl.toString(16);
-    }
-    return str;
-  };
-
-  function cvt_hex(val) {
-    var str="";
-    var i;
-    var v;
-
-    for( i=7; i>=0; i-- ) {
-      v = (val>>>(i*4))&0x0f;
-      str += v.toString(16);
-    }
-    return str;
-  };
-
-
-  function Utf8Encode(string) {
-    string = string.replace(/\r\n/g,"\n");
-    var utftext = "";
-
-    for (var n = 0; n < string.length; n++) {
-
-      var c = string.charCodeAt(n);
-
-      if (c < 128) {
-        utftext += String.fromCharCode(c);
-      }
-      else if((c > 127) && (c < 2048)) {
-        utftext += String.fromCharCode((c >> 6) | 192);
-        utftext += String.fromCharCode((c & 63) | 128);
-      }
-      else {
-        utftext += String.fromCharCode((c >> 12) | 224);
-        utftext += String.fromCharCode(((c >> 6) & 63) | 128);
-        utftext += String.fromCharCode((c & 63) | 128);
-      }
-
-    }
-
-    return utftext;
-  };
-
-  var blockstart;
-  var i, j;
-  var W = new Array(80);
-  var H0 = 0x67452301;
-  var H1 = 0xEFCDAB89;
-  var H2 = 0x98BADCFE;
-  var H3 = 0x10325476;
-  var H4 = 0xC3D2E1F0;
-  var A, B, C, D, E;
-  var temp;
-
-  msg = Utf8Encode(msg);
-
-  var msg_len = msg.length;
-
-  var word_array = new Array();
-  for( i=0; i<msg_len-3; i+=4 ) {
-    j = msg.charCodeAt(i)<<24 | msg.charCodeAt(i+1)<<16 |
-    msg.charCodeAt(i+2)<<8 | msg.charCodeAt(i+3);
-    word_array.push( j );
-  }
-
-  switch( msg_len % 4 ) {
-    case 0:
-      i = 0x080000000;
-    break;
-    case 1:
-      i = msg.charCodeAt(msg_len-1)<<24 | 0x0800000;
-    break;
-
-    case 2:
-      i = msg.charCodeAt(msg_len-2)<<24 | msg.charCodeAt(msg_len-1)<<16 | 0x08000;
-    break;
-
-    case 3:
-      i = msg.charCodeAt(msg_len-3)<<24 | msg.charCodeAt(msg_len-2)<<16 | msg.charCodeAt(msg_len-1)<<8  | 0x80;
-    break;
-  }
-
-  word_array.push( i );
-
-  while( (word_array.length % 16) != 14 ) word_array.push( 0 );
-
-  word_array.push( msg_len>>>29 );
-  word_array.push( (msg_len<<3)&0x0ffffffff );
-
-
-  for ( blockstart=0; blockstart<word_array.length; blockstart+=16 ) {
-
-    for( i=0; i<16; i++ ) W[i] = word_array[blockstart+i];
-    for( i=16; i<=79; i++ ) W[i] = rotate_left(W[i-3] ^ W[i-8] ^ W[i-14] ^ W[i-16], 1);
-
-    A = H0;
-    B = H1;
-    C = H2;
-    D = H3;
-    E = H4;
-
-    for( i= 0; i<=19; i++ ) {
-      temp = (rotate_left(A,5) + ((B&C) | (~B&D)) + E + W[i] + 0x5A827999) & 0x0ffffffff;
-      E = D;
-      D = C;
-      C = rotate_left(B,30);
-      B = A;
-      A = temp;
-    }
-
-    for( i=20; i<=39; i++ ) {
-      temp = (rotate_left(A,5) + (B ^ C ^ D) + E + W[i] + 0x6ED9EBA1) & 0x0ffffffff;
-      E = D;
-      D = C;
-      C = rotate_left(B,30);
-      B = A;
-      A = temp;
-    }
-
-    for( i=40; i<=59; i++ ) {
-      temp = (rotate_left(A,5) + ((B&C) | (B&D) | (C&D)) + E + W[i] + 0x8F1BBCDC) & 0x0ffffffff;
-      E = D;
-      D = C;
-      C = rotate_left(B,30);
-      B = A;
-      A = temp;
-    }
-
-    for( i=60; i<=79; i++ ) {
-      temp = (rotate_left(A,5) + (B ^ C ^ D) + E + W[i] + 0xCA62C1D6) & 0x0ffffffff;
-      E = D;
-      D = C;
-      C = rotate_left(B,30);
-      B = A;
-      A = temp;
-    }
-
-    H0 = (H0 + A) & 0x0ffffffff;
-    H1 = (H1 + B) & 0x0ffffffff;
-    H2 = (H2 + C) & 0x0ffffffff;
-    H3 = (H3 + D) & 0x0ffffffff;
-    H4 = (H4 + E) & 0x0ffffffff;
-
-  }
-
-  var temp = cvt_hex(H0) + cvt_hex(H1) + cvt_hex(H2) + cvt_hex(H3) + cvt_hex(H4);
-
-  return temp.toLowerCase();
-
-    }
 
     /*
     *    Renders the timeline of the current user, defined in settings.username
@@ -935,16 +618,16 @@
 
 
 
-        if (_MAXUI.settings.activitySource=='timeline')
+        if (maxui.settings.activitySource=='timeline')
         {
             var activityRetriever = this.maxClient.getUserTimeline
-            func_params.push(_MAXUI.settings.username)
+            func_params.push(maxui.settings.username)
         }
-        else if (_MAXUI.settings.activitySource=='activities')
+        else if (maxui.settings.activitySource=='activities')
         {
             var activityRetriever = this.maxClient.getActivities
-            func_params.push(_MAXUI.settings.username)
-            func_params.push(_MAXUI.settings.readContextHash)
+            func_params.push(maxui.settings.username)
+            func_params.push(maxui.settings.readContextHash)
         }
 
         if (arguments.length>1)
@@ -956,7 +639,7 @@
                 var canwrite = true
 
                 // Add read context if user is not subscribed to it
-                var subscriptions = _MAXUI.settings.subscriptions
+                var subscriptions = maxui.settings.subscriptions
                 if (!subscriptions[this.context.url])
                 {
                     subscriptions[this.context.url]={}
@@ -970,9 +653,9 @@
 
                 // Iterate through all the defined write contexts to check for write permissions on
                 // the current user
-                for (wc=0;wc<_MAXUI.settings.writeContexts.length;wc++)
+                for (wc=0;wc<maxui.settings.writeContexts.length;wc++)
                     {
-                        var write_context = _MAXUI.settings.writeContexts[wc]
+                        var write_context = maxui.settings.writeContexts[wc]
                         if (subscriptions[write_context]['permissions'])
                         {
                           if (subscriptions[write_context]['permissions'].write==false)
@@ -986,10 +669,10 @@
                 // Render the postbox UI if user has permission
                 if (canwrite)
                 {
-                    var params = jq.extend(_MAXUI.settings,{'avatar':_MAXUI.settings.avatarURLpattern.format(_MAXUI.settings.username),
-                                                                'profile':_MAXUI.settings.profileURLpattern.format(_MAXUI.settings.username),
+                    var params = jq.extend(maxui.settings,{'avatar':maxui.settings.avatarURLpattern.format(maxui.settings.username),
+                                                                'profile':maxui.settings.profileURLpattern.format(maxui.settings.username),
                                                                 'allowPosting': canwrite,
-                                                                'literals': _MAXUI.settings.literals
+                                                                'literals': maxui.settings.literals
                                                                })
                     var postbox = maxui.templates.postBox.render(params)
                     jQuery('#maxui-mainpanel').prepend(postbox)
