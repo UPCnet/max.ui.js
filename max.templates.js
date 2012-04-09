@@ -1,4 +1,12 @@
+var max = max || {};
 
+/**
+ * @fileoverview Provides remote content retrieval facilities.
+ *     Available to every gadget.
+ */
+
+
+max.templates = function() {
 
 // construct and compile templates
 var MSTCH_MAXUI_MAIN_UI = '\
@@ -133,8 +141,13 @@ var MSTCH_MAXUI_FILTERS = '\
 {{/filters}}\
 ';
 
-var MAXUI_MAIN_UI = Hogan.compile(MSTCH_MAXUI_MAIN_UI);
-var MAXUI_POSTBOX = Hogan.compile(MSTCH_MAXUI_POSTBOX);
-var MAXUI_ACTIVITY = Hogan.compile(MSTCH_MAXUI_ACTIVITY);
-var MAXUI_COMMENT = Hogan.compile(MSTCH_MAXUI_COMMENT);
-var MAXUI_FILTERS = Hogan.compile(MSTCH_MAXUI_FILTERS);
+var templates = {
+    mainUI: Hogan.compile(MSTCH_MAXUI_MAIN_UI),
+   postBox: Hogan.compile(MSTCH_MAXUI_POSTBOX),
+  activity: Hogan.compile(MSTCH_MAXUI_ACTIVITY),
+   comment: Hogan.compile(MSTCH_MAXUI_COMMENT),
+  filters: Hogan.compile(MSTCH_MAXUI_FILTERS)
+  }
+
+  return templates
+}

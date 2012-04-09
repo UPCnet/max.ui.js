@@ -16,6 +16,7 @@
         // in order to get the default literals in the chosen language
         maxui.language = options.language || 'en'
 
+
         var defaults = {'maxRequestsAPI' : 'jquery',
                         'maxServerURL' : 'https://max.upc.edu',
                         'readContext': '',
@@ -62,6 +63,8 @@
             alert('The server responded with a "{0}" error, with the following message: "{1}". \n\nPlease try again later or contact administrator at admin@max.upc.edu.'.format(error.error,error.error_description))
         })
 
+        maxui.templates = max.templates()
+
         // Init MAX Client
         this.maxClient = new MaxClient()
         var maxclient_config = {  server:    _MAXUI.settings.maxServerURL,
@@ -101,7 +104,7 @@
                          username: _MAXUI.settings.username,
                          literals: _MAXUI.settings.literals
                      }
-            var mainui = MAXUI_MAIN_UI.render(params)
+            var mainui = maxui.templates.mainUI.render(params)
             maxui.html(mainui)
             maxui.printActivities({},function() {
 
@@ -310,7 +313,7 @@
 
         var maxui=this
         var params = {filters:window._MAXUI.filters}
-        var activity_items = MAXUI_FILTERS.render(params)
+        var activity_items = maxui.templates.filters.render(params)
         jq('#maxui-search-filters').html(activity_items)
         var filters = {}
         // group filters
@@ -628,8 +631,8 @@
                                  }
                     // Render the activities template and append it at the end of the rendered activities
                     // partials is used to render each comment found in the activities
-                    var partials = {comment: MAXUI_COMMENT}
-                    var activities = activities + MAXUI_ACTIVITY.render(params, partials)
+                    var partials = {comment: maxui.templates.comment}
+                    var activities = activities + maxui.templates.activity.render(params, partials)
                 }
 
 
@@ -707,7 +710,7 @@
                                    profileURL: _MAXUI.settings.profileURLpattern.format(comment.author.username)
                                  }
                     // Render the comment template and append it at the end of the rendered comments
-                    var comments = comments + MAXUI_COMMENT.render(params)
+                    var comments = comments + maxui.templates.comment.render(params)
                 }
             // Insert new comments by replacing previous comments with all comments
             jq('.maxui-activity#'+activity_id+' .maxui-commentsbox').html(comments)
@@ -988,7 +991,7 @@
                                                                 'allowPosting': canwrite,
                                                                 'literals': _MAXUI.settings.literals
                                                                })
-                    var postbox = MAXUI_POSTBOX.render(params)
+                    var postbox = maxui.templates.postBox.render(params)
                     jQuery('#maxui-mainpanel').prepend(postbox)
                 }
 
