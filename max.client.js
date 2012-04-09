@@ -17,9 +17,7 @@ String.prototype.format = function(){
     return this.replace(pattern, function(capture){ return args[capture.match(/\d+/)]; });
     }
 
-function MaxClient (url) {
-    this.url = url;
-    this.mode = 'jquery'
+function MaxClient () {
 
     this.ROUTES = {   users : '/people',
                       user : '/people/{0}',
@@ -43,26 +41,26 @@ function MaxClient (url) {
                    }
 };
 
-MaxClient.prototype.setMode = function(mode) {
-	this.mode = mode
-
-};
-
-MaxClient.prototype.setActor = function(username) {
-	this.actor = {
+MaxClient.prototype.configure = function(settings) {
+  this.url = settings.server
+	this.mode = settings.mode
+  this.token = settings.token
+  this.actor = {
             "objectType": "person",
-            "username": username
+            "username": settings.username
         }
+
 };
 
 MaxClient.prototype.POST = function(route, query, callback) {
+    maxclient = this
     resource_uri = '{0}{1}'.format(this.url, route)
     if (this.mode=='jquery')
     {
            jQuery.ajax( {url: resource_uri,
              beforeSend: function(xhr) {
-                 xhr.setRequestHeader("X-Oauth-Token", _MAXUI.settings.oAuthToken);
-                 xhr.setRequestHeader("X-Oauth-Username", _MAXUI.settings.username);
+                 xhr.setRequestHeader("X-Oauth-Token", maxclient.token);
+                 xhr.setRequestHeader("X-Oauth-Username", maxclient.actor.username);
                  xhr.setRequestHeader("X-Oauth-Scope", 'widgetcli');
              },
 			     type: 'POST',
@@ -70,7 +68,7 @@ MaxClient.prototype.POST = function(route, query, callback) {
 			     async: true,
 			     dataType: 'json'
 			    })
-         .done( function(result) { callback.call(result) } )
+         .done( function(result) { callback.call(result) } )  
          .fail( function(xhr) { jQuery(window).trigger('maxclienterror',xhr) })
 
     }
@@ -82,8 +80,8 @@ MaxClient.prototype.POST = function(route, query, callback) {
 	    params[gadgets.io.RequestParameters.REFRESH_INTERVAL] = 1
 	    params[gadgets.io.RequestParameters.POST_DATA] = JSON.stringify(query)
 
-      var headers = {"X-Oauth-Token": _MAXUI.settings.oAuthToken,
-                     "X-Oauth-Username": _MAXUI.settings.username,
+      var headers = {"X-Oauth-Token": maxclient.token,
+                     "X-Oauth-Username": maxclient.actor.username,
                      "X-Oauth-Scope": 'widgetcli'}
       params[gadgets.io.RequestParameters.HEADERS] = headers
 
@@ -101,8 +99,8 @@ MaxClient.prototype.POST = function(route, query, callback) {
 };
 
 MaxClient.prototype.GET = function(route, query, callback) {
+    maxclient = this
     resource_uri = '{0}{1}'.format(this.url, route)
-    caca = this
     if (Object.keys(query).length >0)
     {
         resource_uri+='?'+jQuery.param(query, true)
@@ -111,15 +109,15 @@ MaxClient.prototype.GET = function(route, query, callback) {
     {
 	    jQuery.ajax( {url: resource_uri,
              beforeSend: function(xhr) {
-                 xhr.setRequestHeader("X-Oauth-Token", _MAXUI.settings.oAuthToken);
-                 xhr.setRequestHeader("X-Oauth-Username", _MAXUI.settings.username);
+                 xhr.setRequestHeader("X-Oauth-Token", maxclient.token);
+                 xhr.setRequestHeader("X-Oauth-Username", maxclient.actor.username);
                  xhr.setRequestHeader("X-Oauth-Scope", 'widgetcli');
              },
 			     type: 'GET',
 			     async: true,
 			     dataType: 'json'
 			    })
-         .done( function(result) { callback.call(result) } )
+         .done( function(result) { callback.call(result) } )  
          .fail( function(xhr) { jQuery(window).trigger('maxclienterror',xhr) })
 
 	}
@@ -130,8 +128,8 @@ MaxClient.prototype.GET = function(route, query, callback) {
 	    params[gadgets.io.RequestParameters.METHOD] = gadgets.io.MethodType.GET
 	    params[gadgets.io.RequestParameters.REFRESH_INTERVAL] = 1
 
-      var headers = {"X-Oauth-Token": _MAXUI.settings.oAuthToken,
-                     "X-Oauth-Username": _MAXUI.settings.username,
+      var headers = {"X-Oauth-Token": maxclient.token,
+                     "X-Oauth-Username": maxclient.actor.username,
                      "X-Oauth-Scope": 'widgetcli'}
       params[gadgets.io.RequestParameters.HEADERS] = headers
 

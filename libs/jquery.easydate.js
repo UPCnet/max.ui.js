@@ -8,7 +8,7 @@
 
     jQuery.easydate = { };
     jQuery.easydate.locales = { };
-    jQuery.easydate.locales.enUS = {
+    jQuery.easydate.locales.en = {
         "future_format": "%s %t",
         "past_format": "%t %s",
         "second": "second",
@@ -32,7 +32,7 @@
         "in": "in"
     };
 
-    jQuery.easydate.locales.esCA = {
+    jQuery.easydate.locales.ca = {
         "future_format": "%s %t",
         "past_format": "%s %t",
         "second": "segon",
@@ -53,6 +53,31 @@
         "tomorrow": "demà",
         "now": "fa un moment",
         "ago": "fa",
+        "in": "en"
+    };
+
+
+    jQuery.easydate.locales.es= {
+        "future_format": "%s %t",
+        "past_format": "%s %t",
+        "second": "segundo",
+        "seconds": "segundos",
+        "minute": "minuto",
+        "minutes": "minutos",
+        "hour": "hora",
+        "hours": "horas",
+        "day": "dia",
+        "days": "dias",
+        "week": "semana",
+        "weeks": "semanas",
+        "month": "mes",
+        "months": "meses",
+        "year": "año",
+        "years": "años",
+        "yesterday": "ayer",
+        "tomorrow": "mañana",
+        "now": "hace un instante",
+        "ago": "hace",
         "in": "en"
     };
 
@@ -77,7 +102,7 @@
         {
             return date.toLocaleDateString();
         },
-        locale: jQuery.easydate.locales.esCA
+        locale: jQuery.easydate.locales.en
     };
 
     function __(str, value, settings)
@@ -95,10 +120,10 @@
     // synchronizing the user's clock with a server-side clock.
 
     // Formats a Date object to a human-readable localized string.
-    jQuery.easydate.format_date = function(date, options)
+    jQuery.easydate.format_date = function(date, language)
     {
-
-        var settings = jQuery.extend({}, defaults, options);
+        var settings = jQuery.extend({}, defaults);
+        settings.locale = jQuery.easydate.locales[language]
         var now = new Date();
         var diff = (( now.getTime() - date.getTime()) / 1000);
         var diff_abs = Math.abs(diff);

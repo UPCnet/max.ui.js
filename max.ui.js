@@ -12,43 +12,22 @@
         if (!window._MAXUI)
             { window._MAXUI = {}}
 
-        // Define default english literals
-        var literals_en = {'new_activity_text': 'Write something...',
-                           'new_activity_post': "Post activity",
-                           'toggle_comments': "Comments",
-                           'new_comment_text': "Comment something...",
-                           'new_comment_post': "Post comment",
-                           'load_more': "Load more",
-                           'context_published_in': "Published in",
-                           'generator_via': "via",
-                           'search_text': "Search..."
-            }
-
-        // Update the default EN literals and delete from the options,
-        // to allow partial extending of literals
-        var literals = jq.extend(literals_en,options.literals)
-        delete options.literals
+        // Get language from options or set default. Doing this previously to set other defaults
+        // in order to get the default literals in the chosen language
+        maxui.language = options.language || 'en'
 
         var defaults = {'maxRequestsAPI' : 'jquery',
-                        'maxServerURL' : 'http://max.beta.upcnet.es',
+                        'maxServerURL' : 'https://max.upc.edu',
                         'readContext': '',
                         'writeContexts' : [],
                         'activitySource': 'timeline',
-                        'literals': literals,
+                        'literals': max.literals(maxui.language),
                         'enableAlerts': false
                         }
 
         // extend defaults with user-defined settings
         // and store in the global _MAXUI namespace
         _MAXUI.settings = jq.extend(defaults,options)
-
-        // Prepare utf strings to show correctly on browser
-        // TODO Check if needed on all browsers, sometimes not working...
-        //for (key in _MAXUI.settings.literals)
-        //    {
-        //      value = _MAXUI.settings.literals[key]
-        //       _MAXUI.settings.literals[key] = maxui.utf8_decode(value)
-        //    }
 
         // Configure maxui without CORS if CORS not available
         if (!this.isCORSCapable())
@@ -84,10 +63,13 @@
         })
 
         // Init MAX Client
-        this.maxClient = new MaxClient(_MAXUI.settings.maxServerURL)
-        this.maxClient.setMode(_MAXUI.settings.maxRequestsAPI)
-        this.maxClient.setActor(_MAXUI.settings.username)
-
+        this.maxClient = new MaxClient()
+        var maxclient_config = {  server:    _MAXUI.settings.maxServerURL,
+                                    mode:    _MAXUI.settings.maxRequestsAPI,
+                                   username: _MAXUI.settings.username,
+                                   token:    _MAXUI.settings.oAuthToken
+                               }
+        this.maxClient.configure(maxclient_config)
         this.maxClient.getUserData(_MAXUI.settings.username, function() {
 
             //Determine if user can write in writeContexts
@@ -500,7 +482,7 @@
           if (match[2] >= 0 && match[2] <= 99) // 1-99 AD
            ms -= 59958144000000;
           thisdate.setTime(ms);
-          formatted = jq.easydate.format_date(thisdate)
+          formatted = jq.easydate.format_date(thisdate, this.language)
           return formatted
          }
          else
