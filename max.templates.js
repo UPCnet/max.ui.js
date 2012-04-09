@@ -1,8 +1,8 @@
 var max = max || {};
 
 /**
- * @fileoverview Provides remote content retrieval facilities.
- *     Available to every gadget.
+ * @fileoverview Provides hogan compiled templates
+ *               ready to render.
  */
 
 
