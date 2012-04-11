@@ -49,8 +49,7 @@ max.utils = function() {
                 /(\s|^)#{1}(\w+)/gi,
                 function(){
                     var tag = arguments[2]
-                    var search_url='{0}/{}'
-                    return '<a class="maxui-hashtag" value="'+tag+'" href="' + search_url + '">#' + tag + ' </a>';
+                    return '<a class="maxui-hashtag" href="#" value="'+tag+'">#' + tag + ' </a>';
                 }
             );
         }

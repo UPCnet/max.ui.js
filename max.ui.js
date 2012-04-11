@@ -319,6 +319,7 @@
     *    @param {Object} filter    An object repesenting a filter, with the keys "type" and "value"
     */
     jq.fn.delFilter = function(filter) {
+        maxui = this
         var deleted = false
         var index = -1
         for (i=0;i<maxui.filters.length;i++)
@@ -337,6 +338,7 @@
     */
     jq.fn.addFilter = function(filter) {
 
+        maxui = this
         var reload=true
         //Reload or not by func argument
         if (arguments.length>1)
@@ -371,6 +373,7 @@
     *    Returns the current settings of the plugin
     */
     jq.fn.Settings = function() {
+        maxui = this
         return maxui.settings
         }
 
