@@ -43,15 +43,18 @@
 
 
 
-        // set default avatar and profile url pattern if user didn't provide it
+
+        //set default avatar and profile url pattern if user didn't provide it
         if (!maxui.settings.avatarURLpattern)
-               maxui.settings['avatarURLpattern'] = maxui.settings.maxServerURL+'/people/{0}/avatar'
+              maxui.settings['avatarURLpattern'] = maxui.settings.maxServerURL+'/people/{0}/avatar'
 
         if (!maxui.settings.contextAvatarURLpattern)
                maxui.settings['contextAvatarURLpattern'] = maxui.settings.maxServerURL+'/contexts/{0}/avatar'
 
-        if (!maxui.settings.profileURLpattern)
-               maxui.settings['profileURLpattern'] = maxui.settings.maxServerURL+'/profiles/{0}'
+        // Disable profileURL by now
+
+        // if (!maxui.settings.profileURLpattern)
+        //        maxui.settings['profileURLpattern'] = maxui.settings.maxServerURL+'/profiles/{0}'
 
         // Catch errors triggered by failed max api calls
         if (maxui.settings.enableAlerts)
@@ -135,6 +138,15 @@
                       event.preventDefault()
                       window.status=''
                       jq(this).closest('.maxui-activity').find('.maxui-comments').toggle(200)
+                      })
+
+                  //Assign Username and avatar clicking via delegating the click to the activities container
+                  jq('#maxui-activities').on('click','.maxui-author',function (event) {
+                      event.preventDefault()
+                      var author = jq(this).find('.maxui-username').text()
+                      maxui.addFilter({type:'author', value:author})
+                      jq('#maxui-search').toggleClass('folded',false)
+
                       })
 
                   //Assign hashtag filtering via delegating the click to the activities container
@@ -268,11 +280,19 @@
                 {
                     var kwtype = 'keyword'
                     var keyword = keywords[kw]
-                    if (keyword[0]=='#')
+
+                    switch (keyword[0])
                     {
-                        kwtype='hashtag'
-                        keyword = keyword.substr(1)
+                    case '#': var kwtype='hashtag';
+                              var keyword = keyword.substr(1);
+                              break;
+                    case '@': var kwtype='author';
+                              var keyword = keyword.substr(1);
+                              break;
+                    default:  var kwtype = 'keyword';
+                              break;
                     }
+
                     if (keyword.length>=3)
                         this.addFilter({type:kwtype, value:keyword}, false)
                 }
@@ -349,9 +369,9 @@
 
         switch (filter.type)
         {
-        case "hashtag":
-        filter['prepend']='#';break;
-        default: filter['prepend']='';break;
+        case "hashtag": filter['prepend']='#';break;
+        case "author": filter['prepend']='@';break;
+        default:        filter['prepend']='';break;
         }
 
 
@@ -668,7 +688,6 @@
                 if (canwrite)
                 {
                     var params = jq.extend(maxui.settings,{'avatar':maxui.settings.avatarURLpattern.format(maxui.settings.username),
-                                                                'profile':maxui.settings.profileURLpattern.format(maxui.settings.username),
                                                                 'allowPosting': canwrite,
                                                                 'literals': maxui.settings.literals
                                                                })

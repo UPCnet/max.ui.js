@@ -49,7 +49,7 @@ var MSTCH_MAXUI_MAIN_UI = '\
 var MSTCH_MAXUI_POSTBOX = '\
    {{#allowPosting}}\
    <div id="maxui-newactivity">\
-      <a href="{{profile}}" class="maxui-avatar">\
+      <a href="#" class="maxui-avatar">\
           <img src="{{avatar}}">\
       </a>\
       <div id="maxui-newactivity-box">\
@@ -65,7 +65,7 @@ var MSTCH_MAXUI_ACTIVITY = '\
     <div class="maxui-activity-content">\
         <div class="maxui-publisheddate">{{date}}</div>\
         <div class="maxui-author">\
-          <a href="{{profileURL}}">\
+          <a href="#">\
            		<span class="maxui-avatar"><img src="{{avatarURL}}"></span>\
 		          <span class="maxui-displayname">{{actor.displayName}}</span>\
           </a>\
