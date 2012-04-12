@@ -121,7 +121,7 @@ var MSTCH_MAXUI_COMMENT = '\
     <div class="maxui-activity-content">\
         <div class="maxui-publisheddate">{{date}}</div>\
         <div class="maxui-author">\
-	   <a href="{{profileURL}}">\
+	   <a href="#">\
 		<span class="maxui-avatar"><img src="{{avatarURL}}"></span>\
 		<span class="maxui-displayname">{{author.displayName}}</span></a> \
 	   <span class="maxui-username">{{author.username}}</span>\

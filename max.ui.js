@@ -477,14 +477,11 @@
 
                     // Prepare avatar image url depending on actor type
                     var avatar_url = ''
-                    var profile_url = ''
                     if (activity.actor.objectType=='person') {
                         avatar_url = maxui.settings.avatarURLpattern.format(activity.actor.username)
-                        profile_url = maxui.settings.profileURLpattern.format(activity.actor.username)
                       }
                     else if (activity.actor.objectType=='context') {
                         avatar_url = maxui.settings.contextAvatarURLpattern.format(activity.actor.urlHash)
-                        profile_url = activity.actor.url
                       }
                     // Take replies (if exists) and format to be included as a formatted
                     // subobject ready for hogan
@@ -504,9 +501,7 @@
                                                        author: comment.author,
                                                          date: maxui.utils.formatDate(comment.published,maxui.language),
                                                          text: maxui.utils.formatText(comment.content),
-                                                    avatarURL: maxui.settings.avatarURLpattern.format(comment.author.username),
-                                                   profileURL: maxui.settings.profileURLpattern.format(comment.author.username)
-
+                                                    avatarURL: maxui.settings.avatarURLpattern.format(comment.author.username)
                                                 }
                                         replies.items.push(reply)
                                         }
@@ -523,7 +518,6 @@
                                          text: maxui.utils.formatText(activity.object.content),
                                       replies: replies,
                                     avatarURL: avatar_url,
-                                   profileURL: profile_url,
                                   publishedIn: contexts,
                                           via: generator
 
@@ -605,8 +599,7 @@
                                        author: comment.author,
                                          date: maxui.utils.formatDate(comment.published, maxui.language),
                                          text: maxui.utils.formatText(comment.content),
-                                    avatarURL: maxui.settings.avatarURLpattern.format(comment.author.username),
-                                   profileURL: maxui.settings.profileURLpattern.format(comment.author.username)
+                                    avatarURL: maxui.settings.avatarURLpattern.format(comment.author.username)
                                  }
                     // Render the comment template and append it at the end of the rendered comments
                     var comments = comments + maxui.templates.comment.render(params)
