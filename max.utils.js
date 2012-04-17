@@ -48,8 +48,9 @@ max.utils = function() {
             text = text.replace(
                 /(\s|^)#{1}(\w+)/gi,
                 function(){
+                    var pre = arguments[1]
                     var tag = arguments[2]
-                    return '<a class="maxui-hashtag" href="#" value="'+tag+'">#' + tag + ' </a>';
+                    return '<a class="maxui-hashtag" href="#" value="'+tag+'">'+pre+'#'+tag+'</a>';
                 }
             );
         }
