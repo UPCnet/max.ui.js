@@ -10,7 +10,7 @@ max.literals = function(language) {
     var maxui = {}
     maxui['en'] = {'new_activity_text': 'Write something...',
                        'new_activity_post': "Post activity",
-                       'toggle_comments': "Comments",
+                       'toggle_comments': "comments",
                        'new_comment_text': "Comment something...",
                        'new_comment_post': "Post comment",
                        'load_more': "Load more",
@@ -21,7 +21,7 @@ max.literals = function(language) {
 
     maxui['es'] = {'new_activity_text': 'Escribe algo...',
                        'new_activity_post': "Publica",
-                       'toggle_comments': "Comentarios",
+                       'toggle_comments': "comentarios",
                        'new_comment_text': "Comenta algo...",
                        'new_comment_post': "Comenta",
                        'load_more': "Cargar más",
@@ -32,7 +32,7 @@ max.literals = function(language) {
 
     maxui['ca'] = {'new_activity_text': 'Escriu alguna cosa...',
                        'new_activity_post': "Publica",
-                       'toggle_comments': "Comentaris",
+                       'toggle_comments': "comentaris",
                        'new_comment_text': "Comenta alguna cosa...",
                        'new_comment_post': "Comenta",
                        'load_more': "Carrega'n més",
