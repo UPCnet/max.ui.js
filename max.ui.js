@@ -35,13 +35,18 @@
                 maxui.settings.maxServerURL = maxui.settings.maxServerURLAlias
             }
 
-        // Add read context to write contexts
-        maxui.settings.writeContexts.push(maxui.settings.readContext)
 
         // Calculate readContextHash
         maxui.settings.readContextHash = maxui.utils.sha1(maxui.settings.readContext)
 
+        // Add read context to write contexts
+        maxui.settings.writeContexts.push(maxui.settings.readContext)
 
+        // Store the hashes of the write contexts
+        maxui.settings.writeContextsHashes = []
+        for (wc=0;wc<maxui.settings.writeContexts.length;wc++) {
+            maxui.settings.writeContextsHashes.push(maxui.utils.sha1(maxui.settings.writeContexts[wc]))
+        }
 
 
         //set default avatar and profile url pattern if user didn't provide it
@@ -84,12 +89,12 @@
                         for (sc=0;sc<this.subscribedTo.items.length;sc++)
                         {
                             var subscription = this.subscribedTo.items[sc]
-                            userSubscriptions[subscription.url]={}
-                            userSubscriptions[subscription.url]['permissions']={}
+                            userSubscriptions[subscription.hash]={}
+                            userSubscriptions[subscription.hash]['permissions']={}
                             for (pm=0;pm<subscription.permissions.length;pm++)
                             {
                                 var permission=subscription.permissions[pm]
-                                userSubscriptions[subscription.url]['permissions'][permission]=true
+                                userSubscriptions[subscription.hash]['permissions'][permission]=true
                             }
                         }
                     }
@@ -481,7 +486,7 @@
                         avatar_url = maxui.settings.avatarURLpattern.format(activity.actor.username)
                       }
                     else if (activity.actor.objectType=='context') {
-                        avatar_url = maxui.settings.contextAvatarURLpattern.format(activity.actor.urlHash)
+                        avatar_url = maxui.settings.contextAvatarURLpattern.format(activity.actor.hash)
                       }
                     // Take replies (if exists) and format to be included as a formatted
                     // subobject ready for hogan
@@ -651,22 +656,22 @@
 
                 // Add read context if user is not subscribed to it
                 var subscriptions = maxui.settings.subscriptions
-                if (!subscriptions[this.context.url])
+                if (!subscriptions[this.context.hash])
                 {
-                    subscriptions[this.context.url]={}
-                    subscriptions[this.context.url]['permissions']={}
+                    subscriptions[this.context.hash]={}
+                    subscriptions[this.context.hash]['permissions']={}
 
                     // Check only for public defaults, as any other permission would require
                     // a susbcription, that we already checked that doesn't exists
-                    subscriptions[this.context.url]['permissions']['read'] = this.context.permissions.read=='public'
-                    subscriptions[this.context.url]['permissions']['write'] = false
+                    subscriptions[this.context.hash]['permissions']['read'] = this.context.permissions.read=='public'
+                    subscriptions[this.context.hash]['permissions']['write'] = false
                 }
 
                 // Iterate through all the defined write contexts to check for write permissions on
                 // the current user
                 for (wc=0;wc<maxui.settings.writeContexts.length;wc++)
                     {
-                        var write_context = maxui.settings.writeContexts[wc]
+                        var write_context = maxui.settings.writeContextsHashes[wc]
                         if (subscriptions[write_context]['permissions'])
                         {
                           if (subscriptions[write_context]['permissions'].write==false)

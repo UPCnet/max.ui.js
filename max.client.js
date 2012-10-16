@@ -68,7 +68,7 @@ MaxClient.prototype.POST = function(route, query, callback) {
 			     async: true,
 			     dataType: 'json'
 			    })
-         .done( function(result) { callback.call(result) } )  
+         .done( function(result) { callback.call(result) } )
          .fail( function(xhr) { jQuery(window).trigger('maxclienterror',xhr) })
 
     }
@@ -115,7 +115,7 @@ MaxClient.prototype.GET = function(route, query, callback) {
 			     async: true,
 			     dataType: 'json'
 			    })
-         .done( function(result) { callback.call(result) } )  
+         .done( function(result) { callback.call(result) } )
          .fail( function(xhr) { jQuery(window).trigger('maxclienterror',xhr) })
 
 	}
@@ -209,7 +209,13 @@ MaxClient.prototype.addActivity = function(text,contexts,callback) {
             }
         }
      if (contexts.length>0)
-        { query.contexts = contexts }
+        { query.contexts = []
+          for (ct=0;ct<contexts.length;ct++)
+          {
+            query.contexts.push({'objectType':'uri','url':contexts[ct]})
+          }
+        }
+
     query.object.content = text
 
     //We have a generator
