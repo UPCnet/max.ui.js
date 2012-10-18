@@ -15,6 +15,7 @@ jQuery().ready(function() {
 
     var settings = {
            'literals': literals_ca,
+           'language': 'ca',
            'username' : 'carles.bruguera',
            'oAuthToken' : 'eb0d4b6c2a44ac90db29d2bbb172cba1',
            'oAuthGrantType' : 'password',
@@ -23,7 +24,7 @@ jQuery().ready(function() {
 //           'avatarURLpattern' : '',
            'profileURLpattern' : '#',
            'readContext': 'http://sheldon.upc.es',
-//           'writeContexts': ['http://eider'],
+           //'writeContexts': ['http://sheldon.upc.es'],
            'activitySource': 'activities',
            'generatorName': 'SheldonApp'
            }

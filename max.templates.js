@@ -14,6 +14,15 @@ var MSTCH_MAXUI_MAIN_UI = '\
 {{#username}}\
  <div id="maxui-mainpanel">\
 \
+   <div id="maxui-conversations">\
+       <div class="wrapper" style="height:0px;">\
+           <div id="maxui-conversations-list" class="activities">\
+           </div>\
+       </div>\
+       <div id="maxui-messages">\
+       </div>\
+   </div>\
+\
    <div id="maxui-search" class="folded">\
        <a id="maxui-search-toggle" class="maxui-disabled" href="#"><img src="https://max.upc.edu/maxui/transparent.gif" alt="obre-tanca" ></a>\
        <div id="maxui-search-box">\
@@ -56,6 +65,10 @@ var MSTCH_MAXUI_POSTBOX = '\
            <textarea class="maxui-empty maxui-text-input">{{literals.new_activity_text}}</textarea>\
            <input disabled="disabled" type="button" class="maxui-button maxui-disabled" value="{{literals.new_activity_post}}">\
       </div>\
+      <div id="maxui-sections">\
+          <a href="#" id="maxui-toggle-conversations"><img src="/maxui/img/conversations.png"></a>\
+          <a href="#" id="maxui-toggle-timeline"><img src="/maxui/img/timeline.png"></a>\
+      </div>\
    </div>\
    {{/allowPosting}}\
 ';
@@ -63,7 +76,9 @@ var MSTCH_MAXUI_POSTBOX = '\
 var MSTCH_MAXUI_ACTIVITY = '\
 <div class="maxui-activity" id="{{id}}" userid="{{actor.id}}" username="{{actor.username}}">\
     <div class="maxui-activity-content">\
-        <div class="maxui-publisheddate">{{date}}</div>\
+        <div class="maxui-topright">\
+            <span class="maxui-publisheddate">{{date}}</span>\
+        </div>\
         <div class="maxui-author">\
               <a href="#"><span class="maxui-avatar"><img src="{{avatarURL}}"></span>\
 		          <span class="maxui-displayname">{{actor.displayName}}</span></a>\
@@ -72,7 +87,6 @@ var MSTCH_MAXUI_ACTIVITY = '\
         <div>\
             <p class="maxui-body">{{&text}}</p>\
         </div>\
-        <div class="maxui-publisheddate"></div>\
     </div>\
     <div class="maxui-footer">\
         <div class="maxui-origin">\
@@ -113,6 +127,38 @@ var MSTCH_MAXUI_ACTIVITY = '\
 </div>\
 ';
 
+var MSTCH_MAXUI_CONVERSATION = '\
+<div class="maxui-conversation" id="{{id}}">\
+    <div class="maxui-activity-content">\
+        <div class="maxui-topright">\
+            <span class="maxui-publisheddate">{{date}}</span>\
+            <a class="maxui-enterconversation" href="#"><img src="/maxui/img/to_conversation.png"></a>\
+        </div>\
+        <div class="maxui-author">\
+              <a href="#"><span class="maxui-avatar"><img src="{{avatarURL}}"></span>\
+              <span class="maxui-displayname">{{partner}}</span></a>\
+              <span>({{messages}})</span>\
+        </div>\
+        <div>\
+            <p class="maxui-body">{{&text}}</p>\
+        </div>\
+    </div>\
+\
+    <div class="maxui-clear"></div>\
+</div>\
+';
+
+var MSTCH_MAXUI_MESSAGE = '\
+<div class="maxui-message {{origin}}" id="{{id}}">\
+    <div class="maxui-activity-content">\
+        <span class="maxui-avatar"><img src="{{avatarURL}}"></span>\
+        <div>\
+            <p class="maxui-body">{{&text}}</p>\
+        </div>\
+    </div>\
+    <div class="maxui-clear"></div>\
+</div>\
+';
 
 var MSTCH_MAXUI_COMMENT = '\
 <div class="maxui-comment" id="{{id}}" userid="{{author.id}}" displayname="{{author.username}}">\
@@ -140,11 +186,13 @@ var MSTCH_MAXUI_FILTERS = '\
 ';
 
 var templates = {
-    mainUI: Hogan.compile(MSTCH_MAXUI_MAIN_UI),
-   postBox: Hogan.compile(MSTCH_MAXUI_POSTBOX),
-  activity: Hogan.compile(MSTCH_MAXUI_ACTIVITY),
-   comment: Hogan.compile(MSTCH_MAXUI_COMMENT),
-  filters: Hogan.compile(MSTCH_MAXUI_FILTERS)
+         mainUI: Hogan.compile(MSTCH_MAXUI_MAIN_UI),
+        postBox: Hogan.compile(MSTCH_MAXUI_POSTBOX),
+       activity: Hogan.compile(MSTCH_MAXUI_ACTIVITY),
+        comment: Hogan.compile(MSTCH_MAXUI_COMMENT),
+        filters: Hogan.compile(MSTCH_MAXUI_FILTERS),
+   conversation: Hogan.compile(MSTCH_MAXUI_CONVERSATION),
+        message: Hogan.compile(MSTCH_MAXUI_MESSAGE),
   }
 
   return templates

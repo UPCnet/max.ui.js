@@ -73,6 +73,22 @@ max.utils = function() {
     },
 
     /*
+    *    Removes elements from array by value
+    */
+    removeValueFrom: function(arr){
+        var what, a= arguments, L= a.length, ax;
+        while(L> 1 && arr.length){
+            what= a[--L];
+            while((ax= arr.indexOf(what))!= -1){
+                arr.splice(ax, 1);
+            }
+        }
+        return arr;
+    },
+
+
+
+    /*
     *    Returns an human readable date from a timestamp in rfc3339 format (cross-browser)
     *    @param {String} timestamp    A date represented as a string in rfc3339 format '2012-02-09T13:06:43Z'
     */

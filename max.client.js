@@ -37,7 +37,9 @@ function MaxClient () {
                       likes : '/activities/{0}/likes',
                       like : '/activities/{0}/likes/{1}',
                       shares : '/activities/{0}/shares',
-                      share : '/activities/{0}/shares/{1}'
+                      share : '/activities/{0}/shares/{1}',
+                      conversations : '/conversations',
+                      messages: '/conversations/{0}/messages'
                    }
 };
 
@@ -174,6 +176,17 @@ MaxClient.prototype.getActivities = function(username, context, callback) {
   this.GET(route,query,callback)
 };
 
+MaxClient.prototype.getConversationsForUser = function(username, callback) {
+  var route = this.ROUTES['conversations'];
+  query={}
+  this.GET(route,query,callback)
+};
+
+MaxClient.prototype.getMessagesForConversation = function(hash, callback) {
+  var route = this.ROUTES['messages'].format(hash);
+  query={}
+  this.GET(route,query,callback)
+};
 
 MaxClient.prototype.getCommentsForActivity = function(activityid, callback) {
   route = this.ROUTES['comments'].format(activityid);
@@ -225,6 +238,25 @@ MaxClient.prototype.addActivity = function(text,contexts,callback) {
         }
 
   	route = this.ROUTES['user_activities'].format(this.actor.username);
+    this.POST(route,query,callback)
+};
+
+
+MaxClient.prototype.addMessage = function(text,participants,callback) {
+    query = {
+        "object": {
+            "objectType": "message",
+            "content": ""
+            },
+        "contexts": [ { 'objectType': 'conversation',
+                        'participants': participants
+                      }
+                    ]
+        }
+
+    query.object.content = text
+
+    route = this.ROUTES['conversations']
     this.POST(route,query,callback)
 };
 

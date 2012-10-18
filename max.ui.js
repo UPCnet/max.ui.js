@@ -10,22 +10,25 @@
         maxui.templates = max.templates()
         maxui.utils = max.utils()
 
-        // Get language from options or set default. Doing this previously to set other defaults
-        // in order to get the default literals in the chosen language
-        maxui.language = options.language || 'en'
-
-
         var defaults = {'maxRequestsAPI' : 'jquery',
                         'maxServerURL' : 'https://max.upc.edu',
                         'readContext': '',
                         'writeContexts' : [],
                         'activitySource': 'timeline',
-                        'literals': max.literals(maxui.language),
-                        'enableAlerts': false
+                        'enableAlerts': false,
+                        'UISection': 'timeline'
                         }
+
+        maxui.ConversationsSection = 'conversations'
 
         // extend defaults with user-defined settings
         maxui.settings = jq.extend(defaults,options)
+
+        // Get language from options or set default.
+        // Set literals in the choosen language and extend from user options
+        maxui.language = options.language || 'en'
+        user_literals = options.literals || {}
+        maxui.settings.literals = jq.extend(max.literals(maxui.language), user_literals)
 
         // Configure maxui without CORS if CORS not available
         if (!maxui.utils.isCORSCapable())
@@ -168,11 +171,42 @@
                       maxui.delFilter({type:filter.attr('type'), value:filter.attr('value')})
                       })
 
+                  //Assign activation of conversations section by its button
+                  jq('#maxui-toggle-conversations').on('click',function (event) {
+                      event.preventDefault()
+                      window.status=''
+                      maxui.printConversations( function() { maxui.toggleSection('conversations') })
+
+                      })
+
+                  //Assign activation of timeline section by its button
+                  jq('#maxui-toggle-timeline').on('click',function (event) {
+                      event.preventDefault()
+                      window.status=''
+                      maxui.toggleSection('timeline')
+                      })
+
+                  //Assign activation of messages section by delegating the clicl of a conversation arrow to the conversations container
+                  jq('#maxui-conversations').on('click', '.maxui-enterconversation',function (event) {
+                      event.preventDefault()
+                      window.status=''
+                      var conversation_hash = jq(event.target).closest('.maxui-conversation').attr('id')
+                      maxui.printMessages(conversation_hash, function() { maxui.toggleMessages('messages') })
+                      })
+
+
                   //Assign Activity post action And textarea behaviour
                   maxui.bindActionBehaviour('#maxui-newactivity','#maxui-newactivity-box', maxui.settings.literals.new_activity_text, function(text)
                           {
-                          maxui.sendActivity(text)
-                          jq('#maxui-search').toggleClass('folded',true)
+                          match = text.match('^\\s*@([\\w\\.]+)')
+                          if (match) {
+                              maxui.sendMessage(text,match[1])
+
+                          }
+                          else {
+                              maxui.sendActivity(text)
+                              jq('#maxui-search').toggleClass('folded',true)
+                          }
                           })
 
                   //Assign Commentbox send comment action And textarea behaviour
@@ -393,6 +427,80 @@
          }
     }
 
+    /*
+    *    Toggles between Conversations and Messages
+    */
+    jq.fn.toggleMessages = function(sectionToEnable) {
+        maxui = this
+
+        if (sectionToEnable=='messages')
+        {
+        var widgetWidth = jq('#maxui-container').width()+2 // +2 To include border
+        var $conversations = jq('#maxui-conversations')
+        var $conversations_wrapper = jq('#maxui-conversations .wrapper')
+        var $messages = jq('#maxui-messages')
+        var messages_height = $messages.height()
+        $conversations.animate({'margin-left':widgetWidth*(-1)}, 400)
+        $conversations_wrapper.animate({'height':messages_height}, 400)
+        maxui.settings.ConversationsSection='messages'
+        }
+        else {
+
+        }
+        // var $timeline_wrapper = jq('#maxui-timeline .wrapper')
+
+        // var $conversations_list = jq('#maxui-conversations .wrapper #maxui-conversations-list')
+
+        // if (sectionToEnable=='conversations')
+        // {
+        //   var conversations_height = $conversations_list.height()
+        //   $conversations_wrapper.animate({'height':conversations_height}, 400)
+        //   $timeline.animate({'height':0}, 400)
+        //   maxui.settings.UISection='conversations'
+        // }
+        // else
+        // {
+        //   var timeline_height = $timeline_wrapper.height()
+        //   $conversations_wrapper.animate({'height':0}, 400)
+        //   $timeline.animate({'height':timeline_height}, 400)
+        //   $timeline.css('height','')
+        //   maxui.settings.UISection='timeline'
+        // }
+
+        }
+
+
+    /*
+    *    Toggles between main sections
+    */
+    jq.fn.toggleSection = function(sectionToEnable) {
+        maxui = this
+        var $timeline = jq('#maxui-timeline')
+        var $timeline_wrapper = jq('#maxui-timeline .wrapper')
+        var $conversations_wrapper = jq('#maxui-conversations .wrapper')
+        var $conversations_list = jq('#maxui-conversations .wrapper #maxui-conversations-list')
+        var $postbutton = jq('#maxui-newactivity-box .maxui-button')
+
+        if (sectionToEnable=='conversations')
+        {
+          var conversations_height = $conversations_list.height()
+          $conversations_wrapper.animate({'height':conversations_height}, 400)
+          $timeline.animate({'height':0}, 400)
+          maxui.settings.UISection='conversations'
+          $postbutton.val(maxui.settings.literals.new_message_post)
+
+        }
+        else
+        {
+          var timeline_height = $timeline_wrapper.height()
+          $conversations_wrapper.animate({'height':0}, 400)
+          $timeline.animate({'height':timeline_height}, 400)
+          $timeline.css('height','')
+          maxui.settings.UISection='timeline'
+          $postbutton.val(maxui.settings.literals.new_activity_post)
+        }
+
+        }
 
     /*
     *    Returns the current settings of the plugin
@@ -401,6 +509,29 @@
         maxui = this
         return maxui.settings
         }
+
+
+    /*
+    *    Sends a post when user clicks `post activity` button with
+    *    the current contents of the `maxui-newactivity` textarea
+    */
+    jq.fn.sendMessage = function (text, target) {
+        maxui = this
+        var func_params = []
+        var participants = []
+        participants.push(maxui.settings.username)
+        participants.push(target)
+        func_params.push(text)
+        func_params.push(participants)
+        func_params.push( function() {
+                            maxui.printConversations( function() { maxui.toggleSection('conversations') })
+                            maxui.toggleSection('conversations')
+                           })
+
+        var messageAdder = maxui.maxClient.addMessage
+        messageAdder.apply(maxui.maxClient, func_params)
+
+    }
 
     /*
     *    Sends a post when user clicks `post activity` button with
@@ -442,6 +573,140 @@
         filter = {before:jq('.maxui-activity:last').attr('id')}
         maxui.printActivities(filter)
 
+    }
+
+    /*
+    *    Renders the conversations list of the current user, defined in settings.username
+    */
+    jq.fn.printConversations = function() {
+        var maxui = this
+
+        var func_params = []
+        func_params.push(maxui.settings.username)
+        if (arguments.length>0)
+        {
+            var callback = arguments[0]
+            func_params.push( function() {
+                                  maxui.formatConversations(this.items, callback)
+
+                                })
+        }
+        else
+        {
+            func_params.push( function() { maxui.formatConversations(this.items) })
+        }
+
+        var conversationsRetriever = this.maxClient.getConversationsForUser
+        conversationsRetriever.apply(this.maxClient,func_params)
+    }
+
+    /*
+    *
+    *
+    */
+    jq.fn.formatConversations = function(items) {
+        var maxui = this;
+
+        // String to store the generated html pieces of each conversation item
+        var conversations = ''
+
+        // Iterate through all the conversations
+        for (i=0;i<items.length;i++)
+            {
+            var conversation = items[i]
+
+            var other_participants = conversation.object.participants.slice()
+            maxui.utils.removeValueFrom(other_participants,maxui.settings.username)
+            var partner = other_participants[0]
+            var andmore = ''
+            if (other_participants.length>1) andmore = maxui.literals.andmore
+            var avatar_url = maxui.settings.avatarURLpattern.format(partner)
+
+            var params = {
+                                   id: conversation.hash,
+                              partner: partner,
+                                 text: conversation.object.lastMessage.content,
+                             messages: conversation.object.messages,
+                             literals: maxui.settings.literals,
+                                 date: maxui.utils.formatDate(conversation.object.lastMessage.published, maxui.language),
+                            avatarURL: avatar_url,
+                         }
+
+            // Render the conversations template and append it at the end of the rendered covnersations
+            conversations = conversations + maxui.templates.conversation.render(params)
+
+            }
+        jq('#maxui-conversations-list').html(conversations)
+
+        if (arguments.length>1) {
+          var callback = arguments[1]
+          callback()
+        }
+    }
+
+    /*
+    *    Renders the messages of the choosen conversation
+    */
+    jq.fn.printMessages = function(conversation_hash) {
+        var maxui = this
+
+        var func_params = []
+        func_params.push(conversation_hash)
+        if (arguments.length>1)
+        {
+            var callback = arguments[1]
+            func_params.push( function() {
+                                  maxui.formatMessages(this.items, callback)
+
+                                })
+        }
+        else
+        {
+            func_params.push( function() { maxui.formatMessages(this.items) })
+        }
+
+        var messagesRetriever = this.maxClient.getMessagesForConversation
+        messagesRetriever.apply(this.maxClient,func_params)
+    }
+
+    /*
+    *
+    *
+    */
+    jq.fn.formatMessages = function(items) {
+        var maxui = this;
+
+        // String to store the generated html pieces of each conversation item
+        var messages = ''
+
+        // Iterate through all the conversations
+        for (i=0;i<items.length;i++)
+            {
+            var message = items[i]
+            var avatar_url = maxui.settings.avatarURLpattern.format(message.actor.username)
+
+            // Store in origin, who is the sender of the message, the authenticated user or anyone else
+            origin = 'anyone'
+            if (message.actor.username==maxui.settings.username) origin = 'user'
+
+            var params = {
+                                   id: message.id,
+                                 text: message.object.content,
+                               origin: origin,
+                             literals: maxui.settings.literals,
+                             avatarURL: avatar_url,
+                         }
+
+            // Render the conversations template and append it at the end of the rendered covnersations
+            messages = messages + maxui.templates.message.render(params)
+
+            }
+        jq('#maxui-messages').html(messages)
+
+        if (arguments.length>1) {
+          var callback = arguments[1]
+          callback()
+        }
     }
 
     /*
@@ -690,7 +955,7 @@
                                                                 'literals': maxui.settings.literals
                                                                })
                     var postbox = maxui.templates.postBox.render(params)
-                    jQuery('#maxui-mainpanel').prepend(postbox)
+                    jQuery('#maxui-search').before(postbox)
                 }
 
                 // format the result items as activities
