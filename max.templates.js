@@ -155,6 +155,7 @@ var MSTCH_MAXUI_MESSAGE = '\
         <div>\
             <p class="maxui-body">{{&text}}</p>\
         </div>\
+        <span class="maxui-publisheddate">{{date}}</span>\
     </div>\
     <div class="maxui-clear"></div>\
 </div>\

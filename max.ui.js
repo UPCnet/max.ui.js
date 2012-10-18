@@ -692,6 +692,7 @@
             var params = {
                                    id: message.id,
                                  text: message.object.content,
+                                 date: maxui.utils.formatDate(message.published, maxui.language),
                                origin: origin,
                              literals: maxui.settings.literals,
                              avatarURL: avatar_url,

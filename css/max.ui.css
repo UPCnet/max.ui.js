@@ -22,6 +22,8 @@
 
 }
 
+
+
 #maxui-newactivity textarea, .maxui-comments textarea {
 width:100%;
 color:#666;
@@ -320,7 +322,6 @@ img { -ms-interpolation-mode: bicubic; image-rendering: optimizeQuality;}
 
  #maxui-messages {
  	width:400px;
- 	height:200px;
  	position:absolute;
  	top:0px;
  	left:400px;
@@ -328,13 +329,33 @@ img { -ms-interpolation-mode: bicubic; image-rendering: optimizeQuality;}
 
  }
 
- .maxui-message.user {
- 	text-align: left;
- }
+.maxui-message {
+position:relative;
+min-height:30px;
+}
 
-.maxui-message.anyone {
- 	text-align: right;
- }
+
+.maxui-message.user { text-align: right; padding-right: 40px }
+.maxui-message.user .maxui-avatar { right:5px; left:auto; }
+.maxui-message.user .maxui-body { margin-left:80px; }
+.maxui-message.user .maxui-publisheddate { position: absolute; top:0px; left:10px; }
+
+
+.maxui-message.anyone { text-align: left; padding-left:40px; }
+.maxui-message.anyone .maxui-avatar{ left:5px; }
+.maxui-message.anyone .maxui-body{ margin-right:80px }
+.maxui-message.anyone .maxui-publisheddate { position: absolute; top:0px; right:10px; }
+
+.maxui-message .maxui-avatar {top:0px;}
+.maxui-message .maxui-avatar img { width:30px;height:30px; }
+
+
+.maxui-message .maxui-body {
+	padding: 5px;
+	-moz-border-radius: 8px; -webkit-border-radius: 8px; border-radius: 8px;
+	border:1px solid #ddd;
+	margin-top:5px;
+}
 
 @media only screen and (-webkit-min-device-pixel-ratio: 1.5),
 	only screen and (-o-min-device-pixel-ratio: 3/2),
