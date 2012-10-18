@@ -198,9 +198,12 @@
                   //Assign Activity post action And textarea behaviour
                   maxui.bindActionBehaviour('#maxui-newactivity','#maxui-newactivity-box', maxui.settings.literals.new_activity_text, function(text)
                           {
-                          match = text.match('^\\s*@([\\w\\.]+)')
+                          var matchMention = new RegExp('^\\s*@([\\w\\.]+\s*)')
+                          var match = text.match(matchMention)
                           if (match) {
-                              maxui.sendMessage(text,match[1])
+                              // strip mentions at the start of line
+                              var stripped = text.replace( matchMention,'')
+                              maxui.sendMessage(stripped,match[1])
 
                           }
                           else {
