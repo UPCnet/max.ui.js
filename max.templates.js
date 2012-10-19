@@ -20,6 +20,8 @@ var MSTCH_MAXUI_MAIN_UI = '\
            </div>\
        </div>\
        <div id="maxui-messages">\
+          <div class="wrapper">\
+          </div>\
        </div>\
    </div>\
 \

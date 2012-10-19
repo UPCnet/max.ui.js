@@ -242,7 +242,7 @@ MaxClient.prototype.addActivity = function(text,contexts,callback) {
 };
 
 
-MaxClient.prototype.addMessage = function(text,participants,callback) {
+MaxClient.prototype.addMessageAndConversation = function(text,participants,callback) {
     query = {
         "object": {
             "objectType": "message",
@@ -257,6 +257,20 @@ MaxClient.prototype.addMessage = function(text,participants,callback) {
     query.object.content = text
 
     route = this.ROUTES['conversations']
+    this.POST(route,query,callback)
+};
+
+MaxClient.prototype.addMessage = function(text,chash,callback) {
+    query = {
+        "object": {
+            "objectType": "message",
+            "content": ""
+            },
+        }
+
+    query.object.content = text
+
+    route = this.ROUTES['messages'].format(chash)
     this.POST(route,query,callback)
 };
 

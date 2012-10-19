@@ -191,6 +191,7 @@
                       event.preventDefault()
                       window.status=''
                       var conversation_hash = jq(event.target).closest('.maxui-conversation').attr('id')
+                      maxui.settings.currentConversation = conversation_hash
                       maxui.printMessages(conversation_hash, function() { maxui.toggleMessages('messages') })
                       })
 
@@ -200,16 +201,35 @@
                           {
                           var matchMention = new RegExp('^\\s*@([\\w\\.]+\s*)')
                           var match = text.match(matchMention)
-                          if (match) {
-                              // strip mentions at the start of line
-                              var stripped = text.replace( matchMention,'')
-                              maxui.sendMessage(stripped,match[1])
+
+                          if (maxui.settings.UISection=='timeline') {
+                              if (match) {
+                                  // strip mentions at the start of line
+                                  var stripped = text.replace( matchMention,'')
+                                  maxui.createConversationAndSendMessage(stripped,match[1])
+                              }
+                              else {
+                                  maxui.sendActivity(text)
+                                  jq('#maxui-search').toggleClass('folded',true)
+                              }
+                          }
+
+                          else if (maxui.settings.UISection=='conversations') {
+                              if (maxui.settings.ConversationsSection=='conversations') {
+                                  if (match) {
+                                      // strip mentions at the start of line
+                                      var stripped = text.replace( matchMention,'')
+                                      maxui.createConversationAndSendMessage(stripped,match[1])
+                                  }
+                              }
+                              else {
+                                maxui.sendMessage(text, maxui.settings.currentConversation)
+
+                              }
 
                           }
-                          else {
-                              maxui.sendActivity(text)
-                              jq('#maxui-search').toggleClass('folded',true)
-                          }
+
+
                           })
 
                   //Assign Commentbox send comment action And textarea behaviour
@@ -436,20 +456,27 @@
     jq.fn.toggleMessages = function(sectionToEnable) {
         maxui = this
 
-        if (sectionToEnable=='messages')
-        {
-        var widgetWidth = jq('#maxui-container').width()+2 // +2 To include border
         var $conversations = jq('#maxui-conversations')
         var $conversations_wrapper = jq('#maxui-conversations .wrapper')
         var $messages = jq('#maxui-messages')
-        var messages_height = $messages.height()
-        $conversations.animate({'margin-left':widgetWidth*(-1)}, 400)
-        $conversations_wrapper.animate({'height':messages_height}, 400)
-        maxui.settings.ConversationsSection='messages'
+
+        if (sectionToEnable=='messages')
+        {
+            var widgetWidth = jq('#maxui-container').width()+2 // +2 To include border
+            $conversations.animate({'margin-left':widgetWidth*(-1)}, 400)
+            maxui.settings.ConversationsSection='messages'
         }
         else {
 
         }
+
+        // Update height always if we end showing messages section
+        if (maxui.settings.ConversationsSection=='messages') {
+            var messages_height = $messages.height()+5
+            $conversations_wrapper.animate({'height':messages_height}, 400)
+        }
+
+
         // var $timeline_wrapper = jq('#maxui-timeline .wrapper')
 
         // var $conversations_list = jq('#maxui-conversations .wrapper #maxui-conversations-list')
@@ -518,17 +545,39 @@
     *    Sends a post when user clicks `post activity` button with
     *    the current contents of the `maxui-newactivity` textarea
     */
-    jq.fn.sendMessage = function (text, target) {
+    jq.fn.createConversationAndSendMessage = function (text, target) {
         maxui = this
         var func_params = []
+        func_params.push(text)
+
         var participants = []
         participants.push(maxui.settings.username)
         participants.push(target)
-        func_params.push(text)
         func_params.push(participants)
+
         func_params.push( function() {
                             maxui.printConversations( function() { maxui.toggleSection('conversations') })
-                            maxui.toggleSection('conversations')
+                           })
+
+        var messageAdder = maxui.maxClient.addMessageAndConversation
+        messageAdder.apply(maxui.maxClient, func_params)
+
+    }
+
+    /*
+    *    Sends a post when user clicks `post activity` button with
+    *    the current contents of the `maxui-newactivity` textarea
+    */
+    jq.fn.sendMessage = function (text, chash) {
+        maxui = this
+        var func_params = []
+        func_params.push(text)
+
+        func_params.push(chash)
+
+        func_params.push( function() {
+                            maxui.printMessages(chash, function() {maxui.toggleMessages('messages')})
+
                            })
 
         var messageAdder = maxui.maxClient.addMessage
