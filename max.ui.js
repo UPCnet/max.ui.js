@@ -681,7 +681,7 @@
                              messages: conversation.object.messages,
                              literals: maxui.settings.literals,
                                  date: maxui.utils.formatDate(conversation.object.lastMessage.published, maxui.language),
-                            avatarURL: avatar_url,
+                            avatarURL: avatar_url
                          }
 
             // Render the conversations template and append it at the end of the rendered covnersations
@@ -747,7 +747,7 @@
                                  date: maxui.utils.formatDate(message.published, maxui.language),
                                origin: origin,
                              literals: maxui.settings.literals,
-                             avatarURL: avatar_url,
+                             avatarURL: avatar_url
                          }
 
             // Render the conversations template and append it at the end of the rendered covnersations

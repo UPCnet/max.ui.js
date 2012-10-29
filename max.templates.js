@@ -195,7 +195,7 @@ var templates = {
         comment: Hogan.compile(MSTCH_MAXUI_COMMENT),
         filters: Hogan.compile(MSTCH_MAXUI_FILTERS),
    conversation: Hogan.compile(MSTCH_MAXUI_CONVERSATION),
-        message: Hogan.compile(MSTCH_MAXUI_MESSAGE),
+        message: Hogan.compile(MSTCH_MAXUI_MESSAGE)
   }
 
   return templates

@@ -265,7 +265,7 @@ MaxClient.prototype.addMessage = function(text,chash,callback) {
         "object": {
             "objectType": "message",
             "content": ""
-            },
+            }
         }
 
     query.object.content = text
