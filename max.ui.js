@@ -726,7 +726,7 @@
             var params = {
                                    id: conversation.hash,
                               partner: partner,
-                                 text: conversation.object.lastMessage.content,
+                                 text: maxui.utils.formatText(conversation.object.lastMessage.content),
                              messages: conversation.object.messages,
                              literals: maxui.settings.literals,
                                  date: maxui.utils.formatDate(conversation.object.lastMessage.published, maxui.language),
@@ -792,7 +792,7 @@
 
             var params = {
                                    id: message.id,
-                                 text: message.object.content,
+                                 text: maxui.utils.formatText(message.object.content),
                                  date: maxui.utils.formatDate(message.published, maxui.language),
                                origin: origin,
                              literals: maxui.settings.literals,
