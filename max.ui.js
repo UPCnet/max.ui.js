@@ -16,10 +16,9 @@
                         'writeContexts' : [],
                         'activitySource': 'timeline',
                         'enableAlerts': false,
-                        'UISection': 'timeline'
+                        'UISection': 'timeline',
+                        'conversationsSection': 'conversations'
                         }
-
-        maxui.ConversationsSection = 'conversations'
 
         // extend defaults with user-defined settings
         maxui.settings = jq.extend(defaults,options)
@@ -172,15 +171,23 @@
                       })
 
                   //Assign activation of conversations section by its button
-                  jq('#maxui-toggle-conversations').on('click',function (event) {
+                  jq('#maxui-show-conversations').on('click',function (event) {
                       event.preventDefault()
                       window.status=''
                       maxui.printConversations( function() { maxui.toggleSection('conversations') })
 
                       })
 
+                  //Assign activation of conversations section by its button
+                  jq('#maxui-back-conversations').on('click',function (event) {
+                      event.preventDefault()
+                      window.status=''
+                      maxui.printConversations( function() { maxui.toggleMessages('conversations') })
+
+                      })
+
                   //Assign activation of timeline section by its button
-                  jq('#maxui-toggle-timeline').on('click',function (event) {
+                  jq('#maxui-show-timeline').on('click',function (event) {
                       event.preventDefault()
                       window.status=''
                       maxui.toggleSection('timeline')
@@ -215,7 +222,7 @@
                           }
 
                           else if (maxui.settings.UISection=='conversations') {
-                              if (maxui.settings.ConversationsSection=='conversations') {
+                              if (maxui.settings.conversationsSection=='conversations') {
                                   if (match) {
                                       // strip mentions at the start of line
                                       var stripped = text.replace( matchMention,'')
@@ -291,6 +298,8 @@
         })
 
         .on('keyup',selector, function(event) {
+                  console.log(maxui.settings.UISection)
+                  console.log(maxui.settings.conversationsSection)
                   event.preventDefault()
                   text = jq(this).val()
                   button = jq(this).parent().find('.maxui-button')
@@ -299,11 +308,41 @@
                   {   jq(button).attr('disabled', 'disabled')
                       jq(button).attr('class','maxui-button maxui-disabled')
                       jq(this).attr('class','maxui-empty maxui-text-input')
+                      if (maxui.settings.UISection=='timeline') jq(button).val(maxui.settings.literals.new_activity_post)
                   }
                   else
-                  {   jq(button).removeAttr('disabled')
-                      jq(button).attr('class','maxui-button')
-                      jq(this).attr('class','maxui-text-input')
+                  {
+                      var matchMention = new RegExp('^\\s*@([\\w\\.]+\s*)')
+                      var match = text.match(matchMention)
+
+                      if (maxui.settings.UISection=='timeline') {
+                          jq(button).removeAttr('disabled')
+                          jq(button).attr('class','maxui-button')
+                          jq(this).attr('class','maxui-text-input')
+                          if (match) {jq(button).val(maxui.settings.literals.new_message_post)}
+                          else {jq(button).val(maxui.settings.literals.new_activity_post)}
+                      }
+
+                      else if (maxui.settings.UISection=='conversations') {
+                          if (maxui.settings.conversationsSection=='conversations') {
+                              if (match) {
+                                jq(button).removeAttr('disabled')
+                                jq(button).attr('class','maxui-button')
+                                jq(this).attr('class','maxui-text-input')
+                              }
+                              else {
+                                jq(button).attr('disabled', 'disabled')
+                                jq(button).attr('class','maxui-button maxui-disabled')
+                                jq(this).attr('class','maxui-empty maxui-text-input')
+                              }
+                          }
+                          else if (maxui.settings.conversationsSection=='messages') {
+                               jq(button).removeAttr('disabled')
+                                jq(button).attr('class','maxui-button')
+                                jq(this).attr('class','maxui-text-input')
+                          }
+                      }
+
                   }
 
         })
@@ -457,47 +496,33 @@
         maxui = this
 
         var $conversations = jq('#maxui-conversations')
-        var $conversations_wrapper = jq('#maxui-conversations .wrapper')
+        var $conversations_list = jq('#maxui-conversations-list')
         var $messages = jq('#maxui-messages')
+        var $message_list = jq('#maxui-message-list')
 
         if (sectionToEnable=='messages')
         {
-            var widgetWidth = jq('#maxui-container').width()+2 // +2 To include border
-            $conversations.animate({'margin-left':widgetWidth*(-1)}, 400)
-            maxui.settings.ConversationsSection='messages'
+            var widgetWidth = $conversations_list.width()+11 // +2 To include border
+            var height = 270
+            //$conversations_list.jScrollPane().data('jsp').destroy()
+            $conversations_list.animate({'margin-left':widgetWidth*(-1) }, 400)
+            $messages.animate({'left':0}, 400, function(event) {
+                $message_list.height(height-22)
+                $message_list.jScrollPane({'maintainPosition':true})
+            $message_list.jScrollPane().data('jsp').scrollToBottom()
+
+            })
+            $messages.width(widgetWidth)
+            maxui.settings.conversationsSection='messages'
         }
         else {
-
+            var widgetWidth = $conversations_list.width()+11 // +2 To include border
+            $conversations_list.animate({'margin-left':0 }, 400)
+            $message_list.jScrollPane().data('jsp').destroy()
+            $messages.animate({'left':widgetWidth}, 400)
+            maxui.settings.conversationsSection='conversations'
         }
-
-        // Update height always if we end showing messages section
-        if (maxui.settings.ConversationsSection=='messages') {
-            var messages_height = $messages.height()+5
-            $conversations_wrapper.animate({'height':messages_height}, 400)
-        }
-
-
-        // var $timeline_wrapper = jq('#maxui-timeline .wrapper')
-
-        // var $conversations_list = jq('#maxui-conversations .wrapper #maxui-conversations-list')
-
-        // if (sectionToEnable=='conversations')
-        // {
-        //   var conversations_height = $conversations_list.height()
-        //   $conversations_wrapper.animate({'height':conversations_height}, 400)
-        //   $timeline.animate({'height':0}, 400)
-        //   maxui.settings.UISection='conversations'
-        // }
-        // else
-        // {
-        //   var timeline_height = $timeline_wrapper.height()
-        //   $conversations_wrapper.animate({'height':0}, 400)
-        //   $timeline.animate({'height':timeline_height}, 400)
-        //   $timeline.css('height','')
-        //   maxui.settings.UISection='timeline'
-        // }
-
-        }
+    }
 
 
     /*
@@ -505,29 +530,51 @@
     */
     jq.fn.toggleSection = function(sectionToEnable) {
         maxui = this
+        var $search = jq('#maxui-search')
         var $timeline = jq('#maxui-timeline')
         var $timeline_wrapper = jq('#maxui-timeline .wrapper')
-        var $conversations_wrapper = jq('#maxui-conversations .wrapper')
-        var $conversations_list = jq('#maxui-conversations .wrapper #maxui-conversations-list')
+        var $conversations = jq('#maxui-conversations')
+        var $conversations_list = jq('#maxui-conversations #maxui-conversations-list')
+        var $conversations_list_wrapper = jq('#maxui-conversations #maxui-conversations-list .wrapper')
         var $postbutton = jq('#maxui-newactivity-box .maxui-button')
+        var $conversationsbutton = jq('#maxui-show-conversations')
+        var $timelinebutton = jq('#maxui-show-timeline')
 
         if (sectionToEnable=='conversations')
         {
-          var conversations_height = $conversations_list.height()
-          $conversations_wrapper.animate({'height':conversations_height}, 400)
+          $conversations.show()
+          $conversations.width($conversations.width())
+          $conversations_list.width($conversations.width())
+          var height = 270
+
+          $conversations.animate({'height':height}, 400, function(event) {
+            $conversations_list.height(height)
+            if (jq('#maxui-conversations .jspPane').length==0) {
+                $conversations_list.jScrollPane({'maintainPosition':true, 'stickToBottom': true})
+              }
+          })
           $timeline.animate({'height':0}, 400)
+          $search.hide(400)
           maxui.settings.UISection='conversations'
           $postbutton.val(maxui.settings.literals.new_message_post)
+          $conversationsbutton.hide()
+          $timelinebutton.show()
 
         }
         else
         {
           var timeline_height = $timeline_wrapper.height()
-          $conversations_wrapper.animate({'height':0}, 400)
           $timeline.animate({'height':timeline_height}, 400)
+          $conversations.animate({'height':0}, 400, function(event) {
+              $conversations.hide()
+          })
+          $search.show(400)
           $timeline.css('height','')
           maxui.settings.UISection='timeline'
           $postbutton.val(maxui.settings.literals.new_activity_post)
+          $conversationsbutton.show()
+          $timelinebutton.hide()
+
         }
 
         }
@@ -576,6 +623,8 @@
         func_params.push(chash)
 
         func_params.push( function() {
+                            jq('#maxui-newactivity textarea').val('')
+                            jq('#maxui-newactivity .maxui-button').attr('disabled','disabled')
                             maxui.printMessages(chash, function() {maxui.toggleMessages('messages')})
 
                            })
@@ -688,7 +737,7 @@
             conversations = conversations + maxui.templates.conversation.render(params)
 
             }
-        jq('#maxui-conversations-list').html(conversations)
+        jq('#maxui-conversations-list .wrapper').html(conversations)
 
         if (arguments.length>1) {
           var callback = arguments[1]
@@ -754,7 +803,7 @@
             messages = messages + maxui.templates.message.render(params)
 
             }
-        jq('#maxui-messages').html(messages)
+        jq('#maxui-messages .wrapper').html(messages)
 
         if (arguments.length>1) {
           var callback = arguments[1]

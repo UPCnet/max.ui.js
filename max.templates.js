@@ -14,15 +14,19 @@ var MSTCH_MAXUI_MAIN_UI = '\
 {{#username}}\
  <div id="maxui-mainpanel">\
 \
-   <div id="maxui-conversations">\
-       <div class="wrapper" style="height:0px;">\
+   <div id="maxui-conversations" style="height:0px; display:none;">\
            <div id="maxui-conversations-list" class="activities">\
+               <div class="wrapper">\
+               </div>\
            </div>\
-       </div>\
-       <div id="maxui-messages">\
-          <div class="wrapper">\
-          </div>\
-       </div>\
+\
+           <div id="maxui-messages">\
+               <div id="maxui-back-conversations" class="maxui-togglebar"><a href="#">&larr; Llista de converses</a></div>\
+               <div id="maxui-message-list">\
+                   <div class="wrapper">\
+                   </div>\
+               </div>\
+           </div>\
    </div>\
 \
    <div id="maxui-search" class="folded">\
@@ -33,6 +37,8 @@ var MSTCH_MAXUI_MAIN_UI = '\
        </div>\
        <div id="maxui-search-filters"></div>\
    </div>\
+\
+   <div id="maxui-show-timeline" class="maxui-togglebar" style="display:none;"><a href="#">activitat &darr;</a></div>\
 \
    <div id="maxui-timeline">\
       <div class="wrapper">\
@@ -56,20 +62,16 @@ var MSTCH_MAXUI_MAIN_UI = '\
 </div>\
 ';
 
-
 var MSTCH_MAXUI_POSTBOX = '\
    {{#allowPosting}}\
    <div id="maxui-newactivity">\
+      <div id="maxui-show-conversations" class="maxui-togglebar"><a href="#">converses &uarr;</a></div>\
       <a href="#" class="maxui-avatar">\
           <img src="{{avatar}}">\
       </a>\
       <div id="maxui-newactivity-box">\
            <textarea class="maxui-empty maxui-text-input">{{literals.new_activity_text}}</textarea>\
            <input disabled="disabled" type="button" class="maxui-button maxui-disabled" value="{{literals.new_activity_post}}">\
-      </div>\
-      <div id="maxui-sections">\
-          <a href="#" id="maxui-toggle-conversations"><img src="/maxui/img/conversations.png"></a>\
-          <a href="#" id="maxui-toggle-timeline"><img src="/maxui/img/timeline.png"></a>\
       </div>\
    </div>\
    {{/allowPosting}}\

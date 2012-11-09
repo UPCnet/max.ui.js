@@ -16,13 +16,43 @@
 #maxui-newactivity {padding:10px; position:relative; background: #f2f2f2 url('https://max.upc.edu/maxui/bgact.gif') 0 0 repeat;}
 #maxui-newactivity:after {content: "";display: block;height: 0;clear: both;}
 
-#maxui-newactivity #maxui-sections {
-	margin-left:57px;
-	margin-top:-24px;
+
+#maxui-show-timeline {
+	padding-bottom:3px;
+	text-align:center;
+	background: #f2f2f2 url('https://max.upc.edu/maxui/bgact.gif') 0 0 repeat;
+	border-top: 1px #b2b2b2 solid;
+	height:18px;
 
 }
 
+#maxui-back-conversations {
+	padding-bottom:3px;
+	text-align:center;
+	background: #f2f2f2 url('https://max.upc.edu/maxui/bgact.gif') 0 0 repeat;
+	border-bottom: 1px #b2b2b2 solid;
+	height:18px;
+}
 
+
+#maxui-show-conversations {
+	border-bottom: 1px #b2b2b2 solid;
+	margin-top:-11px;
+	padding-bottom:3px;
+	margin-bottom:10px;
+	text-align:center;
+	margin-left:-10px;
+	margin-right:-10px;
+}
+
+.maxui-togglebar a{
+    color:#929292 !important;
+}
+
+.maxui-togglebar a:hover {
+	color:#555 !important;
+	text-decoration: none !important;
+}
 
 #maxui-newactivity textarea, .maxui-comments textarea {
 width:100%;
@@ -98,7 +128,7 @@ input.maxui-button[disabled] {-webkit-appearance: none;border:1px solid #b2b2b2;
 
 
 #maxui-timeline {clear:both;margin:0;overflow: hidden; padding:0 10px; background:#fff;}
-#maxui-conversations {clear:both;margin:0;overflow: hidden; padding:0 10px; background:#fff;}
+#maxui-conversations {clear:both;margin:0;overflow: hidden; padding:0 0 0 10px; background:#fff;  border-bottom:1px #ccc solid;}
 
 	.activities .maxui-avatar img {float:left;}
 	.maxui-avatar img {width:48px;
@@ -370,3 +400,8 @@ min-height:30px;
 			}
 }
 html { -webkit-text-size-adjust:none; }
+
+
+.jspVerticalBar { width:10px; border-left:1px #ccc solid;}
+.jspTrack { background: #E5FAFF; }
+.jspDrag { background: #666; }

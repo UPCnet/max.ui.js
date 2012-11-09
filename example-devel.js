@@ -19,7 +19,7 @@ jQuery().ready(function() {
            'username' : 'carles.bruguera',
            'oAuthToken' : 'eb0d4b6c2a44ac90db29d2bbb172cba1',
            'oAuthGrantType' : 'password',
-           'maxServerURL' : 'http://localhost:8081',
+           'maxServerURL' : 'http://sheldon.upc.es:8081',
            'maxServerURLAlias' : 'http://sheldon.upc.es/max',
 //           'avatarURLpattern' : '',
            'profileURLpattern' : '#',
