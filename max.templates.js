@@ -73,6 +73,7 @@ var MSTCH_MAXUI_POSTBOX = '\
            <textarea class="maxui-empty maxui-text-input">{{literals.new_activity_text}}</textarea>\
            <input disabled="disabled" type="button" class="maxui-button maxui-disabled" value="{{literals.new_activity_post}}">\
       </div>\
+      <div id="maxui-predictive" style="display:none;"><ul></ul></div>\
    </div>\
    {{/allowPosting}}\
 ';
@@ -183,6 +184,12 @@ var MSTCH_MAXUI_COMMENT = '\
 </div>\
 ';
 
+var MSTCH_MAXUI_PREDICTIVE_ITEM = '\
+<li class="{{cssclass}}">\
+{{username}}\
+</li>\
+';
+
 
 var MSTCH_MAXUI_FILTERS = '\
 {{#filters}}\
@@ -197,7 +204,8 @@ var templates = {
         comment: Hogan.compile(MSTCH_MAXUI_COMMENT),
         filters: Hogan.compile(MSTCH_MAXUI_FILTERS),
    conversation: Hogan.compile(MSTCH_MAXUI_CONVERSATION),
-        message: Hogan.compile(MSTCH_MAXUI_MESSAGE)
+        message: Hogan.compile(MSTCH_MAXUI_MESSAGE),
+     predictive: Hogan.compile(MSTCH_MAXUI_PREDICTIVE_ITEM)
   }
 
   return templates
