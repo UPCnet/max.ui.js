@@ -159,6 +159,13 @@ MaxClient.prototype.getUserData = function(username, callback) {
     this.GET(route,query,callback)
 };
 
+MaxClient.prototype.getUsersList = function(userquery, callback) {
+    var route = this.ROUTES['users']
+    var query = {username:userquery}
+    this.GET(route,query,callback)
+};
+
+
 MaxClient.prototype.getActivities = function(username, context, callback) {
   var route = this.ROUTES['activities'];
   if (arguments.length>3)
