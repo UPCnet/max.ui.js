@@ -282,7 +282,7 @@
                               if ($prev.length>0) $prev.addClass('selected')
                               else {$selected.siblings(':last').addClass('selected')}
                             }
-                            else if (key==27 && is_predicting) {
+                            else if (key==27) {
                               $predictive.hide()
                             }
                             else if ((key==13 || key==9) && is_predicting) {
