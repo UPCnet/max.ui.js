@@ -170,6 +170,23 @@
                       maxui.delFilter({type:filter.attr('type'), value:filter.attr('value')})
                       })
 
+                  //Assign user mention suggestion to textarea by click
+                  jq('#maxui-predictive').on('click','.maxui-prediction',function (event) {
+                      event.preventDefault()
+
+                      var $selected = jq(this)
+                      var $area = jq('#maxui-newactivity-box textarea')
+                      var $predictive = jq('#maxui-predictive')
+                      var text = $area.val()
+
+                      var matchMention = new RegExp('^\\s*@([\\w\\.]+)')
+                      var match = text.match(matchMention)
+                      var replacement = text.replace(matchMention, '@'+$selected.text()+' ')
+                      $predictive.hide()
+                      $area.val(replacement).focus()
+
+                      })
+
                   //Assign activation of conversations section by its button
                   jq('#maxui-show-conversations').on('click',function (event) {
                       event.preventDefault()
@@ -206,7 +223,7 @@
                   //Assign Activity post action And textarea behaviour
                   maxui.bindActionBehaviour('#maxui-newactivity','#maxui-newactivity-box', maxui.settings.literals.new_activity_text, function(text)
                           {
-                          var matchMention = new RegExp('^\\s*@([\\w\\.]+\s*)')
+                          var matchMention = new RegExp('^\\s*@([\\w\\.]+)\s*')
                           var match = text.match(matchMention)
 
                           if (maxui.settings.UISection=='timeline') {
@@ -237,7 +254,113 @@
                           }
 
 
-                          })
+                          },
+                          function(text, area, button, ev) {
+
+                            var key = ev.which
+                            var matchMention = new RegExp('^\\s*@([\\w\\.]+)\s*')
+                            var match = text.match(matchMention)
+
+                            var matchMentionEOL = new RegExp('^\\s*@([\\w\\.]+)\s*$')
+                            var matchEOL = text.match(matchMentionEOL)
+
+                            var $selected = jq('.maxui-prediction.selected')
+                            var $area = jq(area)
+                            var $predictive = jq('#maxui-predictive')
+                            var is_predicting = jq('#maxui-predictive:visible').length>0
+
+                            // Up & down
+                            if (key==38 && is_predicting) {
+                              var $next = $selected.next()
+                              $selected.removeClass('selected')
+                              if ($next.length>0) $next.addClass('selected')
+                              else {$selected.siblings(':first').addClass('selected')}
+                            }
+                            else if (key==40 && is_predicting) {
+                              var $prev = $selected.prev()
+                              $selected.removeClass('selected')
+                              if ($prev.length>0) $prev.addClass('selected')
+                              else {$selected.siblings(':last').addClass('selected')}
+                            }
+                            else if (key==27 && is_predicting) {
+                              $predictive.hide()
+                            }
+                            else if ((key==13 || key==9) && is_predicting) {
+                              var matchMention2 = new RegExp('^\\s*@([\\w\\.]+)')
+                              var replacement = text.replace(matchMention2, '@'+$selected.text()+' ')
+                              $predictive.hide()
+                              $area.val(replacement).focus()
+                            }
+
+                            else if (text=='') {
+                                if (maxui.settings.UISection=='timeline')
+                                    jq(button).val(maxui.settings.literals.new_activity_post)
+                            }
+
+                            else //1
+                            {
+
+                                if (maxui.settings.UISection=='timeline') {
+                                    if (match) {
+                                        jq(button).val(maxui.settings.literals.new_message_post)
+                                        if (matchEOL) {
+                                            jq('#maxui-predictive').show()
+                                            jq('#maxui-predictive').html('<ul></ul>')
+                                            maxui.printPredictions(match[1])
+                                        }
+                                        jq(button).removeAttr('disabled')
+                                        jq(button).attr('class','maxui-button')
+                                        $area.attr('class','maxui-text-input')
+
+
+                                    }
+                                    else {
+                                        jq(button).val(maxui.settings.literals.new_activity_post)
+                                        jq('#maxui-predictive').hide()
+                                        jq(button).attr('disabled', 'disabled')
+                                        jq(button).attr('class','maxui-button maxui-disabled')
+                                        $area.attr('class','maxui-empty maxui-text-input')
+                                    }
+                                }
+
+                                else if (maxui.settings.UISection=='conversations') {
+
+                                    if (maxui.settings.conversationsSection=='conversations') {
+                                        if (match) {
+                                            jq(button).removeAttr('disabled')
+                                            jq(button).attr('class','maxui-button')
+                                            $area.attr('class','maxui-text-input')
+                                            jq(button).removeAttr('disabled')
+                                            jq(button).attr('class','maxui-button')
+                                            $area.attr('class','maxui-text-input')
+                                            if (matchEOL) {
+                                                jq('#maxui-predictive').show()
+                                                jq('#maxui-predictive').html('<ul></ul>')
+                                                maxui.printPredictions(match[1])
+                                            }
+                                        }
+
+                                        else {
+                                            jq('#maxui-predictive').hide()
+                                            jq(button).attr('disabled', 'disabled')
+                                            jq(button).attr('class','maxui-button maxui-disabled')
+                                            $area.attr('class','maxui-empty maxui-text-input')
+                                        }
+                                    }
+                                    else if (maxui.settings.conversationsSection=='messages') {
+                                        jq('#maxui-predictive').hide()
+                                        jq(button).removeAttr('disabled')
+                                        jq(button).attr('class','maxui-button')
+                                        $area.attr('class','maxui-text-input')
+                                    }
+
+
+                                } //elseif
+
+                            } //1
+                          }) //function
+
+
 
                   //Assign Commentbox send comment action And textarea behaviour
                   maxui.bindActionBehaviour('#maxui-activities', '.maxui-newcommentbox', maxui.settings.literals.new_comment_text, function(text)
@@ -287,6 +410,8 @@
         // Clear input when focusing in only if user hasn't typed anything yet
         var maxui = this
         var selector = target+' .maxui-text-input'
+        if (arguments.length>4) { var extra_bind = arguments[4] }
+        else { var extra_bind = null }
         jq(delegate)
 
         .on('focusin',selector, function(event) {
@@ -297,10 +422,18 @@
                       jq(this).val('')
         })
 
+         .on('keydown', selector, function(event) {
+           if ( jq('#maxui-predictive:visible').length>0 &&  (event.which==40 || event.which==38 || event.which==13 || event.which==9)) {
+
+              maxui.utils.freezeEvent(event)
+           }
+
+
+         })
+
         .on('keyup',selector, function(event) {
-                  console.log(maxui.settings.UISection)
-                  console.log(maxui.settings.conversationsSection)
                   event.preventDefault()
+                  event.stopPropagation()
                   text = jq(this).val()
                   button = jq(this).parent().find('.maxui-button')
                   normalized = maxui.utils.normalizeWhiteSpace(text,false)
@@ -308,42 +441,18 @@
                   {   jq(button).attr('disabled', 'disabled')
                       jq(button).attr('class','maxui-button maxui-disabled')
                       jq(this).attr('class','maxui-empty maxui-text-input')
-                      if (maxui.settings.UISection=='timeline') jq(button).val(maxui.settings.literals.new_activity_post)
                   }
                   else
                   {
-                      var matchMention = new RegExp('^\\s*@([\\w\\.]+\s*)')
-                      var match = text.match(matchMention)
-
-                      if (maxui.settings.UISection=='timeline') {
-                          jq(button).removeAttr('disabled')
-                          jq(button).attr('class','maxui-button')
-                          jq(this).attr('class','maxui-text-input')
-                          if (match) {jq(button).val(maxui.settings.literals.new_message_post)}
-                          else {jq(button).val(maxui.settings.literals.new_activity_post)}
-                      }
-
-                      else if (maxui.settings.UISection=='conversations') {
-                          if (maxui.settings.conversationsSection=='conversations') {
-                              if (match) {
-                                jq(button).removeAttr('disabled')
-                                jq(button).attr('class','maxui-button')
-                                jq(this).attr('class','maxui-text-input')
-                              }
-                              else {
-                                jq(button).attr('disabled', 'disabled')
-                                jq(button).attr('class','maxui-button maxui-disabled')
-                                jq(this).attr('class','maxui-empty maxui-text-input')
-                              }
-                          }
-                          else if (maxui.settings.conversationsSection=='messages') {
-                               jq(button).removeAttr('disabled')
-                                jq(button).attr('class','maxui-button')
-                                jq(this).attr('class','maxui-text-input')
-                          }
-                      }
-
+                      jq(button).removeAttr('disabled')
+                      jq(button).attr('class','maxui-button')
+                      jq(this).attr('class','maxui-text-input')
                   }
+
+                  if (extra_bind!=null) {
+                    extra_bind(text, this, button, event)
+                  }
+
 
         })
 
@@ -602,9 +711,21 @@
         participants.push(target)
         func_params.push(participants)
 
-        func_params.push( function() {
+        if (maxui.settings.UISection=='conversations') {
+            func_params.push( function() {
+                            jq('#maxui-newactivity textarea').val('')
+                            jq('#maxui-newactivity .maxui-button').attr('disabled','disabled')
+                            maxui.printMessages(this.contexts[0].hash, function() {
+                                   maxui.toggleMessages('messages')
+                            })
+                       })
+        } else {
+            func_params.push( function() {
+                            jq('#maxui-newactivity textarea').val('')
+                            jq('#maxui-newactivity .maxui-button').attr('disabled','disabled')
                             maxui.printConversations( function() { maxui.toggleSection('conversations') })
                            })
+        }
 
         var messageAdder = maxui.maxClient.addMessageAndConversation
         messageAdder.apply(maxui.maxClient, func_params)
@@ -675,6 +796,56 @@
         maxui.printActivities(filter)
 
     }
+
+
+    /*
+    *    Renders the conversations list of the current user, defined in settings.username
+    */
+    jq.fn.printPredictions = function(query) {
+        var maxui = this
+
+        var func_params = []
+        func_params.push(query)
+        func_params.push( function() { maxui.formatPredictions(this.items) })
+
+        var userListRetriever = this.maxClient.getUsersList
+        userListRetriever.apply(this.maxClient,func_params)
+    }
+
+    /*
+    *
+    *
+    */
+    jq.fn.formatPredictions = function(items) {
+        var maxui = this;
+
+        // String to store the generated html pieces of each conversation item
+        var predictions = ''
+
+        // Iterate through all the conversations
+        for (i=0;i<items.length;i++)
+            {
+            var prediction = items[i]
+            var avatar_url = maxui.settings.avatarURLpattern.format(prediction.username)
+            var params = {
+                               username: prediction.username,
+                              avatarURL: avatar_url,
+                               cssclass: 'maxui-prediction' + (i == 0 && ' selected' || '')
+                         }
+
+            // Render the conversations template and append it at the end of the rendered covnersations
+            predictions = predictions + maxui.templates.predictive.render(params)
+
+            }
+        jq('#maxui-predictive ul').html(predictions)
+
+        if (arguments.length>1) {
+          var callback = arguments[1]
+          callback()
+        }
+    }
+
+
 
     /*
     *    Renders the conversations list of the current user, defined in settings.username

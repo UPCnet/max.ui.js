@@ -16,6 +16,33 @@
 #maxui-newactivity {padding:10px; position:relative; background: #f2f2f2 url('https://max.upc.edu/maxui/bgact.gif') 0 0 repeat;}
 #maxui-newactivity:after {content: "";display: block;height: 0;clear: both;}
 
+#maxui-predictive {
+width:200px;
+background-color: white;
+margin-top:-32px;
+margin-left:57px;
+position:absolute;
+z-index: 100;
+border: 1px #b2b2b2 solid;;
+-moz-border-radius: 3px; -webkit-border-radius: 3px; border-radius: 3px;
+}
+
+#maxui-predictive ul {
+
+list-style: none;
+margin:0px;
+padding:1px;
+}
+
+li.maxui-prediction {
+	padding:0px 4px 2px 0px;
+	cursor:pointer;
+
+}
+
+li.maxui-prediction.selected {
+background-color: #ddd;
+}
 
 #maxui-show-timeline {
 	padding-bottom:3px;
@@ -153,6 +180,7 @@ input.maxui-button[disabled] {-webkit-appearance: none;border:1px solid #b2b2b2;
 
 #maxui-newactivity .maxui-avatar img {*position:absolute;}
 #maxui-newactivity #maxui-newactivity-box {margin-left:56px;text-align:right;}
+#maxui-newactivity #maxui-newactivity-box textarea{position:relative;}
 
 .maxui-clear {clear:both;float:none;}
 
