@@ -8,7 +8,23 @@ var max = max || {};
 
 max.utils = function() {
 
+
   return {
+
+    /*
+    *    Stops propagation of an event, to avoid arrows, esc, enter keys
+    *    bubbling to an input, Used in conjunction with the users prediction box
+    *
+    *    @param {Event} e       The DOM event we want to freeze
+    */
+    freezeEvent: function (e) {
+          if (e.preventDefault) e.preventDefault();
+          e.returnValue = false;
+          e.cancelBubble = true;
+          if (e.stopPropagation) e.stopPropagation();
+          return false;
+    },
+
     /*
     *    Strips whitespace at the beggining and end of a string and optionaly between
     *
