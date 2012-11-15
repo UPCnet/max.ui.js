@@ -486,16 +486,19 @@
         .on('focusout',selector, function(event) {
                   event.preventDefault()
                   var text = jq(this).val()
+                  var literal = jq(this).attr('data-literal')
                   normalized = maxui.utils.normalizeWhiteSpace(text,false)
                   if ( normalized=='' )
-                      var literal = jq(this).attr('data-literal')
                       jq(this).val(literal)
         })
 
         .on('click',target+' .maxui-button',function (event) {
             event.preventDefault()
-            var text = jq(this).parent().find('.maxui-text-input').val()
+            var $area = jq(this).parent().find('.maxui-text-input')
+            var literal = $area.attr('data-literal')
+            var text = $area.val()
             var normalized = maxui.utils.normalizeWhiteSpace(text,false)
+
             if (normalized!=literal & normalized!='')
                 clickFunction.apply(this,[text])
             })
