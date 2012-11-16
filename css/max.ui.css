@@ -481,7 +481,7 @@ text-align: center;
 }
 
 .jspVerticalBar:hover {
-	width:10px; border-left:1px #bbb solid;
+	width:10px; border-left:1px #eee solid;
 }
 
 .jspHorizontalBar
@@ -513,7 +513,7 @@ text-align: center;
 
 .jspTrack
 {
-    background: #dde;
+    background: white;
     position: relative;
 }
 
