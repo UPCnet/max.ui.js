@@ -50,6 +50,8 @@ max.utils = function() {
     */
     formatText: function (text){
         if (text) {
+
+            // Format hyperlinks
             text = text.replace(
                 /((https?\:\/\/)|(www\.))(\S+)(\w{2,4})(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/gi,
                 function(url){
@@ -61,6 +63,7 @@ max.utils = function() {
                 }
             );
 
+            // Format hashtags links
             text = text.replace(
                 /(\s|^)#{1}(\w+)/gi,
                 function(){
@@ -69,6 +72,10 @@ max.utils = function() {
                     return '<a class="maxui-hashtag" href="#" value="'+tag+'">'+pre+'#'+tag+'</a>';
                 }
             );
+
+            // Format line breaks
+            text = text.replace(/\r?\n/gi, '<br/>')
+
         }
         return text;
     },
