@@ -80,6 +80,24 @@
                                    token:    maxui.settings.oAuthToken
                                }
         this.maxClient.configure(maxclient_config)
+
+        // Start socket listener
+
+        if (!maxui.settings.disableConversations) {
+            maxui.io = io.connect(maxui.settings.maxChatURL)
+            maxui.io.on('chat', function(data) {
+                //console.log(data)
+                if (maxui.settings.UISection == 'conversations' && maxui.settings.conversationsSection == 'messages')
+                    self.maxui.printMessages(data.conversation, function() {maxui.toggleMessages('messages')})
+                else (maxui.settings.UISection == 'conversations' && maxui.settings.conversationsSection == 'conversations')
+                    maxui.printConversations( function() { maxui.toggleSection('conversations') })
+            })
+            maxui.io.emit('join', maxui.settings.username)
+
+        }
+
+
+        // Get user data and start ui rendering when completed
         this.maxClient.getUserData(maxui.settings.username, function() {
 
             //Determine if user can write in writeContexts
@@ -236,7 +254,7 @@
             })
 
         //Assign activation of messages section by delegating the clicl of a conversation arrow to the conversations container
-        jq('#maxui-conversations').on('click', '.maxui-enterconversation',function (event) {
+        jq('#maxui-conversations').on('click', '.maxui-conversation',function (event) {
             event.preventDefault()
             window.status=''
             var conversation_hash = jq(event.target).closest('.maxui-conversation').attr('id')
@@ -784,6 +802,7 @@
                             jq('#maxui-newactivity textarea').val('')
                             jq('#maxui-newactivity .maxui-button').attr('disabled','disabled')
                             maxui.printMessages(chash, function() {maxui.toggleMessages('messages')})
+                            maxui.io.emit('chat', {message: text, conversation: chash} )
 
                            })
 

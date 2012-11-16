@@ -142,7 +142,7 @@ var MSTCH_MAXUI_CONVERSATION = '\
         <div class="maxui-author">\
               <a href="#"><span class="maxui-avatar"><img src="{{avatarURL}}"></span>\
               <span class="maxui-displayname">{{partner}}</span></a>\
-              <span>({{messages}})</span>\
+              <span class="maxui-message-count">{{messages}}</span>\
         </div>\
         <div>\
             <p class="maxui-body">{{&text}}</p>\
