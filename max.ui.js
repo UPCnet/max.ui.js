@@ -84,7 +84,7 @@
         // Start socket listener
 
         if (!maxui.settings.disableConversations) {
-            maxui.io = io.connect(maxui.settings.maxChatURL)
+            maxui.io = io.connect(maxui.settings.maxTalkURL)
             maxui.io.on('chat', function(data) {
                 //console.log(data)
                 if (maxui.settings.UISection == 'conversations' && maxui.settings.conversationsSection == 'messages')
