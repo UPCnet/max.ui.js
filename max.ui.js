@@ -728,12 +728,13 @@
         {
           $timeline.show()
           var timeline_height = $timeline_wrapper.height()
-          $timeline.animate({'height':timeline_height}, 400)
+          $timeline.animate({'height':timeline_height}, 400, function(event) {
+              $timeline.css('height','')
+          })
           $conversations.animate({'height':0}, 400, function(event) {
               $conversations.hide()
           })
           $search.show(400)
-          $timeline.css('height','')
           maxui.settings.UISection='timeline'
           $postbutton.val(maxui.settings.literals.new_activity_post)
           if (!maxui.settings.disableConversations) $conversationsbutton.show()
