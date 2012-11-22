@@ -19,6 +19,14 @@ echo "Compiling jquery.iecors.js"
 java -jar closure-compiler-v1346.jar --js ../libs/jquery.iecors.js --compilation_level SIMPLE_OPTIMIZATIONS --js_output_file jquery.iecors-min.js
 echo "Compiling json2.js"
 java -jar closure-compiler-v1346.jar --js ../libs/json2.js --compilation_level SIMPLE_OPTIMIZATIONS --js_output_file json2-min.js
+echo "Compiling socket.io.js"
+java -jar closure-compiler-v1346.jar --js ../libs/socket.io.js --compilation_level SIMPLE_OPTIMIZATIONS --js_output_file socket.io-min.js
+echo "Compiling jquery.mousewheel.js"
+java -jar closure-compiler-v1346.jar --js ../libs/jquery.mousewheel-3.0.6.pack.js --compilation_level SIMPLE_OPTIMIZATIONS --js_output_file jquery.mousewheel-min.js
+echo "Compiling jquery.jscrollpane.js"
+java -jar closure-compiler-v1346.jar --js ../libs/jquery.jscrollpane.js --compilation_level SIMPLE_OPTIMIZATIONS --js_output_file jquery.jscrollpane-min.js
+
+
 
 VERSION=`cat ../version`
 FILENAME="max.ui-$VERSION.js"
@@ -51,6 +59,15 @@ cat jquery.easydate-min.js >> $FILENAME
 
 comment "hogan.js"
 cat hogan-min.js >> $FILENAME
+
+comment "socket.io.js"
+cat socket.io-min.js >> $FILENAME
+
+comment "jquery.mousewheel.js"
+cat jquery.mousewheel-min.js >> $FILENAME
+
+comment "jquery.jscrollpane.js"
+cat jquery.jscrollpane-min.js >> $FILENAME
 
 comment "max.templates.js"
 cat max.templates-min.js >> $FILENAME
