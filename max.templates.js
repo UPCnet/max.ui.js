@@ -35,7 +35,7 @@ var MSTCH_MAXUI_MAIN_UI = '\
    </div>\
 \
    <div id="maxui-search" class="folded">\
-       <a id="maxui-search-toggle" class="maxui-disabled" href="#"><img src="https://max.upc.edu/maxui/transparent.gif" alt="obre-tanca" ></a>\
+       <a id="maxui-search-toggle" class="maxui-disabled" href="#"><img src="/maxui/img/transparent.gif" alt="obre-tanca" ></a>\
        <div id="maxui-search-box">\
           <input id="maxui-search-text" type="search" placeholder="{{literals.search_text}}" class="maxui-empty maxui-text-input" value="{{literals.search_text}}" />\
           <!--<input disabled="disabled" id="maxui-search-action" type="button" class="maxui-button maxui-disabled"></input>-->\
@@ -193,7 +193,7 @@ var MSTCH_MAXUI_PREDICTIVE_ITEM = '\
 
 var MSTCH_MAXUI_FILTERS = '\
 {{#filters}}\
-<div class="maxui-filter maxui-{{type}}" type="{{type}}" value="{{value}}"><span>{{prepend}}{{value}}<a class="close" href=""><img src="https://max.upc.edu/maxui/x.png" alt="tanca"></a></span></div>\
+<div class="maxui-filter maxui-{{type}}" type="{{type}}" value="{{value}}"><span>{{prepend}}{{value}}<a class="close" href=""><img src="/maxui/img/x.png" alt="tanca"></a></span></div>\
 {{/filters}}\
 ';
 
