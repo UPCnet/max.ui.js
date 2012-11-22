@@ -773,6 +773,7 @@
                             jq('#maxui-newactivity .maxui-button').attr('disabled','disabled')
                             maxui.printMessages(this.contexts[0].hash, function() {
                                    maxui.toggleMessages('messages')
+                                   maxui.io.emit('chat', {message: text, conversation: chash} )
                             })
                        })
         } else {
