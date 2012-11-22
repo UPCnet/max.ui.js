@@ -90,8 +90,20 @@
                 if (maxui.settings.UISection == 'conversations' && maxui.settings.conversationsSection == 'messages')
                     self.maxui.printMessages(data.conversation, function() {maxui.toggleMessages('messages')})
                 else (maxui.settings.UISection == 'conversations' && maxui.settings.conversationsSection == 'conversations')
-                    maxui.printConversations( function() { maxui.toggleSection('conversations') })
+                    maxui.printConversations( function() { maxui.toggleSection('conversations')
+                                                           $('.maxui-message-count:first').css({'background-color':'red'})
+                                                         })
             })
+            maxui.io.on('new', function(data) {
+                console.log(data)
+                maxui.io.emit('join', maxui.settings.username)
+                if (maxui.settings.UISection == 'conversations' && maxui.settings.conversationsSection == 'conversations')
+                    maxui.printConversations( function() { maxui.toggleSection('conversations')
+                                                           $('.maxui-message-count:first').css({'background-color':'red'})
+                                                         })
+            })
+
+
             maxui.io.emit('join', maxui.settings.username)
 
         }
@@ -771,9 +783,12 @@
             func_params.push( function() {
                             jq('#maxui-newactivity textarea').val('')
                             jq('#maxui-newactivity .maxui-button').attr('disabled','disabled')
-                            maxui.printMessages(this.contexts[0].hash, function() {
+                            var chash = this.contexts[0].hash
+                            maxui.printMessages(chash, function() {
                                    maxui.toggleMessages('messages')
-                                   maxui.io.emit('chat', {message: text, conversation: chash} )
+                                   maxui.io.emit('join', maxui.settings.username)
+                                   maxui.settings.currentConversation = chash
+                                   maxui.io.emit('chat', {message: text, conversation: chash , update:target} )
                             })
                        })
         } else {
