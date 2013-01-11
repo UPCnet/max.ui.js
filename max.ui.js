@@ -12,7 +12,7 @@
 
         var defaults = {'maxRequestsAPI' : 'jquery',
                         'maxServerURL' : 'https://max.upc.edu',
-                        'readContext': '',
+                        'readContext': undefined,
                         'writeContexts' : [],
                         'activitySource': 'timeline',
                         'enableAlerts': false,
@@ -24,6 +24,14 @@
 
         // extend defaults with user-defined settings
         maxui.settings = jq.extend(defaults,options)
+
+        // Check timeline/activities consistency
+        if (maxui.settings.UISection == 'timeline' && maxui.settings.readContext)
+        {
+            maxui.settings.readContext = undefined
+            maxui.settings.writeContexts = []
+        }
+
 
         // Get language from options or set default.
         // Set literals in the choosen language and extend from user options
@@ -39,19 +47,20 @@
                 maxui.settings.maxServerURL = maxui.settings.maxServerURLAlias
             }
 
+        if (maxui.settings.readContext)
+        {
+            // Calculate readContextHash
+            maxui.settings.readContextHash = maxui.utils.sha1(maxui.settings.readContext)
 
-        // Calculate readContextHash
-        maxui.settings.readContextHash = maxui.utils.sha1(maxui.settings.readContext)
+            // Add read context to write contexts
+            maxui.settings.writeContexts.push(maxui.settings.readContext)
 
-        // Add read context to write contexts
-        maxui.settings.writeContexts.push(maxui.settings.readContext)
-
-        // Store the hashes of the write contexts
-        maxui.settings.writeContextsHashes = []
-        for (wc=0;wc<maxui.settings.writeContexts.length;wc++) {
-            maxui.settings.writeContextsHashes.push(maxui.utils.sha1(maxui.settings.writeContexts[wc]))
+            // Store the hashes of the write contexts
+            maxui.settings.writeContextsHashes = []
+            for (wc=0;wc<maxui.settings.writeContexts.length;wc++) {
+                maxui.settings.writeContextsHashes.push(maxui.utils.sha1(maxui.settings.writeContexts[wc]))
+            }
         }
-
 
         //set default avatar and profile url pattern if user didn't provide it
         if (!maxui.settings.avatarURLpattern)
@@ -1295,33 +1304,37 @@
                 // Determine write permission, granted by default if we don't find a restriction
                 maxui.settings.canwrite = true
 
-                // Add read context if user is not subscribed to it
-                var subscriptions = maxui.settings.subscriptions
-                if (!subscriptions[this.context.hash])
+                // If we don't have a context, we're in timeline, so we can write
+                if (this.context)
                 {
-                    subscriptions[this.context.hash]={}
-                    subscriptions[this.context.hash]['permissions']={}
-
-                    // Check only for public defaults, as any other permission would require
-                    // a susbcription, that we already checked that doesn't exists
-                    subscriptions[this.context.hash]['permissions']['read'] = this.context.permissions.read=='public'
-                    subscriptions[this.context.hash]['permissions']['write'] = this.context.permissions.write=='public'
-                }
-
-                // Iterate through all the defined write contexts to check for write permissions on
-                // the current user
-                for (wc=0;wc<maxui.settings.writeContexts.length;wc++)
+                    // Add read context if user is not subscribed to it{
+                    var subscriptions = maxui.settings.subscriptions
+                    if (!subscriptions[this.context.hash])
                     {
-                        var write_context = maxui.settings.writeContextsHashes[wc]
-                        if (subscriptions[write_context]['permissions'])
-                        {
-                          if (subscriptions[write_context]['permissions'].write==false)
-                          {
-                              maxui.settings.canwrite = false
-                          }
-                        }
-                        else { maxui.settings.canwrite = false }
+                        subscriptions[this.context.hash]={}
+                        subscriptions[this.context.hash]['permissions']={}
+
+                        // Check only for public defaults, as any other permission would require
+                        // a susbcription, that we already checked that doesn't exists
+                        subscriptions[this.context.hash]['permissions']['read'] = this.context.permissions.read=='public'
+                        subscriptions[this.context.hash]['permissions']['write'] = this.context.permissions.write=='public'
                     }
+
+                    // Iterate through all the defined write contexts to check for write permissions on
+                    // the current user
+                    for (wc=0;wc<maxui.settings.writeContexts.length;wc++)
+                        {
+                            var write_context = maxui.settings.writeContextsHashes[wc]
+                            if (subscriptions[write_context]['permissions'])
+                            {
+                              if (subscriptions[write_context]['permissions'].write==false)
+                              {
+                                  maxui.settings.canwrite = false
+                              }
+                            }
+                            else { maxui.settings.canwrite = false }
+                        }
+                }
 
                 // Render the postbox UI if user has permission
                 var showCT = maxui.settings.UISection == 'conversations'
