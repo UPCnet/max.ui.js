@@ -239,7 +239,8 @@
             var match = text.match(matchMention)
             var replacement = text.replace(matchMention, '@'+$selected.text()+' ')
             $predictive.hide()
-            $area.val(replacement).focus()
+            $area.val(replacement)
+            $area.focus()
 
             })
 
@@ -325,13 +326,13 @@
                   var is_predicting = jq('#maxui-predictive:visible').length>0
 
                   // Up & down
-                  if (key==38 && is_predicting) {
+                  if (key==40 && is_predicting) {
                     var $next = $selected.next()
                     $selected.removeClass('selected')
                     if ($next.length>0) $next.addClass('selected')
                     else {$selected.siblings(':first').addClass('selected')}
                   }
-                  else if (key==40 && is_predicting) {
+                  else if (key==38 && is_predicting) {
                     var $prev = $selected.prev()
                     $selected.removeClass('selected')
                     if ($prev.length>0) $prev.addClass('selected')
@@ -479,8 +480,17 @@
 
          .on('keydown', selector, function(event) {
            if ( jq('#maxui-predictive:visible').length>0 &&  (event.which==40 || event.which==38 || event.which==13 || event.which==9)) {
-
               maxui.utils.freezeEvent(event)
+           } else if(event.which==13 && event.shiftKey==false) {
+                event.preventDefault()
+                var $area = jq(this).parent().find('.maxui-text-input')
+                var literal = $area.attr('data-literal')
+                var text = $area.val()
+                var normalized = maxui.utils.normalizeWhiteSpace(text,false)
+
+                if (normalized!=literal & normalized!='')
+                    clickFunction.apply(this,[text])
+
            }
 
 
