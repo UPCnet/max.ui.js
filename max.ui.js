@@ -26,7 +26,7 @@
         maxui.settings = jq.extend(defaults,options)
 
         // Check timeline/activities consistency
-        if (maxui.settings.UISection == 'timeline' && maxui.settings.readContext)
+        if (maxui.settings.UISection == 'timeline' && maxui.settings.activitySource == 'timeline' && maxui.settings.readContext)
         {
             maxui.settings.readContext = undefined
             maxui.settings.writeContexts = []
