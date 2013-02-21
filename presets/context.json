@@ -1,0 +1,7 @@
+{
+    "readContext": "http://localhost",
+    "writeContexts": [],
+    "activitySource": "activities",
+    "disableConversations": false,
+    "disableTimeline": false
+}

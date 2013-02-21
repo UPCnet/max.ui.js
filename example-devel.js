@@ -12,50 +12,32 @@ function getURLParameter(name) {
 
 jQuery().ready(function() {
 
-    literals_ca = {'new_activity_text': 'Escriu alguna cosa...',
-                   'new_activity_post': "Envia l'activitat",
-                   'toggle_comments': "Comentaris",
-                   'new_comment_post': "Envia el comentari",
-                   'load_more': "Carrega'n més"
-                 }
+    var settings = {}
+
+    // Get parameters from URL Configuration
     var username = getURLParameter('user')
+    var preset = getURLParameter('preset')
+    preset = preset=="null" ? 'timeline' : preset
 
-    var settings = {
-           'literals': literals_ca,
-           'language': 'ca',
-           'username' :  username=="null" ? 'carles.bruguera' : username,
-           'oAuthToken' : 'eb0d4b6c2a44ac90db29d2bbb172cba1',
-           'oAuthGrantType' : 'password',
-           'maxServerURL' : 'http://localhost',
-           'maxTalkURL' : 'http://sheldon.estacions.upcnet.es:6545/max',
-           //'maxTalkURL' : 'http://sheldon.upc.es:6545/max',
-           'maxServerURLAlias' : 'http://sheldon.upc.es/max',
-//           'avatarURLpattern' : '',
-           'profileURLpattern' : '#',
-           'readContext': 'http://sheldon.upc.es',
-           //'writeContexts': ['http://sheldon.upc.es'],
-           'activitySource': 'timeline',
-           'generatorName': 'SheldonApp',
-           'UISection':'timeline',
-//           'disableTimeline':true,
-//           'disableConversations':true
-           }
+    // Get Widget basic configuration parameters
+    $.get('presets/base.json', 'json')
+      .always( function(data)
+      {
+         $.extend(settings, data)
 
-//  var settings = {
-//  'newActivityText' : 'Escriu alguna cosa ...',
-//                 'username' : 'francesc.bassas-bullich',
-//                 'oAuthToken' : '0310fb63c9014aeb4f888eda768c1c86',
-//                 'maxServerURL' : 'http://max.beta.upcnet.es',
-//                 'maxServerURLAlias' : 'https://devel.upcnet.es/max',
-//                 'avatarURLpattern' : 'https://devel.upcnet.es/clubs/avatar/{0}',
-//                 'activitiesSource' : 'activities',
-//                 'contextFilter' : ['hola'],
-//                 'activitySource': 'activities'
-// }
-    //gadgets.io.setProxyURL(settings.maxServerURL+'/makeRequest')
+        // When done, extend settings with parameters from selected preset
+        $.get('presets/' + preset + '.json', function(data)
+          { $.extend(settings, data)
+
+            // Overwrite username if supplied
+            if (username!="null") settings['username'] = username
+
+            // After all, fire up the widget
+            jQuery('#container').maxUI(settings)
+          })
+
+      })
 
 
-  settings['username']
 
-    jQuery('#container').maxUI(settings)
 })
