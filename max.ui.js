@@ -19,7 +19,8 @@
                         'UISection': 'timeline',
                         'disableTimeline': false,
                         'disableConversations': false,
-                        'conversationsSection': 'conversations'
+                        'conversationsSection': 'conversations',
+                        'activitySortOrder': 'activities'
                         }
 
         // extend defaults with user-defined settings
@@ -213,10 +214,10 @@
             })
 
         //Assign Username and avatar clicking via delegating the click to the activities container
-        jq('#maxui-activities').on('click','.maxui-author',function (event) {
+        jq('#maxui-activities').on('click','.maxui-actor',function (event) {
             event.preventDefault()
-            var author = jq(this).find('.maxui-username').text()
-            maxui.addFilter({type:'author', value:author})
+            var actor = jq(this).find('.maxui-username').text()
+            maxui.addFilter({type:'actor', value:actor})
             jq('#maxui-search').toggleClass('folded',false)
 
             })
@@ -576,7 +577,7 @@
                     case '#': var kwtype='hashtag';
                               var keyword = keyword.substr(1);
                               break;
-                    case '@': var kwtype='author';
+                    case '@': var kwtype='actor';
                               var keyword = keyword.substr(1);
                               break;
                     default:  var kwtype = 'keyword';
@@ -660,7 +661,7 @@
         switch (filter.type)
         {
         case "hashtag": filter['prepend']='#';break;
-        case "author": filter['prepend']='@';break;
+        case "actor": filter['prepend']='@';break;
         default:        filter['prepend']='';break;
         }
 
@@ -1153,10 +1154,10 @@
                                         var comment = activity.replies.items[r]
                                         reply = {
                                                            id: comment.id,
-                                                       author: comment.author,
+                                                       actor: comment.actor,
                                                          date: maxui.utils.formatDate(comment.published,maxui.language),
                                                          text: maxui.utils.formatText(comment.content),
-                                                    avatarURL: maxui.settings.avatarURLpattern.format(comment.author.username)
+                                                    avatarURL: maxui.settings.avatarURLpattern.format(comment.actor.username)
                                                 }
                                         replies.items.push(reply)
                                         }
@@ -1251,10 +1252,10 @@
 
                     var params = {   literals:maxui.settings.literals,
                                            id: comment.id,
-                                       author: comment.author,
+                                       actor: comment.actor,
                                          date: maxui.utils.formatDate(comment.published, maxui.language),
                                          text: maxui.utils.formatText(comment.content),
-                                    avatarURL: maxui.settings.avatarURLpattern.format(comment.author.username)
+                                    avatarURL: maxui.settings.avatarURLpattern.format(comment.actor.username)
                                  }
                     // Render the comment template and append it at the end of the rendered comments
                     var comments = comments + maxui.templates.comment.render(params)
@@ -1282,6 +1283,7 @@
         if (filters.after)
             {insert_at = 'beggining'}
 
+        filters.sortBy = maxui.settings.activitySortOrder
 
 
         if (maxui.settings.activitySource=='timeline')

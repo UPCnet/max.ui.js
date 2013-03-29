@@ -84,7 +84,7 @@ var MSTCH_MAXUI_ACTIVITY = '\
         <div class="maxui-topright">\
             <span class="maxui-publisheddate">{{date}}</span>\
         </div>\
-        <div class="maxui-author">\
+        <div class="maxui-actor">\
               <a href="#"><span class="maxui-avatar"><img src="{{avatarURL}}"></span>\
 		          <span class="maxui-displayname">{{actor.displayName}}</span></a>\
           <span class="maxui-username">{{actor.username}}&nbsp;</span>\
@@ -139,7 +139,7 @@ var MSTCH_MAXUI_CONVERSATION = '\
             <span class="maxui-publisheddate">{{date}}</span>\
             <a class="maxui-enterconversation" href="#"><img src="/maxui/img/to_conversation.png"></a>\
         </div>\
-        <div class="maxui-author">\
+        <div class="maxui-actor">\
               <a href="#"><span class="maxui-avatar"><img src="{{avatarURL}}"></span>\
               <span class="maxui-displayname">{{partner}}</span></a>\
               <span class="maxui-message-count">{{messages}}</span>\
@@ -167,14 +167,14 @@ var MSTCH_MAXUI_MESSAGE = '\
 ';
 
 var MSTCH_MAXUI_COMMENT = '\
-<div class="maxui-comment" id="{{id}}" userid="{{author.id}}" displayname="{{author.username}}">\
+<div class="maxui-comment" id="{{id}}" userid="{{actor.id}}" displayname="{{actor.username}}">\
     <div class="maxui-activity-content">\
         <div class="maxui-publisheddate">{{date}}</div>\
-        <div class="maxui-author">\
+        <div class="maxui-actor">\
 	   <a href="#">\
 		<span class="maxui-avatar"><img src="{{avatarURL}}"></span>\
-		<span class="maxui-displayname">{{author.displayName}}</span></a> \
-	   <span class="maxui-username">{{author.username}}</span>\
+		<span class="maxui-displayname">{{actor.displayName}}</span></a> \
+	   <span class="maxui-username">{{actor.username}}</span>\
         </div>\
         <div>\
             <p class="maxui-body">{{&text}}</p>\
