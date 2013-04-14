@@ -252,7 +252,7 @@ MaxClient.prototype.addActivity = function(text,contexts,callback) {
 MaxClient.prototype.addMessageAndConversation = function(text,participants,callback) {
     query = {
         "object": {
-            "objectType": "message",
+            "objectType": "note",
             "content": ""
             },
         "contexts": [ { 'objectType': 'conversation',
@@ -270,7 +270,7 @@ MaxClient.prototype.addMessageAndConversation = function(text,participants,callb
 MaxClient.prototype.addMessage = function(text,chash,callback) {
     query = {
         "object": {
-            "objectType": "message",
+            "objectType": "note",
             "content": ""
             }
         }
