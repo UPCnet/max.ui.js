@@ -998,7 +998,7 @@
             {
             var conversation = items[i]
 
-            var other_participants = conversation.object.participants.slice()
+            var other_participants = conversation.participants.slice()
             maxui.utils.removeValueFrom(other_participants,maxui.settings.username)
             var partner = other_participants[0]
             var andmore = ''
@@ -1006,12 +1006,12 @@
             var avatar_url = maxui.settings.avatarURLpattern.format(partner)
 
             var params = {
-                                   id: conversation.hash,
+                                   id: conversation.id,
                               partner: partner,
-                                 text: maxui.utils.formatText(conversation.object.lastMessage.content),
-                             messages: conversation.object.messages,
+                                 text: maxui.utils.formatText(conversation.lastMessage.content),
+                             messages: conversation.messages,
                              literals: maxui.settings.literals,
-                                 date: maxui.utils.formatDate(conversation.object.lastMessage.published, maxui.language),
+                                 date: maxui.utils.formatDate(conversation.lastMessage.published, maxui.language),
                             avatarURL: avatar_url
                          }
 
