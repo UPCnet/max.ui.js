@@ -804,7 +804,7 @@
             func_params.push( function() {
                             jq('#maxui-newactivity textarea').val('')
                             jq('#maxui-newactivity .maxui-button').attr('disabled','disabled')
-                            var chash = this.contexts[0].hash
+                            var chash = this.contexts[0].id
                             maxui.printMessages(chash, function() {
                                    maxui.toggleMessages('messages')
                                    maxui.io.emit('join', maxui.settings.username)
