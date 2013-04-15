@@ -1507,6 +1507,9 @@
 
     io.util.merge(this.options, options);
 
+    if (options['limit_transports']) {
+        this.options.transports = options['limit_transports']
+    }
     this.connected = false;
     this.open = false;
     this.connecting = false;

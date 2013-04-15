@@ -20,7 +20,8 @@
                         'disableTimeline': false,
                         'disableConversations': false,
                         'conversationsSection': 'conversations',
-                        'activitySortOrder': 'activities'
+                        'activitySortOrder': 'activities',
+                        'transports': undefined
                         }
 
         // extend defaults with user-defined settings
@@ -94,7 +95,7 @@
         // Start socket listener
 
         if (!maxui.settings.disableConversations) {
-            maxui.io = io.connect(maxui.settings.maxTalkURL)
+            maxui.io = io.connect(maxui.settings.maxTalkURL, {'limit_transports': maxui.settings.transports})
             maxui.io.on('chat', function(data) {
                 //console.log(data)
                 if (maxui.settings.UISection == 'conversations' && maxui.settings.conversationsSection == 'messages')
