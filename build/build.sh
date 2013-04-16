@@ -48,6 +48,8 @@ function comment(){
 #comment "jQuery 1.7.1"
 #cat jquery-1.7.1-min.js >> $FILENAME
 
+comment "MAX UI v.$VERSION"
+
 comment "json2"
 cat json2-min.js >> $FILENAME
 
