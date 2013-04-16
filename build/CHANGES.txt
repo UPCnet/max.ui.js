@@ -1,0 +1,6 @@
+CHANGELOG
+=========
+
+3.0 (2013-04-16)
+----------------
+* Updated to new conversation formats
