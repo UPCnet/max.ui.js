@@ -68,7 +68,7 @@ js = re.sub(r'src="{}'.format(DEFAULT_MAXUI_IMAGES_FOLDER), r'src="{images_url}'
 open(config['js_location'], 'w').write(js)
 
 css = downloadFile(config, 'css/max.ui.css'.format(version))
-css = re.sub(r"url\('{}".format(DEFAULT_MAXUI_IMAGES_FOLDER), r"url\('{images_url}".format(**config), css)
+css = re.sub(r"url\('{}".format(DEFAULT_MAXUI_IMAGES_FOLDER), r"url('{images_url}".format(**config), css)
 open(config['css_location'], 'w').write(css)
 
 print 'MAX UI {} setup finished'.format(version)
