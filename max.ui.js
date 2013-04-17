@@ -97,7 +97,7 @@
         if (!maxui.settings.disableConversations) {
             maxui.io = io.connect(maxui.settings.maxTalkURL, {'limit_transports': maxui.settings.transports})
             maxui.io.on('chat', function(data) {
-                //console.log(data)
+                console.log(data)
                 if (maxui.settings.UISection == 'conversations' && maxui.settings.conversationsSection == 'messages')
                     self.maxui.printMessages(data.conversation, function() {maxui.toggleMessages('messages')})
                 else (maxui.settings.UISection == 'conversations' && maxui.settings.conversationsSection == 'conversations')
