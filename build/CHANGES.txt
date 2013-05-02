@@ -1,6 +1,10 @@
 CHANGELOG
 =========
 
+3.1 (2013-05-02)
+----------------
+* Added Posted conversation event
+
 3.0 (2013-04-16)
 ----------------
 * Updated to new conversation formats
