@@ -57,6 +57,10 @@ MaxClient.prototype.configure = function(settings) {
 MaxClient.prototype.POST = function(route, query, callback) {
     maxclient = this
     resource_uri = '{0}{1}'.format(this.url, route)
+    // Get method-defined triggers
+    var triggers = {}
+    if (arguments.length>3) triggers = arguments[3]
+
     if (this.mode=='jquery')
     {
            jQuery.ajax( {url: resource_uri,
@@ -70,8 +74,14 @@ MaxClient.prototype.POST = function(route, query, callback) {
 			     async: true,
 			     dataType: 'json'
 			    })
-         .done( function(result) { callback.call(result) } )
-         .fail( function(xhr) { jQuery(window).trigger('maxclienterror',xhr) })
+         .done( function(result) {
+            callback.call(result)
+            if (triggers.done) jQuery(window).trigger(triggers.done, result)
+          })
+         .fail( function(xhr) {
+            jQuery(window).trigger('maxclienterror',xhr)
+            if (triggers.fail) jQuery(window).trigger(triggers.fail, xhr)
+          })
 
     }
     else
@@ -101,6 +111,11 @@ MaxClient.prototype.POST = function(route, query, callback) {
 MaxClient.prototype.GET = function(route, query, callback) {
     maxclient = this
     resource_uri = '{0}{1}'.format(this.url, route)
+
+    // Get method-defined triggers
+    var triggers = {}
+    if (arguments.length>3) triggers = arguments[3]
+
     if (Object.keys(query).length >0)
     {
         resource_uri+='?'+jQuery.param(query, true)
@@ -117,8 +132,14 @@ MaxClient.prototype.GET = function(route, query, callback) {
 			     async: true,
 			     dataType: 'json'
 			    })
-         .done( function(result) { callback.call(result) } )
-         .fail( function(xhr) { jQuery(window).trigger('maxclienterror',xhr) })
+         .done( function(result) {
+            if (triggers.done) jQuery(window).trigger(triggers.done)
+            callback.call(result)
+          })
+         .fail( function(xhr) {
+            jQuery(window).trigger('maxclienterror',xhr)
+            if (triggers.fail) jQuery(window).trigger(triggers.fail)
+          })
 
 	}
 	else
@@ -232,7 +253,7 @@ MaxClient.prototype.addActivity = function(text,contexts,callback) {
         { query.contexts = []
           for (ct=0;ct<contexts.length;ct++)
           {
-            query.contexts.push({'objectType':'uri','url':contexts[ct]})
+            query.contexts.push({'objectType':'context','url':contexts[ct]})
           }
         }
 
@@ -245,7 +266,9 @@ MaxClient.prototype.addActivity = function(text,contexts,callback) {
         }
 
   	route = this.ROUTES['user_activities'].format(this.actor.username);
-    this.POST(route,query,callback)
+    trigger = {'done': 'maxui-posted-activity',
+               'fail': 'maxui-failed-activity'}
+    this.POST(route,query,callback, trigger)
 };
 
 
