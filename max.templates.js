@@ -15,15 +15,15 @@ var MSTCH_MAXUI_MAIN_UI = '\
  <div id="maxui-mainpanel">\
 \
    <div id="maxui-conversations" style="height:0px; {{showConversations}}">\
-           <div id="maxui-conversations-list" class="activities">\
-               <div class="wrapper">\
+           <div id="maxui-conversations-list" class="maxui-activities">\
+               <div class="maxui-wrapper">\
                </div>\
            </div>\
 \
            <div id="maxui-messages" style="{{messagesStyle}}">\
                <div id="maxui-back-conversations" class="maxui-togglebar"><a href="#">&larr; {{literals.conversations_list}}</a></div>\
                <div id="maxui-message-list">\
-                   <div class="wrapper">\
+                   <div class="maxui-wrapper">\
                    </div>\
                </div>\
            </div>\
@@ -46,12 +46,12 @@ var MSTCH_MAXUI_MAIN_UI = '\
    <div id="maxui-show-timeline" class="maxui-togglebar" style="{{showTimelineToggle}}"><a href="#">{{literals.activity}} &darr;</a></div>\
 \
    <div id="maxui-timeline" style="{{showTimeline}}">\
-      <div class="wrapper">\
-          <div id="maxui-preload" class="activities" style="height:0px;overflow:hidden">\
-              <div class="wrapper">\
+      <div class="maxui-wrapper">\
+          <div id="maxui-preload" class="maxui-activities" style="height:0px;overflow:hidden">\
+              <div class="maxui-wrapper">\
               </div>\
           </div>\
-          <div id="maxui-activities" class="activities">\
+          <div id="maxui-activities" class="maxui-activities">\
           </div>\
           <div id="maxui-more-activities">\
               <input type="button" class="maxui-button" value="{{literals.load_more}}">\

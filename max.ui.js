@@ -738,10 +738,10 @@
         maxui = this
         var $search = jq('#maxui-search')
         var $timeline = jq('#maxui-timeline')
-        var $timeline_wrapper = jq('#maxui-timeline .wrapper')
+        var $timeline_wrapper = jq('#maxui-timeline .maxui-wrapper')
         var $conversations = jq('#maxui-conversations')
         var $conversations_list = jq('#maxui-conversations #maxui-conversations-list')
-        var $conversations_list_wrapper = jq('#maxui-conversations #maxui-conversations-list .wrapper')
+        var $conversations_list_wrapper = jq('#maxui-conversations #maxui-conversations-list .maxui-wrapper')
         var $postbutton = jq('#maxui-newactivity-box .maxui-button')
         var $conversationsbutton = jq('#maxui-show-conversations')
         var $timelinebutton = jq('#maxui-show-timeline')
@@ -1033,7 +1033,7 @@
 
             }
         if (items.length==0) conversations = '<span style="font-style:italic;color:#666;">No hi ha converses<span>'
-        jq('#maxui-conversations-list .wrapper').html(conversations)
+        jq('#maxui-conversations-list .maxui-wrapper').html(conversations)
 
         if (arguments.length>1) {
           var callback = arguments[1]
@@ -1084,8 +1084,8 @@
             var avatar_url = maxui.settings.avatarURLpattern.format(message.actor.username)
 
             // Store in origin, who is the sender of the message, the authenticated user or anyone else
-            origin = 'anyone'
-            if (message.actor.username==maxui.settings.username) origin = 'user'
+            origin = 'maxui-user-notme'
+            if (message.actor.username==maxui.settings.username) origin = 'maxui-user-me'
 
             var params = {
                                    id: message.id,
@@ -1100,7 +1100,7 @@
             messages = messages + maxui.templates.message.render(params)
 
             }
-        jq('#maxui-messages .wrapper').html(messages)
+        jq('#maxui-messages .maxui-wrapper').html(messages)
 
         if (arguments.length>1) {
           var callback = arguments[1]
@@ -1202,8 +1202,8 @@
             if (insertAt == 'beggining')
             {
                 // Load all the activities in a overflow-hidden div to calculate the height
-                jq('#maxui-preload .wrapper').prepend(activities)
-                var ritems = jq('#maxui-preload .wrapper .maxui-activity')
+                jq('#maxui-preload .maxui-wrapper').prepend(activities)
+                var ritems = jq('#maxui-preload .maxui-wrapper .maxui-activity')
                 var heightsum = 0
                 for (i=0;i<ritems.length;i++)
                       heightsum += jq(ritems[i]).height()+18
@@ -1217,7 +1217,7 @@
                 jq('#maxui-preload').animate({"margin-top":0}, 200, function()
                    {
                         // When the animation ends, move the new activites to its native container
-                        jq('#maxui-preload .wrapper').html("")
+                        jq('#maxui-preload .maxui-wrapper').html("")
                         jq('#maxui-activities').prepend(activities)
                         jq('#maxui-preload').height(0)
 
