@@ -96,8 +96,8 @@
 
         if (!maxui.settings.disableConversations) {
             maxui.io = io.connect(maxui.settings.maxTalkURL, {'limit_transports': maxui.settings.transports})
-            maxui.io.on('chat', function(data) {
-                console.log(data)
+            maxui.io.on('update', function(data) {
+                console.log('New message from user {0} on {1}'.format(data.username, data.conversation))
                 if (maxui.settings.UISection == 'conversations' && maxui.settings.conversationsSection == 'messages')
                     self.maxui.printMessages(data.conversation, function() {maxui.toggleMessages('messages')})
                 else (maxui.settings.UISection == 'conversations' && maxui.settings.conversationsSection == 'conversations')
@@ -105,17 +105,25 @@
                                                            $('.maxui-message-count:first').css({'background-color':'red'})
                                                          })
             })
-            maxui.io.on('new', function(data) {
-                console.log(data)
-                maxui.io.emit('join', maxui.settings.username)
-                if (maxui.settings.UISection == 'conversations' && maxui.settings.conversationsSection == 'conversations')
-                    maxui.printConversations( function() { maxui.toggleSection('conversations')
-                                                           $('.maxui-message-count:first').css({'background-color':'red'})
-                                                         })
+            // maxui.io.on('new', function(data) {
+            //     console.log('')
+            //     console.log(data)
+            //     maxui.io.emit('join', maxui.settings.username)
+            //     if (maxui.settings.UISection == 'conversations' && maxui.settings.conversationsSection == 'conversations')
+            //         maxui.printConversations( function() { maxui.toggleSection('conversations')
+            //                                                $('.maxui-message-count:first').css({'background-color':'red'})
+            //                                              })
+            // })
+
+            maxui.io.on('listening', function(data) {
+                console.log('Ready and listening {0}'.format(data.conversations))
             })
 
+            maxui.io.on('joined', function(data) {
+                console.log('User {0} joined {1}'.format(data.username, data.conversation))
+            })
 
-            maxui.io.emit('join', maxui.settings.username)
+            maxui.io.emit('join', {username:maxui.settings.username, timestamp:maxui.utils.timestamp()})
 
         }
 
@@ -805,11 +813,12 @@
                             jq('#maxui-newactivity textarea').val('')
                             jq('#maxui-newactivity .maxui-button').attr('disabled','disabled')
                             var chash = this.contexts[0].id
+                            var activityid = this.id
                             maxui.printMessages(chash, function() {
                                    maxui.toggleMessages('messages')
                                    maxui.io.emit('join', maxui.settings.username)
                                    maxui.settings.currentConversation = chash
-                                   maxui.io.emit('chat', {message: text, conversation: chash , update:target} )
+                                   maxui.io.emit('talk', { conversation: chash, timestamp: maxui.utils.timestamp(), messageID: activityid } )
                             })
                        })
         } else {
@@ -840,7 +849,8 @@
                             jq('#maxui-newactivity textarea').val('')
                             jq('#maxui-newactivity .maxui-button').attr('disabled','disabled')
                             maxui.printMessages(chash, function() {maxui.toggleMessages('messages')})
-                            maxui.io.emit('chat', {message: text, conversation: chash} )
+                            var activityid = this.id
+                            maxui.io.emit('talk', { conversation: chash, timestamp: maxui.utils.timestamp(), messageID: activityid } )
 
                            })
 
