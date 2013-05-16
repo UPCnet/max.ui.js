@@ -109,6 +109,13 @@ max.utils = function() {
         return arr;
     },
 
+    /*
+    *    Returns the numner of milliseconds since epoch
+    */
+    timestamp: function() {
+        var date = new Date()
+        return date / 1
+    },
 
 
     /*
