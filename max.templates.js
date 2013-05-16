@@ -20,7 +20,7 @@ var MSTCH_MAXUI_MAIN_UI = '\
                </div>\
            </div>\
 \
-           <div id="maxui-messages">\
+           <div id="maxui-messages" style="{{messagesStyle}}">\
                <div id="maxui-back-conversations" class="maxui-togglebar"><a href="#">&larr; {{literals.conversations_list}}</a></div>\
                <div id="maxui-message-list">\
                    <div class="wrapper">\

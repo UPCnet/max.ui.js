@@ -161,6 +161,7 @@
             var showTL = maxui.settings.UISection == 'timeline'
             var toggleTL = maxui.settings.disableTimeline == false && !showTL
             var toggleCT = maxui.settings.disableConversations == false && !showCT
+            var containerWidth = maxui.width()
 
             var params = {
                                   username: maxui.settings.username,
@@ -168,7 +169,8 @@
                          showConversations: showCT ? 'display:block;' : 'display:none;',
                    showConversationsToggle: toggleCT ? 'display:block;' : 'display:none;',
                               showTimeline: showTL ? 'display:block;' : 'display:none;',
-                        showTimelineToggle: toggleTL ? 'display:block;' : 'display:none;'
+                        showTimelineToggle: toggleTL ? 'display:block;' : 'display:none;',
+                             messagesStyle: 'width:{0}px;left:{0}px;'.format(containerWidth)
                      }
             var mainui = maxui.templates.mainUI.render(params)
             maxui.html(mainui)

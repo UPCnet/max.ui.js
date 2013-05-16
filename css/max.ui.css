@@ -387,10 +387,8 @@ img { -ms-interpolation-mode: bicubic; image-rendering: optimizeQuality;}
 }
 
  #maxui-messages {
- 	width:400px;
  	position:absolute;
  	top:0px;
- 	left:400px;
  	background-color: #fff;
 
  }
