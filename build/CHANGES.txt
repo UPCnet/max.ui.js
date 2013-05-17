@@ -1,6 +1,11 @@
 CHANGELOG
 =========
 
+3.3 (2013-05-17)
+----------------
+* Added activity delete button
+* Added tunnelet DELETE method in max.client.js
+
 3.2 (2013-05-16)
 ----------------
 * Fixed classes and ids without maxui- prefix
