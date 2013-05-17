@@ -296,6 +296,18 @@
             maxui.printMessages(conversation_hash, function() { maxui.toggleMessages('messages') })
             })
 
+        //Assign activity removal via delegating the click to the activities container
+        jq('#maxui-activities').on('click','.maxui-delete-activity',function (event) {
+            event.preventDefault()
+            var $activity = jq(this).closest('.maxui-activity')
+            var activityid = $activity.attr('id')
+            maxui.maxClient.removeActivity(activityid, function() {
+                $activity.css({height:$activity.height(), 'min-height':'auto'})
+                $activity.animate({height: 0, opacity:0}, 100, function(event) {
+                    $activity.remove()
+                })
+            })
+        })
 
         //Assign Activity post action And textarea behaviour
         maxui.bindActionBehaviour('#maxui-newactivity','#maxui-newactivity-box', function(text)
@@ -1188,6 +1200,7 @@
                                       replies: replies,
                                     avatarURL: avatar_url,
                                   publishedIn: contexts,
+                            canDeleteActivity: activity.owner == maxui.settings.username,
                                           via: generator
 
                                  }

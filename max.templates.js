@@ -35,7 +35,7 @@ var MSTCH_MAXUI_MAIN_UI = '\
    </div>\
 \
    <div id="maxui-search" class="folded">\
-       <a id="maxui-search-toggle" class="maxui-disabled" href="#"><img src="/maxui/img/transparent.gif" alt="obre-tanca" ></a>\
+       <a id="maxui-search-toggle" class="maxui-disabled" href="#"><img src="/maxui-dev/img/transparent.gif" alt="obre-tanca" ></a>\
        <div id="maxui-search-box">\
           <input id="maxui-search-text" type="search" data-literal="{{literals.search_text}}" class="maxui-empty maxui-text-input" value="{{literals.search_text}}" />\
           <!--<input disabled="disabled" id="maxui-search-action" type="button" class="maxui-button maxui-disabled"></input>-->\
@@ -91,14 +91,16 @@ var MSTCH_MAXUI_ACTIVITY = '\
         </div>\
         <div>\
             <p class="maxui-body">{{&text}}</p>\
+            {{#canDeleteActivity}}\
+            <span class="maxui-delete-activity"></span>\
+            {{/canDeleteActivity}}\
         </div>\
     </div>\
     <div class="maxui-footer">\
+        {{#publishedIn}}\
         <div class="maxui-origin">\
-               {{#publishedIn}}\
-                   {{literals.context_published_in}}\
-                   <a href="{{publishedIn.url}}">{{publishedIn.displayName}}</a>\
-               {{/publishedIn}}\
+               {{literals.context_published_in}}\
+               <a href="{{publishedIn.url}}">{{publishedIn.displayName}}</a>\
                {{#via}}\
                    {{literals.generator_via}}\
                    <span class="maxui-via">\
@@ -106,6 +108,7 @@ var MSTCH_MAXUI_ACTIVITY = '\
                    </span>\
                {{/via}}\
         </div>\
+        {{/publishedIn}}\
         <div class="maxui-actions">\
             <a href="" class="maxui-commentaction">\
                  {{#replies}}<strong>{{replies.totalItems}}</strong>{{/replies}}\
@@ -137,7 +140,7 @@ var MSTCH_MAXUI_CONVERSATION = '\
     <div class="maxui-activity-content">\
         <div class="maxui-topright">\
             <span class="maxui-publisheddate">{{date}}</span>\
-            <a class="maxui-enterconversation" href="#"><img src="/maxui/img/to_conversation.png"></a>\
+            <a class="maxui-enterconversation" href="#"><img src="/maxui-dev/img/to_conversation.png"></a>\
         </div>\
         <div class="maxui-actor">\
               <a href="#"><span class="maxui-avatar"><img src="{{avatarURL}}"></span>\
@@ -193,7 +196,7 @@ var MSTCH_MAXUI_PREDICTIVE_ITEM = '\
 
 var MSTCH_MAXUI_FILTERS = '\
 {{#filters}}\
-<div class="maxui-filter maxui-{{type}}" type="{{type}}" value="{{value}}"><span>{{prepend}}{{value}}<a class="close" href=""><img src="/maxui/img/x.png" alt="tanca"></a></span></div>\
+<div class="maxui-filter maxui-{{type}}" type="{{type}}" value="{{value}}"><span>{{prepend}}{{value}}<a class="close" href=""><img src="/maxui-dev/img/x.png" alt="tanca"></a></span></div>\
 {{/filters}}\
 ';
 
