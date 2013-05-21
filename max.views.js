@@ -12,6 +12,7 @@ max.views = function(settings) {
     var templates = max.templates()
     var literals = settings.literals
     var utils = max.utils()
+    var jq = jQuery
 
     /*
     *    Main interface view, this holds
@@ -74,9 +75,6 @@ max.views = function(settings) {
                         }
                 }
 
-            // Take all the latter properties and join them into an object
-            // containing all the needed params to render the template
-
             view.replies = replies
             view.avatar_url = avatar_url
             view.contexts = contexts
@@ -100,7 +98,6 @@ max.views = function(settings) {
             // partials is used to render each comment found in the activities
             var partials = {comment: templates.comment}
             var html = templates.activity.render(variables, partials)
-            console.log('here')
             return html
         }
     })
@@ -134,7 +131,10 @@ max.views = function(settings) {
 
     PostBoxView = Backbone.View.extend({
         initialize: function(options) {
+            this.default_text = options.default_text
             this.render()
+            this.$text = jq(this.$el).find('textarea.maxui-text-input')
+            this.$button = jq(this.$el).find('input.maxui-button')
         },
         render: function () {
             var showCT = settings.UISection == 'conversations'
@@ -150,9 +150,70 @@ max.views = function(settings) {
             var html = templates.postBox.render(variables)
             this.$el.html(html)
         },
-        canwrite: function() {
-            return true
+        canwrite: function() { return true },
+        isPredicting: function() { return jq('#maxui-predictive:visible').length>0 },
+        getText: function() { return utils.normalizeWhiteSpace(this.$text.val(), false) },
+        setText: function(text) { this.$text.val(text)},
+        enableButton: function() { this.$button.removeAttr('disabled') },
+        disableButton: function() { this.$button.attr({'disabled': 'disabled', 'class': 'maxui-button maxui-disabled'}) },
+
+        events: {
+            'click input.maxui-button':             'postMessage',
+            'focusin textarea.maxui-text-input':    'focusIn',
+            'focusout textarea.maxui-text-input':   'focusOut',
+            'keydown textarea.maxui-text-input':    'keyDown',
+            'keyup textarea.maxui-text-input':      'keyUp'
+        },
+
+        focusIn: function(event) {
+            event.preventDefault()
+            if ( this.getText() == this.default_text )
+                this.setText('')
+
+        },
+
+        focusOut: function(event) {
+            event.preventDefault()
+            if ( this.getText() == '' )
+                this.setText(this.default_text)
+        },
+
+        keyDown: function(event) {
+            if ( this.isPredicting() && false(event.which==40 || event.which==38 || event.which==13 || event.which==9)) {
+                utils.freezeEvent(event)
+            } else if (event.which==13 && event.shiftKey==false) {
+                event.preventDefault()
+                var text = this.getText()
+                if (text!=this.default_text & text!='')
+                    this.postMessage()
+            }
+        },
+
+        keyUp: function(event) {
+            event.preventDefault()
+            event.stopPropagation()
+            if (this.getText()=='') {
+                this.disableButton()
+                this.$text.attr('class','maxui-empty maxui-text-input')
+            }
+            else {
+                if (this.canwrite()) {
+                    this.enableButton()
+                    this.$text.attr('class','maxui-text-input')
+                }
+            }
+
+            // TO recover when refactoring the predictive input
+            // if (extra_bind!=null) {
+            //   extra_bind(text, this, button, event)
+            // }
+        },
+
+
+        postMessage: function (event) {
+            alert('post')
         }
+
 
     })
 
@@ -165,7 +226,10 @@ max.views = function(settings) {
                     settings.subscriptions = mainview.user.getSubscriptions()
                     mainview.render()
                     mainview.views = {}
-                    mainview.views.postbox = new PostBoxView({el: $('#maxui-newactivity')})
+                    mainview.views.postbox = new PostBoxView({
+                        el: $('#maxui-newactivity'),
+                        default_text: literals.new_activity_text
+                    })
                     mainview.views.timeline = new TimelineView({el: $('#maxui-activities')})
                 }
             })

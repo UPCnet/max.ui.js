@@ -433,14 +433,14 @@
         else { var extra_bind = null }
         jq(delegate)
 
-        .on('focusin',selector, function(event) {
-                  event.preventDefault()
-                  var text = jq(this).val()
-                  var literal = jq(this).attr('data-literal')
-                  normalized = maxui.utils.normalizeWhiteSpace(text,false)
-                  if ( normalized==literal )
-                      jq(this).val('')
-        })
+        // .on('focusin',selector, function(event) {
+        //           event.preventDefault()
+        //           var text = jq(this).val()
+        //           var literal = jq(this).attr('data-literal')
+        //           normalized = maxui.utils.normalizeWhiteSpace(text,false)
+        //           if ( normalized==literal )
+        //               jq(this).val('')
+        // })
 
          .on('keydown', selector, function(event) {
            if ( jq('#maxui-predictive:visible').length>0 &&  (event.which==40 || event.which==38 || event.which==13 || event.which==9)) {
@@ -487,14 +487,14 @@
 
         })
 
-        .on('focusout',selector, function(event) {
-                  event.preventDefault()
-                  var text = jq(this).val()
-                  var literal = jq(this).attr('data-literal')
-                  normalized = maxui.utils.normalizeWhiteSpace(text,false)
-                  if ( normalized=='' )
-                      jq(this).val(literal)
-        })
+        // .on('focusout',selector, function(event) {
+        //           event.preventDefault()
+        //           var text = jq(this).val()
+        //           var literal = jq(this).attr('data-literal')
+        //           normalized = maxui.utils.normalizeWhiteSpace(text,false)
+        //           if ( normalized=='' )
+        //               jq(this).val(literal)
+        // })
 
         .on('click',target+' .maxui-button',function (event) {
             event.preventDefault()
@@ -1295,20 +1295,20 @@
                         }
                 }
 
-                // Render the postbox UI if user has permission
-                var showCT = maxui.settings.UISection == 'conversations'
-                var toggleCT = maxui.settings.disableConversations == false && !showCT
+                // // Render the postbox UI if user has permission
+                // var showCT = maxui.settings.UISection == 'conversations'
+                // var toggleCT = maxui.settings.disableConversations == false && !showCT
 
-                var params = {        avatar: maxui.settings.avatarURLpattern.format(maxui.settings.username),
-                                allowPosting: maxui.settings.canwrite,
-                               buttonLiteral: maxui.settings.literals.new_activity_post,
-                                 textLiteral: maxui.settings.literals.new_activity_text,
-                                    literals: maxui.settings.literals,
-                     showConversationsToggle: toggleCT ? 'display:block;' : 'display:none;'
-                            }
-                var postbox = maxui.templates.postBox.render(params)
-                var $postbox = jq('#maxui-newactivity')
-                $postbox.html(postbox)
+                // var params = {        avatar: maxui.settings.avatarURLpattern.format(maxui.settings.username),
+                //                 allowPosting: maxui.settings.canwrite,
+                //                buttonLiteral: maxui.settings.literals.new_activity_post,
+                //                  textLiteral: maxui.settings.literals.new_activity_text,
+                //                     literals: maxui.settings.literals,
+                //      showConversationsToggle: toggleCT ? 'display:block;' : 'display:none;'
+                //             }
+                // var postbox = maxui.templates.postBox.render(params)
+                // var $postbox = jq('#maxui-newactivity')
+                // $postbox.html(postbox)
 
                 // format the result items as activities
                  maxui.formatActivities(this.items, insert_at, callback)
