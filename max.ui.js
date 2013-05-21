@@ -7,7 +7,6 @@
 
         // Keep a reference of the context object
         var maxui = this
-        maxui.templates = max.templates()
         maxui.utils = max.utils()
 
         var defaults = {'maxRequestsAPI' : 'jquery',
@@ -49,142 +48,39 @@
                 maxui.settings.maxServerURL = maxui.settings.maxServerURLAlias
             }
 
-        if (maxui.settings.readContext)
-        {
-            // Calculate readContextHash
-            maxui.settings.readContextHash = maxui.utils.sha1(maxui.settings.readContext)
-
-            // Add read context to write contexts
-            maxui.settings.writeContexts.push(maxui.settings.readContext)
-
-            // Store the hashes of the write contexts
-            maxui.settings.writeContextsHashes = []
-            for (wc=0;wc<maxui.settings.writeContexts.length;wc++) {
-                maxui.settings.writeContextsHashes.push(maxui.utils.sha1(maxui.settings.writeContexts[wc]))
-            }
-        }
-
-        //set default avatar and profile url pattern if user didn't provide it
-        if (!maxui.settings.avatarURLpattern)
-              maxui.settings['avatarURLpattern'] = maxui.settings.maxServerURL+'/people/{0}/avatar'
-
-        if (!maxui.settings.contextAvatarURLpattern)
-               maxui.settings['contextAvatarURLpattern'] = maxui.settings.maxServerURL+'/contexts/{0}/avatar'
-
-        // Disable profileURL by now
-
-        // if (!maxui.settings.profileURLpattern)
-        //        maxui.settings['profileURLpattern'] = maxui.settings.maxServerURL+'/profiles/{0}'
-
-        // Catch errors triggered by failed max api calls
-        if (maxui.settings.enableAlerts)
-        jq(window).bind('maxclienterror', function(event,xhr) {
-            var error = JSON.parse(xhr.responseText)
-            alert('The server responded with a "{0}" error, with the following message: "{1}". \n\nPlease try again later or contact administrator at admin@max.upc.edu.'.format(error.error,error.error_description))
-        })
-
-        // Init MAX Client
-        this.maxClient = new MaxClient()
-        var maxclient_config = {  server:    maxui.settings.maxServerURL,
-                                    mode:    maxui.settings.maxRequestsAPI,
-                                   username: maxui.settings.username,
-                                   token:    maxui.settings.oAuthToken
-                               }
-        this.maxClient.configure(maxclient_config)
-
-        // Start socket listener
-
-        if (!maxui.settings.disableConversations) {
-            maxui.io = io.connect(maxui.settings.maxTalkURL, {'limit_transports': maxui.settings.transports})
-            maxui.io.on('update', function(data) {
-                console.log('New message from user {0} on {1}'.format(data.username, data.conversation))
-                if (maxui.settings.UISection == 'conversations' && maxui.settings.conversationsSection == 'messages')
-                    self.maxui.printMessages(data.conversation, function() {maxui.toggleMessages('messages')})
-                else (maxui.settings.UISection == 'conversations' && maxui.settings.conversationsSection == 'conversations')
-                    maxui.printConversations( function() { maxui.toggleSection('conversations')
-                                                           $('.maxui-message-count:first').css({'background-color':'red'})
-                                                         })
-            })
-            // maxui.io.on('new', function(data) {
-            //     console.log('')
-            //     console.log(data)
-            //     maxui.io.emit('join', maxui.settings.username)
-            //     if (maxui.settings.UISection == 'conversations' && maxui.settings.conversationsSection == 'conversations')
-            //         maxui.printConversations( function() { maxui.toggleSection('conversations')
-            //                                                $('.maxui-message-count:first').css({'background-color':'red'})
-            //                                              })
-            // })
-
-            maxui.io.on('listening', function(data) {
-                console.log('Ready and listening {0}'.format(data.conversations))
-            })
-
-            maxui.io.on('joined', function(data) {
-                console.log('User {0} joined {1}'.format(data.username, data.conversation))
-            })
-
-            maxui.io.emit('join', {username:maxui.settings.username, timestamp:maxui.utils.timestamp()})
-
-        }
+        maxui.templates = max.templates()
+        maxui.models = max.models(maxui.settings)
+        maxui.views = max.views()
 
 
-        // Get user data and start ui rendering when completed
-        this.maxClient.getUserData(maxui.settings.username, function() {
-
-            //Determine if user can write in writeContexts
-            var userSubscriptions = {}
-            if (this.subscribedTo)
-            {
-                if (this.subscribedTo.items)
-                {
-                    if (this.subscribedTo.items.length>0)
-                    {
-                        for (sc=0;sc<this.subscribedTo.items.length;sc++)
-                        {
-                            var subscription = this.subscribedTo.items[sc]
-                            userSubscriptions[subscription.hash]={}
-                            userSubscriptions[subscription.hash]['permissions']={}
-                            for (pm=0;pm<subscription.permissions.length;pm++)
-                            {
-                                var permission=subscription.permissions[pm]
-                                userSubscriptions[subscription.hash]['permissions'][permission]=true
-                            }
-                        }
-                    }
-                }
-            }
-
-            maxui.settings.subscriptions = userSubscriptions
-            // render main interface
-
-            var showCT = maxui.settings.UISection == 'conversations'
-            var showTL = maxui.settings.UISection == 'timeline'
-            var toggleTL = maxui.settings.disableTimeline == false && !showTL
-            var toggleCT = maxui.settings.disableConversations == false && !showCT
-            var containerWidth = maxui.width()
-
-            var params = {
-                                  username: maxui.settings.username,
-                                  literals: maxui.settings.literals,
-                         showConversations: showCT ? 'display:block;' : 'display:none;',
-                   showConversationsToggle: toggleCT ? 'display:block;' : 'display:none;',
-                              showTimeline: showTL ? 'display:block;' : 'display:none;',
-                        showTimelineToggle: toggleTL ? 'display:block;' : 'display:none;',
-                             messagesStyle: 'width:{0}px;left:{0}px;'.format(containerWidth)
-                     }
-            var mainui = maxui.templates.mainUI.render(params)
-            maxui.html(mainui)
-            if (maxui.settings.UISection=='conversations')
-                maxui.printConversations( function() { maxui.bindEvents()
-                                                       maxui.toggleSection('conversations')
-                                                     })
-            else if (maxui.settings.UISection=='timeline')
-                maxui.printActivities({}, function() { maxui.bindEvents() })
-        })
 
         // allow jq chaining
         return maxui;
     };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
     jq.fn.bindEvents =function() {
