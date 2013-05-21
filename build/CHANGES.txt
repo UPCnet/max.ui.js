@@ -1,6 +1,10 @@
 CHANGELOG
 =========
 
+3.3.1(2013-05-21)
+-----------------
+* Changed context activity route
+
 3.3 (2013-05-17)
 ----------------
 * Added activity delete button
