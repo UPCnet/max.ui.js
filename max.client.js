@@ -30,7 +30,7 @@ function MaxClient () {
                       follows : '/people/{0}/follows',
                       follow : '/people/{0}/follows/{1}',
                       subscriptions : '/people/{0}/subscriptions',
-                      activities : '/activities',
+                      activities : '/contexts/{0}/activities',
                       activity : '/activities/{0}',
                       comments : '/activities/{0}/comments',
                       comment : '/activities/{0}/comments/{1}',
@@ -242,7 +242,7 @@ MaxClient.prototype.getUsersList = function(userquery, callback) {
 
 
 MaxClient.prototype.getActivities = function(username, context, callback) {
-  var route = this.ROUTES['activities'];
+  var route = this.ROUTES['activities'].format(context);
   if (arguments.length>3)
     {
       query=arguments[3]
@@ -251,10 +251,6 @@ MaxClient.prototype.getActivities = function(username, context, callback) {
     {
       query={}
     }
-  if (context)
-      { //construir la query string
-        query.context = context
-       }
   this.GET(route,query,callback)
 };
 
