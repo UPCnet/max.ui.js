@@ -48,6 +48,7 @@ jQuery().ready(function() {
 
 
             // After all, fire up the widget
+            _MAXUI = settings
             jQuery('#container').maxUI(settings)
           })
 
