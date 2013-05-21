@@ -119,14 +119,20 @@ max.views = function(settings) {
             })
 
         },
-        render: function (){
+        render: function () {
             var view = this
             view.$el.empty()
             _(this._activityViews).each(function(activityView) {
                 view.$el.append(activityView.render())
             })
 
+        },
+
+        update: function() {
+            alert('updating')
         }
+
+
     })
 
     PostBoxView = Backbone.View.extend({
@@ -135,6 +141,7 @@ max.views = function(settings) {
             this.render()
             this.$text = jq(this.$el).find('textarea.maxui-text-input')
             this.$button = jq(this.$el).find('input.maxui-button')
+            this.activities = options.activities
         },
         render: function () {
             var showCT = settings.UISection == 'conversations'
@@ -156,9 +163,10 @@ max.views = function(settings) {
         setText: function(text) { this.$text.val(text)},
         enableButton: function() { this.$button.removeAttr('disabled') },
         disableButton: function() { this.$button.attr({'disabled': 'disabled', 'class': 'maxui-button maxui-disabled'}) },
+        clear: function() { this.disableButton(); this.setText(this.default_text); this.$text.attr('class','maxui-empty maxui-text-input')},
 
         events: {
-            'click input.maxui-button':             'postMessage',
+            'click input.maxui-button':             'post',
             'focusin textarea.maxui-text-input':    'focusIn',
             'focusout textarea.maxui-text-input':   'focusOut',
             'keydown textarea.maxui-text-input':    'keyDown',
@@ -185,7 +193,7 @@ max.views = function(settings) {
                 event.preventDefault()
                 var text = this.getText()
                 if (text!=this.default_text & text!='')
-                    this.postMessage()
+                    this.post()
             }
         },
 
@@ -209,9 +217,19 @@ max.views = function(settings) {
             // }
         },
 
-
-        postMessage: function (event) {
-            alert('post')
+        post: function (event) {
+            var view = this
+            var new_activity = new this.model({
+                object: {
+                    objectType: 'note',
+                    content: this.getText()
+            }})
+            new_activity.save({}, {
+                success: function(event) {
+                    view.clear()
+                    view.activities.update()
+                }
+            })
         }
 
 
@@ -226,11 +244,14 @@ max.views = function(settings) {
                     settings.subscriptions = mainview.user.getSubscriptions()
                     mainview.render()
                     mainview.views = {}
+                    mainview.views.activities = new TimelineView({el: $('#maxui-activities')})
                     mainview.views.postbox = new PostBoxView({
                         el: $('#maxui-newactivity'),
-                        default_text: literals.new_activity_text
+                        default_text: literals.new_activity_text,
+                        model: models.UserActivity,
+                        activities: mainview.views.activities
                     })
-                    mainview.views.timeline = new TimelineView({el: $('#maxui-activities')})
+
                 }
             })
 

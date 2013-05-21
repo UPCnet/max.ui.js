@@ -460,25 +460,25 @@
 
          })
 
-        .on('keyup',selector, function(event) {
-                  event.preventDefault()
-                  event.stopPropagation()
-                  var text = jq(this).val()
-                  var button = jq(this).parent().find('.maxui-button')
-                  var normalized = maxui.utils.normalizeWhiteSpace(text,false)
-                  if (normalized=='')
-                  {   jq(button).attr('disabled', 'disabled')
-                      jq(button).attr('class','maxui-button maxui-disabled')
-                      jq(this).attr('class','maxui-empty maxui-text-input')
-                      jq(this).removeAttr('title')
-                  }
-                  else
-                  {   if (maxui.settings.canwrite) {
-                          jq(button).removeAttr('disabled')
-                          jq(button).attr('class','maxui-button')
-                          jq(this).attr('class','maxui-text-input')
-                      }
-                  }
+        // .on('keyup',selector, function(event) {
+        //           event.preventDefault()
+        //           event.stopPropagation()
+        //           var text = jq(this).val()
+        //           var button = jq(this).parent().find('.maxui-button')
+        //           var normalized = maxui.utils.normalizeWhiteSpace(text,false)
+        //           if (normalized=='')
+        //           {   jq(button).attr('disabled', 'disabled')
+        //               jq(button).attr('class','maxui-button maxui-disabled')
+        //               jq(this).attr('class','maxui-empty maxui-text-input')
+        //               jq(this).removeAttr('title')
+        //           }
+        //           else
+        //           {   if (maxui.settings.canwrite) {
+        //                   jq(button).removeAttr('disabled')
+        //                   jq(button).attr('class','maxui-button')
+        //                   jq(this).attr('class','maxui-text-input')
+        //               }
+        //           }
 
                   if (extra_bind!=null) {
                     extra_bind(text, this, button, event)

@@ -120,6 +120,13 @@ max.models = function(settings) {
         }
     })
 
+    var UserActivity = Activity.extend({
+        urlRoot: '{0}/people/{1}/activities'.format(settings.maxServerURL, settings.username),
+
+        initialize: function(){
+
+        }
+    })
 
     var Timeline = Backbone.Collection.extend({
         model: Activity,
@@ -132,6 +139,7 @@ max.models = function(settings) {
 
     return {
         User: User,
+        UserActivity: UserActivity,
         Timeline: Timeline
     }
 }
