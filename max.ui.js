@@ -33,6 +33,20 @@
             maxui.settings.writeContexts = []
         }
 
+        if (maxui.settings.readContext)
+        {
+            // Calculate readContextHash
+            maxui.settings.readContextHash = maxui.utils.sha1(maxui.settings.readContext)
+
+            // Add read context to write contexts
+            maxui.settings.writeContexts.push(maxui.settings.readContext)
+
+            // Store the hashes of the write contexts
+            maxui.settings.writeContextsHashes = []
+            for (wc=0;wc<maxui.settings.writeContexts.length;wc++) {
+                maxui.settings.writeContextsHashes.push(maxui.utils.sha1(maxui.settings.writeContexts[wc]))
+            }
+        }
 
         // Get language from options or set default.
         // Set literals in the choosen language and extend from user options
@@ -48,11 +62,32 @@
                 maxui.settings.maxServerURL = maxui.settings.maxServerURLAlias
             }
 
-        maxui.templates = max.templates()
-        maxui.models = max.models(maxui.settings)
-        maxui.views = max.views()
 
 
+
+
+        //set default avatar and profile url pattern if user didn't provide it
+        if (!maxui.settings.avatarURLpattern)
+              maxui.settings['avatarURLpattern'] = maxui.settings.maxServerURL+'/people/{0}/avatar'
+
+        if (!maxui.settings.contextAvatarURLpattern)
+               maxui.settings['contextAvatarURLpattern'] = maxui.settings.maxServerURL+'/contexts/{0}/avatar'
+
+        // Disable profileURL by now
+
+        // if (!maxui.settings.profileURLpattern)
+        //        maxui.settings['profileURLpattern'] = maxui.settings.maxServerURL+'/profiles/{0}'
+
+        // Catch errors triggered by failed max api calls
+        if (maxui.settings.enableAlerts)
+        jq(window).bind('maxclienterror', function(event,xhr) {
+            var error = JSON.parse(xhr.responseText)
+            alert('The server responded with a "{0}" error, with the following message: "{1}". \n\nPlease try again later or contact administrator at admin@max.upc.edu.'.format(error.error,error.error_description))
+        })
+
+        maxui.views = max.views(maxui.settings);
+
+        maxui.mainview = new maxui.views.MainView({el: maxui})
 
         // allow jq chaining
         return maxui;
