@@ -25,7 +25,6 @@ max.views = function(settings) {
         initialize: function(options) {
             var view = this
             view._views = []
-            view.collection = options.collection
 
             _(view).bindAll()
             view.collection.bind('destroy', view.remove)
@@ -263,7 +262,7 @@ max.views = function(settings) {
             this.render()
             this.$text = jq(this.$el).find('textarea.maxui-text-input')
             this.$button = jq(this.$el).find('input.maxui-button')
-            this.activities = options.activities
+
         },
         render: function () {
             var showCT = settings.UISection == 'conversations'
@@ -272,7 +271,7 @@ max.views = function(settings) {
                 avatar: settings.avatarURLpattern.format(settings.username),
                 allowPosting: this.canwrite(),
                 buttonLiteral: literals.new_activity_post,
-                textLiteral: literals.new_activity_text,
+                textLiteral: this.default_text,
                 literals: literals,
                 showConversationsToggle: toggleCT ? 'display:block;' : 'display:none;'
             }
