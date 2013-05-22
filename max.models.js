@@ -111,6 +111,17 @@ max.models = function(settings) {
 
     }) // End User model
 
+
+    // Collection that returns the inner `items` attribute of the
+    // json returned by calls to the server, in response
+    // to calls to the fetch or reset collection methods
+
+    var MaxCollection = Backbone.Model.extend({
+        parse: function(resp, options) {
+            return resp.items;
+        },
+    })
+
     var Activity = Backbone.Model.extend({
         idAttribute: 'id',
         urlRoot: '{0}/activities'.format(settings.maxServerURL),
@@ -118,6 +129,20 @@ max.models = function(settings) {
         initialize: function(){
 
         }
+    })
+
+    var Comment = Backbone.Model.extend({
+        idAttribute: 'id',
+        urlRoot: '{0}/activities/{1}/comments'.format(settings.maxServerURL, options.activity_id),
+
+        initialize: function(){
+
+        }
+    })
+
+    var ActivityComments = MaxCollection.extend({
+        model: Comment,
+        url: '{0}/activities/{1}/comments'.format(settings.maxServerURL, options.activity_id),
     })
 
     var UserActivity = Activity.extend({
@@ -128,12 +153,9 @@ max.models = function(settings) {
         }
     })
 
-    var Timeline = Backbone.Collection.extend({
+    var Timeline = MaxCollection.extend({
         model: Activity,
         url: '{0}/people/{1}/timeline'.format(settings.maxServerURL, settings.username),
-        parse: function(resp, options) {
-            return resp.items;
-        },
     })
     // Expose models to the world
 
@@ -141,5 +163,7 @@ max.models = function(settings) {
         User: User,
         UserActivity: UserActivity,
         Timeline: Timeline
+        Comment: Comment,
+        ActivityComments: ActivityComments
     }
 }

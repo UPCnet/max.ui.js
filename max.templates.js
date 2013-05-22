@@ -122,9 +122,6 @@ var MSTCH_MAXUI_ACTIVITY = '\
 \
     <div class="maxui-comments" style="display: none">\
         <div class="maxui-commentsbox">\
-            {{#replies.items}}\
-                {{> comment}}\
-            {{/replies.items}}\
         </div>\
         <div class="maxui-newcommentbox">\
                 <textarea class="maxui-empty maxui-text-input" id="maxui-commentBox" data-literal="{{literals.new_comment_text}}">{{literals.new_comment_text}}</textarea>\

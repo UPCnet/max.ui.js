@@ -21,6 +21,93 @@ max.views = function(settings) {
     *    @param {el} the element where to instantiate the view
     */
 
+
+    CommentsView = Backbone.view.extend({
+        initialize: function(options) {
+        var view = this
+            view._views = []
+            view.activity_id = options.activity_id
+            view.collection = new models.ActivityComments({activity_id: this.activity_id})
+            view.model = ActivityView
+
+            _(view).bindAll('remove')
+            view.collection.bind('destroy', view.remove)
+        },
+
+        fetch: function() {
+            view = this
+            view.collection.fetch({
+                success: function(event) {
+                    view.collection.each(function(model) {
+                        view._views.push( new view.model({
+                            model: model,
+                        }))
+                    })
+                    view.render()
+                }
+            })
+
+        },
+        render: function () {
+            var view = this
+            view.$el.empty()
+            _(view._views).each(function(model_view) {
+                view.$el.append(model_view.render().el)
+            })
+        },
+
+        update: function() {
+            alert('updating')
+        },
+
+        remove: function(model) {
+            var itemToRemove = _(this._views).select(function(cv) { return cv.model === model; })[0];
+            this._views = _(this._views).without(itemToRemove);
+        }
+
+
+    })
+
+
+    CommentView = Backbone.View.extend({
+        initialize: function(options) {
+            var view = this
+
+            _(view).bindAll()
+            this.model.bind('destroy', this.animateAndRemove, this)
+
+        },
+
+        // Other functions
+
+        animateAndRemove: function(model, resp, options) {
+            this.$el.css({height:this.$el.height(), 'min-height':'auto'})
+            this.$el.animate(
+                {height: 0, opacity:0},
+                200,
+                function(event) { this.remove() }
+            )
+        },
+
+
+        render: function() {
+
+            var variables = {}
+                id: this.model.get('id'),
+                actor: this.model.get('actor'),
+                date: utils.formatDate(this.model.get('published'),settings.language),
+                text: utils.formatText(this.model.get('content'),
+                avatarURL: settings.avatarURLpattern.format(this.model.get('actor'),.username)
+            }
+
+            // Render the activities template and append it at the end of the rendered activities
+            // partials is used to render each comment found in the activities
+            var html = templates.comment.render(variables)
+            this.$el.html(html)
+            return this
+        }
+
+
     ActivityView = Backbone.View.extend({
         initialize: function(options) {
             var view = this
@@ -29,6 +116,7 @@ max.views = function(settings) {
             this.model.bind('destroy', this.animateAndRemove, this)
 
             this.render = _.bind(this.render, this)
+            this.comments_view = new CommentsView({activity_id: this.model.get('id')})
 
             var activity = this.model
             // Take first context (if exists) to display in the 'published on' field
@@ -51,32 +139,9 @@ max.views = function(settings) {
             else if (activity.get('actor').objectType=='context') {
                 avatar_url = contextAvatarURLpattern.format(activity.get('actor').hash)
               }
-            // Take replies (if exists) and format to be included as a formatted
-            // subobject ready for hogan
-            var replies = undefined
-            if (activity.get('replies'))
-                {
-                    var _replies = activity.get('replies')
-                    replies = { totalItems: _replies.totalItems,
-                                     items: []
-                              }
 
-                    if (_replies.itemslength>0)
-                        {
-                            for (r=0;r<_replies.items.length;r++)
-                                {
-                                var comment = _replies.items[r]
-                                reply = {
-                                                   id: comment.id,
-                                               actor: comment.actor,
-                                                 date: utils.formatDate(comment.published,settings.language),
-                                                 text: utils.formatText(comment.content),
-                                            avatarURL: settings.avatarURLpattern.format(comment.actor.username)
-                                        }
-                                replies.items.push(reply)
-                                }
-                        }
-                }
+            // Set empty replies, this will be filled in by commentsview
+            var replies = undefined
 
             view.replies = replies
             view.avatar_url = avatar_url
@@ -93,15 +158,29 @@ max.views = function(settings) {
         },
 
         events: {
-            'click .maxui-actor a': 'goToProfile',
-            'click .maxui-delete-activity': 'removeActivity'
+            'click .maxui-actor a':            'goToProfile',
+            'click .maxui-delete-activity':    'removeActivity',
+            'click .maxui-commentaction':      'toggleComments'
         },
+
+        // Envent binded functions
 
         goToProfile: function(event) {
             if (!settings.profileURLPattern)
                 event.preventDefault()
                 event.stopPropagation()
         },
+
+        toggleComments: function(event) {
+            event.preventDefault()
+
+        },
+
+        removeActivity: function(event) {
+            this.model.destroy({wait:true})
+        },
+
+        // Other functions
 
         animateAndRemove: function(model, resp, options) {
             this.$el.css({height:this.$el.height(), 'min-height':'auto'})
@@ -112,9 +191,6 @@ max.views = function(settings) {
             )
         },
 
-        removeActivity: function(event) {
-            this.model.destroy({wait:true})
-        },
 
         render: function() {
             var variables = {
@@ -217,7 +293,22 @@ max.views = function(settings) {
             'focusin textarea.maxui-text-input':    'focusIn',
             'focusout textarea.maxui-text-input':   'focusOut',
             'keydown textarea.maxui-text-input':    'keyDown',
-            'keyup textarea.maxui-text-input':      'keyUp'
+            'keyup textarea.maxui-text-input':      'keyUp',
+        },
+
+        post: function (event) {
+            var view = this
+            var new_activity = new this.model({
+                object: {
+                    objectType: 'note',
+                    content: this.getText()
+            }})
+            new_activity.save({}, {
+                success: function(event) {
+                    view.clear()
+                    view.activities.update()
+                }
+            })
         },
 
         focusIn: function(event) {
@@ -262,23 +353,7 @@ max.views = function(settings) {
             // if (extra_bind!=null) {
             //   extra_bind(text, this, button, event)
             // }
-        },
-
-        post: function (event) {
-            var view = this
-            var new_activity = new this.model({
-                object: {
-                    objectType: 'note',
-                    content: this.getText()
-            }})
-            new_activity.save({}, {
-                success: function(event) {
-                    view.clear()
-                    view.activities.update()
-                }
-            })
         }
-
 
     })
 
