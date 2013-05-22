@@ -99,6 +99,23 @@ max.views = function(settings) {
             this.model.bind('destroy', this.animateAndRemove, this)
 
         },
+        events: {
+            'click .maxui-actor a':            'goToProfile',
+            'click .maxui-delete-activity':    'removeComment',
+        },
+
+        // Envent binded functions
+
+        goToProfile: function(event) {
+            if (!settings.profileURLPattern)
+                event.preventDefault()
+                event.stopPropagation()
+        },
+
+        removeComment: function(event) {
+            event.stopPropagation()
+            this.model.destroy({wait:true})
+        },
 
         // Other functions
 
@@ -119,6 +136,7 @@ max.views = function(settings) {
                 actor: this.model.get('actor'),
                 date: utils.formatDate(this.model.get('published'),settings.language),
                 text: utils.formatText(this.model.get('content')),
+                canDeleteActivity: true,
                 avatarURL: settings.avatarURLpattern.format(this.model.get('actor').username)
             }
 

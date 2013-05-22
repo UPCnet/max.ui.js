@@ -171,13 +171,16 @@ var MSTCH_MAXUI_COMMENT = '\
     <div class="maxui-activity-content">\
         <div class="maxui-publisheddate">{{date}}</div>\
         <div class="maxui-actor">\
-	   <a href="#">\
+	   <a href="{{profileURL}}" {{^enableActorLink}}class="maxui-disabled-link"{{/enableActorLink}}>\
 		<span class="maxui-avatar"><img src="{{avatarURL}}"></span>\
 		<span class="maxui-displayname">{{actor.displayName}}</span></a> \
 	   <span class="maxui-username">{{actor.username}}</span>\
         </div>\
         <div>\
             <p class="maxui-body">{{&text}}</p>\
+            {{#canDeleteActivity}}\
+            <span class="maxui-delete-activity"></span>\
+            {{/canDeleteActivity}}\
         </div>\
         <div class="maxui-publisheddate"></div>\
     </div>\
