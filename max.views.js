@@ -32,13 +32,13 @@ max.views = function(settings) {
             // XXX TODO Build a coma-separated list of contexts ??
             var contexts = undefined
             if (activity.get('contexts'))
-                contexts = activity.contexts[0]
+                contexts = activity.get('contexts')[0]
 
             // Take generator property (if exists) and set it only if it's different
             // from the application name defined in settings
             var generator = undefined
             if (activity.get('generator') && activity.generator!=settings.generatorName)
-                generator = activity.generator
+                generator = activity.get('generator')
 
             // Prepare avatar image url depending on actor type
             var avatar_url = ''
@@ -79,9 +79,29 @@ max.views = function(settings) {
             view.avatar_url = avatar_url
             view.contexts = contexts
             view.generator = generator
+            if (settings.profileURLPattern) {
+                view.profile_url = settings.profileURLPattern.format(settings.username)
+                view.actor_link_active = true
+            }
+            else {
+                view.profile_url = '#'
+                view.actor_link_active = false
+            }
+
+
+        },
+
+
+        events: {'click .maxui-actor a': 'goToProfile'},
+
+        goToProfile: function(event) {
+            if (!settings.profileURLPattern)
+                event.preventDefault()
+                event.stopPropagation()
         },
 
         render: function() {
+            console.log(this.actor_link_active)
             var variables = {
                 id: this.model.get('id'),
                 actor: this.model.get('actor'),
@@ -90,7 +110,9 @@ max.views = function(settings) {
                 text: utils.formatText(this.model.get('object').content),
                 replies: this.replies,
                 avatarURL: this.avatar_url,
+                profileURL: this.profile_url,
                 publishedIn: this.contexts,
+                enableActorLink: this.actor_link_active,
                 canDeleteActivity: this.model.get('owner') == settings.username,
                 via: this.generator
             }

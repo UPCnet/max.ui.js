@@ -85,7 +85,8 @@ var MSTCH_MAXUI_ACTIVITY = '\
             <span class="maxui-publisheddate">{{date}}</span>\
         </div>\
         <div class="maxui-actor">\
-              <a href="#"><span class="maxui-avatar"><img src="{{avatarURL}}"></span>\
+              <a href="{{profileURL}}" {{^enableActorLink}}class="maxui-disabled-link"{{/enableActorLink}}>\
+              <span class="maxui-avatar"><img src="{{avatarURL}}"></span>\
 		          <span class="maxui-displayname">{{actor.displayName}}</span></a>\
           <span class="maxui-username">{{actor.username}}&nbsp;</span>\
         </div>\

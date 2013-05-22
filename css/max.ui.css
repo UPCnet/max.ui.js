@@ -27,6 +27,13 @@ border: 1px #b2b2b2 solid;;
 -moz-border-radius: 3px; -webkit-border-radius: 3px; border-radius: 3px;
 }
 
+#maxui-container a.maxui-disabled-link {
+    text-decoration: none;
+    font-weight: normal;
+    cursor:default;
+    color:#007bc0;
+}
+
 #maxui-predictive ul {
 
 list-style: none;

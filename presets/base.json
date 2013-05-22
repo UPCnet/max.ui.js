@@ -7,6 +7,5 @@
     "maxTalkURL": "http://localhost:8081/max",
     "oAuthGrantType": "password",
     "oAuthToken": "891e970d444bda8179dbcd5b66328f14",
-    "profileURLpattern": "#",
     "username": "usuari.iescude"
 }

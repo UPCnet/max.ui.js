@@ -20,6 +20,7 @@
                         'disableConversations': false,
                         'conversationsSection': 'conversations',
                         'activitySortOrder': 'activities',
+                        'profileURLPattern': undefined,
                         'transports': undefined
                         }
 
@@ -62,10 +63,6 @@
                 maxui.settings.maxServerURL = maxui.settings.maxServerURLAlias
             }
 
-
-
-
-
         //set default avatar and profile url pattern if user didn't provide it
         if (!maxui.settings.avatarURLpattern)
               maxui.settings['avatarURLpattern'] = maxui.settings.maxServerURL+'/people/{0}/avatar'
@@ -73,10 +70,11 @@
         if (!maxui.settings.contextAvatarURLpattern)
                maxui.settings['contextAvatarURLpattern'] = maxui.settings.maxServerURL+'/contexts/{0}/avatar'
 
-        // Disable profileURL by now
-
+        // DEFAULT VALUE DISABLED !!! Now disables the link by css and javascript if
+        // not configured. The desired configuration would be to have a default
+        // profile pattern if nothing specified as with the avatar
         // if (!maxui.settings.profileURLpattern)
-        //        maxui.settings['profileURLpattern'] = maxui.settings.maxServerURL+'/profiles/{0}'
+        //         maxui.settings['profileURLpattern'] = maxui.settings.maxServerURL+'/profiles/{0}'
 
         // Catch errors triggered by failed max api calls
         if (maxui.settings.enableAlerts)
@@ -480,12 +478,12 @@
         //               }
         //           }
 
-                  if (extra_bind!=null) {
-                    extra_bind(text, this, button, event)
-                  }
+        //           if (extra_bind!=null) {
+        //             extra_bind(text, this, button, event)
+        //           }
 
 
-        })
+        // })
 
         // .on('focusout',selector, function(event) {
         //           event.preventDefault()
@@ -496,18 +494,18 @@
         //               jq(this).val(literal)
         // })
 
-        .on('click',target+' .maxui-button',function (event) {
-            event.preventDefault()
-            var $area = jq(this).parent().find('.maxui-text-input')
-            var literal = $area.attr('data-literal')
-            var text = $area.val()
-            var normalized = maxui.utils.normalizeWhiteSpace(text,false)
+    //     .on('click',target+' .maxui-button',function (event) {
+    //         event.preventDefault()
+    //         var $area = jq(this).parent().find('.maxui-text-input')
+    //         var literal = $area.attr('data-literal')
+    //         var text = $area.val()
+    //         var normalized = maxui.utils.normalizeWhiteSpace(text,false)
 
-            if (normalized!=literal & normalized!='')
-                clickFunction.apply(this,[text])
-            })
+    //         if (normalized!=literal & normalized!='')
+    //             clickFunction.apply(this,[text])
+    //         })
 
-    }
+     }
 
     /*
     *    Updates the search filters with a new collection of keywords/hashtags extracted of
