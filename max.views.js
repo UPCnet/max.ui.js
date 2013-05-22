@@ -24,8 +24,11 @@ max.views = function(settings) {
     ActivityView = Backbone.View.extend({
         initialize: function(options) {
             var view = this
+
+            _(view).bindAll()
+            this.model.bind('destroy', this.animateAndRemove, this)
+
             this.render = _.bind(this.render, this)
-            this.model.bind('change:name', this.render)
 
             var activity = this.model
             // Take first context (if exists) to display in the 'published on' field
@@ -87,12 +90,12 @@ max.views = function(settings) {
                 view.profile_url = '#'
                 view.actor_link_active = false
             }
-
-
         },
 
-
-        events: {'click .maxui-actor a': 'goToProfile'},
+        events: {
+            'click .maxui-actor a': 'goToProfile',
+            'click .maxui-delete-activity': 'removeActivity'
+        },
 
         goToProfile: function(event) {
             if (!settings.profileURLPattern)
@@ -100,8 +103,20 @@ max.views = function(settings) {
                 event.stopPropagation()
         },
 
+        animateAndRemove: function(model, resp, options) {
+            this.$el.css({height:this.$el.height(), 'min-height':'auto'})
+            this.$el.animate(
+                {height: 0, opacity:0},
+                200,
+                function(event) { this.remove() }
+            )
+        },
+
+        removeActivity: function(event) {
+            this.model.destroy({wait:true})
+        },
+
         render: function() {
-            console.log(this.actor_link_active)
             var variables = {
                 id: this.model.get('id'),
                 actor: this.model.get('actor'),
@@ -120,15 +135,20 @@ max.views = function(settings) {
             // partials is used to render each comment found in the activities
             var partials = {comment: templates.comment}
             var html = templates.activity.render(variables, partials)
-            return html
+            this.$el.html(html)
+            return this
         }
     })
 
     TimelineView = Backbone.View.extend({
         initialize: function(options) {
-            var view = this
+        var view = this
             view._activityViews = []
             view.collection = new models.Timeline()
+
+            _(view).bindAll('remove')
+            view.collection.bind('destroy', view.remove)
+
             view.collection.fetch({
                 success: function(event) {
                     view.collection.each(function(activity) {
@@ -144,14 +164,19 @@ max.views = function(settings) {
         render: function () {
             var view = this
             view.$el.empty()
-            _(this._activityViews).each(function(activityView) {
-                view.$el.append(activityView.render())
+            _(view._activityViews).each(function(activityView) {
+                view.$el.append(activityView.render().el)
             })
 
         },
 
         update: function() {
             alert('updating')
+        },
+
+        remove: function(model) {
+            var activityToRemove = _(this._activityViews).select(function(cv) { return cv.model === model; })[0];
+            this._activityViews = _(this._activityViews).without(activityToRemove);
         }
 
 
