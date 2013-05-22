@@ -21,21 +21,21 @@ max.views = function(settings) {
     *    @param {el} the element where to instantiate the view
     */
 
-
-    CommentsView = Backbone.view.extend({
+    var CommentsView = Backbone.View.extend({
         initialize: function(options) {
         var view = this
             view._views = []
             view.activity_id = options.activity_id
-            view.collection = new models.ActivityComments({activity_id: this.activity_id})
-            view.model = ActivityView
+            view.collection = new models.ActivityComments([], {activity_id: this.activity_id})
+            view.model = CommentView
+            view.$visibility = view.$el.closest('.maxui-comments')
 
-            _(view).bindAll('remove')
+            _(view).bindAll()
             view.collection.bind('destroy', view.remove)
         },
 
-        fetch: function() {
-            view = this
+        fetch: function(options) {
+            var view = this
             view.collection.fetch({
                 success: function(event) {
                     view.collection.each(function(model) {
@@ -44,15 +44,32 @@ max.views = function(settings) {
                         }))
                     })
                     view.render()
+                    options.success.apply(view)
                 }
             })
 
         },
+
+        toggle: function() {
+            var view = this
+            if (view.collection.isEmpty()) {
+                view.$el.empty()
+                view.fetch({
+                    success: function(event){
+                        view.$visibility.toggle(200)
+                    }
+                })
+            } else {
+                view.$visibility.toggle(200)
+            }
+        },
+
         render: function () {
             var view = this
             view.$el.empty()
             _(view._views).each(function(model_view) {
-                view.$el.append(model_view.render().el)
+                html = model_view.render().el
+                view.$el.append(html)
             })
         },
 
@@ -69,7 +86,7 @@ max.views = function(settings) {
     })
 
 
-    CommentView = Backbone.View.extend({
+    var CommentView = Backbone.View.extend({
         initialize: function(options) {
             var view = this
 
@@ -92,12 +109,12 @@ max.views = function(settings) {
 
         render: function() {
 
-            var variables = {}
+            var variables = {
                 id: this.model.get('id'),
                 actor: this.model.get('actor'),
                 date: utils.formatDate(this.model.get('published'),settings.language),
-                text: utils.formatText(this.model.get('content'),
-                avatarURL: settings.avatarURLpattern.format(this.model.get('actor'),.username)
+                text: utils.formatText(this.model.get('content')),
+                avatarURL: settings.avatarURLpattern.format(this.model.get('actor').username)
             }
 
             // Render the activities template and append it at the end of the rendered activities
@@ -106,9 +123,10 @@ max.views = function(settings) {
             this.$el.html(html)
             return this
         }
+    })
 
 
-    ActivityView = Backbone.View.extend({
+    var ActivityView = Backbone.View.extend({
         initialize: function(options) {
             var view = this
 
@@ -116,7 +134,6 @@ max.views = function(settings) {
             this.model.bind('destroy', this.animateAndRemove, this)
 
             this.render = _.bind(this.render, this)
-            this.comments_view = new CommentsView({activity_id: this.model.get('id')})
 
             var activity = this.model
             // Take first context (if exists) to display in the 'published on' field
@@ -141,7 +158,9 @@ max.views = function(settings) {
               }
 
             // Set empty replies, this will be filled in by commentsview
-            var replies = undefined
+            var replies = 0
+            if (activity.get('replies'))
+                replies = activity.get('replies').totalItems
 
             view.replies = replies
             view.avatar_url = avatar_url
@@ -172,8 +191,9 @@ max.views = function(settings) {
         },
 
         toggleComments: function(event) {
+            view = this
             event.preventDefault()
-
+            view.comments_view.toggle()
         },
 
         removeActivity: function(event) {
@@ -212,11 +232,17 @@ max.views = function(settings) {
             var partials = {comment: templates.comment}
             var html = templates.activity.render(variables, partials)
             this.$el.html(html)
+
+            // setup the comments view whe the rendering is completed
+            this.comments_view = new CommentsView({
+                activity_id: this.model.get('id'),
+                el: this.$el.find('.maxui-commentsbox')
+            })
             return this
         }
     })
 
-    TimelineView = Backbone.View.extend({
+    var TimelineView = Backbone.View.extend({
         initialize: function(options) {
         var view = this
             view._activityViews = []
@@ -258,7 +284,7 @@ max.views = function(settings) {
 
     })
 
-    PostBoxView = Backbone.View.extend({
+    var PostBoxView = Backbone.View.extend({
         initialize: function(options) {
             this.default_text = options.default_text
             this.render()
@@ -357,7 +383,7 @@ max.views = function(settings) {
 
     })
 
-    MainView = Backbone.View.extend({
+    var MainView = Backbone.View.extend({
         initialize: function(options){
             var mainview = this
             mainview.user = new models.User({'username': settings.username})

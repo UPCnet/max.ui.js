@@ -112,8 +112,7 @@ var MSTCH_MAXUI_ACTIVITY = '\
         {{/publishedIn}}\
         <div class="maxui-actions">\
             <a href="" class="maxui-commentaction">\
-                 {{#replies}}<strong>{{replies.totalItems}}</strong>{{/replies}}\
-                 {{^replies}}<strong>0</strong>{{/replies}}\
+                 <strong>{{replies}}</strong>\
                  {{literals.toggle_comments}}\
             </a>\
             \
