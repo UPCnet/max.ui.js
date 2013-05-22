@@ -21,14 +21,11 @@ max.views = function(settings) {
     *    @param {el} the element where to instantiate the view
     */
 
-    var CommentsView = Backbone.View.extend({
+    var CollectionView = Backbone.View.extend({
         initialize: function(options) {
-        var view = this
+            var view = this
             view._views = []
-            view.activity_id = options.activity_id
-            view.collection = new models.ActivityComments([], {activity_id: this.activity_id})
-            view.model = CommentView
-            view.$visibility = view.$el.closest('.maxui-comments')
+            view.collection = options.collection
 
             _(view).bindAll()
             view.collection.bind('destroy', view.remove)
@@ -36,32 +33,20 @@ max.views = function(settings) {
 
         fetch: function(options) {
             var view = this
+            options = options || {}
             view.collection.fetch({
                 success: function(event) {
                     view.collection.each(function(model) {
-                        view._views.push( new view.model({
+                        view._views.push( new view.item_view({
                             model: model,
                         }))
                     })
                     view.render()
-                    options.success.apply(view)
+                    if (options.success)
+                        options.success.apply(view)
                 }
             })
 
-        },
-
-        toggle: function() {
-            var view = this
-            if (view.collection.isEmpty()) {
-                view.$el.empty()
-                view.fetch({
-                    success: function(event){
-                        view.$visibility.toggle(200)
-                    }
-                })
-            } else {
-                view.$visibility.toggle(200)
-            }
         },
 
         render: function () {
@@ -81,8 +66,29 @@ max.views = function(settings) {
             var itemToRemove = _(this._views).select(function(cv) { return cv.model === model; })[0];
             this._views = _(this._views).without(itemToRemove);
         }
+    })
 
+    var CommentsView = CollectionView.extend({
+        initialize: function(options) {
+            var view = this
+            CollectionView.prototype.initialize.apply(view, [options])
+            view.item_view = CommentView
+            view.$visibility = view.$el.closest('.maxui-comments')
+        },
 
+        toggle: function() {
+            var view = this
+            if (view.collection.isEmpty()) {
+                view.$el.empty()
+                view.fetch({
+                    success: function(event){
+                        view.$visibility.toggle(200)
+                    }
+                })
+            } else {
+                view.$visibility.toggle(200)
+            }
+        },
     })
 
 
@@ -235,53 +241,20 @@ max.views = function(settings) {
 
             // setup the comments view whe the rendering is completed
             this.comments_view = new CommentsView({
-                activity_id: this.model.get('id'),
-                el: this.$el.find('.maxui-commentsbox')
+                el: this.$el.find('.maxui-commentsbox'),
+                collection: new models.ActivityComments([], {activity_id: this.model.get('id')}),
             })
             return this
         }
     })
 
-    var TimelineView = Backbone.View.extend({
+    var TimelineView = CollectionView.extend({
         initialize: function(options) {
-        var view = this
-            view._activityViews = []
-            view.collection = new models.Timeline()
-
-            _(view).bindAll('remove')
-            view.collection.bind('destroy', view.remove)
-
-            view.collection.fetch({
-                success: function(event) {
-                    view.collection.each(function(activity) {
-                        view._activityViews.push( new ActivityView({
-                            model: activity,
-                        }))
-                    })
-                    view.render()
-                }
-            })
-
-        },
-        render: function () {
             var view = this
-            view.$el.empty()
-            _(view._activityViews).each(function(activityView) {
-                view.$el.append(activityView.render().el)
-            })
-
+            CollectionView.prototype.initialize.apply(view, [options])
+            view.item_view = ActivityView
+            view.fetch()
         },
-
-        update: function() {
-            alert('updating')
-        },
-
-        remove: function(model) {
-            var activityToRemove = _(this._activityViews).select(function(cv) { return cv.model === model; })[0];
-            this._activityViews = _(this._activityViews).without(activityToRemove);
-        }
-
-
     })
 
     var PostBoxView = Backbone.View.extend({
@@ -392,7 +365,10 @@ max.views = function(settings) {
                     settings.subscriptions = mainview.user.getSubscriptions()
                     mainview.render()
                     mainview.views = {}
-                    mainview.views.activities = new TimelineView({el: $('#maxui-activities')})
+                    mainview.views.activities = new TimelineView({
+                        el: $('#maxui-activities'),
+                        collection: new models.TimelineActivities()
+                    })
                     mainview.views.postbox = new PostBoxView({
                         el: $('#maxui-newactivity'),
                         default_text: literals.new_activity_text,

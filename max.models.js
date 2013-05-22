@@ -123,11 +123,6 @@ max.models = function(settings) {
 
     var Comment = Backbone.Model.extend({
         idAttribute: 'id',
-
-
-        initialize: function(models, options) {
-            this.urlRoot = '{0}/activities/{1}/comments'.format(settings.maxServerURL, options.activity_id)
-        }
     })
 
     var UserActivity = Activity.extend({
@@ -156,7 +151,7 @@ max.models = function(settings) {
         }
     })
 
-    var Timeline = MaxCollection.extend({
+    var TimelineActivities = MaxCollection.extend({
         model: Activity,
         url: '{0}/people/{1}/timeline'.format(settings.maxServerURL, settings.username),
     })
@@ -166,7 +161,7 @@ max.models = function(settings) {
     return {
         User: User,
         UserActivity: UserActivity,
-        Timeline: Timeline,
+        TimelineActivities: TimelineActivities,
         Comment: Comment,
         ActivityComments: ActivityComments
     }
