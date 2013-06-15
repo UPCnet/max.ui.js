@@ -27,6 +27,9 @@
         // extend defaults with user-defined settings
         maxui.settings = jq.extend(defaults,options)
 
+        // save the undotted username for stomp messages
+        maxui.settings.stomp_username = maxui.settings.username.replace('.','_')
+
         // Check timeline/activities consistency
         if (maxui.settings.UISection == 'timeline' && maxui.settings.activitySource == 'timeline' && maxui.settings.readContext)
         {
@@ -92,40 +95,27 @@
                                }
         this.maxClient.configure(maxclient_config)
 
-        // Start socket listener
+        //     // maxui.io.on('new', function(data) {
+        //     //     console.log('')
+        //     //     console.log(data)
+        //     //     maxui.io.emit('join', maxui.settings.username)
+        //     //     if (maxui.settings.UISection == 'conversations' && maxui.settings.conversationsSection == 'conversations')
+        //     //         maxui.printConversations( function() { maxui.toggleSection('conversations')
+        //     //                                                $('.maxui-message-count:first').css({'background-color':'red'})
+        //     //                                              })
+        //     // })
 
-        if (!maxui.settings.disableConversations) {
-            maxui.io = io.connect(maxui.settings.maxTalkURL, {'limit_transports': maxui.settings.transports})
-            maxui.io.on('update', function(data) {
-                console.log('New message from user {0} on {1}'.format(data.username, data.conversation))
-                if (maxui.settings.UISection == 'conversations' && maxui.settings.conversationsSection == 'messages')
-                    self.maxui.printMessages(data.conversation, function() {maxui.toggleMessages('messages')})
-                else (maxui.settings.UISection == 'conversations' && maxui.settings.conversationsSection == 'conversations')
-                    maxui.printConversations( function() { maxui.toggleSection('conversations')
-                                                           $('.maxui-message-count:first').css({'background-color':'red'})
-                                                         })
-            })
-            // maxui.io.on('new', function(data) {
-            //     console.log('')
-            //     console.log(data)
-            //     maxui.io.emit('join', maxui.settings.username)
-            //     if (maxui.settings.UISection == 'conversations' && maxui.settings.conversationsSection == 'conversations')
-            //         maxui.printConversations( function() { maxui.toggleSection('conversations')
-            //                                                $('.maxui-message-count:first').css({'background-color':'red'})
-            //                                              })
-            // })
+        //     maxui.io.on('listening', function(data) {
+        //         console.log('Ready and listening {0}'.format(data.conversations))
+        //     })
 
-            maxui.io.on('listening', function(data) {
-                console.log('Ready and listening {0}'.format(data.conversations))
-            })
+        //     maxui.io.on('joined', function(data) {
+        //         console.log('User {0} joined {1}'.format(data.username, data.conversation))
+        //     })
 
-            maxui.io.on('joined', function(data) {
-                console.log('User {0} joined {1}'.format(data.username, data.conversation))
-            })
+        //     maxui.io.emit('join', {username:maxui.settings.username, timestamp:maxui.utils.timestamp()})
 
-            maxui.io.emit('join', {username:maxui.settings.username, timestamp:maxui.utils.timestamp()})
 
-        }
 
 
         // Get user data and start ui rendering when completed
@@ -152,6 +142,69 @@
                         }
                     }
                 }
+            }
+
+            // Start socket listener
+
+            if (!maxui.settings.disableConversations) {
+
+                // Collect conversation ids
+                maxui.conversations = []
+                var talkingin = this.talkingIn || {}
+                var talking_items = talkingin.items || []
+                for (co=0;co<talking_items.length;co++) {
+                    maxui.conversations.push(talking_items[co].id)
+                }
+
+                // Stomp.js boilerplate
+                ws = new SockJS(maxui.settings.maxTalkURL);
+                maxui.client = Stomp.over(ws);
+
+                var on_connect = function(x) {
+                    for (co=0;co<maxui.conversations.length;co++) {
+                        conversation_id = maxui.conversations[co]
+                        maxui.client.subscribe('/exchange/{0}'.format(conversation_id), function(d) {
+                            data = JSON.parse(d.body)
+                            console.log('New message from user {0} on {1}'.format(data.username, data.conversation))
+                            if (maxui.settings.UISection == 'conversations' && maxui.settings.conversationsSection == 'messages')
+                                self.maxui.printMessages(data.conversation, function() {maxui.toggleMessages('messages')})
+                            else (maxui.settings.UISection == 'conversations' && maxui.settings.conversationsSection == 'conversations')
+                                maxui.printConversations( function() {
+                                    maxui.toggleSection('conversations')
+                                    $('.maxui-message-count:first').css({'background-color':'red'})
+                                })
+                        });
+                    }
+                    maxui.client.subscribe('/exchange/new/{0}'.format(maxui.settings.username), function(d) {
+                        data = JSON.parse(d.body)
+                        if (maxui.settings.UISection == 'conversations' && maxui.settings.conversationsSection == 'conversations')
+                            maxui.printConversations( function() { maxui.toggleSection('conversations')
+                                                                   $('.maxui-message-count:first').css({'background-color':'red'})
+                                                                 })
+
+                        maxui.client.subscribe('/exchange/{0}'.format(data.conversation), function(d2) {
+                            data = JSON.parse(d.body)
+                            console.log('New message from user {0} on {1}'.format(data.username, data.conversation))
+                            if (maxui.settings.UISection == 'conversations' && maxui.settings.conversationsSection == 'messages')
+                                self.maxui.printMessages(data.conversation, function() {maxui.toggleMessages('messages')})
+                            else (maxui.settings.UISection == 'conversations' && maxui.settings.conversationsSection == 'conversations')
+                                maxui.printConversations( function() {
+                                    maxui.toggleSection('conversations')
+                                    $('.maxui-message-count:first').css({'background-color':'red'})
+                                })
+                        });
+                    });
+
+                    console.log('connect')
+                };
+
+                var on_error =  function() {
+                  console.log('error');
+                };
+                maxui.client.debug = function(a){console.log(a);};
+                maxui.client.heartbeat.outgoing = 0;
+                maxui.client.heartbeat.incoming = 0;
+                maxui.client.connect(maxui.settings.username, maxui.settings.oAuthToken, on_connect, on_error, '/');
             }
 
             maxui.settings.subscriptions = userSubscriptions
@@ -830,9 +883,18 @@
                             var activityid = this.id
                             maxui.printMessages(chash, function() {
                                    maxui.toggleMessages('messages')
-                                   maxui.io.emit('join', maxui.settings.username)
+                                   id = maxui.client.subscribe('/exchange/{0}'.format(chash), function(d) {
+                                        data = JSON.parse(d.body)
+                                        console.log('New message from user {0} on {1}'.format(data.username, data.conversation))
+                                        if (maxui.settings.UISection == 'conversations' && maxui.settings.conversationsSection == 'messages')
+                                            self.maxui.printMessages(data.conversation, function() {maxui.toggleMessages('messages')})
+                                        else (maxui.settings.UISection == 'conversations' && maxui.settings.conversationsSection == 'conversations')
+                                            maxui.printConversations( function() {
+                                                maxui.toggleSection('conversations')
+                                                $('.maxui-message-count:first').css({'background-color':'red'})
+                                            })
+                                   })
                                    maxui.settings.currentConversation = chash
-                                   maxui.io.emit('talk', { conversation: chash, timestamp: maxui.utils.timestamp(), messageID: activityid } )
                             })
                        })
         } else {
@@ -863,8 +925,8 @@
                             jq('#maxui-newactivity textarea').val('')
                             jq('#maxui-newactivity .maxui-button').attr('disabled','disabled')
                             maxui.printMessages(chash, function() {maxui.toggleMessages('messages')})
-                            var activityid = this.id
-                            maxui.io.emit('talk', { conversation: chash, timestamp: maxui.utils.timestamp(), messageID: activityid } )
+                            // var activityid = this.id
+                            // maxui.io.emit('talk', { conversation: chash, timestamp: maxui.utils.timestamp(), messageID: activityid } )
 
                            })
 
