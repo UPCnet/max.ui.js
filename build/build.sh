@@ -19,8 +19,10 @@ echo "Compiling jquery.iecors.js"
 java -jar closure-compiler-v1346.jar --js ../libs/jquery.iecors.js --compilation_level SIMPLE_OPTIMIZATIONS --js_output_file jquery.iecors-min.js
 echo "Compiling json2.js"
 java -jar closure-compiler-v1346.jar --js ../libs/json2.js --compilation_level SIMPLE_OPTIMIZATIONS --js_output_file json2-min.js
-echo "Compiling socket.io.js"
-java -jar closure-compiler-v1346.jar --js ../libs/socket.io.js --compilation_level SIMPLE_OPTIMIZATIONS --js_output_file socket.io-min.js
+# echo "Compiling socket.io.js"
+# java -jar closure-compiler-v1346.jar --js ../libs/socket.io.js --compilation_level SIMPLE_OPTIMIZATIONS --js_output_file socket.io-min.js
+echo "Compiling stomp.js"
+java -jar closure-compiler-v1346.jar --js ../libs/stomp.js --compilation_level SIMPLE_OPTIMIZATIONS --js_output_file stomp-min.js
 echo "Compiling jquery.mousewheel.js"
 java -jar closure-compiler-v1346.jar --js ../libs/jquery.mousewheel-3.0.6.pack.js --compilation_level SIMPLE_OPTIMIZATIONS --js_output_file jquery.mousewheel-min.js
 echo "Compiling jquery.jscrollpane.js"
@@ -66,7 +68,10 @@ cat hogan-min.js >> $FILENAME
 # cat socket.io-min.js >> $FILENAME
 
 comment "sockjs-0.3.min.js"
-cat sockjs-0.3.min.js >> $FILENAME
+cat ../libs/sockjs-0.3.min.js >> $FILENAME
+
+comment "stomp.js"
+cat stomp-min.js >> $FILENAME
 
 comment "jquery.mousewheel.js"
 cat jquery.mousewheel-min.js >> $FILENAME
