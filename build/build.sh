@@ -62,8 +62,11 @@ cat jquery.easydate-min.js >> $FILENAME
 comment "hogan.js"
 cat hogan-min.js >> $FILENAME
 
-comment "socket.io.js"
-cat socket.io-min.js >> $FILENAME
+# comment "socket.io.js"
+# cat socket.io-min.js >> $FILENAME
+
+comment "sockjs-0.3.min.js"
+cat sockjs-0.3.min.js >> $FILENAME
 
 comment "jquery.mousewheel.js"
 cat jquery.mousewheel-min.js >> $FILENAME
