@@ -52,6 +52,12 @@ function comment(){
 
 comment "MAX UI v.$VERSION"
 
+comment "sockjs-0.3.min.js"
+cat ../libs/sockjs-0.3.min.js >> $FILENAME
+
+comment "stomp.js"
+cat stomp-min.js >> $FILENAME
+
 comment "json2"
 cat json2-min.js >> $FILENAME
 
@@ -66,12 +72,6 @@ cat hogan-min.js >> $FILENAME
 
 # comment "socket.io.js"
 # cat socket.io-min.js >> $FILENAME
-
-comment "sockjs-0.3.min.js"
-cat ../libs/sockjs-0.3.min.js >> $FILENAME
-
-comment "stomp.js"
-cat stomp-min.js >> $FILENAME
 
 comment "jquery.mousewheel.js"
 cat jquery.mousewheel-min.js >> $FILENAME
