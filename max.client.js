@@ -30,14 +30,16 @@ function MaxClient () {
                       follows : '/people/{0}/follows',
                       follow : '/people/{0}/follows/{1}',
                       subscriptions : '/people/{0}/subscriptions',
-                      activities : '/activities',
+                      activities : '/contexts/{0}/activities',
                       activity : '/activities/{0}',
                       comments : '/activities/{0}/comments',
                       comment : '/activities/{0}/comments/{1}',
                       likes : '/activities/{0}/likes',
                       like : '/activities/{0}/likes/{1}',
                       shares : '/activities/{0}/shares',
-                      share : '/activities/{0}/shares/{1}'
+                      share : '/activities/{0}/shares/{1}',
+                      conversations : '/conversations',
+                      messages: '/conversations/{0}/messages'
                    }
 };
 
@@ -55,6 +57,10 @@ MaxClient.prototype.configure = function(settings) {
 MaxClient.prototype.POST = function(route, query, callback) {
     maxclient = this
     resource_uri = '{0}{1}'.format(this.url, route)
+    // Get method-defined triggers
+    var triggers = {}
+    if (arguments.length>3) triggers = arguments[3]
+
     if (this.mode=='jquery')
     {
            jQuery.ajax( {url: resource_uri,
@@ -68,8 +74,14 @@ MaxClient.prototype.POST = function(route, query, callback) {
 			     async: true,
 			     dataType: 'json'
 			    })
-         .done( function(result) { callback.call(result) } )  
-         .fail( function(xhr) { jQuery(window).trigger('maxclienterror',xhr) })
+         .done( function(result) {
+            callback.call(result)
+            if (triggers.done) jQuery(window).trigger(triggers.done, result)
+          })
+         .fail( function(xhr) {
+            jQuery(window).trigger('maxclienterror',xhr)
+            if (triggers.fail) jQuery(window).trigger(triggers.fail, xhr)
+          })
 
     }
     else
@@ -96,9 +108,68 @@ MaxClient.prototype.POST = function(route, query, callback) {
     return true
 };
 
+MaxClient.prototype.DELETE = function(route, callback) {
+    maxclient = this
+    resource_uri = '{0}{1}'.format(this.url, route)
+    // Get method-defined triggers
+    var triggers = {}
+    if (arguments.length>2) triggers = arguments[2]
+
+    if (this.mode=='jquery')
+    {
+           jQuery.ajax( {url: resource_uri,
+             beforeSend: function(xhr) {
+                 xhr.setRequestHeader("X-Oauth-Token", maxclient.token);
+                 xhr.setRequestHeader("X-Oauth-Username", maxclient.actor.username);
+                 xhr.setRequestHeader("X-Oauth-Scope", 'widgetcli');
+                 xhr.setRequestHeader("X-HTTP-Method-Override", 'DELETE');
+             },
+           type: 'POST',
+           data: '',
+           async: true,
+           dataType: 'json'
+          })
+         .done( function(result) {
+            callback.call(result)
+            if (triggers.done) jQuery(window).trigger(triggers.done, result)
+          })
+         .fail( function(xhr) {
+            jQuery(window).trigger('maxclienterror',xhr)
+            if (triggers.fail) jQuery(window).trigger(triggers.fail, xhr)
+          })
+
+    }
+    else
+    {
+      var params = {}
+      params[gadgets.io.RequestParameters.CONTENT_TYPE] = gadgets.io.ContentType.JSON
+      params[gadgets.io.RequestParameters.METHOD] = gadgets.io.MethodType.POST
+      params[gadgets.io.RequestParameters.REFRESH_INTERVAL] = 1
+      params[gadgets.io.RequestParameters.POST_DATA] = JSON.stringify(query)
+
+      var headers = {"X-Oauth-Token": maxclient.token,
+                     "X-Oauth-Username": maxclient.actor.username,
+                     "X-Oauth-Scope": 'widgetcli'}
+      params[gadgets.io.RequestParameters.HEADERS] = headers
+
+      gadgets.io.makeRequest(
+                     resource_uri,
+                     function(result) { callback.call(result.data) },
+                     params
+                      )
+
+
+    }
+    return true
+};
 MaxClient.prototype.GET = function(route, query, callback) {
     maxclient = this
     resource_uri = '{0}{1}'.format(this.url, route)
+
+    // Get method-defined triggers
+    var triggers = {}
+    if (arguments.length>3) triggers = arguments[3]
+
     if (Object.keys(query).length >0)
     {
         resource_uri+='?'+jQuery.param(query, true)
@@ -115,8 +186,14 @@ MaxClient.prototype.GET = function(route, query, callback) {
 			     async: true,
 			     dataType: 'json'
 			    })
-         .done( function(result) { callback.call(result) } )  
-         .fail( function(xhr) { jQuery(window).trigger('maxclienterror',xhr) })
+         .done( function(result) {
+            if (triggers.done) jQuery(window).trigger(triggers.done)
+            callback.call(result)
+          })
+         .fail( function(xhr) {
+            jQuery(window).trigger('maxclienterror',xhr)
+            if (triggers.fail) jQuery(window).trigger(triggers.fail)
+          })
 
 	}
 	else
@@ -157,8 +234,15 @@ MaxClient.prototype.getUserData = function(username, callback) {
     this.GET(route,query,callback)
 };
 
+MaxClient.prototype.getUsersList = function(userquery, callback) {
+    var route = this.ROUTES['users']
+    var query = {username:userquery}
+    this.GET(route,query,callback)
+};
+
+
 MaxClient.prototype.getActivities = function(username, context, callback) {
-  var route = this.ROUTES['activities'];
+  var route = this.ROUTES['activities'].format(context);
   if (arguments.length>3)
     {
       query=arguments[3]
@@ -167,13 +251,20 @@ MaxClient.prototype.getActivities = function(username, context, callback) {
     {
       query={}
     }
-  if (context)
-      { //construir la query string
-        query.context = context
-       }
   this.GET(route,query,callback)
 };
 
+MaxClient.prototype.getConversationsForUser = function(username, callback) {
+  var route = this.ROUTES['conversations'];
+  query={}
+  this.GET(route,query,callback)
+};
+
+MaxClient.prototype.getMessagesForConversation = function(hash, callback) {
+  var route = this.ROUTES['messages'].format(hash);
+  query={}
+  this.GET(route,query,callback)
+};
 
 MaxClient.prototype.getCommentsForActivity = function(activityid, callback) {
   route = this.ROUTES['comments'].format(activityid);
@@ -209,7 +300,13 @@ MaxClient.prototype.addActivity = function(text,contexts,callback) {
             }
         }
      if (contexts.length>0)
-        { query.contexts = contexts }
+        { query.contexts = []
+          for (ct=0;ct<contexts.length;ct++)
+          {
+            query.contexts.push({'objectType':'context','url':contexts[ct]})
+          }
+        }
+
     query.object.content = text
 
     //We have a generator
@@ -219,6 +316,46 @@ MaxClient.prototype.addActivity = function(text,contexts,callback) {
         }
 
   	route = this.ROUTES['user_activities'].format(this.actor.username);
+    trigger = {'done': 'maxui-posted-activity',
+               'fail': 'maxui-failed-activity'}
+    this.POST(route,query,callback, trigger)
+};
+
+MaxClient.prototype.removeActivity = function(activity_id,callback) {
+    route = this.ROUTES['activity'].format(activity_id);
+    this.DELETE(route, callback)
+}
+
+
+MaxClient.prototype.addMessageAndConversation = function(text,participants,callback) {
+    query = {
+        "object": {
+            "objectType": "note",
+            "content": ""
+            },
+        "contexts": [ { 'objectType': 'conversation',
+                        'participants': participants
+                      }
+                    ]
+        }
+
+    query.object.content = text
+
+    route = this.ROUTES['conversations']
+    this.POST(route,query,callback)
+};
+
+MaxClient.prototype.addMessage = function(text,chash,callback) {
+    query = {
+        "object": {
+            "objectType": "note",
+            "content": ""
+            }
+        }
+
+    query.object.content = text
+
+    route = this.ROUTES['messages'].format(chash)
     this.POST(route,query,callback)
 };
 

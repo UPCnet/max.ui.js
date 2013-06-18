@@ -8,7 +8,23 @@ var max = max || {};
 
 max.utils = function() {
 
+
   return {
+
+    /*
+    *    Stops propagation of an event, to avoid arrows, esc, enter keys
+    *    bubbling to an input, Used in conjunction with the users prediction box
+    *
+    *    @param {Event} e       The DOM event we want to freeze
+    */
+    freezeEvent: function (e) {
+          if (e.preventDefault) e.preventDefault();
+          e.returnValue = false;
+          e.cancelBubble = true;
+          if (e.stopPropagation) e.stopPropagation();
+          return false;
+    },
+
     /*
     *    Strips whitespace at the beggining and end of a string and optionaly between
     *
@@ -34,6 +50,8 @@ max.utils = function() {
     */
     formatText: function (text){
         if (text) {
+
+            // Format hyperlinks
             text = text.replace(
                 /((https?\:\/\/)|(www\.))(\S+)(\w{2,4})(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/gi,
                 function(url){
@@ -45,6 +63,7 @@ max.utils = function() {
                 }
             );
 
+            // Format hashtags links
             text = text.replace(
                 /(\s|^)#{1}(\w+)/gi,
                 function(){
@@ -53,6 +72,10 @@ max.utils = function() {
                     return '<a class="maxui-hashtag" href="#" value="'+tag+'">'+pre+'#'+tag+'</a>';
                 }
             );
+
+            // Format line breaks
+            text = text.replace(/\r?\n/gi, '<br/>')
+
         }
         return text;
     },
@@ -71,6 +94,29 @@ max.utils = function() {
                 return false;
               }
     },
+
+    /*
+    *    Removes elements from array by value
+    */
+    removeValueFrom: function(arr){
+        var what, a= arguments, L= a.length, ax;
+        while(L> 1 && arr.length){
+            what= a[--L];
+            while((ax= arr.indexOf(what))!= -1){
+                arr.splice(ax, 1);
+            }
+        }
+        return arr;
+    },
+
+    /*
+    *    Returns the numner of milliseconds since epoch
+    */
+    timestamp: function() {
+        var date = new Date()
+        return date / 1
+    },
+
 
     /*
     *    Returns an human readable date from a timestamp in rfc3339 format (cross-browser)

@@ -2,44 +2,57 @@
 * Invokes maxui when page is ready
 * calling trough jQuery ready is only for development purses
 * use snippet in example.js for production environments
+
+* It's possible to override certain settings from url in development mode
+*   - username:   authorize as a different user, must hack oauth in max service to be usefull
+*   - preset:     select a preset to configure the widget
+*   - transports: limit the socket.io transports. must be one of
+          0: "websocket"
+          1: "flashsocket"
+          2: "htmlfile"
+          3: "xhr-polling"
+          4: "jsonp-polling"
 */
+
+function getURLParameter(name) {
+    return decodeURI(
+        (RegExp(name + '=' + '(.+?)(&|$)').exec(location.search)||[,null])[1]
+    );
+}
+
 jQuery().ready(function() {
 
-    literals_ca = {'new_activity_text': 'Escriu alguna cosa...',
-                   'new_activity_post': "Envia l'activitat",
-                   'toggle_comments': "Comentaris",
-                   'new_comment_post': "Envia el comentari",
-                   'load_more': "Carrega'n més"
-                 }
+    var settings = {}
+
+    // Get parameters from URL Configuration
+    var username = getURLParameter('user')
+    var preset = getURLParameter('preset')
+    var transports = getURLParameter('transports')
+    preset = preset=="null" ? 'timeline' : preset
+
+    // Get Widget basic configuration parameters
+    $.get('presets/base.json', 'json')
+      .always( function(data)
+      {
+         $.extend(settings, data)
+
+        // When done, extend settings with parameters from selected preset
+        $.get('presets/' + preset + '.json', function(data)
+          { $.extend(settings, data)
+
+            // Overwrite username if supplied
+            if (username!="null") settings['username'] = username
+
+            // Overwrite transports if supplied
+            if (transports!="null") settings['transports'] = [transports]
 
 
-    var settings = {
-           'literals': literals_ca,
-           'username' : 'carles.bruguera',
-           'oAuthToken' : 'eb0d4b6c2a44ac90db29d2bbb172cba1',
-           'oAuthGrantType' : 'password',
-           'maxServerURL' : 'http://max.upc.edu',
-           'maxServerURLAlias' : 'http://sheldon.estacions.upcnet.es/max',
-//           'avatarURLpattern' : '',
-           'profileURLpattern' : '#',
-           'readContext': 'https://max.upc.edu',
-//           'writeContexts': ['http://eider'],
-           'activitySource': 'activities',
-           'generatorName': 'SheldonApp'
-           }
+            // After all, fire up the widget
+            jQuery('#container').maxUI(settings)
+          })
 
-//  var settings = {
-//  'newActivityText' : 'Escriu alguna cosa ...',
-//                 'username' : 'francesc.bassas-bullich',
-//                 'oAuthToken' : '0310fb63c9014aeb4f888eda768c1c86',
-//                 'maxServerURL' : 'http://max.beta.upcnet.es',
-//                 'maxServerURLAlias' : 'https://devel.upcnet.es/max',
-//                 'avatarURLpattern' : 'https://devel.upcnet.es/clubs/avatar/{0}',
-//                 'activitiesSource' : 'activities',
-//                 'contextFilter' : ['hola'],
-//                 'activitySource': 'activities'
-// }
-    //gadgets.io.setProxyURL(settings.maxServerURL+'/makeRequest')
+      })
 
-    jQuery('#container').maxUI(settings)
+
+
 })
