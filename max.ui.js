@@ -1262,7 +1262,7 @@
                                       replies: replies,
                                     avatarURL: avatar_url,
                                   publishedIn: contexts,
-                            canDeleteActivity: activity.owner == maxui.settings.username,
+                            canDeleteActivity: activity.deletable,
                                           via: generator
 
                                  }
