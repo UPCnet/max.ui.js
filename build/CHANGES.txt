@@ -1,6 +1,11 @@
 CHANGELOG
 =========
 
+3.5 (unreleased)
+----------------
+
+* Change way of show trashbin to new "deletable" permission in activities 
+
 3.4 (2013-06-17)
 ----------------
 
