@@ -39,7 +39,9 @@ function MaxClient () {
                       shares : '/activities/{0}/shares',
                       share : '/activities/{0}/shares/{1}',
                       conversations : '/conversations',
-                      messages: '/conversations/{0}/messages'
+                      messages: '/conversations/{0}/messages',
+                      context: '/contexts/{0}'
+
                    }
 };
 
@@ -240,6 +242,11 @@ MaxClient.prototype.getUsersList = function(userquery, callback) {
     this.GET(route,query,callback)
 };
 
+MaxClient.prototype.getContext = function(chash, callback) {
+    var route = this.ROUTES['context'].format(chash)
+    var query = {}
+    this.GET(route,query,callback)
+};
 
 MaxClient.prototype.getActivities = function(username, context, callback) {
   var route = this.ROUTES['activities'].format(context);

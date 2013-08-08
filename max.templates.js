@@ -111,8 +111,7 @@ var MSTCH_MAXUI_ACTIVITY = '\
         {{/publishedIn}}\
         <div class="maxui-actions">\
             <a href="" class="maxui-commentaction">\
-                 {{#replies}}<strong>{{replies.totalItems}}</strong>{{/replies}}\
-                 {{^replies}}<strong>0</strong>{{/replies}}\
+                 <strong>{{replies.length}}</strong>\
                  {{literals.toggle_comments}}\
             </a>\
             \
@@ -121,9 +120,9 @@ var MSTCH_MAXUI_ACTIVITY = '\
 \
     <div class="maxui-comments" style="display: none">\
         <div class="maxui-commentsbox">\
-            {{#replies.items}}\
+            {{#replies}}\
                 {{> comment}}\
-            {{/replies.items}}\
+            {{/replies}}\
         </div>\
         <div class="maxui-newcommentbox">\
                 <textarea class="maxui-empty maxui-text-input" id="maxui-commentBox" data-literal="{{literals.new_comment_text}}">{{literals.new_comment_text}}</textarea>\

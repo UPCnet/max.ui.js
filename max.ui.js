@@ -125,13 +125,13 @@
             var userSubscriptions = {}
             if (this.subscribedTo)
             {
-                if (this.subscribedTo.items)
+                if (this.subscribedTo)
                 {
-                    if (this.subscribedTo.items.length>0)
+                    if (this.subscribedTo.length>0)
                     {
-                        for (sc=0;sc<this.subscribedTo.items.length;sc++)
+                        for (sc=0;sc<this.subscribedTo.length;sc++)
                         {
-                            var subscription = this.subscribedTo.items[sc]
+                            var subscription = this.subscribedTo[sc]
                             userSubscriptions[subscription.hash]={}
                             userSubscriptions[subscription.hash]['permissions']={}
                             for (pm=0;pm<subscription.permissions.length;pm++)
@@ -150,8 +150,7 @@
 
                 // Collect conversation ids
                 maxui.conversations = []
-                var talkingin = this.talkingIn || {}
-                var talking_items = talkingin.items || []
+                var talking_items = this.talkingIn || []
                 for (co=0;co<talking_items.length;co++) {
                     maxui.conversations.push(talking_items[co].id)
                 }
@@ -194,14 +193,14 @@
                                 })
                         });
                     });
-
-                    console.log('connect')
                 };
 
                 var on_error =  function() {
                   console.log('error');
                 };
-                maxui.client.debug = function(a){console.log(a);};
+                if (maxui.settings.enableAlerts)
+                    maxui.client.debug = function(a){console.log(a);};
+
                 maxui.client.heartbeat.outgoing = 0;
                 maxui.client.heartbeat.incoming = 0;
                 maxui.client.connect(maxui.settings.username, maxui.settings.oAuthToken, on_connect, on_error, '/');
@@ -986,7 +985,7 @@
 
         var func_params = []
         func_params.push(query)
-        func_params.push( function() { maxui.formatPredictions(this.items) })
+        func_params.push( function() { maxui.formatPredictions(this) })
 
         var userListRetriever = this.maxClient.getUsersList
         userListRetriever.apply(this.maxClient,func_params)
@@ -1057,13 +1056,13 @@
         {
             var callback = arguments[0]
             func_params.push( function() {
-                                  maxui.formatConversations(this.items, callback)
+                                  maxui.formatConversations(this, callback)
 
                                 })
         }
         else
         {
-            func_params.push( function() { maxui.formatConversations(this.items) })
+            func_params.push( function() { maxui.formatConversations(this) })
         }
 
         var conversationsRetriever = this.maxClient.getConversationsForUser
@@ -1128,13 +1127,13 @@
         {
             var callback = arguments[1]
             func_params.push( function() {
-                                  maxui.formatMessages(this.items, callback)
+                                  maxui.formatMessages(this, callback)
 
                                 })
         }
         else
         {
-            func_params.push( function() { maxui.formatMessages(this.items) })
+            func_params.push( function() { maxui.formatMessages(this) })
         }
 
         var messagesRetriever = this.maxClient.getMessagesForConversation
@@ -1195,7 +1194,7 @@
             var maxui = this;
             var activities = ''
 
-            // Iterate throug all the activities
+            // Iterate through all the activities
             for (i=0;i<items.length;i++)
                 {
                     var activity = items[i]
@@ -1228,17 +1227,14 @@
                       }
                     // Take replies (if exists) and format to be included as a formatted
                     // subobject ready for hogan
-                    var replies = undefined
+                    var replies = []
                     if (activity.replies)
                         {
-                            replies = { totalItems: activity.replies.totalItems,
-                                             items: []
-                                      }
-                            if (activity.replies.items.length>0)
+                            if (activity.replies.length>0)
                                 {
-                                    for (r=0;r<activity.replies.items.length;r++)
+                                    for (r=0;r<activity.replies.length;r++)
                                         {
-                                        var comment = activity.replies.items[r]
+                                        var comment = activity.replies[r]
                                         reply = {
                                                            id: comment.id,
                                                        actor: comment.actor,
@@ -1246,20 +1242,21 @@
                                                          text: maxui.utils.formatText(comment.content),
                                                     avatarURL: maxui.settings.avatarURLpattern.format(comment.actor.username)
                                                 }
-                                        replies.items.push(reply)
+                                        replies.push(reply)
                                         }
                                 }
                         }
 
                     // Take all the latter properties and join them into an object
                     // containing all the needed params to render the template
-                    var params = {
+                        var params = {
                                            id: activity.id,
                                         actor: activity.actor,
                                      literals:maxui.settings.literals,
                                          date: maxui.utils.formatDate(activity.published, maxui.language),
                                          text: maxui.utils.formatText(activity.object.content),
                                       replies: replies,
+
                                     avatarURL: avatar_url,
                                   publishedIn: contexts,
                             canDeleteActivity: activity.deletable,
@@ -1355,6 +1352,31 @@
             jq(comment_count).text(eval(jq(comment_count).text())+1)
         }
 
+
+    /*
+    *    Renders the postbox
+    */
+    jq.fn.renderPostbox = function() {
+        var maxui = this
+        // Render the postbox UI if user has permission
+        var showCT = maxui.settings.UISection == 'conversations'
+        var toggleCT = maxui.settings.disableConversations == false && !showCT
+
+        var params = {        avatar: maxui.settings.avatarURLpattern.format(maxui.settings.username),
+                        allowPosting: maxui.settings.canwrite,
+                       buttonLiteral: maxui.settings.literals.new_activity_post,
+                         textLiteral: maxui.settings.literals.new_activity_text,
+                            literals: maxui.settings.literals,
+             showConversationsToggle: toggleCT ? 'display:block;' : 'display:none;'
+                    }
+        var postbox = maxui.templates.postBox.render(params)
+        var $postbox = jq('#maxui-newactivity')
+        $postbox.html(postbox)
+
+
+    }
+
+
     /*
     *    Renders the timeline of the current user, defined in settings.username
     */
@@ -1389,65 +1411,65 @@
         if (arguments.length>1)
         {
             var callback = arguments[1]
-            func_params.push( function() {
-
+            func_params.push( function(event) {
+                var items = this
                 // Determine write permission, granted by default if we don't find a restriction
                 maxui.settings.canwrite = true
 
                 // If we don't have a context, we're in timeline, so we can write
-                if (this.context)
-                {
-                    // Add read context if user is not subscribed to it{
-                    var subscriptions = maxui.settings.subscriptions
-                    if (!subscriptions[this.context.hash])
-                    {
-                        subscriptions[this.context.hash]={}
-                        subscriptions[this.context.hash]['permissions']={}
+                if (maxui.settings.activitySource == 'activities') {
+                    maxui.maxClient.getContext(
+                        maxui.settings.readContextHash,
+                        function (event) {
+                            var context = this
 
-                        // Check only for public defaults, as any other permission would require
-                        // a susbcription, that we already checked that doesn't exists
-                        subscriptions[this.context.hash]['permissions']['read'] = this.context.permissions.read=='public'
-                        subscriptions[this.context.hash]['permissions']['write'] = this.context.permissions.write=='public'
-                    }
-
-                    // Iterate through all the defined write contexts to check for write permissions on
-                    // the current user
-                    for (wc=0;wc<maxui.settings.writeContexts.length;wc++)
-                        {
-                            var write_context = maxui.settings.writeContextsHashes[wc]
-                            if (subscriptions[write_context]['permissions'])
+                            // Add read context if user is not subscribed to it{
+                            var subscriptions = maxui.settings.subscriptions
+                            if (!subscriptions[context.hash])
                             {
-                              if (subscriptions[write_context]['permissions'].write==false)
-                              {
-                                  maxui.settings.canwrite = false
-                              }
+                                subscriptions[context.hash]={}
+                                subscriptions[context.hash]['permissions']={}
+
+                                // Check only for public defaults, as any other permission would require
+                                // a susbcription, that we already checked that doesn't exists
+                                subscriptions[context.hash]['permissions']['read'] = context.permissions.read=='public'
+                                subscriptions[context.hash]['permissions']['write'] = context.permissions.write=='public'
                             }
-                            else { maxui.settings.canwrite = false }
+
+                            // Iterate through all the defined write contexts to check for write permissions on
+                            // the current user
+                            for (wc=0;wc<maxui.settings.writeContexts.length;wc++)
+                                {
+                                    var write_context = maxui.settings.writeContextsHashes[wc]
+                                    if (subscriptions[write_context]['permissions'])
+                                    {
+                                      if (subscriptions[write_context]['permissions'].write==false)
+                                      {
+                                          maxui.settings.canwrite = false
+                                      }
+                                    }
+                                    else { maxui.settings.canwrite = false }
+                                }
+
+
+                            maxui.renderPostbox()
+                            // format the result items as activities
+                            maxui.formatActivities(items, insert_at, callback)
+
                         }
+                    )
+                } else {
+                    maxui.renderPostbox(items, insert_at, callback)
+                            // format the result items as activities
+                    maxui.formatActivities(items, insert_at, callback)
                 }
 
-                // Render the postbox UI if user has permission
-                var showCT = maxui.settings.UISection == 'conversations'
-                var toggleCT = maxui.settings.disableConversations == false && !showCT
-
-                var params = {        avatar: maxui.settings.avatarURLpattern.format(maxui.settings.username),
-                                allowPosting: maxui.settings.canwrite,
-                               buttonLiteral: maxui.settings.literals.new_activity_post,
-                                 textLiteral: maxui.settings.literals.new_activity_text,
-                                    literals: maxui.settings.literals,
-                     showConversationsToggle: toggleCT ? 'display:block;' : 'display:none;'
-                            }
-                var postbox = maxui.templates.postBox.render(params)
-                var $postbox = jq('#maxui-newactivity')
-                $postbox.html(postbox)
-
-                // format the result items as activities
-                 maxui.formatActivities(this.items, insert_at, callback)
             })
         }
         else
         {
-            func_params.push( function() {maxui.formatActivities(this.items, insert_at)})
+            func_params.push( function() {
+                maxui.formatActivities(this, insert_at)})
         }
 
 
@@ -1468,7 +1490,7 @@
         var func_params = []
 
         func_params.push(activity_id)
-        func_params.push(function() {maxui.formatComment(this.items, activity_id)})
+        func_params.push(function() {maxui.formatComment(this, activity_id)})
         this.maxClient.getCommentsForActivity.apply(this.maxClient, func_params)
 
     }
