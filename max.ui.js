@@ -348,17 +348,40 @@
             maxui.printMessages(conversation_hash, function() { maxui.toggleMessages('messages') })
             })
 
-        //Assign activity removal via delegating the click to the activities container
+        //Assign activity removal confirmation dialog via delegating the click to the activities container
         jq('#maxui-activities').on('click','.maxui-delete-activity',function (event) {
+            event.preventDefault()
+            var $activity = jq(this).closest('.maxui-activity')
+            var $dialog = $activity.find('.maxui-popover')
+
+            jq('.maxui-popover').css({opacity:0})
+            $dialog.animate({opacity:1}, 300)
+        })
+
+        //Assign activity removal confirmation dialog via delegating the click to the activities container
+        jq('#maxui-activities').on('click','.maxui-button.cancel',function (event) {
+            event.preventDefault()
+            var $activity = jq(this).closest('.maxui-activity')
+            var $dialog = $activity.find('.maxui-popover')
+
+            jq('.maxui-popover').css({opacity:0})
+        })
+
+
+        //Assign activity removal via delegating the click to the activities container
+        jq('#maxui-activities').on('click','.maxui-button.delete',function (event) {
             event.preventDefault()
             var $activity = jq(this).closest('.maxui-activity')
             var activityid = $activity.attr('id')
             maxui.maxClient.removeActivity(activityid, function() {
+                jq('.maxui-popover').animate({opacity:0}, 300)
                 $activity.css({height:$activity.height(), 'min-height':'auto'})
                 $activity.animate({height: 0, opacity:0}, 100, function(event) {
                     $activity.remove()
+
                 })
             })
+
         })
 
         //Assign Activity post action And textarea behaviour

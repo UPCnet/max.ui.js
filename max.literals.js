@@ -24,7 +24,10 @@ max.literals = function(language) {
                        'and_more': "and more...",
                        'new_message_post': "Send message",
                        'post_permission_unauthorized': "You''re not authorized to post on this context",
-                       'post_permission_not_here': "You're not mentioning @anyone"
+                       'post_permission_not_here': "You're not mentioning @anyone",
+                       'delete_activity_confirmation': "Are you sure?",
+                       'delete_activity_delete': "Delete",
+                       'delete_activity_cancel': "Cancel"
         }
 
     maxui['es'] = {'new_activity_text': 'Escribe algo...',
@@ -43,7 +46,10 @@ max.literals = function(language) {
                        'and_more': "i más...",
                        'new_message_post':'Envia el mensaje',
                        'post_permission_unauthorized': 'No estas autorizado a publicar en este contexto',
-                       'post_permission_not_here': "No estas citando a @nadie"
+                       'post_permission_not_here': "No estas citando a @nadie",
+                       'delete_activity_confirmation': "Estás seguro?",
+                       'delete_activity_delete': "Borrar",
+                       'delete_activity_cancel': "Cancelar"
         }
 
     maxui['ca'] = {'new_activity_text': 'Escriu alguna cosa...',
@@ -62,7 +68,11 @@ max.literals = function(language) {
                        'and_more': "i més...",
                        'new_message_post':'Envia el missatge',
                        'post_permission_unauthorized': 'No estàs autoritzat a publicar en aquest contexte',
-                       'post_permission_not_here': "No estas citant a @ningú"
+                       'post_permission_not_here': "No estas citant a @ningú",
+                       'delete_activity_confirmation': "Estàs segur?",
+                       'delete_activity_delete': "Esborra",
+                       'delete_activity_cancel': "No ho toquis!"
+
         }
 
     return maxui[language]

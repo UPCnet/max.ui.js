@@ -89,10 +89,18 @@ var MSTCH_MAXUI_ACTIVITY = '\
 		          <span class="maxui-displayname">{{actor.displayName}}</span></a>\
           <span class="maxui-username">{{actor.username}}&nbsp;</span>\
         </div>\
-        <div>\
+        <div class="maxui-activity-message">\
             <p class="maxui-body">{{&text}}</p>\
             {{#canDeleteActivity}}\
             <span class="maxui-delete-activity"></span>\
+            <div class="maxui-popover left">\
+                <div class="maxui-arrow"></div>\
+                    <h3 class="maxui-popover-title">{{literals.delete_activity_confirmation}}</h3>\
+                    <div class="maxui-popover-content">\
+                      <input type="button" class="maxui-button delete" value="{{literals.delete_activity_delete}}">\
+                      <input type="button" class="maxui-button cancel" value="{{literals.delete_activity_cancel}}">\
+                    </div>\
+            </div>\
             {{/canDeleteActivity}}\
         </div>\
     </div>\
