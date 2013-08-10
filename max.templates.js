@@ -188,6 +188,17 @@ var MSTCH_MAXUI_COMMENT = '\
         </div>\
         <div>\
             <p class="maxui-body">{{&text}}</p>\
+            {{#canDeleteComment}}\
+            <span class="maxui-delete-comment"></span>\
+            <div class="maxui-popover left">\
+                <div class="maxui-arrow"></div>\
+                    <h3 class="maxui-popover-title">{{literals.delete_activity_confirmation}}</h3>\
+                    <div class="maxui-popover-content">\
+                      <input type="button" class="maxui-button delete" value="{{literals.delete_activity_delete}}">\
+                      <input type="button" class="maxui-button cancel" value="{{literals.delete_activity_cancel}}">\
+                    </div>\
+            </div>\
+            {{/canDeleteComment}}\
         </div>\
         <div class="maxui-publisheddate"></div>\
     </div>\

@@ -333,6 +333,10 @@ MaxClient.prototype.removeActivity = function(activity_id,callback) {
     this.DELETE(route, callback)
 }
 
+MaxClient.prototype.removeActivityComment = function(activity_id,comment_id,callback) {
+    route = this.ROUTES['comment'].format(activity_id, comment_id);
+    this.DELETE(route, callback)
+}
 
 MaxClient.prototype.addMessageAndConversation = function(text,participants,callback) {
     query = {

@@ -188,7 +188,7 @@ input.maxui-button[disabled] {-webkit-appearance: none;border:1px solid #b2b2b2;
 p.maxui-body {margin:0;font-size:13px;}
 	.maxui-comment .maxui-activity-content p.maxui-body {font-size:12px !important;}
 
-.maxui-delete-activity {
+.maxui-delete-activity, .maxui-delete-comment {
 background:url('/maxui-dev/img/trashbin.png') center 1px no-repeat;
 height:12px;
 width:12px;
@@ -198,7 +198,7 @@ margin-top:-12px;
 cursor:pointer;
 }
 
-.maxui-delete-activity:hover {
+.maxui-delete-activity:hover, .maxui-delete-comment:hover  {
 background:url('/maxui-dev/img/trashbino.png') center 0 no-repeat;
 height:12px;
 width:12px;
@@ -207,7 +207,6 @@ float:right;
 margin-top:-12px;
 cursor:pointer;
 }
-
 
 .maxui-topright{
 font-size:11px;
@@ -604,6 +603,7 @@ text-align: center;
     position:relative;
 }
 .maxui-popover {
+    display:none;
 position: absolute;
 float: left;
 width: 180px;
@@ -614,7 +614,7 @@ left: 0;
 z-index: 1010;
 max-width: 276px;
 padding: 1px;
-margin-bottom: -5px;
+margin-bottom: -42px;
 margin-left:117px;
 text-align: left;
 white-space: normal;
@@ -630,6 +630,12 @@ box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
 -webkit-background-clip: padding-box;
 -moz-background-clip: padding;
 background-clip: padding-box;
+}
+
+
+
+.maxui-comment .maxui-popover {
+    margin-left:64px;
 }
 
 .maxui-popover .maxui-button.delete {

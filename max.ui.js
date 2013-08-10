@@ -348,42 +348,97 @@
             maxui.printMessages(conversation_hash, function() { maxui.toggleMessages('messages') })
             })
 
-        //Assign activity removal confirmation dialog via delegating the click to the activities container
+        //Assign activity removal confirmation dialog toggle via delegating the click to the activities container
         jq('#maxui-activities').on('click','.maxui-delete-activity',function (event) {
             event.preventDefault()
             var $activity = jq(this).closest('.maxui-activity')
-            var $dialog = $activity.find('.maxui-popover')
+            var $dialog = $activity.find('.maxui-activity-message > .maxui-popover')
 
-            jq('.maxui-popover').css({opacity:0})
-            $dialog.animate({opacity:1}, 300)
+            if (!$dialog.is(':visible')) {
+                jq('.maxui-popover').css({opacity:0}).hide()
+                $dialog.show()
+                $dialog.animate({opacity:1}, 300)
+            } else {
+                $dialog.animate({opacity:0}, 300)
+                jq('.maxui-popover').css({opacity:0}).hide()
+            }
         })
 
         //Assign activity removal confirmation dialog via delegating the click to the activities container
-        jq('#maxui-activities').on('click','.maxui-button.cancel',function (event) {
+        jq('#maxui-activities').on('click','.maxui-activity-message .maxui-button.cancel',function (event) {
             event.preventDefault()
             var $activity = jq(this).closest('.maxui-activity')
             var $dialog = $activity.find('.maxui-popover')
 
-            jq('.maxui-popover').css({opacity:0})
+            $popover = jq('.maxui-popover').css({opacity:0})
+            $popover.hide()
         })
 
 
         //Assign activity removal via delegating the click to the activities container
-        jq('#maxui-activities').on('click','.maxui-button.delete',function (event) {
+        jq('#maxui-activities').on('click','.maxui-activity-message .maxui-button.delete',function (event) {
+            console.log('delete activityid')
             event.preventDefault()
             var $activity = jq(this).closest('.maxui-activity')
             var activityid = $activity.attr('id')
             maxui.maxClient.removeActivity(activityid, function() {
-                jq('.maxui-popover').animate({opacity:0}, 300)
+                var $popover =jq('.maxui-popover').animate({opacity:0}, 300)
                 $activity.css({height:$activity.height(), 'min-height':'auto'})
                 $activity.animate({height: 0, opacity:0}, 100, function(event) {
                     $activity.remove()
+                    $popover.hide()
 
                 })
             })
 
         })
 
+        //Assign activity comment removal confirmation dialog toggle via delegating the click to the activities container
+        jq('#maxui-activities').on('click','.maxui-delete-comment',function (event) {
+            event.preventDefault()
+            var $comment = jq(this).closest('.maxui-comment')
+            var $dialog = $comment.find('.maxui-popover')
+
+            if (!$dialog.is(':visible')) {
+                jq('.maxui-popover').css({opacity:0}).hide()
+                $dialog.show()
+                $dialog.animate({opacity:1}, 300)
+            } else {
+               $dialog.animate({opacity:0}, 300)
+               jq('.maxui-popover').css({opacity:0}).hide()
+            }
+        })
+
+        //Assign activity comment removal confirmation dialog via delegating the click to the activities container
+        jq('#maxui-activities').on('click','.maxui-comment .maxui-button.cancel',function (event) {
+            event.preventDefault()
+            var $comment = jq(this).closest('.maxui-comment')
+            var $dialog = $comment.find('.maxui-popover')
+
+            $popover = jq('.maxui-popover').css({opacity:0})
+            $popover.hide()
+        })
+
+
+        //Assign activity comment removal via delegating the click to the activities container
+        jq('#maxui-activities').on('click','.maxui-comment .maxui-button.delete',function (event) {
+            console.log('delete comment')
+            event.preventDefault()
+            var $comment = jq(this).closest('.maxui-comment')
+            var $activity = $comment.closest('.maxui-activity')
+            var activityid = $activity.attr('id')
+            var commentid = $comment.attr('id')
+            maxui.maxClient.removeActivityComment(activityid, commentid, function() {
+                var $popover =jq('.maxui-popover').animate({opacity:0}, 300)
+                $comment.css({height:$activity.height(), 'min-height':'auto'})
+                $comment.animate({height: 0, opacity:0}, 100, function(event) {
+                    $comment.remove()
+                    $popover.hide()
+
+                })
+            })
+
+        })
         //Assign Activity post action And textarea behaviour
         maxui.bindActionBehaviour('#maxui-newactivity','#maxui-newactivity-box', function(text)
                 {
@@ -1263,7 +1318,10 @@
                                                        actor: comment.actor,
                                                          date: maxui.utils.formatDate(comment.published,maxui.language),
                                                          text: maxui.utils.formatText(comment.content),
-                                                    avatarURL: maxui.settings.avatarURLpattern.format(comment.actor.username)
+                                                    avatarURL: maxui.settings.avatarURLpattern.format(comment.actor.username),
+                                             canDeleteComment: comment.deletable,
+                                                     literals: maxui.settings.literals
+
                                                 }
                                         replies.push(reply)
                                         }
@@ -1363,7 +1421,8 @@
                                        actor: comment.actor,
                                          date: maxui.utils.formatDate(comment.published, maxui.language),
                                          text: maxui.utils.formatText(comment.content),
-                                    avatarURL: maxui.settings.avatarURLpattern.format(comment.actor.username)
+                                    avatarURL: maxui.settings.avatarURLpattern.format(comment.actor.username),
+                             canDeleteComment: comment.deletable
                                  }
                     // Render the comment template and append it at the end of the rendered comments
                     var comments = comments + maxui.templates.comment.render(params)
