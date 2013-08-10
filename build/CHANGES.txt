@@ -4,6 +4,8 @@ CHANGELOG
 3.5 (unreleased)
 ----------------
 
+* Add a confirmation dialog before deleting activities and comments
+* Add option to delete comments
 * Change way of show trashbin to new "deletable" permission in activities 
 * Refactor to get rid of totalItems schema
 
