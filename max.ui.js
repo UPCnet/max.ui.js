@@ -1086,17 +1086,19 @@
         // Iterate through all the conversations
         for (i=0;i<items.length;i++)
             {
-            var prediction = items[i]
-            var avatar_url = maxui.settings.avatarURLpattern.format(prediction.username)
-            var params = {
-                               username: prediction.username,
-                              avatarURL: avatar_url,
-                               cssclass: 'maxui-prediction' + (i == 0 && ' selected' || '')
-                         }
+            if (prediction.username != maxui.username)
+                {
+                var prediction = items[i]
+                var avatar_url = maxui.settings.avatarURLpattern.format(prediction.username)
+                var params = {
+                                   username: prediction.username,
+                                  avatarURL: avatar_url,
+                                   cssclass: 'maxui-prediction' + (i == 0 && ' selected' || '')
+                             }
 
-            // Render the conversations template and append it at the end of the rendered covnersations
-            predictions = predictions + maxui.templates.predictive.render(params)
-
+                // Render the conversations template and append it at the end of the rendered covnersations
+                predictions = predictions + maxui.templates.predictive.render(params)
+                }
             }
         jq('#maxui-predictive ul').html(predictions)
 
