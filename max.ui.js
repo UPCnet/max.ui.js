@@ -301,7 +301,7 @@
             })
 
         //Assign user mention suggestion to textarea by click
-        jq('#maxui-predictive').on('click','.maxui-prediction',function (event) {
+        jq('#maxui-newactivity').on('click','.maxui-prediction',function (event) {
             event.preventDefault()
 
             var $selected = jq(this)
