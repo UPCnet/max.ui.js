@@ -602,16 +602,19 @@
         //Assign Search box search action And input behaviour
         maxui.bindActionBehaviour('#maxui-search','#maxui-search-box', function(text)
                {
+                console.log('behaviour')
                maxui.textSearch(text)
                jq('#maxui-search').toggleClass('folded',false)
+               jq('#maxui-search-text').val('')
                })
-        // Execute search if <enter> pressed
-        jq('#maxui-search .maxui-text-input').keyup(function(e) {
-                  if (e.keyCode == 13) {
-                     maxui.textSearch(jq(this).attr('value'))
-                     jq('#maxui-search').toggleClass('folded',false)
-                  }
-        });
+        // // Execute search if <enter> pressed
+        // jq('#maxui-search .maxui-text-input').keyup(function(e) {
+        //           if (e.keyCode == 13) {
+        //             console.log('enter')
+        //              maxui.textSearch(jq(this).attr('value'))
+        //              jq('#maxui-search').toggleClass('folded',false)
+        //           }
+        // });
     }
 
     /*
