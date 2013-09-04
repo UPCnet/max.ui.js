@@ -1109,7 +1109,6 @@
     */
     jq.fn.printConversations = function() {
         var maxui = this
-        maxui.settings.canwrite = true
         // Render the postbox UI if user has permission
 
         var showCT = maxui.settings.UISection == 'conversations'
@@ -1197,7 +1196,6 @@
     */
     jq.fn.printMessages = function(conversation_hash) {
         var maxui = this
-        maxui.settings.canwrite = true
 
         var func_params = []
         func_params.push(conversation_hash)
