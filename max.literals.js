@@ -10,7 +10,7 @@ max.literals = function(language) {
     var maxui = {}
     maxui['en'] = {'new_activity_text': 'Write something...',
                        'activity': 'activity',
-                       'conversations': 'conversations',
+                       'conversations': 'private conversations',
                        'conversations_list': 'conversations list',
                        'new_conversation_text': 'Mention @someone to start a conversation',
                        'new_activity_post': "Post activity",
@@ -32,7 +32,7 @@ max.literals = function(language) {
 
     maxui['es'] = {'new_activity_text': 'Escribe algo...',
                        'activity': 'actividad',
-                       'conversations': 'conversaciones',
+                       'conversations': 'conversaciones privadas',
                        'conversations_list': 'lista de conversaciones',
                        'new_conversation_text': 'Cita a @alguien para iniciar una conversacion',
                        'new_activity_post': "Publica",
@@ -54,7 +54,7 @@ max.literals = function(language) {
 
     maxui['ca'] = {'new_activity_text': 'Escriu alguna cosa...',
                        'activity': 'activitat',
-                       'conversations': 'converses',
+                       'conversations': 'converses privades',
                        'conversations_list': 'llista de converses',
                        'new_conversation_text': 'Cita a @algu per iniciar una conversa',
                        'new_activity_post': "Publica",
