@@ -144,6 +144,8 @@
                 }
             }
 
+            maxui.settings.subscriptions = userSubscriptions
+
             // Start socket listener
 
             if (!maxui.settings.disableConversations) {
@@ -206,7 +208,6 @@
                 maxui.client.connect(maxui.settings.username, maxui.settings.oAuthToken, on_connect, on_error, '/');
             }
 
-            maxui.settings.subscriptions = userSubscriptions
             // render main interface
 
             var showCT = maxui.settings.UISection == 'conversations'
@@ -1523,7 +1524,7 @@
                                     var write_context = maxui.settings.writeContextsHashes[wc]
                                     if (subscriptions[write_context]['permissions'])
                                     {
-                                      if (subscriptions[write_context]['permissions'].write==false)
+                                      if (subscriptions[write_context]['permissions'].write!=true)
                                       {
                                           maxui.settings.canwrite = false
                                       }
