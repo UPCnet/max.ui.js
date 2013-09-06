@@ -4,6 +4,9 @@ CHANGELOG
 3.5 (unreleased)
 ----------------
 
+* Fix search box glitches in firefox #bigwin
+* Fix write permission issues
+* Fix visual glitches
 * Add a confirmation dialog before deleting activities and comments
 * Add option to delete comments
 * Change way of show trashbin to new "deletable" permission in activities 
