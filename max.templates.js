@@ -35,7 +35,7 @@ var MSTCH_MAXUI_MAIN_UI = '\
    </div>\
 \
    <div id="maxui-search" class="folded">\
-       <a id="maxui-search-toggle" class="maxui-disabled" href="#"><img src="/maxui-dev/img/transparent.gif" alt="obre-tanca" ></a>\
+       <a id="maxui-search-toggle" class="maxui-disabled" href="#" alt="obre-tanca"></a>\
        <div id="maxui-search-box">\
           <input id="maxui-search-text" type="search" data-literal="{{literals.search_text}}" class="maxui-empty maxui-text-input" value="{{literals.search_text}}" />\
           <!--<input disabled="disabled" id="maxui-search-action" type="button" class="maxui-button maxui-disabled"></input>-->\
