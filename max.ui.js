@@ -197,8 +197,8 @@
                     });
                 };
 
-                var on_error =  function() {
-                  console.log('error');
+                var on_error =  function(error) {
+                  console.log(error.body);
                 };
                 if (maxui.settings.enableAlerts)
                     maxui.client.debug = function(a){console.log(a);};
@@ -1086,9 +1086,9 @@
         // Iterate through all the conversations
         for (i=0;i<items.length;i++)
             {
+            var prediction = items[i]
             if (prediction.username != maxui.username)
                 {
-                var prediction = items[i]
                 var avatar_url = maxui.settings.avatarURLpattern.format(prediction.username)
                 var params = {
                                    username: prediction.username,
