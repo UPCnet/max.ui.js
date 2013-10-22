@@ -21,7 +21,8 @@
                         'disableConversations': false,
                         'conversationsSection': 'conversations',
                         'activitySortOrder': 'activities',
-                        'transports': undefined
+                        'transports': undefined,
+                        'domain': undefined
                         }
 
         // extend defaults with user-defined settings
@@ -35,6 +36,24 @@
         {
             maxui.settings.readContext = undefined
             maxui.settings.writeContexts = []
+        }
+
+        // Extract domain out of maxserver url, if present
+        // Matches several cases, but always assumes the domain is the last
+        // part of the path. SO, urls with subpaths, always will be seen as a
+        // domain urls, examples:
+        //
+        // http://max.upcnet.es  --> NO DOMAIN
+        // http://max.upcnet.es/  --> NO DOMAIN
+        // http://max.upcnet.es/demo  --> domain "demo"
+        // http://max.upcnet.es/demo/  --> domain "demo"
+        // http://max.upcnet.es/subpath/demo/  --> domain "demo"
+        // http://max.upcnet.es/subpath/demo  --> domain "demo"
+
+        server_regex = regex = /(?:^https?:\/\/)*(.*?)(?:\/([^\/]*)+)?\/?$/g;
+        groups = regex.exec(maxui.settings.maxServerURL)
+        if (groups[2]) {
+            maxui.settings.domain = groups[2]
         }
 
 
@@ -94,29 +113,6 @@
                                    token:    maxui.settings.oAuthToken
                                }
         this.maxClient.configure(maxclient_config)
-
-        //     // maxui.io.on('new', function(data) {
-        //     //     console.log('')
-        //     //     console.log(data)
-        //     //     maxui.io.emit('join', maxui.settings.username)
-        //     //     if (maxui.settings.UISection == 'conversations' && maxui.settings.conversationsSection == 'conversations')
-        //     //         maxui.printConversations( function() { maxui.toggleSection('conversations')
-        //     //                                                $('.maxui-message-count:first').css({'background-color':'red'})
-        //     //                                              })
-        //     // })
-
-        //     maxui.io.on('listening', function(data) {
-        //         console.log('Ready and listening {0}'.format(data.conversations))
-        //     })
-
-        //     maxui.io.on('joined', function(data) {
-        //         console.log('User {0} joined {1}'.format(data.username, data.conversation))
-        //     })
-
-        //     maxui.io.emit('join', {username:maxui.settings.username, timestamp:maxui.utils.timestamp()})
-
-
-
 
         // Get user data and start ui rendering when completed
         this.maxClient.getUserData(maxui.settings.username, function() {
@@ -205,7 +201,12 @@
 
                 maxui.client.heartbeat.outgoing = 0;
                 maxui.client.heartbeat.incoming = 0;
-                maxui.client.connect(maxui.settings.username, maxui.settings.oAuthToken, on_connect, on_error, '/');
+                var stomp_user_with_domain = ""
+                if (maxui.settings.domain) {
+                    stomp_user_with_domain += maxui.settings.domain + ':'
+                }
+                stomp_user_with_domain += maxui.settings.username
+                maxui.client.connect(stomp_user_with_domain, maxui.settings.oAuthToken, on_connect, on_error, '/');
             }
 
             // render main interface
