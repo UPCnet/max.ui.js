@@ -488,16 +488,17 @@
                   var $selected = jq('.maxui-prediction.selected')
                   var $area = jq(area)
                   var $predictive = jq('#maxui-predictive')
+                  var num_predictions = $predictive.find('.maxui-prediction').length
                   var is_predicting = jq('#maxui-predictive:visible').length>0
 
                   // Up & down
-                  if (key==40 && is_predicting) {
+                  if (key==40 && is_predicting && num_predictions>1) {
                     var $next = $selected.next()
                     $selected.removeClass('selected')
                     if ($next.length>0) $next.addClass('selected')
                     else {$selected.siblings(':first').addClass('selected')}
                   }
-                  else if (key==38 && is_predicting) {
+                  else if (key==38 && is_predicting && num_predictions>1) {
                     var $prev = $selected.prev()
                     $selected.removeClass('selected')
                     if ($prev.length>0) $prev.addClass('selected')
