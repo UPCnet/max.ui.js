@@ -208,12 +208,16 @@ margin-top:-12px;
 cursor:pointer;
 }
 
-.maxui-topright{
+.maxui-publisheddate {
 font-size:11px;
 color:  #6e6e6e;
+text-align: right;
+}
+
+.maxui-topright{
 float:right;
 padding-top:1px;
-text-align: right;
+
 }
 .maxui-enterconversation{
 float:right;
