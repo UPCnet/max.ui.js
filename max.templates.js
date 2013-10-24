@@ -214,7 +214,7 @@ var MSTCH_MAXUI_PREDICTIVE_ITEM = '\
 
 var MSTCH_MAXUI_FILTERS = '\
 {{#filters}}\
-<div class="maxui-filter maxui-{{type}}" type="{{type}}" value="{{value}}"><span>{{prepend}}{{value}}<a class="close" href=""><img src="/maxui-dev/img/x.png" alt="tanca"></a></span></div>\
+<div class="maxui-filter maxui-{{type}}" type="{{type}}" value="{{value}}"><span>{{prepend}}{{value}}<a class="maxui-close" href=""><img class="maxui-img" src="/maxui-dev/img/x.png" alt="tanca"></a></span></div>\
 {{/filters}}\
 ';
 

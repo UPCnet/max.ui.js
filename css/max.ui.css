@@ -228,7 +228,9 @@ float:right;
 padding-top:6px;
 }
 
-
+.maxui-filter .maxui-img {
+    vertical-align: inherit;
+}
 .maxui-actions a, .maxui-origin{
 display:inline;
 margin-left: 56px;
@@ -318,14 +320,14 @@ display:block;
 #maxui-search-filters .maxui-filter span.hashtag {background-color:#008564;border:1px solid #007355;}
 #maxui-search-filters .maxui-filter span.person {background-color:#837800;border:1px solid #706923;}
 
-#maxui-search-filters .maxui-filter .close{
+#maxui-search-filters .maxui-filter .maxui-close{
 padding: 0 2px 0 4px;
 opacity:.8; filter: alpha(opacity=80);
 position: relative;
 top: 3px;
 }
-#maxui-search-filters .maxui-filter .close img{width:14px; height:15px; margin:0;}
-#maxui-search-filters .maxui-filter .close:hover {opacity:1; filter: alpha(opacity=100);}
+#maxui-search-filters .maxui-filter .maxui-close img{width:14px; height:15px; margin:0;}
+#maxui-search-filters .maxui-filter .maxui-close:hover {opacity:1; filter: alpha(opacity=100);}
 
 #maxui-search-text {
 -webkit-appearance: none; -moz-appearance:none; appearance:none;
