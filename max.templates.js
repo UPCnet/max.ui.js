@@ -17,6 +17,7 @@ var MSTCH_MAXUI_MAIN_UI = '\
    <div id="maxui-conversations" style="height:0px; {{showConversations}}">\
            <div id="maxui-conversations-list" class="maxui-activities">\
                <div class="maxui-wrapper">\
+               <span id="maxui-info">{{literals.no_conversations}}<span>\
                </div>\
            </div>\
 \

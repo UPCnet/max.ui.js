@@ -208,6 +208,10 @@ margin-top:-12px;
 cursor:pointer;
 }
 
+.maxui-info {
+   font-style:italic;
+   color:#666
+}
 .maxui-publisheddate {
 font-size:11px;
 color:  #6e6e6e;

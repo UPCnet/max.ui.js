@@ -1189,8 +1189,9 @@
             conversations = conversations + maxui.templates.conversation.render(params)
 
             }
-        if (items.length==0) conversations = '<span style="font-style:italic;color:#666;">No hi ha converses<span>'
-        jq('#maxui-conversations-list .maxui-wrapper').html(conversations)
+        if (items.length>0) {
+            jq('#maxui-conversations-list .maxui-wrapper').html(conversations)
+        }
 
         if (arguments.length>1) {
           var callback = arguments[1]
