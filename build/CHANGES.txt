@@ -1,46 +1,53 @@
 CHANGELOG
 =========
 
-3.5.1 (2013-10-22)
------------------
+3.5.2 (2013-10-25)
+------------------
+ * Refactor message view css [Carles Bruguera]
+ * Fix up& down arrows in predictive list [Carles Bruguera]
+ * Fix classes to avoid collisions with ext. css [Carles Bruguera]
+ * Fix piggy code that showed empty conversation message [Carles Bruguera]
+ * Use same style in every date [Carles Bruguera]
+ * Update maxui setup script [Carles Bruguera]
 
-* Add domain:name splitting for rabbitmq authentication
+3.5.1 (2013-10-22)
+------------------
+ * Add domain:name splitting for rabbitmq authentication
 
 3.5 (unreleased)
 ----------------
-
-* Fix search box glitches in firefox #bigwin
-* Fix write permission issues
-* Fix visual glitches
-* Add a confirmation dialog before deleting activities and comments
-* Add option to delete comments
-* Change way of show trashbin to new "deletable" permission in activities 
-* Refactor to get rid of totalItems schema
+ * Fix search box glitches in firefox #bigwin
+ * Fix write permission issues
+ * Fix visual glitches
+ * Add a confirmation dialog before deleting activities and comments
+ * Add option to delete comments
+ * Change way of show trashbin to new "deletable" permission in activities 
+ * Refactor to get rid of totalItems schema
 
 3.4 (2013-06-17)
 ----------------
 
-* First STOMP version enabled
+ * First STOMP version enabled
 
 3.3.1(2013-05-21)
 -----------------
-* Changed context activity route
+ * Changed context activity route
 
 3.3 (2013-05-17)
 ----------------
-* Added activity delete button
-* Added tunnelet DELETE method in max.client.js
+ * Added activity delete button
+ * Added tunnelet DELETE method in max.client.js
 
 3.2 (2013-05-16)
 ----------------
-* Fixed classes and ids without maxui- prefix
-* Adapted to revised maxtalk protocol
-* Fixed hardcoded width on messages section
+ * Fixed classes and ids without maxui- prefix
+ * Adapted to revised maxtalk protocol
+ * Fixed hardcoded width on messages section
 
 3.1 (2013-05-02)
 ----------------
-* Added Posted conversation event
+ * Added Posted conversation event
 
 3.0 (2013-04-16)
 ----------------
-* Updated to new conversation formats
+ * Updated to new conversation formats
