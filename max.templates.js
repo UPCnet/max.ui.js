@@ -168,10 +168,10 @@ var MSTCH_MAXUI_MESSAGE = '\
 <div class="maxui-message {{origin}}" id="{{id}}">\
     <div class="maxui-activity-content">\
         <span class="maxui-avatar"><img src="{{avatarURL}}"></span>\
-        <div>\
+        <div class="maxui-balloon">\
             <p class="maxui-body">{{&text}}</p>\
+            <span class="maxui-publisheddate">{{date}}</span>\
         </div>\
-        <span class="maxui-publisheddate">{{date}}</span>\
     </div>\
     <div class="maxui-clear"></div>\
 </div>\
