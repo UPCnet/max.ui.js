@@ -1,34 +1,32 @@
 #!/bin/bash
-#echo "Compiling jquery 1.7.1"
-#java -jar closure-compiler-v1346.jar --js ../jquery-1.7.1.js --compilation_level SIMPLE_OPTIMIZATIONS --js_output_file jquery-1.7.1-min.js
-echo "Compiling max.ui.js"
-java -jar closure-compiler-v1346.jar --js ../max.ui.js --compilation_level SIMPLE_OPTIMIZATIONS --js_output_file max.ui-min.js
-echo "Compiling max.client.js"
-java -jar closure-compiler-v1346.jar --js ../max.client.js --compilation_level SIMPLE_OPTIMIZATIONS --js_output_file max.client-min.js
-echo "compiling max.templates.js"
-java -jar closure-compiler-v1346.jar --js ../max.templates.js --compilation_level SIMPLE_OPTIMIZATIONS --js_output_file max.templates-min.js
-echo "compiling max.literals.js"
-java -jar closure-compiler-v1346.jar --js ../max.literals.js --compilation_level SIMPLE_OPTIMIZATIONS --js_output_file max.literals-min.js
-echo "compiling max.utils.js"
-java -jar closure-compiler-v1346.jar --js ../max.utils.js --compilation_level SIMPLE_OPTIMIZATIONS --js_output_file max.utils-min.js
-echo "Compiling jquery.easydate.js"
-java -jar closure-compiler-v1346.jar --js ../libs/jquery.easydate.js --compilation_level SIMPLE_OPTIMIZATIONS --js_output_file jquery.easydate-min.js
-echo "Compiling hogan.js"
-java -jar closure-compiler-v1346.jar --js ../libs/hogan.js --compilation_level SIMPLE_OPTIMIZATIONS --js_output_file hogan-min.js
-echo "Compiling jquery.iecors.js"
-java -jar closure-compiler-v1346.jar --js ../libs/jquery.iecors.js --compilation_level SIMPLE_OPTIMIZATIONS --js_output_file jquery.iecors-min.js
-echo "Compiling json2.js"
-java -jar closure-compiler-v1346.jar --js ../libs/json2.js --compilation_level SIMPLE_OPTIMIZATIONS --js_output_file json2-min.js
-# echo "Compiling socket.io.js"
-# java -jar closure-compiler-v1346.jar --js ../libs/socket.io.js --compilation_level SIMPLE_OPTIMIZATIONS --js_output_file socket.io-min.js
-echo "Compiling stomp.js"
-java -jar closure-compiler-v1346.jar --js ../libs/stomp.js --compilation_level SIMPLE_OPTIMIZATIONS --js_output_file stomp-min.js
-echo "Compiling jquery.mousewheel.js"
-java -jar closure-compiler-v1346.jar --js ../libs/jquery.mousewheel-3.0.6.pack.js --compilation_level SIMPLE_OPTIMIZATIONS --js_output_file jquery.mousewheel-min.js
-echo "Compiling jquery.jscrollpane.js"
-java -jar closure-compiler-v1346.jar --js ../libs/jquery.jscrollpane.js --compilation_level SIMPLE_OPTIMIZATIONS --js_output_file jquery.jscrollpane-min.js
 
+function comment(){
+    echo "Appending $1 to $FILENAME"
+    echo "/*" >> $FILENAME
+    echo "* $1" >> $FILENAME
+    echo "*/" >> $FILENAME
+}
 
+function compile_js(){
+    echo "Compiling $1 to $2"
+    java -jar compiler.jar \
+    --js $1 \
+    --compilation_level SIMPLE_OPTIMIZATIONS \
+    --js_output_file $2
+}
+
+compile_js "../max.ui.js" "max.ui-min.js"
+compile_js "../max.client.js" "max.client-min.js"
+compile_js "../max.templates.js" "max.templates-min.js"
+compile_js "../max.literals.js" "max.literals-min.js"
+compile_js "../max.utils.js" "max.utils-min.js"
+compile_js "../libs/jquery.easydate.js" "jquery.easydate-min.js"
+compile_js "../libs/hogan.js" "hogan-min.js"
+compile_js "../libs/jquery.iecors.js" "jquery.iecors-min.js"
+compile_js "../libs/json2.js" "json2-min.js"
+compile_js "../libs/stomp.js" "stomp-min.js"
+compile_js "../libs/jquery.mousewheel-3.0.6.pack.js" "jquery.mousewheel-min.js"
+compile_js "../libs/jquery.jscrollpane.js" "jquery.jscrollpane-min.js"
 
 VERSION=`cat ../version`
 FILENAME="max.ui-$VERSION.js"
@@ -38,17 +36,6 @@ then
     rm $FILENAME
 fi
 touch $FILENAME
-
-function comment(){
-    echo "Appending $1 to $FILENAME"
-    echo "/*" >> $FILENAME
-    echo "* $1" >> $FILENAME
-    echo "*/" >> $FILENAME
-}
-
-
-#comment "jQuery 1.7.1"
-#cat jquery-1.7.1-min.js >> $FILENAME
 
 comment "MAX UI v.$VERSION"
 
@@ -69,9 +56,6 @@ cat jquery.easydate-min.js >> $FILENAME
 
 comment "hogan.js"
 cat hogan-min.js >> $FILENAME
-
-# comment "socket.io.js"
-# cat socket.io-min.js >> $FILENAME
 
 comment "jquery.mousewheel.js"
 cat jquery.mousewheel-min.js >> $FILENAME
