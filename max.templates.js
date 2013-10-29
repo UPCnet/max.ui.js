@@ -15,19 +15,32 @@ var MSTCH_MAXUI_MAIN_UI = '\
  <div id="maxui-mainpanel">\
 \
    <div id="maxui-conversations" style="height:0px; {{showConversations}}">\
+       <div id="maxui-predictive" style="display:none;"><ul></ul></div>\
+       <div id="maxui-add-people-box">\
+          <label class="maxui-label">{{literals.participants}}: <span class="maxui-count">(1/20)</span></label>\
+          <input tabindex="20", type="text" data-literal="{{literals.search_people}}" value="{{literals.search_people}}" class="maxui-text-input" id="add-user-input">\
+          <input tabindex="23" type="button" class="maxui-button maxui-add" disabled="disabled" value="{{literals.add_conversation}}"/>\
+          <div id="maxui-new-participants" style="display:none;"></div>\
+          <div id="maxui-new-displayName" style="display:none;">\
+              <label class="maxui-label">{{literals.conversation_name}}: </label>\
+              <input tabindex="21" type="text" class="maxui-simple-text-input"/>\
+          </div>\
+          <div id="maxui-new-message" style="display:none;">\
+              <label class="maxui-label">{{literals.message}}: </label>\
+              <textarea tabindex="22" class="maxui-simple-text-input"></textarea>\
+          </div>\
+       </div>\
+       <div class="maxui-wrapper">\
            <div id="maxui-conversations-list" class="maxui-activities">\
-               <div class="maxui-wrapper">\
                <span id="maxui-info">{{literals.no_conversations}}<span>\
-               </div>\
            </div>\
 \
            <div id="maxui-messages" style="{{messagesStyle}}">\
                <div id="maxui-back-conversations" class="maxui-togglebar"><a href="#">&larr; {{literals.conversations_list}}</a></div>\
                <div id="maxui-message-list">\
-                   <div class="maxui-wrapper">\
-                   </div>\
                </div>\
            </div>\
+        </div>\
    </div>\
 \
 <div id="maxui-show-conversations" class="maxui-togglebar" style="{{showConversationsToggle}}"><a href="#">{{literals.conversations}} &uarr;</a></div>\
@@ -152,7 +165,7 @@ var MSTCH_MAXUI_CONVERSATION = '\
         </div>\
         <div class="maxui-actor">\
               <a href="#"><span class="maxui-avatar"><img src="{{avatarURL}}"></span>\
-              <span class="maxui-displayname">{{partner}}</span></a>\
+              <span class="maxui-displayname">{{displayName}}</span></a>\
               <span class="maxui-message-count">{{messages}}</span>\
         </div>\
         <div>\
@@ -218,12 +231,19 @@ var MSTCH_MAXUI_FILTERS = '\
 {{/filters}}\
 ';
 
+var MSTCH_MAXUI_PARTICIPANTS = '\
+{{#persons}}\
+<div class="maxui-filter maxui-participant" type="participant" username="{{username}}"><span>{{prepend}}{{username}}<a class="maxui-close" href=""><img class="maxui-img" src="/maxui-dev/img/x.png" alt="tanca"></a></span></div>\
+{{/persons}}\
+';
+
 var templates = {
          mainUI: Hogan.compile(MSTCH_MAXUI_MAIN_UI),
         postBox: Hogan.compile(MSTCH_MAXUI_POSTBOX),
        activity: Hogan.compile(MSTCH_MAXUI_ACTIVITY),
         comment: Hogan.compile(MSTCH_MAXUI_COMMENT),
         filters: Hogan.compile(MSTCH_MAXUI_FILTERS),
+   participants: Hogan.compile(MSTCH_MAXUI_PARTICIPANTS),
    conversation: Hogan.compile(MSTCH_MAXUI_CONVERSATION),
         message: Hogan.compile(MSTCH_MAXUI_MESSAGE),
      predictive: Hogan.compile(MSTCH_MAXUI_PREDICTIVE_ITEM)

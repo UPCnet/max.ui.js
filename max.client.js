@@ -338,19 +338,22 @@ MaxClient.prototype.removeActivityComment = function(activity_id,comment_id,call
     this.DELETE(route, callback)
 }
 
-MaxClient.prototype.addMessageAndConversation = function(text,participants,callback) {
+MaxClient.prototype.addMessageAndConversation = function(params,callback) {
     query = {
         "object": {
             "objectType": "note",
-            "content": ""
+            "content": params.message
             },
         "contexts": [ { 'objectType': 'conversation',
-                        'participants': participants
+                        'participants': params.participants
                       }
                     ]
         }
 
-    query.object.content = text
+    if (params.displayName) {
+      query.contexts[0].displayName = params.displayName
+    }
+
 
     route = this.ROUTES['conversations']
     this.POST(route,query,callback)
