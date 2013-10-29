@@ -19,6 +19,9 @@ input.maxui-simple-text-input:focus {
 .maxui-activities .maxui-activity {border-top: 1px #fff solid;border-bottom: 1px #ccc solid;width:100%;padding:8px 0;padding-left:0; min-height:51px;}
 .maxui-activities .maxui-conversation {border-top: 1px #fff solid;border-bottom: 1px #ccc solid;width:100%;padding:8px 0;padding-left:0; min-height:51px;}
 #maxui-timeline .maxui-wrapper {}
+#maxui-conversations .maxui-wrapper {
+    overflow: hidden;
+}
 
 #maxui-newactivity {padding:10px; position:relative; background: #f2f2f2 url('/maxui-dev/img/bgact.gif') 0 0 repeat;}
 #maxui-newactivity:after {content: "";display: block;height: 0;clear: both;}
@@ -66,6 +69,16 @@ background-color: #ddd;
 	background: #f2f2f2 url('/maxui-dev/img/bgact.gif') 0 0 repeat;
 	border-bottom: 1px #b2b2b2 solid;
 	height:18px;
+}
+
+#maxui-back-conversations {
+    height: 41px;
+}
+
+#maxui-back-conversations h3{
+    margin: 3px 0px 7px;
+    color:#727272;
+
 }
 
 .maxui-togglebar a{
@@ -160,6 +173,7 @@ input.maxui-button[disabled] {-webkit-appearance: none;border:1px solid #b2b2b2;
 #maxui-conversations {clear:both;margin:0;overflow: hidden; padding:0 0 0 0px; background:#fff;  border-bottom:1px #ccc solid;}
 
 #maxui-conversations-list {
+    position:absolute;
 	outline:none;
     padding: 0 10px 0 10px;
 }
@@ -369,7 +383,7 @@ box-sizing:border-box;
 #maxui-newactivity .maxui-avatar {left:0; top:0; position:relative;}
 #maxui-container a img {border:0;}
 
-.maxui-avatar {position: relative;	max-width: 100%;float: left; position: absolute;left: -55px; top: 5px;}
+.maxui-avatar {position: relative; float: left; position: absolute;left: -55px; top: 5px;}
 	.maxui-avatar:before, .maxui-avatar::before {
 		content: "";
 		position: absolute;
@@ -435,7 +449,6 @@ img { -ms-interpolation-mode: bicubic; image-rendering: optimizeQuality;}
 
  #maxui-messages {
  	position:absolute;
- 	top:0px;
  	background-color: #fff;
 
  }

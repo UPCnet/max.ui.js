@@ -16,18 +16,24 @@ var MSTCH_MAXUI_MAIN_UI = '\
 \
    <div id="maxui-conversations" style="height:0px; {{showConversations}}">\
        <div id="maxui-predictive" style="display:none;"><ul></ul></div>\
-       <div id="maxui-add-people-box">\
-          <label class="maxui-label">{{literals.participants}}: <span class="maxui-count">(1/20)</span></label>\
-          <input tabindex="20", type="text" data-literal="{{literals.search_people}}" value="{{literals.search_people}}" class="maxui-text-input" id="add-user-input">\
-          <input tabindex="23" type="button" class="maxui-button maxui-add" disabled="disabled" value="{{literals.add_conversation}}"/>\
-          <div id="maxui-new-participants" style="display:none;"></div>\
-          <div id="maxui-new-displayName" style="display:none;">\
-              <label class="maxui-label">{{literals.conversation_name}}: </label>\
-              <input tabindex="21" type="text" class="maxui-simple-text-input"/>\
+       <div id="maxui-common-header">\
+          <div id="maxui-back-conversations" class="maxui-togglebar">\
+              <a href="#">&larr; {{literals.conversations_list}}</a>\
+              <h3>displayName</h3>\
           </div>\
-          <div id="maxui-new-message" style="display:none;">\
-              <label class="maxui-label">{{literals.message}}: </label>\
-              <textarea tabindex="22" class="maxui-simple-text-input"></textarea>\
+          <div id="maxui-add-people-box">\
+              <label class="maxui-label">{{literals.participants}}: <span class="maxui-count">(1/20)</span></label>\
+              <input tabindex="20", type="text" data-literal="{{literals.search_people}}" value="{{literals.search_people}}" class="maxui-text-input" id="add-user-input">\
+              <input tabindex="23" type="button" class="maxui-button maxui-add" disabled="disabled" value="{{literals.add_conversation}}"/>\
+              <div id="maxui-new-participants" style="display:none;"></div>\
+              <div id="maxui-new-displayName" style="display:none;">\
+                  <label class="maxui-label">{{literals.conversation_name}}: </label>\
+                  <input tabindex="21" type="text" class="maxui-simple-text-input"/>\
+              </div>\
+              <div id="maxui-new-message" style="display:none;">\
+                  <label class="maxui-label">{{literals.message}}: </label>\
+                  <textarea tabindex="22" class="maxui-simple-text-input"></textarea>\
+              </div>\
           </div>\
        </div>\
        <div class="maxui-wrapper">\
@@ -36,7 +42,6 @@ var MSTCH_MAXUI_MAIN_UI = '\
            </div>\
 \
            <div id="maxui-messages" style="{{messagesStyle}}">\
-               <div id="maxui-back-conversations" class="maxui-togglebar"><a href="#">&larr; {{literals.conversations_list}}</a></div>\
                <div id="maxui-message-list">\
                </div>\
            </div>\
@@ -157,7 +162,7 @@ var MSTCH_MAXUI_ACTIVITY = '\
 ';
 
 var MSTCH_MAXUI_CONVERSATION = '\
-<div class="maxui-conversation" id="{{id}}">\
+<div class="maxui-conversation" id="{{id}}" data-displayname="{{displayName}}">\
     <div class="maxui-activity-content">\
         <div class="maxui-topright">\
             <span class="maxui-publisheddate">{{date}}</span>\

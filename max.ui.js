@@ -388,7 +388,8 @@
             event.preventDefault()
             window.status=''
             var conversation_hash = jq(event.target).closest('.maxui-conversation').attr('id')
-            maxui.settings.currentConversation = conversation_hash
+            var conversation_displayName = jq(event.target).closest('.maxui-conversation').attr('data-displayname')
+            maxui.settings.currentConversation = {'hash': conversation_hash, 'displayName': conversation_displayName}
             maxui.printMessages(conversation_hash, function() { maxui.toggleMessages('messages') })
             })
 
@@ -616,7 +617,7 @@
                         }
                     }
                     else {
-                      maxui.sendMessage(text, maxui.settings.currentConversation)
+                      maxui.sendMessage(text, maxui.settings.currentConversation.hash)
 
                     }
 
@@ -1103,9 +1104,14 @@
         var $messages = jq('#maxui-messages')
         var $message_list = jq('#maxui-message-list')
         var $postbox = jq('#maxui-newactivity-box textarea')
+        var $back_conversations = $conversations.find('#maxui-back-conversations')
+        var $addpeople = $conversations.find('#maxui-add-people-box')
 
         if (sectionToEnable=='messages')
         {
+            $back_conversations.show()
+            $addpeople.hide()
+            $back_conversations.find('h3').text(maxui.settings.currentConversation.displayName)
             var widgetWidth = $conversations_list.width()+11 // +2 To include border
             var height = 320
             //$conversations_list.jScrollPane().data('jsp').destroy()
@@ -1122,6 +1128,8 @@
             $postbox.val(literal).attr('data-literal', literal)
         }
         else {
+            $back_conversations.hide()
+            $addpeople.show()
             var widgetWidth = $conversations_list.width()+11 // +2 To include border
             $conversations_list.animate({'margin-left':0 }, 400)
             //$message_list.jScrollPane().data('jsp').destroy()
@@ -1142,9 +1150,10 @@
         var $timeline = jq('#maxui-timeline')
         var $timeline_wrapper = jq('#maxui-timeline .maxui-wrapper')
         var $conversations = jq('#maxui-conversations')
+        var $back_conversations = $conversations.find('#maxui-back-conversations')
         var $conversations_user_input = $conversations.find('input#add-user-input')
         var $conversations_list = jq('#maxui-conversations #maxui-conversations-list')
-        var $conversations_list_wrapper = jq('#maxui-conversations #maxui-conversations-list .maxui-wrapper')
+        var $conversations_wrapper = jq('#maxui-conversations .maxui-wrapper')
         var $postbutton = jq('#maxui-newactivity-box .maxui-button')
         var $conversationsbutton = jq('#maxui-show-conversations')
         var $timelinebutton = jq('#maxui-show-timeline')
@@ -1156,13 +1165,15 @@
           //$conversations_list.width($conversations.width())
           var height = 320
 
+          $back_conversations.hide()
           $conversations_user_input.focus()
           $conversations.animate({'height':height}, 400, function(event) {
-            $conversations_list.height(height)
-            if (jq('#maxui-conversations .jspPane').length==0) {
+            $conversations_wrapper.height(height-45)
+/*            if (jq('#maxui-conversations .jspPane').length==0) {
                 //$conversations_list.jScrollPane({'maintainPosition':true, 'stickToBottom': true})
               }
-          })
+*/          })
+          $conversations_list.width(jq('#maxui-container').width() - 20)
           $timeline.animate({'height':0}, 400)
           $search.hide(400)
           maxui.settings.UISection='conversations'
@@ -1229,7 +1240,7 @@
                                                 $('.maxui-message-count:first').css({'background-color':'red'})
                                             })
                                    })
-                                   maxui.settings.currentConversation = chash
+                                   maxui.settings.currentConversation.hash = chash
                             })
                        })
         } else {
