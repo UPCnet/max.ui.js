@@ -23,11 +23,13 @@
                         'activitySortOrder': 'activities',
                         'transports': undefined,
                         'domain': undefined,
-                        'maximumConversations': 20,
-                        'scrollbar': {
-                            'width': 10
-                           }
+                        'maximumConversations': 20
                         }
+
+        maxui.scrollbar = {
+            dragging: false,
+            width: 10
+        }
 
         // extend defaults with user-defined settings
         maxui.settings = jq.extend(defaults,options)
@@ -222,7 +224,7 @@
             var showTL = maxui.settings.UISection == 'timeline'
             var toggleTL = maxui.settings.disableTimeline == false && !showTL
             var toggleCT = maxui.settings.disableConversations == false && !showCT
-            var containerWidth = maxui.width() - maxui.settings.scrollbar.width
+            var containerWidth = maxui.width() - maxui.scrollbar.width
 
             var params = {
                                   username: maxui.settings.username,
@@ -251,6 +253,7 @@
     jq.fn.bindEvents =function() {
 
         maxui = this
+
         //Assign click to loadmore
         jq('#maxui-more-activities .maxui-button').click(function (event) {
             event.preventDefault()
@@ -1114,6 +1117,7 @@
 
         var $conversations = jq('#maxui-conversations')
         var $conversations_list = jq('#maxui-conversations-list')
+        var $conversations_wrapper = $conversations.find('.maxui-wrapper')
         var $messages = jq('#maxui-messages')
         var $message_list = jq('#maxui-message-list')
         var $postbox = jq('#maxui-newactivity-box textarea')
@@ -1123,38 +1127,46 @@
         var widgetWidth = maxui.width() // Real width of the widget, without the two 1-pixel borders
         var sectionHorizontalPadding = 20
         var widgetBorder = 2
-        var widgetScrollbar = maxui.settings.scrollbar.width
-        var sectionsWidth = widgetWidth - maxui.settings.scrollbar.width - widgetBorder
+        var widgetScrollbar = maxui.scrollbar.width
+        var sectionsWidth = widgetWidth - widgetScrollbar - widgetBorder
         var height = 320
 
 
         if (sectionToEnable=='messages')
         {
-            $addpeople.animate({'height': 0, 'padding-top':0, 'padding-bottom':0, 'border-bottom':0}, 400)
+            $addpeople.animate({'height': 0, 'padding-top':0, 'padding-bottom':0,}, 400, function(event) {
+                $addpeople.css({'border-color': 'transparent'})
+            })
             $common_header.find('h3').text(maxui.settings.currentConversation.displayName)
             $conversations_list.animate({'margin-left':sectionsWidth * (-1) }, 400)
             $messages.animate({'left':0}, 400, function(event) {
-                $message_list.height(height)
+                $conversations_wrapper.height(height - 31 - 45)
+                $conversations_wrapper.find('.dragdealer').css({height:height-31-45})
+                maxui.scrollbar_enable(sectionToEnable)
                 $common_header.animate({'height':45}, 100)
             })
             $messages.width(sectionsWidth)
             maxui.settings.conversationsSection='messages'
             var literal = maxui.settings.literals.new_activity_text
             $postbox.val(literal).attr('data-literal', literal)
+
         }
         else {
             $common_header.animate({'height':0}, 100, function(event) {
-                $addpeople.animate({'height': 19, 'padding-top':6, 'padding-bottom':6, 'border-bottom':1}, 400, function(event) {
+                $addpeople.css({'border-color': '#ccc'})
+                $addpeople.animate({'height': 19, 'padding-top':6, 'padding-bottom':6}, 400, function(event) {
                     $addpeople.removeAttr('style')
                 })
             })
-
+            $conversations_wrapper.height(height - 31)
+            $conversations_wrapper.find('.dragdealer').css({height:height-31})
             var widgetWidth = $conversations_list.width()+11 // +2 To include border
             $conversations_list.animate({'margin-left':0 }, 400)
             $messages.animate({'left':widgetWidth}, 400)
             maxui.settings.conversationsSection='conversations'
             var literal = maxui.settings.literals.new_conversation_text
             $postbox.val(literal).attr('data-literal', literal)
+            maxui.scrollbar_enable(sectionToEnable)
         }
     }
 
@@ -1181,7 +1193,7 @@
         var widgetWidth = maxui.width() // Real width of the widget, without the two 1-pixel borders
         var sectionPadding = 10
         var widgetBorder = 1
-        var sectionsWidth = widgetWidth - maxui.settings.scrollbar.width - (sectionPadding * 2) - (widgetBorder * 2)
+        var sectionsWidth = widgetWidth - maxui.scrollbar.width - (sectionPadding * 2) - (widgetBorder * 2)
         var height = 320
 
         if (sectionToEnable=='conversations')
@@ -1194,8 +1206,8 @@
 
           $common_header.animate({'height':0}, 400)
           $conversations_user_input.focus()
-          $conversations.animate({'height':height}, 400, function(event) {
-            $conversations_wrapper.height(height-45)
+          $conversations.animate({'height':height-31}, 400, function(event) {
+            $conversations_wrapper.height(height - 31)
           })
           $conversations_list.width(sectionsWidth)
           $timeline.animate({'height':0}, 400)
@@ -1204,6 +1216,11 @@
           $postbutton.val(maxui.settings.literals.new_message_post)
           $conversationsbutton.hide()
           if (!maxui.settings.disableTimeline) $timelinebutton.show()
+          $conversations_wrapper.find('.dragdealer').css({height:height-31})
+          maxui.scrollbar_enable(sectionToEnable)
+
+
+
 
         }
         else
@@ -1226,6 +1243,53 @@
         }
 
         }
+
+
+
+
+    /*
+    *    Returns the current settings of the plugin
+    */
+    jq.fn.scrollbar_enable = function(section) {
+        maxui = this
+
+        var $conversations_list = jq('#maxui-conversations #maxui-conversations-list')
+        var $conversations_wrapper = jq('#maxui-conversations .maxui-wrapper')
+        var $messages = jq('#maxui-messages')
+
+        var mask = $conversations_wrapper[0]
+
+        if (section == 'conversations') {
+
+           var content = $conversations_list[0]
+           maxui.scrollbar.dragdealer = new Dragdealer('maxui-conversations-scrollbar', {
+               horizontal: false,
+               vertical: true,
+               steps: $conversations_list.find('.maxui-conversation').length,
+               snap:true,
+               animationCallback: function(x, y) {
+                   var margin = y * (content.offsetHeight - mask.offsetHeight);
+                   content.style.marginTop = String(-margin) + 'px';
+               }
+           })
+        } else {
+           var content = $messages[0]
+           maxui.scrollbar.dragdealer = new Dragdealer('maxui-conversations-scrollbar', {
+               horizontal: false,
+               vertical: true,
+               //steps:10,
+               //snap:true,
+               yPrecision: content.offsetHeight,
+               animationCallback: function(x, y) {
+                   var margin = y * (content.offsetHeight - mask.offsetHeight);
+                   content.style.marginTop = String(-margin) + 'px';
+               }
+           })
+        }
+
+    }
+
+
 
     /*
     *    Returns the current settings of the plugin

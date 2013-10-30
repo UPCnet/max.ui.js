@@ -22,6 +22,11 @@ var MSTCH_MAXUI_MAIN_UI = '\
           </div>\
        </div>\
        <div class="maxui-wrapper">\
+           <div id="maxui-scrollbar">\
+              <div id="maxui-conversations-scrollbar" class="dragdealer">\
+                  <div class="maxui-dragger handle" style="top:0px;"/>\
+              </div>\
+           </div>\
            <div id="maxui-conversations-list" class="maxui-activities">\
                <span id="maxui-info">{{literals.no_conversations}}<span>\
            </div>\

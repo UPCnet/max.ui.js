@@ -21,6 +21,7 @@ input.maxui-simple-text-input:focus {
 #maxui-timeline .maxui-wrapper {}
 #maxui-conversations .maxui-wrapper {
     overflow: hidden;
+    position:relative;
 }
 
 #maxui-newactivity {padding:10px; position:relative; background: #f2f2f2 url('/maxui-dev/img/bgact.gif') 0 0 repeat;}
@@ -952,4 +953,31 @@ top: 3px;
 
 #maxui-common-header {
     overflow:hidden;
+}
+
+#maxui-scrollbar {
+    position:absolute;
+    top:0px;
+    right:0px;
+    width:10px;
+    height: 100%;
+    border-left:1px solid #ccc;
+    z-index: 2;
+}
+
+#maxui-conversations-scrollbar {
+    position:relative;
+}
+
+#maxui-scrollbar .maxui-dragger {
+    position:absolute;
+    background: #bbb;
+    cursor: pointer;
+    -webkit-transition: .1s ease-in-out;
+    -moz-transition: .1s ease-in-out;
+    transition: .1s ease-in-out;
+    margin: 0px 1px;
+    width:8px;
+    height:20px;
+    -moz-border-radius: 8px; -webkit-border-radius: 8px; border-radius: 8px;
 }
