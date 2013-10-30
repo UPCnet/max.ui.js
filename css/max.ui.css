@@ -26,7 +26,7 @@ input.maxui-simple-text-input:focus {
 #maxui-newactivity {padding:10px; position:relative; background: #f2f2f2 url('/maxui-dev/img/bgact.gif') 0 0 repeat;}
 #maxui-newactivity:after {content: "";display: block;height: 0;clear: both;}
 
-#maxui-predictive {
+.maxui-predictive {
 width:200px;
 background-color: white;
 margin-top:-32px;
@@ -37,7 +37,7 @@ border: 1px #b2b2b2 solid;;
 -moz-border-radius: 3px; -webkit-border-radius: 3px; border-radius: 3px;
 }
 
-#maxui-predictive ul {
+.maxui-predictive ul {
 
 list-style: none;
 margin:0px;
@@ -813,9 +813,8 @@ padding: 8px 10px 12px 0px;
 
 
 #maxui-add-people-box{
-    min-height: 29px;
     border-bottom:1px #ccc solid;
-    padding:10px 10px 5px 10px;
+    padding:6px 10px 5px 10px;
     background: #f2f2f2 url('/maxui-dev/img/bgact.gif') 0 0 repeat;
     position:relative;
 }
@@ -836,6 +835,7 @@ padding: 8px 10px 12px 0px;
     border:none;
     background-color: transparent;
     color:#929292;
+    width:250px;
 
 
 }
@@ -846,7 +846,7 @@ padding: 8px 10px 12px 0px;
     box-shadow: none !important;
     outline: 0;}
 
-#maxui-conversations #maxui-predictive {
+#maxui-conversation-predictive {
     margin-top: 35px;
     margin-left: 130px;
 }
@@ -950,4 +950,6 @@ top: 3px;
     border: none !important;
 }
 
-#maxui-new-displayName
+#maxui-common-header {
+    overflow:hidden;
+}
