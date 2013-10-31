@@ -15,7 +15,7 @@ function compile_js(){
     --js_output_file $2
 }
 
-compile_js "../max.ui.js" "max.ui-min.js" "ADVANCED_OPTIMIZATIONS"
+compile_js "../max.ui.js" "max.ui-min.js" "SIMPLE_OPTIMIZATIONS"
 compile_js "../max.client.js" "max.client-min.js" "ADVANCED_OPTIMIZATIONS"
 compile_js "../max.templates.js" "max.templates-min.js" "SIMPLE_OPTIMIZATIONS"
 compile_js "../max.literals.js" "max.literals-min.js" "SIMPLE_OPTIMIZATIONS"
