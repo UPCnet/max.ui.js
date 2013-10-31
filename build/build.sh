@@ -25,7 +25,6 @@ compile_js "../libs/hogan.js" "hogan-min.js" "ADVANCED_OPTIMIZATIONS"
 compile_js "../libs/jquery.iecors.js" "jquery.iecors-min.js" "SIMPLE_OPTIMIZATIONS"
 compile_js "../libs/json2.js" "json2-min.js" "ADVANCED_OPTIMIZATIONS"
 compile_js "../libs/stomp.js" "stomp-min.js" "ADVANCED_OPTIMIZATIONS"
-compile_js "../libs/jquery.mousewheel-3.0.6.pack.js" "jquery.mousewheel-min.js" "ADVANCED_OPTIMIZATIONS"
 
 VERSION=`cat ../version`
 FILENAME="max.ui-$VERSION.js"
@@ -57,10 +56,7 @@ comment "hogan.js"
 cat hogan-min.js >> $FILENAME
 
 comment "jquery.mousewheel.js"
-cat jquery.mousewheel-min.js >> $FILENAME
-
-comment "jquery.jscrollpane.js"
-cat jquery.jscrollpane-min.js >> $FILENAME
+cat ../libs/jquery.mousewheel-3.0.6.pack.js >> $FILENAME
 
 comment "max.templates.js"
 cat max.templates-min.js >> $FILENAME
