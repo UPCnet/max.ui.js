@@ -84,6 +84,12 @@ background-color: #ddd;
 
 }
 
+.maxui-togglebar:before, .maxui-togglebar:after {
+    box-sizing: content-box;
+    -webkit-box-sizing: content-box;
+    -moz-box-sizing: content-box;
+}
+
 .maxui-togglebar a{
     color:#929292 !important;
     font-weight: bold;
