@@ -20,6 +20,7 @@
                         'disableTimeline': false,
                         'disableConversations': false,
                         'conversationsSection': 'conversations',
+                        'currentConversationSection': 'conversations',
                         'activitySortOrder': 'activities',
                         'transports': undefined,
                         'domain': undefined,
@@ -169,20 +170,10 @@
                 ws = new SockJS(maxui.settings.maxTalkURL);
                 maxui.client = Stomp.over(ws);
 
-                var on_connect = function(x) {
+                 var on_connect = function(x) {
                     for (co=0;co<maxui.conversations.length;co++) {
                         conversation_id = maxui.conversations[co]
-                        maxui.client.subscribe('/exchange/{0}'.format(conversation_id), function(d) {
-                            data = JSON.parse(d.body)
-                            console.log('New message from user {0} on {1}'.format(data.username, data.conversation))
-                            if (maxui.settings.UISection == 'conversations' && maxui.settings.conversationsSection == 'messages')
-                                self.maxui.printMessages(data.conversation, function() {maxui.toggleMessages('messages')})
-                            else (maxui.settings.UISection == 'conversations' && maxui.settings.conversationsSection == 'conversations')
-                                maxui.printConversations( function() {
-                                    maxui.toggleSection('conversations')
-                                    $('.maxui-message-count:first').css({'background-color':'red'})
-                                })
-                        });
+                        maxui.client.subscribe('/exchange/{0}'.format(conversation_id), function(d) {maxui.insertMessage(d)})
                     }
                     maxui.client.subscribe('/exchange/new/{0}'.format(maxui.settings.username), function(d) {
                         data = JSON.parse(d.body)
@@ -190,18 +181,7 @@
                             maxui.printConversations( function() { maxui.toggleSection('conversations')
                                                                    $('.maxui-message-count:first').css({'background-color':'red'})
                                                                  })
-
-                        maxui.client.subscribe('/exchange/{0}'.format(data.conversation), function(d2) {
-                            data = JSON.parse(d.body)
-                            console.log('New message from user {0} on {1}'.format(data.username, data.conversation))
-                            if (maxui.settings.UISection == 'conversations' && maxui.settings.conversationsSection == 'messages')
-                                self.maxui.printMessages(data.conversation, function() {maxui.toggleMessages('messages')})
-                            else (maxui.settings.UISection == 'conversations' && maxui.settings.conversationsSection == 'conversations')
-                                maxui.printConversations( function() {
-                                    maxui.toggleSection('conversations')
-                                    $('.maxui-message-count:first').css({'background-color':'red'})
-                                })
-                        });
+                        maxui.client.subscribe('/exchange/{0}'.format(data.conversation), function(d) {maxui.insertMessage(d)})
                     });
                 };
 
@@ -253,13 +233,48 @@
     };
 
 
+    jq.fn.insertMessage = function(d) {
+        maxui = this
+
+        data = JSON.parse(d.body)
+        console.log('New message from user {0} on {1}'.format(data.username, data.conversation))
+        if (maxui.settings.UISection == 'conversations' && maxui.settings.conversationsSection == 'messages') {
+            maxui.printMessages(data.conversation, function() {
+                maxui.scrollbar.setContentPosition(100)
+            })
+
+        }
+        else if (maxui.settings.UISection == 'conversations' && maxui.settings.conversationsSection == 'conversations')
+            maxui.printConversations( function() {
+                maxui.toggleSection('conversations')
+                $('.maxui-message-count:first').css({'background-color':'red'})
+            })
+    }
+
     jq.fn.bindEvents =function() {
 
         maxui = this
 
-
         maxui.scrollbar.$dragger = jq('.maxui-dragger')
         maxui.scrollbar.$bar = jq('#maxui-scrollbar')
+
+        jq('#maxui-conversations').on('mousewheel', function(event, delta, deltaX, deltaY) {
+            event.preventDefault()
+            event.stopPropagation()
+
+            if (maxui.scrollbar.enabled()) {
+                var movable_height = maxui.scrollbar.$target.height() - maxui.scrollbar.maxtop - maxui.scrollbar.handle.height
+                var actual_margin = parseInt(maxui.scrollbar.$target.css('margin-top'))
+                var new_margin = actual_margin + (deltaY * -1 * 30)
+                if (new_margin > 0) new_margin = 0
+                if (new_margin < (movable_height * -1)) new_margin = movable_height * -1
+
+                maxui.scrollbar.$target.css({'margin-top': new_margin})
+                var new_margin = new_margin * -1
+                var relative_pos = ( new_margin * 100 ) / movable_height
+                maxui.scrollbar.setDraggerPosition(relative_pos)
+            }
+        })
 
         maxui.scrollbar.setHeight = function(height) {
             var wrapper_top = $('#maxui-conversations .maxui-wrapper').offset().top - maxui.offset().top -1
@@ -669,22 +684,8 @@
                 {
 
                 if (maxui.settings.UISection=='timeline') {
-                    if (match) {
-                        // strip mentions at the start of line
-                        var stripped = text.replace( matchMention,'')
-                        options = {
-                            participants: [match[1]],
-                            message: stripped
-                        }
-                        maxui.createConversationAndSendMessage(options, function() {
-                            jq('#maxui-newactivity textarea').val('')
-                            jq('#maxui-newactivity .maxui-button').attr('disabled','disabled')
-                        })
-                    }
-                    else {
-                        maxui.sendActivity(text)
-                        jq('#maxui-search').toggleClass('folded',true)
-                    }
+                    maxui.sendActivity(text)
+                    jq('#maxui-search').toggleClass('folded',true)
                 }
 
                 else if (maxui.settings.UISection=='conversations') {
@@ -1199,7 +1200,7 @@
         var height = 320
 
 
-        if (sectionToEnable=='messages')
+        if (sectionToEnable=='messages' && sectionToEnable!=maxui.settings.conversationsSection)
         {
             $addpeople.animate({'height': 0, 'padding-top':0, 'padding-bottom':0,}, 400, function(event) {
                 $addpeople.css({'border-color': 'transparent'})
@@ -1220,7 +1221,7 @@
             $postbox.val(literal).attr('data-literal', literal)
 
         }
-        else {
+        if (sectionToEnable=='conversations' && sectionToEnable!=maxui.settings.conversationsSection) {
             $common_header.animate({'height':0}, 100, function(event) {
                 $addpeople.css({'border-color': '#ccc'})
                 maxui.scrollbar.setHeight(height-31)
@@ -1266,8 +1267,9 @@
         var sectionsWidth = widgetWidth - maxui.scrollbar.width - (sectionPadding * 2) - (widgetBorder * 2)
         var height = 320
 
-        if (sectionToEnable=='conversations')
+        if (sectionToEnable=='conversations' && maxui.settings.currentConversationSection=='conversations')
         {
+
           //$conversations.width($conversations.width())
           //$conversations_list.width($conversations.width())
           var height = 320
@@ -1289,7 +1291,7 @@
           maxui.scrollbar.setHeight(height-31)
           maxui.scrollbar.setTarget('#maxui-conversations #maxui-conversations-list')
         }
-        else
+        if (sectionToEnable=='timeline')
         {
           $timeline.show()
           var timeline_height = $timeline_wrapper.height()
@@ -1301,6 +1303,7 @@
               $addpeople.hide()
           })
           $search.show(400)
+          //maxui.settings.currentConversationSection=='conversations'
           maxui.settings.UISection='timeline'
           $postbutton.val(maxui.settings.literals.new_activity_post)
           if (!maxui.settings.disableConversations) $conversationsbutton.show()
@@ -1346,17 +1349,7 @@
 
                             maxui.printMessages(chash, function() {
                                    maxui.toggleMessages('messages')
-                                   id = maxui.client.subscribe('/exchange/{0}'.format(chash), function(d) {
-                                        data = JSON.parse(d.body)
-                                        console.log('New message from user {0} on {1}'.format(data.username, data.conversation))
-                                        if (maxui.settings.UISection == 'conversations' && maxui.settings.conversationsSection == 'messages')
-                                            self.maxui.printMessages(data.conversation, function() {maxui.toggleMessages('messages')})
-                                        else (maxui.settings.UISection == 'conversations' && maxui.settings.conversationsSection == 'conversations')
-                                            maxui.printConversations( function() {
-                                                maxui.toggleSection('conversations')
-                                                $('.maxui-message-count:first').css({'background-color':'red'})
-                                            })
-                                   })
+                                   id = maxui.client.subscribe('/exchange/{0}'.format(chash), function(d) {maxui.insertMessage(d)})
                             })
                        })
         } else {
@@ -1380,9 +1373,7 @@
         maxui = this
         var func_params = []
         func_params.push(text)
-
         func_params.push(chash)
-
         func_params.push( function() {
                             jq('#maxui-newactivity textarea').val('')
                             jq('#maxui-newactivity .maxui-button').attr('disabled','disabled')
