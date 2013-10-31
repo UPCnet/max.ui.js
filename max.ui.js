@@ -28,7 +28,10 @@
 
         maxui.scrollbar = {
             dragging: false,
-            width: 10
+            width: 10,
+            handle: {
+                height: 20
+            }
         }
 
         // extend defaults with user-defined settings
@@ -253,6 +256,70 @@
     jq.fn.bindEvents =function() {
 
         maxui = this
+
+
+        maxui.scrollbar.$dragger = jq('.maxui-dragger')
+        maxui.scrollbar.$bar = jq('#maxui-scrollbar')
+
+        maxui.scrollbar.setHeight = function(height) {
+            var wrapper_top = $('#maxui-conversations .maxui-wrapper').offset().top - maxui.offset().top -1
+            console.log(wrapper_top)
+            maxui.scrollbar.$bar.css({'height':height, 'top':wrapper_top})
+            maxui.scrollbar.maxtop = height - maxui.scrollbar.handle.height -2
+        }
+        maxui.scrollbar.setTarget = function(selector) {
+            maxui.scrollbar.$target = jq(selector)
+        }
+        maxui.scrollbar.setDraggerPosition = function(relative_pos) {
+            margintop = (maxui.scrollbar.maxtop * relative_pos) / 100
+            maxui.scrollbar.$dragger.css({'margin-top': margintop})
+        }
+        maxui.scrollbar.setContentPosition = function(relative_pos) {
+            if (maxui.scrollbar.enabled()) {
+                var movable_height = maxui.scrollbar.$target.height() - maxui.scrollbar.maxtop - maxui.scrollbar.handle.height
+                var margintop = (movable_height * relative_pos) / 100
+                maxui.scrollbar.$target.css({'margin-top': margintop * -1})
+                maxui.scrollbar.setDraggerPosition(relative_pos)
+            } else {
+                maxui.scrollbar.$target.css({'margin-top': ''})
+                maxui.scrollbar.setDraggerPosition(0)
+            }
+        }
+        maxui.scrollbar.enabled = function() {
+            return maxui.scrollbar.$target.height() > maxui.scrollbar.maxtop
+        }
+
+        jq(document).on('mousemove' ,function(event) {
+
+            if (maxui.scrollbar.dragging) {
+                event.stopPropagation()
+                event.preventDefault()
+
+                // drag only if target content is taller than scrollbar
+                if (maxui.scrollbar.enabled()) {
+
+                    // Calculate dragger position, constrained to actual limits
+                    var margintop = event.clientY - maxui.scrollbar.$bar.offset().top
+                    if (margintop < 0) margintop = 0
+                    if (margintop >= maxui.scrollbar.maxtop) margintop = maxui.scrollbar.maxtop
+
+                    // Calculate dragger position relative to 100 and move content
+                    var relative_position = (margintop * 100) / maxui.scrollbar.maxtop
+                    maxui.scrollbar.setContentPosition(relative_position)
+                }
+            }
+        })
+
+        jq(document.body).on('mousedown', '.maxui-dragger', function(event) {
+            event.stopPropagation()
+            event.preventDefault()
+            maxui.scrollbar.dragging = true
+        })
+
+        jq(document).on('mouseup', function(event) {
+            maxui.scrollbar.dragging = false
+        })
+
 
         //Assign click to loadmore
         jq('#maxui-more-activities .maxui-button').click(function (event) {
@@ -1141,9 +1208,11 @@
             $conversations_list.animate({'margin-left':sectionsWidth * (-1) }, 400)
             $messages.animate({'left':0}, 400, function(event) {
                 $conversations_wrapper.height(height - 31 - 45)
-                $conversations_wrapper.find('.dragdealer').css({height:height-31-45})
-                maxui.scrollbar_enable(sectionToEnable)
-                $common_header.animate({'height':45}, 100)
+                $common_header.animate({'height':45}, 100, function(event) {
+                    maxui.scrollbar.setHeight(height-31-45)
+                    maxui.scrollbar.setTarget('#maxui-conversations #maxui-messages')
+                    maxui.scrollbar.setContentPosition(100)
+                })
             })
             $messages.width(sectionsWidth)
             maxui.settings.conversationsSection='messages'
@@ -1154,19 +1223,20 @@
         else {
             $common_header.animate({'height':0}, 100, function(event) {
                 $addpeople.css({'border-color': '#ccc'})
+                maxui.scrollbar.setHeight(height-31)
+                maxui.scrollbar.setTarget('#maxui-conversations #maxui-conversations-list')
+                maxui.scrollbar.setContentPosition(0)
                 $addpeople.animate({'height': 19, 'padding-top':6, 'padding-bottom':6}, 400, function(event) {
                     $addpeople.removeAttr('style')
                 })
             })
             $conversations_wrapper.height(height - 31)
-            $conversations_wrapper.find('.dragdealer').css({height:height-31})
             var widgetWidth = $conversations_list.width()+11 // +2 To include border
             $conversations_list.animate({'margin-left':0 }, 400)
             $messages.animate({'left':widgetWidth}, 400)
             maxui.settings.conversationsSection='conversations'
             var literal = maxui.settings.literals.new_conversation_text
             $postbox.val(literal).attr('data-literal', literal)
-            maxui.scrollbar_enable(sectionToEnable)
         }
     }
 
@@ -1216,12 +1286,8 @@
           $postbutton.val(maxui.settings.literals.new_message_post)
           $conversationsbutton.hide()
           if (!maxui.settings.disableTimeline) $timelinebutton.show()
-          $conversations_wrapper.find('.dragdealer').css({height:height-31})
-          maxui.scrollbar_enable(sectionToEnable)
-
-
-
-
+          maxui.scrollbar.setHeight(height-31)
+          maxui.scrollbar.setTarget('#maxui-conversations #maxui-conversations-list')
         }
         else
         {
@@ -1243,52 +1309,6 @@
         }
 
         }
-
-
-
-
-    /*
-    *    Returns the current settings of the plugin
-    */
-    jq.fn.scrollbar_enable = function(section) {
-        maxui = this
-
-        var $conversations_list = jq('#maxui-conversations #maxui-conversations-list')
-        var $conversations_wrapper = jq('#maxui-conversations .maxui-wrapper')
-        var $messages = jq('#maxui-messages')
-
-        var mask = $conversations_wrapper[0]
-
-        if (section == 'conversations') {
-
-           var content = $conversations_list[0]
-           maxui.scrollbar.dragdealer = new Dragdealer('maxui-conversations-scrollbar', {
-               horizontal: false,
-               vertical: true,
-               steps: $conversations_list.find('.maxui-conversation').length,
-               snap:true,
-               animationCallback: function(x, y) {
-                   var margin = y * (content.offsetHeight - mask.offsetHeight);
-                   content.style.marginTop = String(-margin) + 'px';
-               }
-           })
-        } else {
-           var content = $messages[0]
-           maxui.scrollbar.dragdealer = new Dragdealer('maxui-conversations-scrollbar', {
-               horizontal: false,
-               vertical: true,
-               //steps:10,
-               //snap:true,
-               yPrecision: content.offsetHeight,
-               animationCallback: function(x, y) {
-                   var margin = y * (content.offsetHeight - mask.offsetHeight);
-                   content.style.marginTop = String(-margin) + 'px';
-               }
-           })
-        }
-
-    }
-
 
 
     /*
