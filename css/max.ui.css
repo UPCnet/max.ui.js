@@ -76,9 +76,11 @@ background-color: #ddd;
     height: 41px;
 }
 
-#maxui-back-conversations h3{
+#maxui-back-conversations h3.maxui-title{
     margin: 3px 0px 7px;
     color:#727272;
+    font-size: 18px;
+    font-weight: bold;
 
 }
 

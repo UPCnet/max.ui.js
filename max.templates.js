@@ -18,7 +18,7 @@ var MSTCH_MAXUI_MAIN_UI = '\
        <div id="maxui-common-header" style="height:0px;">\
           <div id="maxui-back-conversations" class="maxui-togglebar">\
               <a href="#">&larr; {{literals.conversations_list}}</a>\
-              <h3>displayName</h3>\
+              <h3 class="maxui-title">displayName</h3>\
           </div>\
        </div>\
        <div class="maxui-wrapper">\
