@@ -11,20 +11,20 @@ function compile_js(){
     echo "Compiling $1 to $2"
     java -jar compiler.jar \
     --js $1 \
-    --compilation_level $3 \
+    --compilation_level SIMPLE_OPTIMIZATIONS \
     --js_output_file $2
 }
 
-compile_js "../max.ui.js" "max.ui-min.js" "SIMPLE_OPTIMIZATIONS"
-compile_js "../max.client.js" "max.client-min.js" "ADVANCED_OPTIMIZATIONS"
-compile_js "../max.templates.js" "max.templates-min.js" "SIMPLE_OPTIMIZATIONS"
-compile_js "../max.literals.js" "max.literals-min.js" "SIMPLE_OPTIMIZATIONS"
-compile_js "../max.utils.js" "max.utils-min.js" "SIMPLE_OPTIMIZATIONS"
-compile_js "../libs/jquery.easydate.js" "jquery.easydate-min.js" "ADVANCED_OPTIMIZATIONS"
-compile_js "../libs/hogan.js" "hogan-min.js" "ADVANCED_OPTIMIZATIONS"
-compile_js "../libs/jquery.iecors.js" "jquery.iecors-min.js" "SIMPLE_OPTIMIZATIONS"
-compile_js "../libs/json2.js" "json2-min.js" "ADVANCED_OPTIMIZATIONS"
-compile_js "../libs/stomp.js" "stomp-min.js" "ADVANCED_OPTIMIZATIONS"
+compile_js "../max.ui.js" "max.ui-min.js"
+compile_js "../max.client.js" "max.client-min.js"
+compile_js "../max.templates.js" "max.templates-min.js"
+compile_js "../max.literals.js" "max.literals-min.js"
+compile_js "../max.utils.js" "max.utils-min.js"
+compile_js "../libs/jquery.easydate.js" "jquery.easydate-min.js"
+compile_js "../libs/hogan.js" "hogan-min.js"
+compile_js "../libs/jquery.iecors.js" "jquery.iecors-min.js"
+compile_js "../libs/json2.js" "json2-min.js"
+compile_js "../libs/stomp.js" "stomp-min.js"
 
 VERSION=`cat ../version`
 FILENAME="max.ui-$VERSION.js"
