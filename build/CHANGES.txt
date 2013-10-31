@@ -1,6 +1,20 @@
 CHANGELOG
 =========
 
+3.5.3 (2013-20-26)
+------------------
+ * Fix minor syntax to avoid warnings in compiler [Carles Bruguera]
+ * Optimize and unify insertion of messages 
+ * Fix bug that cleared current text when receiving a message 
+ * Add mousewheel support to scrolls
+ * Refactored scroll with an acceptable smooth drag [Carles Bruguera]
+ * Moved participants interface to the bottom UI
+ * Allocate space for new scrollbar [Carles Bruguera]
+ * Refactor panels layout [Carles Bruguera]
+ * Group conversations import [Carles Bruguera]
+ * Updated clousure compiler and build script [Carles Bruguera]
+ * Extra padding to message balloons [Carles Bruguera]
+
 3.5.2 (2013-10-25)
 ------------------
  * Refactor message view css [Carles Bruguera]

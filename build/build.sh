@@ -11,7 +11,7 @@ function compile_js(){
     echo "Compiling $1 to $2"
     java -jar compiler.jar \
     --js $1 \
-    --compilation_level SIMPLE_OPTIMIZATIONS \
+    --compilation_level ADVANCED_OPTIMIZATIONS \
     --js_output_file $2
 }
 
