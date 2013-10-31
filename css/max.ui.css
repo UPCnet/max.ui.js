@@ -85,9 +85,9 @@ background-color: #ddd;
 }
 
 .maxui-togglebar:before, .maxui-togglebar:after {
-    box-sizing: content-box;
-    -webkit-box-sizing: content-box;
-    -moz-box-sizing: content-box;
+    box-sizing: content-box !important;
+    -webkit-box-sizing: content-box !important;
+    -moz-box-sizing: content-box !important;
 }
 
 .maxui-togglebar a{
