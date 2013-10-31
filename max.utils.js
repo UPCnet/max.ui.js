@@ -3,20 +3,18 @@ var max = max || {};
 /**
  * @fileoverview Provides support functions not directly
  *               related to UI construction
- */
-
-
+ **/
 max.utils = function() {
 
 
   return {
 
-    /*
+    /**
     *    Stops propagation of an event, to avoid arrows, esc, enter keys
     *    bubbling to an input, Used in conjunction with the users prediction box
     *
     *    @param {Event} e       The DOM event we want to freeze
-    */
+    **/
     freezeEvent: function (e) {
           if (e.preventDefault) e.preventDefault();
           e.returnValue = false;
@@ -25,12 +23,11 @@ max.utils = function() {
           return false;
     },
 
-    /*
-    *    Strips whitespace at the beggining and end of a string and optionaly between
+    /**  Strips whitespace at the beggining and end of a string and optionaly between
     *
     *    @param {String} s       A text that may contain whitespaces
     *    @param {Boolean} multi  If true, reduces multiple consecutive whitespaces to one
-    */
+    **/
     normalizeWhiteSpace: function (s, multi) {
 
         s = s.replace(/(^\s*)|(\s*$)/gi,"");
@@ -44,10 +41,9 @@ max.utils = function() {
         return s;
     },
 
-    /*
-    *    Searches for urls and hashtags in text and transforms to hyperlinks
+    /**  Searches for urls and hashtags in text and transforms to hyperlinks
     *    @param {String} text     String containing 0 or more valid links embedded with any other text
-    */
+    **/
     formatText: function (text){
         if (text) {
 
@@ -80,10 +76,9 @@ max.utils = function() {
         return text;
     },
 
-    /*
-    *    Identifies cors funcionalities and returns a boolean
+    /**  Identifies cors funcionalities and returns a boolean
          indicating wheter the browser is or isn't CORS capable
-    */
+    **/
     isCORSCapable: function() {
         var xhrObject = new XMLHttpRequest();
             //check if the XHR tobject has CORS functionalities
@@ -95,9 +90,8 @@ max.utils = function() {
               }
     },
 
-    /*
-    *    Removes elements from array by value
-    */
+    /**  Removes elements from array by value
+    **/
     removeValueFrom: function(arr){
         var what, a= arguments, L= a.length, ax;
         while(L> 1 && arr.length){
@@ -109,19 +103,17 @@ max.utils = function() {
         return arr;
     },
 
-    /*
-    *    Returns the numner of milliseconds since epoch
-    */
+    /**  Returns the numner of milliseconds since epoch
+    **/
     timestamp: function() {
         var date = new Date()
         return date / 1
     },
 
 
-    /*
-    *    Returns an human readable date from a timestamp in rfc3339 format (cross-browser)
+    /**  Returns an human readable date from a timestamp in rfc3339 format (cross-browser)
     *    @param {String} timestamp    A date represented as a string in rfc3339 format '2012-02-09T13:06:43Z'
-    */
+    **/
     formatDate: function(timestamp, lang) {
         var thisdate = new Date()
         var match = timestamp.match(
@@ -156,10 +148,9 @@ max.utils = function() {
           return null;
     },
 
-    /*
-    *    Returns an utf8 decoded string
+    /**  Returns an utf8 decoded string
     *    @param {String} str_data    an utf-8 String
-    */
+    **/
     utf8_decode: function(str_data) {
         // Converts a UTF-8 encoded string to ISO-8859-1
         //

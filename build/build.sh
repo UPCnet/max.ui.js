@@ -26,7 +26,6 @@ compile_js "../libs/jquery.iecors.js" "jquery.iecors-min.js"
 compile_js "../libs/json2.js" "json2-min.js"
 compile_js "../libs/stomp.js" "stomp-min.js"
 compile_js "../libs/jquery.mousewheel-3.0.6.pack.js" "jquery.mousewheel-min.js"
-compile_js "../libs/jquery.jscrollpane.js" "jquery.jscrollpane-min.js"
 
 VERSION=`cat ../version`
 FILENAME="max.ui-$VERSION.js"

@@ -1,8 +1,8 @@
 (function(jq) {
-    /*
+    /**
     *    MaxUI plugin definition
     *    @param {Object} options    Object containing overrides for default values
-    */
+    **/
     jq.fn.maxUI = function(options) {
 
         // Keep a reference of the context object
@@ -699,7 +699,7 @@
 
                         var options = {
                             participants: participants,
-                            message: message,
+                            message: message
                         }
 
                         if (participants.length>1) {
@@ -840,7 +840,7 @@
         // });
     }
 
-    /*
+    /**
     *    Takes a  button-input pair identified by 'maxui-button' and 'maxui-text-input'
     *    classes respectively, contained in a container and applies focusin/out
     *    and clicking behaviour
@@ -849,7 +849,7 @@
     *    @param {String} target           CSS selector identifying the direct container on which execute events
     *    @param {object} options          Extra options, currently ignore-button, to avoid button updates
     *    @param {Function} clickFunction  Function to execute when click on the button
-    */
+    **/
     jq.fn.bindActionBehaviour = function(delegate, target, options, clickFunction) {
 
         // Clear input when focusing in only if user hasn't typed anything yet
@@ -935,13 +935,13 @@
 
     }
 
-    /*
+    /**
     *    Updates the search filters with a new collection of keywords/hashtags extracted of
     *    a user-entered text, and reloads the search query. Identifies special characters
     *    at the first position of each keyword to identify keyword type
     *
     *    @param {String} text    A string containing whitespace-separated keywords/#hashtags
-    */
+    **/
     jq.fn.textSearch = function (text) {
                 maxui = this
                 //Normalize spaces
@@ -971,12 +971,12 @@
     }
 
 
-    /*
+    /**
     *    Reloads the current filters UI and executes the search, optionally starting
     *    at a given point of the timeline
     *
     *    @param {String} (optional)    A string containing the id of the last activity loaded
-    */
+    **/
     jq.fn.reloadFilters = function() {
 
         var maxui=this
@@ -1005,10 +1005,10 @@
    }
 
 
-    /*
+    /**
     *    Adds a new filter to the search if its not present
     *    @param {Object} filter    An object repesenting a filter, with the keys "type" and "value"
-    */
+    **/
     jq.fn.delFilter = function(filter) {
         maxui = this
         var deleted = false
@@ -1023,10 +1023,10 @@
             this.reloadFilters()
     }
 
-    /*
+    /**
     *    Adds a new filter to the search if its not present
     *    @param {Object} filter    An object repesenting a filter, with the keys "type" and "value"
-    */
+    **/
     jq.fn.addFilter = function(filter) {
         maxui = this
         var reload=true
@@ -1058,12 +1058,12 @@
          }
     }
 
-    /*
+    /**
     *    Reloads the current filters UI and executes the search, optionally starting
     *    at a given point of the timeline
     *
     *    @param {String} (optional)    A string containing the id of the last activity loaded
-    */
+    **/
     jq.fn.reloadPersons = function() {
 
         var maxui=this
@@ -1127,10 +1127,10 @@
         }
    }
 
-    /*
+    /**
     *    Removes a person from the list of new conversation
     *    @param {String} person    A String representing a user's username
-    */
+    **/
     jq.fn.delPerson = function(person) {
         maxui = this
         var deleted = false
@@ -1146,10 +1146,10 @@
             this.reloadPersons()
     }
 
-    /*
+    /**
     *    Adds a new person to the list of new conversation
     *    @param {String} person    A String representing a user's username
-    */
+    **/
     jq.fn.addPerson = function(person) {
         maxui = this
         participants_box = $('#maxui-new-participants')[0]
@@ -1177,9 +1177,9 @@
         }
     }
 
-    /*
+    /**
     *    Toggles between Conversations and Messages
-    */
+    **/
     jq.fn.toggleMessages = function(sectionToEnable) {
         maxui = this
 
@@ -1202,7 +1202,7 @@
 
         if (sectionToEnable=='messages' && sectionToEnable!=maxui.settings.conversationsSection)
         {
-            $addpeople.animate({'height': 0, 'padding-top':0, 'padding-bottom':0,}, 400, function(event) {
+            $addpeople.animate({'height': 0, 'padding-top':0, 'padding-bottom':0}, 400, function(event) {
                 $addpeople.css({'border-color': 'transparent'})
             })
             $common_header.find('h3').text(maxui.settings.currentConversation.displayName)
@@ -1242,9 +1242,9 @@
     }
 
 
-    /*
+    /**
     *    Toggles between main sections
-    */
+    **/
     jq.fn.toggleSection = function(sectionToEnable) {
         maxui = this
         var $search = jq('#maxui-search')
@@ -1314,19 +1314,19 @@
         }
 
 
-    /*
+    /**
     *    Returns the current settings of the plugin
-    */
+    **/
     jq.fn.Settings = function() {
         maxui = this
         return maxui.settings
         }
 
 
-    /*
+    /**
     *    Sends a post when user clicks `post activity` button with
     *    the current contents of the `maxui-newactivity` textarea
-    */
+    **/
     jq.fn.createConversationAndSendMessage = function (options, post_creation) {
         maxui = this
         var func_params = []
@@ -1365,10 +1365,10 @@
 
     }
 
-    /*
+    /**
     *    Sends a post when user clicks `post activity` button with
     *    the current contents of the `maxui-newactivity` textarea
-    */
+    **/
     jq.fn.sendMessage = function (text, chash) {
         maxui = this
         var func_params = []
@@ -1388,10 +1388,10 @@
 
     }
 
-    /*
+    /**
     *    Sends a post when user clicks `post activity` button with
     *    the current contents of the `maxui-newactivity` textarea
-    */
+    **/
     jq.fn.sendActivity = function () {
         maxui=this
         var text = jq('#maxui-newactivity textarea').val()
@@ -1419,10 +1419,10 @@
 
     }
 
-    /*
+    /**
     *    Loads more activities from max posted earlier than
     *    the oldest loaded activity
-    */
+    **/
     jq.fn.loadMoreActivities = function () {
         maxui=this
         filter = {before:jq('.maxui-activity:last').attr('id')}
@@ -1431,9 +1431,9 @@
     }
 
 
-    /*
+    /**
     *    Renders the conversations list of the current user, defined in settings.username
-    */
+    **/
     jq.fn.printPredictions = function(query, predictive_selector) {
         var maxui = this
 
@@ -1445,10 +1445,10 @@
         userListRetriever.apply(this.maxClient,func_params)
     }
 
-    /*
+    /**
     *
     *
-    */
+    **/
     jq.fn.formatPredictions = function(items, predictive_selector) {
         var maxui = this;
 
@@ -1482,9 +1482,9 @@
 
 
 
-    /*
+    /**
     *    Renders the conversations list of the current user, defined in settings.username
-    */
+    **/
     jq.fn.printConversations = function() {
         var maxui = this
         // Render the postbox UI if user has permission
@@ -1524,10 +1524,10 @@
         conversationsRetriever.apply(this.maxClient,func_params)
     }
 
-    /*
+    /**
     *
     *
-    */
+    **/
     jq.fn.formatConversations = function(items) {
         var maxui = this;
 
@@ -1581,9 +1581,9 @@
         }
     }
 
-    /*
+    /**
     *    Renders the messages of the choosen conversation
-    */
+    **/
     jq.fn.printMessages = function(conversation_hash) {
         var maxui = this
 
@@ -1606,10 +1606,10 @@
         messagesRetriever.apply(this.maxClient,func_params)
     }
 
-    /*
+    /**
     *
     *
-    */
+    **/
     jq.fn.formatMessages = function(items) {
         var maxui = this;
 
@@ -1647,7 +1647,7 @@
         }
     }
 
-    /*
+    /**
     *    Renders the N activities passed in items on the timeline slot. This function is
     *    meant to be called as a callback of a call to a max webservice returning a list
     *    of activity objects
@@ -1655,7 +1655,7 @@
     *    @param {String} items     a list of objects representing activities, returned by max
     *    @param {String} insertAt  were to prepend or append activities, 'beginning' or 'end
     *    @param {Function} (optional)  A function to call when all formatting is finished
-    */
+    **/
     jq.fn.formatActivities = function(items, insertAt) {
             var maxui = this;
             var activities = ''
@@ -1780,12 +1780,12 @@
 
         }
 
-    /*
+    /**
     *    Renders the N comments passed in items on the timeline slot. This function is
     *    meant to be called as a callback of a call to a max webservice returning comments
     *    @param {String} items         a list of objects representing comments, returned by max
     *    @param {String} activity_id   id of the activity where comments belong to
-    */
+    **/
     jq.fn.formatComment = function(items, activity_id) {
             // When receiving the list of activities from max
             // construct the object for Hogan
@@ -1823,9 +1823,9 @@
         }
 
 
-    /*
+    /**
     *    Renders the postbox
-    */
+    **/
     jq.fn.renderPostbox = function() {
         var maxui = this
         // Render the postbox UI if user has permission
@@ -1847,9 +1847,9 @@
     }
 
 
-    /*
+    /**
     *    Renders the timeline of the current user, defined in settings.username
-    */
+    **/
     jq.fn.printActivities = function(filters) {
         // save a reference to the container object to be able to access it
         // from callbacks defined in inner levels
@@ -1950,9 +1950,9 @@
         activityRetriever.apply(this.maxClient,func_params)
         }
 
-    /*
+    /**
     *    Renders the timeline of the current user, defined in settings.username
-    */
+    **/
     jq.fn.printCommentsForActivity = function(activity_id) {
 
 
