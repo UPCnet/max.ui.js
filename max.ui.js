@@ -1344,7 +1344,7 @@
                             if (options.displayName) {
                                 maxui.settings.currentConversation.displayName = options.displayName
                             } else {
-                                maxui.settings.currentConversation.displayName = options.participants[0]
+                                maxui.settings.currentConversation.displayName = options.participants[0].displayName
                             }
 
                             maxui.printMessages(chash, function() {
@@ -1539,26 +1539,21 @@
             {
             var conversation = items[i]
 
-            var other_participants = conversation.participants.slice()
-            maxui.utils.removeValueFrom(other_participants,maxui.settings.username)
             if (conversation.participants.length <= 2) {
-                var partner = other_participants[0]
-                var avatar_url = maxui.settings.avatarURLpattern.format(partner)
-                var displayName = partner
+                if (conversation.participants[0].username == maxui.settings.username) {
+                    var partner = conversation.participants[1] }
+                else {
+                    var partner = conversation.participants[0]
+                }
+
+                var avatar_url = maxui.settings.avatarURLpattern.format(partner.username)
             } else {
-                var partner = other_participants[0]
                 var avatar_url = maxui.settings.conversationAvatarURLpattern.format(conversation.id)
-                var displayName = conversation.displayName
             }
-
-
-            //var andmore = ''
-            //if (other_participants.length>1) andmore = maxui.literals.andmore
-
+                var displayName = conversation.displayName
 
             var params = {
                                    id: conversation.id,
-                              partner: partner,
                           displayName: displayName,
                                  text: maxui.utils.formatText(conversation.lastMessage.content),
                              messages: conversation.messages,
