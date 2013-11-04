@@ -1207,7 +1207,7 @@
             })
             $common_header.find('h3').text(maxui.settings.currentConversation.displayName)
             $conversations_list.animate({'margin-left':sectionsWidth * (-1) }, 400)
-            $messages.animate({'left':0}, 400, function(event) {
+            $messages.animate({'left':0, 'margin-left':0}, 400, function(event) {
                 $conversations_wrapper.height(height - 31 - 45)
                 $common_header.animate({'height':45}, 100, function(event) {
                     maxui.scrollbar.setHeight(height-31-45)
@@ -1234,7 +1234,7 @@
             $conversations_wrapper.height(height - 31)
             var widgetWidth = $conversations_list.width()+11 // +2 To include border
             $conversations_list.animate({'margin-left':0 }, 400)
-            $messages.animate({'left':widgetWidth}, 400)
+            $messages.animate({'left':widgetWidth + 20, }, 400)
             maxui.settings.conversationsSection='conversations'
             var literal = maxui.settings.literals.new_conversation_text
             $postbox.val(literal).attr('data-literal', literal)
