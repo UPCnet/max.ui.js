@@ -1235,7 +1235,7 @@
             $conversations_wrapper.height(height - 31)
             var widgetWidth = $conversations_list.width()+11 // +2 To include border
             $conversations_list.animate({'margin-left':0 }, 400)
-            $messages.animate({'left':widgetWidth + 20, }, 400)
+            $messages.animate({'left':widgetWidth + 20 }, 400)
             maxui.settings.conversationsSection='conversations'
             var literal = maxui.settings.literals.new_conversation_text
             $postbox.val(literal).attr('data-literal', literal)
