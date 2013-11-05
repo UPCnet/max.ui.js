@@ -248,16 +248,14 @@ MaxClient.prototype.getContext = function(chash, callback) {
     this.GET(route,query,callback)
 };
 
-MaxClient.prototype.getActivities = function(username, context, callback) {
-  var route = this.ROUTES['activities'].format(context);
-  if (arguments.length>3)
-    {
-      query=arguments[3]
-    }
-  else
-    {
-      query={}
-    }
+MaxClient.prototype.getActivities = function(options, callback) {
+  var route = this.ROUTES['activities'].format(options.context);
+  var query = {}
+  if (arguments.length>2)
+      query=arguments[2]
+  if (options.tags)
+      if (options.tags.length>0)
+          query['context_tags'] = options.tags
   this.GET(route,query,callback)
 };
 

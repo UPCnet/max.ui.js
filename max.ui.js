@@ -24,7 +24,8 @@
                         'activitySortOrder': 'activities',
                         'transports': undefined,
                         'domain': undefined,
-                        'maximumConversations': 20
+                        'maximumConversations': 20,
+                        'contextTagsFilter': []
                         }
 
         maxui.scrollbar = {
@@ -1869,8 +1870,11 @@
         else if (maxui.settings.activitySource=='activities')
         {
             var activityRetriever = this.maxClient.getActivities
-            func_params.push(maxui.settings.username)
-            func_params.push(maxui.settings.readContextHash)
+            options = {
+                context: maxui.settings.readContextHash,
+                tags: maxui.settings.contextTagsFilter
+            }
+            func_params.push(options)
         }
 
         if (arguments.length>1)
