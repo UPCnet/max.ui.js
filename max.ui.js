@@ -1077,6 +1077,7 @@
 
         $newmessagebox = jq('#maxui-newactivity')
         var message = $newmessagebox.find('textarea').val()
+        var placeholder = $newmessagebox.find('textarea').attr('data-literal')
         message = maxui.utils.normalizeWhiteSpace(message)
 
         $newdisplaynamebox = jq('#maxui-add-people-box #maxui-new-displayName')
@@ -1091,10 +1092,7 @@
         jq('#maxui-add-people-box .maxui-label .maxui-count').text('({0}/{1})'.format(participants_box.people.length + 1,maxui.settings.maximumConversations))
 
         if (participants_box.people.length>0) {
-            console.log(participants_box.people.length)
-            console.log('='+displayName+'=')
-            console.log('='+message+'=')
-            if ((participants_box.people.length==1 || displayName!='') && message!='') {
+            if ((participants_box.people.length==1 || displayName!='') && message!='' && message!=placeholder) {
                 $button.removeAttr('disabled')
                 $button.attr('class','maxui-button')
                 $newmessagebox.find('textarea').attr('class','maxui-text-input')
