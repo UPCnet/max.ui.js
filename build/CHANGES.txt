@@ -1,7 +1,18 @@
 CHANGELOG
 =========
 
-3.5.3 (2013-20-26)
+3.5.4 (2013-11-05)
+------------------
+ * Add tags filter parameter [Carles Bruguera]
+ * Fix margin and set scrollbar background [Carles Bruguera]
+ * Use displayName from conversation [Carles Bruguera]
+ * Redo css based on border-box sizing [Carles Bruguera]
+ * Nedded importants to override bootstrap [Carles Bruguera]
+ * Fix box-sizing of toggle bars [Carles Bruguera]
+ * Fixed class of title [Carles Bruguera]
+
+
+3.5.3 (2013-10-26)
 ------------------
  * Fix minor syntax to avoid warnings in compiler [Carles Bruguera]
  * Optimize and unify insertion of messages 
