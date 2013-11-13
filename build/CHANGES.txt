@@ -1,6 +1,11 @@
 CHANGELOG
 =========
 
+3.5.5 (2013-11-13)
+------------------
+ * Literals [Carles Bruguera]
+
+
 3.5.4 (2013-11-05)
 ------------------
  * Add tags filter parameter [Carles Bruguera]
