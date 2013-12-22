@@ -475,6 +475,45 @@
             maxui.printMessages(conversation_hash, function() { maxui.toggleMessages('messages') })
             })
 
+        //Toggle favorite status via delegating the click to the activities container
+        jq('#maxui-activities').on('click','.maxui-action.maxui-favorites',function (event) {
+            event.preventDefault()
+            var $favorites = jq(this)
+            var $activity = jq(this).closest('.maxui-activity')
+            var activityid = $activity.attr('id')
+            var favorited = $favorites.hasClass('maxui-favorited')
+
+            if (favorited) {
+                maxui.maxClient.unfavoriteActivity(activityid, function(event) {
+                    $favorites.toggleClass('maxui-favorited', false)
+                })
+            } else {
+                maxui.maxClient.favoriteActivity(activityid, function(event) {
+                    $favorites.toggleClass('maxui-favorited', true)
+                })
+
+            }
+        })
+
+        //Toggle like status via delegating the click to the activities container
+        jq('#maxui-activities').on('click','.maxui-action.maxui-likes',function (event) {
+            event.preventDefault()
+            var $likes = jq(this)
+            var $activity = jq(this).closest('.maxui-activity')
+            var activityid = $activity.attr('id')
+            var liked = $likes.hasClass('maxui-liked')
+
+            if (liked) {
+                maxui.maxClient.unlikeActivity(activityid, function(event) {
+                    $likes.toggleClass('maxui-liked', false)
+                })
+            } else {
+                maxui.maxClient.likeActivity(activityid, function(event) {
+                    $likes.toggleClass('maxui-liked', true)
+                })
+            }
+        })
+
         //Assign activity removal confirmation dialog toggle via delegating the click to the activities container
         jq('#maxui-activities').on('click','.maxui-action.maxui-delete',function (event) {
             console.log('delete')
@@ -501,14 +540,13 @@
             $popover.hide()
         })
 
-
         //Assign activity removal via delegating the click to the activities container
         jq('#maxui-activities').on('click','.maxui-actions .maxui-button.delete',function (event) {
             console.log('delete activityid')
             event.preventDefault()
             var $activity = jq(this).closest('.maxui-activity')
             var activityid = $activity.attr('id')
-            maxui.maxClient.removeActivity(activityid, function() {
+            maxui.maxClient.removeActivity(activityid, function(event) {
                 var $popover =jq('.maxui-popover:visible').animate({opacity:0}, 300)
                 $activity.css({height:$activity.height(), 'min-height':'auto'})
                 $activity.animate({height: 0, opacity:0}, 100, function(event) {
@@ -1719,7 +1757,9 @@
                                          date: maxui.utils.formatDate(activity.published, maxui.language),
                                          text: maxui.utils.formatText(activity.object.content),
                                       replies: replies,
+                                    favorites: activity.favorited,
                                     favorited: activity.favorited,
+                                        likes: activity.liked,
                                         liked: activity.liked,
 
                                     avatarURL: avatar_url,

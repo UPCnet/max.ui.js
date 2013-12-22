@@ -131,12 +131,10 @@ var MSTCH_MAXUI_ACTIVITY = '\
                  <strong>{{replies.length}}</strong>\
                  {{literals.toggle_comments}}\
             </a>\
-            <a href="" class="maxui-action maxui-favorites">\
-                 <strong>{{favorited}}</strong>\
+            <a href="" class="maxui-action maxui-favorites {{#favorited}}maxui-favorited{{/favorited}}">\
                  {{literals.favorite}}\
             </a>\
-            <a href="" class="maxui-action maxui-likes">\
-                 <strong>{{liked}}</strong>\
+            <a href="" class="maxui-action maxui-likes {{#liked}}maxui-liked{{/liked}}\">\
                  {{literals.like}}\
             </a>\
             {{#canDeleteActivity}}\

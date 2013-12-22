@@ -307,14 +307,19 @@ background-position: 0 -18px;
 }
 
 .maxui-actions a.maxui-action.maxui-likes {
-background: url('/maxui-dev/img/maxcomm.png') no-repeat 0 2px;
-background-position: 0 2px;
+background: url('/maxui-dev/img/nolike.png') no-repeat 0 1px;
 }
 
+.maxui-actions a.maxui-action.maxui-likes.maxui-liked {
+background: url('/maxui-dev/img/like.png') no-repeat 0 1px;
+}
 
 .maxui-actions a.maxui-action.maxui-favorites {
-background: url('/maxui-dev/img/maxcomm.png') no-repeat 0 2px;
-background-position: 0 2px;
+background: url('/maxui-dev/img/nofav.png') no-repeat 0 1px;
+}
+
+.maxui-actions a.maxui-action.maxui-favorites.maxui-favorited {
+background: url('/maxui-dev/img/fav.png') no-repeat 0 1px;
 }
 
 .maxui-actions a.maxui-action.maxui-delete {

@@ -36,6 +36,8 @@ function MaxClient () {
                       comment : '/activities/{0}/comments/{1}',
                       likes : '/activities/{0}/likes',
                       like : '/activities/{0}/likes/{1}',
+                      favorites : '/activities/{0}/favorites',
+                      favorite : '/activities/{0}/favorites/{1}',
                       shares : '/activities/{0}/shares',
                       share : '/activities/{0}/shares/{1}',
                       conversations : '/conversations',
@@ -110,7 +112,7 @@ MaxClient.prototype.POST = function(route, query, callback) {
     return true
 };
 
-MaxClient.prototype.DELETE = function(route, callback) {
+MaxClient.prototype.DELETE = function(route, query, callback) {
     maxclient = this
     resource_uri = '{0}{1}'.format(this.url, route)
     // Get method-defined triggers
@@ -127,7 +129,7 @@ MaxClient.prototype.DELETE = function(route, callback) {
                  xhr.setRequestHeader("X-HTTP-Method-Override", 'DELETE');
              },
            type: 'POST',
-           data: '',
+           data: JSON.stringify(query),
            async: true,
            dataType: 'json'
           })
@@ -328,12 +330,12 @@ MaxClient.prototype.addActivity = function(text,contexts,callback) {
 
 MaxClient.prototype.removeActivity = function(activity_id,callback) {
     route = this.ROUTES['activity'].format(activity_id);
-    this.DELETE(route, callback)
+    this.DELETE(route, {}, callback)
 }
 
 MaxClient.prototype.removeActivityComment = function(activity_id,comment_id,callback) {
     route = this.ROUTES['comment'].format(activity_id, comment_id);
-    this.DELETE(route, callback)
+    this.DELETE(route, {}, callback)
 }
 
 MaxClient.prototype.addMessageAndConversation = function(params,callback) {
@@ -382,5 +384,31 @@ MaxClient.prototype.follow = function(username, callback ) {
     query.object.username = username
 
 	route = this.ROUTES['follow'].format(this.actor.username,username);
-    resp = this.POST(route,query)
+    resp = this.POST(route,query, callback)
+};
+
+MaxClient.prototype.favoriteActivity = function(activityid, callback ) {
+  query = {}
+
+  route = this.ROUTES['favorites'].format(activityid);
+  resp = this.POST(route, query, callback)
+};
+
+MaxClient.prototype.unfavoriteActivity = function(activityid, callback ) {
+  query = {}
+  route = this.ROUTES['favorite'].format(activityid, this.actor.username);
+  resp = this.DELETE(route, query, callback)
+};
+
+MaxClient.prototype.likeActivity = function(activityid, callback ) {
+  query = {}
+
+  route = this.ROUTES['likes'].format(activityid);
+  resp = this.POST(route, query, callback)
+};
+
+MaxClient.prototype.unlikeActivity = function(activityid, callback ) {
+  query = {}
+  route = this.ROUTES['like'].format(activityid, this.actor.username);
+  resp = this.DELETE(route, query, callback)
 };
