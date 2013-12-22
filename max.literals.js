@@ -34,7 +34,10 @@ max.literals = function(language) {
                        'post_permission_missing_displayName': "You have to name the conversation",
                        'delete_activity_confirmation': "Are you sure?",
                        'delete_activity_delete': "Delete",
-                       'delete_activity_cancel': "Cancel"
+                       'delete_activity_cancel': "Cancel",
+                       'delete_activity_icon': "delete",
+                       'favorite': 'Favorite',
+                       'like': 'Like'
         }
 
     maxui['es'] = {'new_activity_text': 'Escribe algo...',
@@ -63,7 +66,10 @@ max.literals = function(language) {
                        'post_permission_missing_displayName': "Tienes que dar un nombre a la conversación",
                        'delete_activity_confirmation': "Estás seguro?",
                        'delete_activity_delete': "Borrar",
-                       'delete_activity_cancel': "Cancelar"
+                       'delete_activity_cancel': "Cancelar",
+                       'delete_activity_icon': "borrar",
+                       'favorite': 'favorito',
+                       'like': 'me gusta'
         }
 
     maxui['ca'] = {'new_activity_text': 'Escriu alguna cosa...',
@@ -92,7 +98,10 @@ max.literals = function(language) {
                        'post_permission_missing_displayName': "Tens que posar nom a la conversa",
                        'delete_activity_confirmation': "Estàs segur?",
                        'delete_activity_delete': "Esborra",
-                       'delete_activity_cancel': "No ho toquis!"
+                       'delete_activity_cancel': "No ho toquis!",
+                       'delete_activity_icon': "esborra",
+                       'favorite': 'favorit',
+                       'like': "m'agrada"
 
         }
 

@@ -111,17 +111,6 @@ var MSTCH_MAXUI_ACTIVITY = '\
         </div>\
         <div class="maxui-activity-message">\
             <p class="maxui-body">{{&text}}</p>\
-            {{#canDeleteActivity}}\
-            <span class="maxui-delete-activity"></span>\
-            <div class="maxui-popover left">\
-                <div class="maxui-arrow"></div>\
-                    <h3 class="maxui-popover-title">{{literals.delete_activity_confirmation}}</h3>\
-                    <div class="maxui-popover-content">\
-                      <input type="button" class="maxui-button delete" value="{{literals.delete_activity_delete}}">\
-                      <input type="button" class="maxui-button cancel" value="{{literals.delete_activity_cancel}}">\
-                    </div>\
-            </div>\
-            {{/canDeleteActivity}}\
         </div>\
     </div>\
     <div class="maxui-footer">\
@@ -138,10 +127,31 @@ var MSTCH_MAXUI_ACTIVITY = '\
         </div>\
         {{/publishedIn}}\
         <div class="maxui-actions">\
-            <a href="" class="maxui-commentaction">\
+            <a href="" class="maxui-action maxui-commentaction">\
                  <strong>{{replies.length}}</strong>\
                  {{literals.toggle_comments}}\
             </a>\
+            <a href="" class="maxui-action maxui-favorites">\
+                 <strong>{{favorited}}</strong>\
+                 {{literals.favorite}}\
+            </a>\
+            <a href="" class="maxui-action maxui-likes">\
+                 <strong>{{liked}}</strong>\
+                 {{literals.like}}\
+            </a>\
+            {{#canDeleteActivity}}\
+            <a href="" class="maxui-action maxui-delete">\
+                 {{literals.delete_activity_icon}}\
+            </a>\
+            <div class="maxui-popover left">\
+                <div class="maxui-arrow"></div>\
+                    <h3 class="maxui-popover-title">{{literals.delete_activity_confirmation}}</h3>\
+                    <div class="maxui-popover-content">\
+                      <input type="button" class="maxui-button delete" value="{{literals.delete_activity_delete}}">\
+                      <input type="button" class="maxui-button cancel" value="{{literals.delete_activity_cancel}}">\
+                    </div>\
+            </div>\
+            {{/canDeleteActivity}}\
             \
         </div>\
     </div>\

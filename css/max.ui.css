@@ -261,24 +261,68 @@ padding-top:6px;
 .maxui-filter .maxui-img {
     vertical-align: inherit;
 }
+.maxui-footer {
+margin-left: 56px;
+}
+
+
+
+
+.maxui-actions {
+    position:relative;
+}
+
+
 .maxui-actions a, .maxui-origin{
 display:inline;
-margin-left: 56px;
 padding-right:10px;
 }
 .maxui-origin {color:#6e6e6e; font-size:11px; background:url('/maxui-dev/img/maxcomm.png') 0 -77px no-repeat; padding-left:10px;}
-.maxui-actions a.maxui-commentaction {
+
+
+
+
+.maxui-actions a.maxui-action{
 font-size:12px;
-background: url('/maxui-dev/img/maxcomm.png') no-repeat 0 2px;
 color:#007bc0;
 text-decoration:none;
 padding-left:18px;
+padding-right: 8px;
 cursor:pointer;
 }
-.maxui-actions a.maxui-commentaction:hover {
+
+.maxui-actions a.maxui-action:hover {
 color:#005ea0;
-background-position: 0 -18px;
 text-decoration:underline;
+}
+
+.maxui-actions a.maxui-commentaction {
+background: url('/maxui-dev/img/maxcomm.png') no-repeat 0 2px;
+background-position: 0 2px;
+}
+
+.maxui-actions a.maxui-commentaction:hover {
+background: url('/maxui-dev/img/maxcomm.png') no-repeat 0 2px;
+background-position: 0 -18px;
+}
+
+.maxui-actions a.maxui-action.maxui-likes {
+background: url('/maxui-dev/img/maxcomm.png') no-repeat 0 2px;
+background-position: 0 2px;
+}
+
+
+.maxui-actions a.maxui-action.maxui-favorites {
+background: url('/maxui-dev/img/maxcomm.png') no-repeat 0 2px;
+background-position: 0 2px;
+}
+
+.maxui-actions a.maxui-action.maxui-delete {
+background:url('/maxui-dev/img/trashbin.png') 5px 1px no-repeat;
+}
+
+.maxui-actions a.maxui-action.maxui-delete:hover {
+background:url('/maxui-dev/img/trashbino.png') 5px 0px no-repeat;
 }
 .maxui-comments {
 margin-left:56px;
@@ -714,8 +758,8 @@ left: 0;
 z-index: 1010;
 max-width: 276px;
 padding: 1px;
-margin-bottom: -42px;
-margin-left:117px;
+margin-bottom: -31px;
+margin-left:68px;
 text-align: left;
 white-space: normal;
 background-color: #ffffff;

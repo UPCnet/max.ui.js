@@ -476,10 +476,11 @@
             })
 
         //Assign activity removal confirmation dialog toggle via delegating the click to the activities container
-        jq('#maxui-activities').on('click','.maxui-delete-activity',function (event) {
+        jq('#maxui-activities').on('click','.maxui-action.maxui-delete',function (event) {
+            console.log('delete')
             event.preventDefault()
             var $activity = jq(this).closest('.maxui-activity')
-            var $dialog = $activity.find('.maxui-activity-message > .maxui-popover')
+            var $dialog = $activity.find('.maxui-actions > .maxui-popover')
 
             if (!$dialog.is(':visible')) {
                 jq('.maxui-popover').css({opacity:0}).hide()
@@ -492,24 +493,23 @@
         })
 
         //Assign activity removal confirmation dialog via delegating the click to the activities container
-        jq('#maxui-activities').on('click','.maxui-activity-message .maxui-button.cancel',function (event) {
+        jq('#maxui-activities').on('click','.maxui-actions .maxui-button.cancel',function (event) {
             event.preventDefault()
             var $activity = jq(this).closest('.maxui-activity')
-            var $dialog = $activity.find('.maxui-popover')
-
-            $popover = jq('.maxui-popover').css({opacity:0})
+            // Hide all visible dialogs
+            $popover = jq('.maxui-popover:visible').css({opacity:0})
             $popover.hide()
         })
 
 
         //Assign activity removal via delegating the click to the activities container
-        jq('#maxui-activities').on('click','.maxui-activity-message .maxui-button.delete',function (event) {
+        jq('#maxui-activities').on('click','.maxui-actions .maxui-button.delete',function (event) {
             console.log('delete activityid')
             event.preventDefault()
             var $activity = jq(this).closest('.maxui-activity')
             var activityid = $activity.attr('id')
             maxui.maxClient.removeActivity(activityid, function() {
-                var $popover =jq('.maxui-popover').animate({opacity:0}, 300)
+                var $popover =jq('.maxui-popover:visible').animate({opacity:0}, 300)
                 $activity.css({height:$activity.height(), 'min-height':'auto'})
                 $activity.animate({height: 0, opacity:0}, 100, function(event) {
                     $activity.remove()
@@ -1715,10 +1715,12 @@
                         var params = {
                                            id: activity.id,
                                         actor: activity.actor,
-                                     literals:maxui.settings.literals,
+                                     literals: maxui.settings.literals,
                                          date: maxui.utils.formatDate(activity.published, maxui.language),
                                          text: maxui.utils.formatText(activity.object.content),
                                       replies: replies,
+                                    favorited: activity.favorited,
+                                        liked: activity.liked,
 
                                     avatarURL: avatar_url,
                                   publishedIn: contexts,
