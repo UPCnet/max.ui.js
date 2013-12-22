@@ -36,8 +36,10 @@ max.literals = function(language) {
                        'delete_activity_delete': "Delete",
                        'delete_activity_cancel': "Cancel",
                        'delete_activity_icon': "delete",
-                       'favorite': 'Favorite',
-                       'like': 'Like'
+                       'favorite': 'favorite',
+                       'unfavorite': 'unfavorite',
+                       'like': 'like',
+                       'unlike': 'unlike'
         }
 
     maxui['es'] = {'new_activity_text': 'Escribe algo...',
@@ -69,7 +71,9 @@ max.literals = function(language) {
                        'delete_activity_cancel': "Cancelar",
                        'delete_activity_icon': "borrar",
                        'favorite': 'favorito',
-                       'like': 'me gusta'
+                       'unfavorite': 'quitar favorito',
+                       'like': 'me gusta',
+                       'unlike': 'ya no me gusta'
         }
 
     maxui['ca'] = {'new_activity_text': 'Escriu alguna cosa...',
@@ -101,7 +105,9 @@ max.literals = function(language) {
                        'delete_activity_cancel': "No ho toquis!",
                        'delete_activity_icon': "esborra",
                        'favorite': 'favorit',
-                       'like': "m'agrada"
+                       'unfavorite': 'treure favorit',
+                       'like': "m'agrada",
+                       'unlike': "ja no m'agrada"
 
         }
 
