@@ -1,0 +1,322 @@
+@import "variables.less";
+@import "mixins.less";
+@import "hacks.css";
+
+
+
+#maxui-container{
+
+    /*Draw a line to define widget boudaries*/
+    &:extend(.mm-bordered);
+    &:extend(.mm-textStyle);
+
+    a:focus,
+    .maxui-button:focus,
+    maxui-text-input:focus,
+    .maxui-simple-text-input:focus {
+        .mm-removeOutline;
+    }
+
+    a {
+        .baseLinkStyle
+        &:hover:extend(.mm-hoverLinkStyle) { }
+        &:focus:extend(.mm-removeOutline) { }
+    }
+
+
+    /* ====== TO IMPROVE ============================*/
+    .maxui-clear {
+        clear:both;
+        float:none;
+    }
+
+    .maxui-topright{
+        float:right;
+        padding-top:1px;
+    }
+
+    .maxui-info {
+       font-style:italic;
+       color:#666
+    }
+
+    .maxui-filter .maxui-img {
+        vertical-align: inherit;
+    }
+
+    .maxui-footer {
+    margin-left: 56px;
+    }
+
+    /* ==================================*/
+    #maxui-mainpanel {
+        #maxui-conversations {
+            clear:both;
+            margin:0;
+            overflow: hidden;
+            padding:0 0 0 0px;
+            background:@mainBackgroundColor;
+            border-bottom:1px @borderColor solid;
+
+            #maxui-common-header {
+                #maxui-back-conversations {
+                    &:extend(.mm-toggleBar all);
+                    height:41px;
+                    h3.maxui-title{
+                        margin: 3px 0px 7px;
+                        color:@darkTextColor;
+                        font-size: 18px;
+                        font-weight: bold;
+                    }
+                }
+            }
+            #maxui-wrapper:extend(.mm-wrapper) {
+                #maxui-conversations-list {
+                    position:absolute;
+                    outline:none;
+                    padding: 0 10px 0 10px;
+
+                    .maxui-conversation {
+                        .maxui-activity-content {
+                            position:relative;
+                            .maxui-topright {
+                                .maxui-published-date:extend(.mm-PublishedDate) {}
+                                .maxui-enterconversation {
+                                    float:right;
+                                    padding-top:6px;
+                                }
+                            }
+                            .maxui-actor {
+                                a {
+                                    .maxui-avatar:extend(.mm-Avatar all) {}
+                                    .maxui-displayname:extend(.mm-DisplayName) {}
+                                }
+                            }
+                            .maxui-body:extend(.mm-Body) {}
+                        }
+                        .maxui-clear {
+
+                        }
+                        border-top: 1px #fff solid;
+                        border-bottom: 1px @borderColor solid;
+                        width:100%;
+                        padding:8px 0;
+                        padding-left:0;
+                        min-height:51px;
+                    }
+                }
+                #maxui-messages {
+                    #maxui-message-list {
+                        #maxui-message {
+                            .maxui-activity-content {
+                                position:relative;
+
+                                .maxui-avatar:extend(.mm-Avatar all) { }
+                                .maxui-balloon {
+                                    .maxui-published-date:extend(.mm-PublishedDate) {}
+                                    .maxui-body:extend(.mm-Body) {}
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            #maxui-scrollbar { }
+
+        }
+        #maxui-show-conversations {
+            &.maxui-togglebar :extend(.mm-toggleBar all){  }
+
+        }
+        #maxui-conversations-predictive { }
+        #maxui-add-people-box { }
+        #maxui-newactivity {
+            &:extend(.mm-texturedBackground);
+            padding:10px;
+            position:relative;
+            &:after {
+                content: "";
+                display: block;
+                height: 0;
+                clear: both;
+            }
+            .maxui-avatar:extend(.mm-Avatar all) {
+                left: 0px;
+                top: 0px;
+                position: relative;
+
+            }
+            #maxui-newactivity-box {
+                margin-left:56px;
+                text-align:right;
+                textarea {
+                    position:relative;
+                }
+            }
+            #maxui-predictive.maxui-predictive:extend(.mm-predictive) { }
+        }
+        #maxui-search {
+            border-top:1px solid #666;
+            border-bottom:1px solid #666;
+            background:#e5faff; padding:10px;
+            &.folded {
+
+            }
+        }
+        #maxui-show-timeline :extend(.mm-texturedBackground) {
+                padding-bottom:3px;
+                text-align:center;
+                border-top: 1px #b2b2b2 solid;
+            &.maxui-togglebar :extend(.mm-toggleBar all){ }
+
+        }
+        #maxui-timeline {
+            clear:both;
+            margin:0;
+            overflow: hidden;
+            padding:0 10px;
+            background:@mainBackgroundColor;
+            #maxui-activity-sort { }
+            #maxui-wrapper:extend(.mm-wrapper) {
+                #maxui-preload {
+                    height: 0px;
+                }
+                #maxui-activities {
+                    .maxui-activity:extend(.mm-Activity all) {
+                        .maxui-activity-content {
+                            position:relative;
+                            margin:-5px 0 0 55px;
+
+                            .maxui-topright {
+                                .maxui-published-date:extend(.mm-PublishedDate) {}
+                            }
+                            .maxui-actor:extend(.mm-Actor all) {}
+                            .maxui-activity-message {
+                                .maxui-body:extend(.mm-Body) {}
+                            }
+                        }
+
+                        .maxui-footer {
+                            .maxui-origin {
+                                display:inline;
+                                padding-right:10px;
+                                color:#6e6e6e;
+                                font-size:11px;
+                                background:url('/maxui-dev/img/maxcomm.png') 0 -77px no-repeat;
+                                padding-left:10px;
+                            }
+                            .maxui-actions {
+                                position:relative;
+                                a {
+                                    display:inline;
+                                    padding-right: 10px;
+                                }
+                                .maxui-action {
+                                    font-size:12px;
+                                    color:#007bc0;
+                                    text-decoration:none;
+                                    padding-left:18px;
+                                    padding-right: 8px;
+                                    cursor:pointer;
+                                    &:hover {
+                                        color:#005ea0;
+                                        text-decoration:underline;
+                                    }
+
+                                    &.commentaction { background: url('/maxui-dev/img/maxcomm.png') no-repeat 0 2px;
+                                                      &:hover { background: url('/maxui-dev/img/maxcomm.png') no-repeat 0 -18px; }
+                                                    }
+                                    &.maxui-likes { background: url('/maxui-dev/img/nolike.png') no-repeat 0 1px;
+                                                    &.maxui-liked { background: url('/maxui-dev/img/like.png') no-repeat 0 1px; }
+                                                  }
+
+                                    &.maxui-favorites { background: url('/maxui-dev/img/nofav.png') no-repeat 0 1px;
+                                                    &.maxui-favorited { background: url('/maxui-dev/img/fav.png') no-repeat 0 1px; }
+                                                  }
+
+                                    &.maxui-delete { background:url('/maxui-dev/img/trashbin.png') 5px 1px no-repeat;
+                                                      &:hover { background:url('/maxui-dev/img/trashbino.png') 5px 0px no-repeat; }
+
+
+                                    }
+                                }
+                            }
+                        }
+                        .maxui-comments {
+                            margin-left:56px;
+                            width:auto;
+                            margin-top:5px;
+                            background:#f2f2f2;
+                            padding:5px;
+                            position:relative;
+                            .mm-borderRadius(6px);
+                            &:before {
+                                content: "";
+                                display: block;
+                                width: 0; height: 0;
+                                position:absolute; margin-top:-12px;
+                                border-left: 8px solid #fff;
+                                border-right: 8px solid #fff;
+                                border-bottom: 8px solid #f2f2f2;
+                            }
+
+                            #maxui-commentsbox {
+                                .maxui-comment {
+                                    padding: 1px 0 0;
+
+                                    #maxui-activity-content {
+                                        margin-left:41px;
+                                        margin-right:0;
+                                        margin-top:-5px;
+                                        margin-bottom:18px;
+                                        position:relative;
+
+                                        .maxui-published-date:extend(.mm-PublishedDate) {}
+                                        .maxui-actor:extend(.mm-Actor all) {
+                                            .maxui-avatar { margin-left:0!important;
+                                                img {
+                                                    width:36px!important;
+                                                    height:36px!important;
+                                                }
+                                            }
+                                        }
+                                        .maxui-body:extend(.m-Body) {
+                                            font-size: 12px !important;
+                                        }
+                                    }
+                                }
+                            }
+                            #maxui-newcommentbox {
+                                text-align: right;
+                                textarea :extend(.mm-textarea all) {}
+                            }
+                        }
+                    }
+                }
+                #maxui-more-activities {
+                    .maxui-button:extend(.mm-Button all) {
+                        width: 100% !important;
+                        margin: 10px 0px !important;
+                        color:#007bc0;
+                        background: #f2f2f2;
+                        text-shadow: 0 1px #fff;
+                        .mm-gradient(#fff, #f2f2f2);
+                        &:hover,
+                        &:focus {
+                            border:1px solid #999;
+                            background: #f2f2f2;
+                            cursor:pointer;
+                            color:#005ea0;
+                            box-shadow:0 1px 5px rgba(0,0,0,.1);
+                        }
+                        &.active {
+                            .mm-gradient(#e5e5e5, #f2f2f2)
+                        }
+
+                    }
+                }
+            }
+        }
+    }
+}
+

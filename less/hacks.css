@@ -1,0 +1,13 @@
+#maxui-newactivity textarea,
+.maxui-comments textarea {
+    width:97.75% \0/;
+    *width:97.75%;
+    height:45px \0/;
+    min-height:45px \0/;
+    *height:45px;
+    *min-height:45px;
+}
+
+.maxui-button {*overflow: visible}
+
+#maxui-newactivity .maxui-avatar img {*position:absolute;}
