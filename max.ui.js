@@ -605,12 +605,33 @@
                 $comment.animate({height: 0, opacity:0}, 100, function(event) {
                     $comment.remove()
                     $popover.hide()
-
                 })
             })
 
         })
 
+
+        jq('#maxui-timeline').on('click', '.maxui-sort-action.maxui-most-recent a', function (event) {
+            event.preventDefault()
+            $sortbutton = jq(this).closest('.maxui-sort-action')
+            if (!$sortbutton.hasClass('active')) {
+                jq('#maxui-activity-sort .maxui-sort-action.active').toggleClass('active', false)
+                $sortbutton.toggleClass('active', true)
+                maxui.printActivities({})
+            }
+
+        })
+
+        jq('#maxui-timeline').on('click', '.maxui-sort-action.maxui-most-valued a', function (event) {
+            event.preventDefault()
+            $sortbutton = jq(this).closest('.maxui-sort-action')
+            if (!$sortbutton.hasClass('active')) {
+                jq('#maxui-activity-sort .maxui-sort-action.active').toggleClass('active', false)
+                $sortbutton.toggleClass('active', true)
+                maxui.printActivities({sortBy: 'likes'})
+            }
+
+        })
 // **************************************************************************************
 //                    add people predicting
 // **************************************************************************************
@@ -1763,9 +1784,9 @@
                                          date: maxui.utils.formatDate(activity.published, maxui.language),
                                          text: maxui.utils.formatText(activity.object.content),
                                       replies: replies,
-                                    favorites: activity.favorited,
                                     favorited: activity.favorited,
-                                        likes: activity.liked,
+                                        likes: activity.likesCount,
+                               showLikesCount: maxui.currentSortOrder == 'likes',
                                         liked: activity.liked,
 
                                     avatarURL: avatar_url,
@@ -1905,8 +1926,11 @@
         if (filters.after)
             {insert_at = 'beggining'}
 
-        filters.sortBy = maxui.settings.activitySortOrder
+        if (!filters.sortBy) {
+            filters.sortBy = maxui.settings.activitySortOrder
+        }
 
+        maxui.currentSortOrder = filters.sortBy
 
         if (maxui.settings.activitySource=='timeline')
         {

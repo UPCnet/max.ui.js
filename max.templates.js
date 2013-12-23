@@ -67,7 +67,7 @@ var MSTCH_MAXUI_MAIN_UI = '\
 \
    <div id="maxui-timeline" style="{{showTimeline}}">\
       <div id="maxui-activity-sort">\
-        <div class="maxui-sort-action maxui-most-recent">\
+        <div class="maxui-sort-action maxui-most-recent active">\
           <a href="#">{{literals.recent_activity}}</a>\
         </div>\
         <div class="maxui-sort-action maxui-most-valued">\
@@ -146,6 +146,7 @@ var MSTCH_MAXUI_ACTIVITY = '\
             <a href="" class="maxui-action maxui-likes {{#liked}}maxui-liked{{/liked}}">\
                  <span>{{#liked}}{{literals.unlike}}{{/liked}}\
                        {{^liked}}{{literals.like}}{{/liked}}</span>\
+                       {{#showLikesCount}}(<strong>{{likes}}</strong>){{/showLikesCount}}\
             </a>\
             {{#canDeleteActivity}}\
             <a href="" class="maxui-action maxui-delete">\

@@ -1074,10 +1074,22 @@ top: 3px;
 
 #maxui-activity-sort .maxui-sort-action.maxui-most-recent a {
     padding-left: 20px;
+    background: url('/maxui-dev/img/sort-recent-bright.png') no-repeat 0px 0px;
+}
+
+#maxui-activity-sort .maxui-sort-action.maxui-most-recent.active a {
+    padding-left: 20px;
     background: url('/maxui-dev/img/sort-recent.png') no-repeat 0px 0px;
+    color: #555;
 }
 
 #maxui-activity-sort .maxui-sort-action.maxui-most-valued  a{
     padding-left: 20px;
+    background: url('/maxui-dev/img/sort-valued-bright.png') no-repeat 0px 0px;
+}
+
+#maxui-activity-sort .maxui-sort-action.maxui-most-valued.active  a{
+    padding-left: 20px;
     background: url('/maxui-dev/img/sort-valued.png') no-repeat 0px 0px;
+    color: #555;
 }
