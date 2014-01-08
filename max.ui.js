@@ -1785,7 +1785,7 @@
                                          text: maxui.utils.formatText(activity.object.content),
                                       replies: replies,
                                     favorited: activity.favorited,
-                                        likes: activity.likesCount,
+                                        likes: activity.likesCount ? activity.likesCount : 0,
                                showLikesCount: maxui.currentSortOrder == 'likes',
                                         liked: activity.liked,
 
