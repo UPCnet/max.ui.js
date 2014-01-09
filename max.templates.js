@@ -58,6 +58,7 @@ var MSTCH_MAXUI_MAIN_UI = '\
        <a id="maxui-search-toggle" class="maxui-disabled" href="#" alt="obre-tanca"></a>\
        <div id="maxui-search-box">\
           <input id="maxui-search-text" type="search" data-literal="{{literals.search_text}}" class="maxui-empty maxui-text-input" value="{{literals.search_text}}" />\
+          <a href="#" id="maxui-favorites-filter">{{literals.favorites}}</a>\
           <!--<input disabled="disabled" id="maxui-search-action" type="button" class="maxui-button maxui-disabled"></input>-->\
        </div>\
        <div id="maxui-search-filters"></div>\
@@ -252,7 +253,9 @@ var MSTCH_MAXUI_PREDICTIVE_ITEM = '\
 
 var MSTCH_MAXUI_FILTERS = '\
 {{#filters}}\
-<div class="maxui-filter maxui-{{type}}" type="{{type}}" value="{{value}}"><span>{{prepend}}{{value}}<a class="maxui-close" href=""><img class="maxui-img" src="/maxui-dev/img/x.png" alt="tanca"></a></span></div>\
+    {{#visible}}\
+    <div class="maxui-filter maxui-{{type}}" type="{{type}}" value="{{value}}"><span>{{prepend}}{{value}}<a class="maxui-close" href=""><img class="maxui-img" src="/maxui-dev/img/x.png" alt="tanca"></a></span></div>\
+    {{/visible}}\
 {{/filters}}\
 ';
 

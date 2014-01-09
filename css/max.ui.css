@@ -410,9 +410,9 @@ top: 3px;
 
 #maxui-search-text {
 -webkit-appearance: none; -moz-appearance:none; appearance:none;
-width:100%;
-width:97.5% \0/;
-*width:97.5%;
+width:80%;
+width:77.5% \0/;
+*width:77.5%;
 color:#666;
 height:24px; min-height:24px;
 border: 1px #b2b2b2 solid;
@@ -435,7 +435,7 @@ box-sizing:border-box;
     width: 24px;
 }
 
-#maxui-search-box {padding-left:56px; width:auto; text-align:right;}
+#maxui-search-box {padding-left:56px; width:auto; text-align:left;}
 
 #maxui-newactivity .maxui-avatar {left:0; top:0; position:relative;}
 #maxui-container a img {border:0;}
@@ -1092,4 +1092,8 @@ top: 3px;
     padding-left: 20px;
     background: url('/maxui-dev/img/sort-valued.png') no-repeat 0px 0px;
     color: #555;
+}
+
+#maxui-favorites-filter {
+    margin-left:10px;
 }

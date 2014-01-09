@@ -380,6 +380,19 @@
 
             })
 
+        //Assign Username and avatar clicking via delegating the click to the activities container
+        jq('#maxui-search').on('click','#maxui-favorites-filter',function (event) {
+            event.preventDefault()
+            var favoritesButton = jq(event.currentTarget)
+            var filterFavorites = !favoritesButton.hasClass('active')
+            if (filterFavorites) {
+                maxui.addFilter({type:'favorites', value:true, visible:false})
+            } else {
+                maxui.delFilter({type:'favorites', value:true})
+            }
+            favoritesButton.toggleClass('active', filterFavorites)
+            })
+
         //Assign hashtag filtering via delegating the click to the activities container
         jq('#maxui-activities').on('click','.maxui-hashtag',function (event) {
             event.preventDefault()
@@ -1051,13 +1064,19 @@
         jq('#maxui-search-filters').html(activity_items)
         var filters = {}
         // group filters
-        for (f=0;f<params.filters.length;f++)
-            { var filter = params.filters[f]
+        enableSearchToggle = false
+        for (f=0;f<params.filters.length;f++) {
+            var filter = params.filters[f]
 
-              if (!filters[filter.type])
-                  filters[filter.type]=[]
-              filters[filter.type].push(filter.value)
+            // Enable toggle button only if there's at least one visible filter
+            if (filter.visible) {
+                enableSearchToggle = true
             }
+            if (!filters[filter.type]) {
+                filters[filter.type]=[]
+            }
+            filters[filter.type].push(filter.value)
+        }
 
         // Accept a optional parameter indicating search start point
         if (arguments.length>0)
@@ -1065,9 +1084,11 @@
 
         maxui.printActivities(filters)
 
-        //Enable or disable filter toogle if there are filters defined (or not)
-        jq('#maxui-search-toggle').toggleClass('maxui-disabled', maxui.filters.length==0)
-        jq('#maxui-search').toggleClass('folded',maxui.filters.length==0)
+        //Enable or disable filter toogle if there are visible filters defined (or not)
+        if (enableSearchToggle) {
+            jq('#maxui-search-toggle').toggleClass('maxui-disabled', maxui.filters.length==0)
+            jq('#maxui-search').toggleClass('folded',maxui.filters.length==0)
+        }
    }
 
 
@@ -1102,6 +1123,12 @@
 
         if (!maxui.filters)
             { maxui.filters = []}
+
+
+        // show filters bu default unless explicitly specified on filter argument
+        if (!filter.hasOwnProperty('visible')) {
+            filter.visible = true
+        }
 
         switch (filter.type)
         {
