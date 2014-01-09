@@ -1051,17 +1051,17 @@
 
 
     /**
-    *    Reloads the current filters UI and executes the search, optionally starting
-    *    at a given point of the timeline
+    *    Prepares a object with the current active filters
     *
     *    @param {String} (optional)    A string containing the id of the last activity loaded
     **/
-    jq.fn.reloadFilters = function() {
+    jq.fn.getFilters = function() {
 
         var maxui=this
         var params = {filters:maxui.filters}
-        var activity_items = maxui.templates.filters.render(params)
-        jq('#maxui-search-filters').html(activity_items)
+        if (params.filters == undefined) {
+            params.filters = []
+        }
         var filters = {}
         // group filters
         enableSearchToggle = false
@@ -1082,10 +1082,34 @@
         if (arguments.length>0)
             filters['before'] = arguments[0]
 
-        maxui.printActivities(filters)
+        return {filters: filters, visible:enableSearchToggle}
+   }
+
+
+    /**
+    *    Reloads the current filters UI and executes the search, optionally starting
+    *    at a given point of the timeline
+    *
+    *    @param {String} (optional)    A string containing the id of the last activity loaded
+    **/
+    jq.fn.reloadFilters = function() {
+
+        var maxui=this
+        var params = {filters:maxui.filters}
+        var activity_items = maxui.templates.filters.render(params)
+        jq('#maxui-search-filters').html(activity_items)
+
+        // Accept a optional parameter indicating search start point
+        if (arguments.length>0) {
+            filters = maxui.getFilters(arguments[0])
+        } else {
+            filters = maxui.getFilters()
+        }
+
+        maxui.printActivities()
 
         //Enable or disable filter toogle if there are visible filters defined (or not)
-        if (enableSearchToggle) {
+        if (filters.visible) {
             jq('#maxui-search-toggle').toggleClass('maxui-disabled', maxui.filters.length==0)
             jq('#maxui-search').toggleClass('folded',maxui.filters.length==0)
         }
@@ -1940,7 +1964,7 @@
     /**
     *    Renders the timeline of the current user, defined in settings.username
     **/
-    jq.fn.printActivities = function(filters) {
+    jq.fn.printActivities = function(ufilters) {
         // save a reference to the container object to be able to access it
         // from callbacks defined in inner levels
         var maxui = this
@@ -1948,13 +1972,21 @@
         var func_params = []
         var insert_at = 'replace'
 
+        // Get current defined filters and update with custom
+        var filters = maxui.getFilters().filters
+        jq.extend(filters, ufilters)
+
         if (filters.before)
             {insert_at = 'end'}
         if (filters.after)
             {insert_at = 'beggining'}
 
         if (!filters.sortBy) {
-            filters.sortBy = maxui.settings.activitySortOrder
+            if (jq('#maxui-timeline .maxui-sort-action.maxui-most-valued').hasClass('active')) {
+                filters.sortBy = 'likes'
+            } else {
+                filters.sortBy = maxui.settings.activitySortOrder
+            }
         }
 
         maxui.currentSortOrder = filters.sortBy
