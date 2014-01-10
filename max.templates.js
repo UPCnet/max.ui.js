@@ -17,7 +17,7 @@ var MSTCH_MAXUI_MAIN_UI = '\
    <div id="maxui-conversations" style="height:0px; {{showConversations}}">\
        <div id="maxui-common-header" style="height:0px;">\
           <div id="maxui-back-conversations" class="maxui-togglebar">\
-              <a href="#">&larr; {{literals.conversations_list}}</a>\
+              <a class="maxui-icon-" href="#"> {{literals.conversations_list}}</a>\
               <h3 class="maxui-title">displayName</h3>\
           </div>\
        </div>\
@@ -36,7 +36,7 @@ var MSTCH_MAXUI_MAIN_UI = '\
            </div>\
    </div>\
 \
-<div id="maxui-show-conversations" class="maxui-togglebar" style="{{showConversationsToggle}}"><a href="#">{{literals.conversations}} &uarr;</a></div>\
+<div id="maxui-show-conversations" class="maxui-togglebar maxui-icon-" style="{{showConversationsToggle}}"><a href="#">{{literals.conversations}}</a></div>\
 \
     <div id="maxui-conversation-predictive" class="maxui-predictive" style="display:none;"><ul></ul></div>\
     <div id="maxui-add-people-box" style="display:none;">\
@@ -64,7 +64,7 @@ var MSTCH_MAXUI_MAIN_UI = '\
        <div id="maxui-search-filters"></div>\
    </div>\
 \
-   <div id="maxui-show-timeline" class="maxui-togglebar" style="{{showTimelineToggle}}"><a href="#">{{literals.activity}} &darr;</a></div>\
+   <div id="maxui-show-timeline" class="maxui-togglebar maxui-icon-" style="{{showTimelineToggle}}"><a href="#">{{literals.activity}}</a></div>\
 \
    <div id="maxui-timeline" style="{{showTimeline}}">\
       <div id="maxui-activity-sort">\
@@ -184,7 +184,7 @@ var MSTCH_MAXUI_CONVERSATION = '\
     <div class="maxui-activity-content">\
         <div class="maxui-topright">\
             <span class="maxui-publisheddate">{{date}}</span>\
-            <a class="maxui-enterconversation" href="#"><img src="/maxui-dev/img/to_conversation.png"></a>\
+            <a class="maxui-enterconversation maxui-icon-" href="#"></a>\
         </div>\
         <div class="maxui-actor">\
               <a href="#"><span class="maxui-avatar"><img src="{{avatarURL}}"></span>\

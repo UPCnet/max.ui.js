@@ -1074,6 +1074,20 @@ top: 3px;
 #maxui-container .maxui-actions a.maxui-action.maxui-favorites.maxui-favorited:hover { color:#026399; }
 
 
+#maxui-show-timeline.maxui-togglebar:after { content: '\e80a'; color:#929292;}
+#maxui-show-timeline.maxui-togglebar:hover:after { content: '\e80a'; color:#555;}
+
+#maxui-show-conversations.maxui-togglebar:after { content: '\e809'; color:#929292;}
+#maxui-show-conversations.maxui-togglebar:hover:after { content: '\e809'; color:#555;}
+
+#maxui-back-conversations.maxui-togglebar a:before { content: '\e807'; color:#929292;}
+#maxui-back-conversations.maxui-togglebar a:hover:before { content: '\e807'; color:#555;}
+
+.maxui-enterconversation:before { font-size: 150%; content: '\e80b'; color:#929292; }
+.maxui-enterconversation:hover:before { color:#555; }
+
+}
+
 /*
 
 
