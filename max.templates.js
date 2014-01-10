@@ -68,12 +68,9 @@ var MSTCH_MAXUI_MAIN_UI = '\
 \
    <div id="maxui-timeline" style="{{showTimeline}}">\
       <div id="maxui-activity-sort">\
-        <div class="maxui-sort-action maxui-most-recent active">\
-          <a href="#">{{literals.recent_activity}}</a>\
-        </div>\
-        <div class="maxui-sort-action maxui-most-valued">\
-          <a href="#">{{literals.valued_activity}}</a>\
-        </div>\
+        <a class="maxui-sort-action maxui-most-recent active" href="#">{{literals.recent_activity}}</a>\
+        /\
+        <a class="maxui-sort-action maxui-most-valued" href="#">{{literals.valued_activity}}</a>\
       </div>\
       <div class="maxui-wrapper">\
           <div id="maxui-preload" class="maxui-activities" style="height:0px;overflow:hidden">\

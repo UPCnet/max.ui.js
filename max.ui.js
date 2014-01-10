@@ -624,9 +624,9 @@
         })
 
 
-        jq('#maxui-timeline').on('click', '.maxui-sort-action.maxui-most-recent a', function (event) {
+        jq('#maxui-timeline').on('click', 'a.maxui-sort-action.maxui-most-recent', function (event) {
             event.preventDefault()
-            $sortbutton = jq(this).closest('.maxui-sort-action')
+            $sortbutton = jq(this)
             if (!$sortbutton.hasClass('active')) {
                 jq('#maxui-activity-sort .maxui-sort-action.active').toggleClass('active', false)
                 $sortbutton.toggleClass('active', true)
@@ -635,9 +635,9 @@
 
         })
 
-        jq('#maxui-timeline').on('click', '.maxui-sort-action.maxui-most-valued a', function (event) {
+        jq('#maxui-timeline').on('click', 'a.maxui-sort-action.maxui-most-valued', function (event) {
             event.preventDefault()
-            $sortbutton = jq(this).closest('.maxui-sort-action')
+            $sortbutton = jq(this)
             if (!$sortbutton.hasClass('active')) {
                 jq('#maxui-activity-sort .maxui-sort-action.active').toggleClass('active', false)
                 $sortbutton.toggleClass('active', true)

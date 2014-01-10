@@ -41,8 +41,8 @@ max.literals = function(language) {
                        'unfavorite': 'unfavorite',
                        'like': 'like',
                        'unlike': 'unlike',
-                       'recent_activity': "Recent activity",
-                       'valued_activity': "Most valued"
+                       'recent_activity': "Latest activity",
+                       'valued_activity': "Most valued activity"
         }
 
     maxui['es'] = {'new_activity_text': 'Escribe algo...',
@@ -78,8 +78,8 @@ max.literals = function(language) {
                        'unfavorite': 'quitar favorito',
                        'like': 'me gusta',
                        'unlike': 'ya no me gusta',
-                       'recent_activity': "Más recientes",
-                       'valued_activity': "Mñas valorados"
+                       'recent_activity': "Últimas actividades",
+                       'valued_activity': "Actividades más valoradas"
         }
 
     maxui['ca'] = {'new_activity_text': 'Escriu alguna cosa...',
@@ -115,8 +115,8 @@ max.literals = function(language) {
                        'unfavorite': 'treure favorit',
                        'like': "m'agrada",
                        'unlike': "ja no m'agrada",
-                       'recent_activity': "Més recent",
-                       'valued_activity': "Més valorats"
+                       'recent_activity': "Darreres Activitats",
+                       'valued_activity': "Activitats més valorades"
 
         }
 

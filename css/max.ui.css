@@ -1035,32 +1035,36 @@ top: 3px;
 }
 
 #maxui-activity-sort {
-    height:30px;
     border-bottom: 1px #b2b2b2 solid;
     margin: 0 -10px;
+    padding: 5px 10px;
 
-}
-
-#maxui-activity-sort .maxui-sort-action {
-    width: 50%;
-    float:left;
-    box-sizing: border-box;
-    margin-top: 5px;
 }
 
 #maxui-activity-sort .maxui-sort-action:hover {
-    color: #;
+    text-decoration:none;
+}
+
+#maxui-activity-sort .maxui-sort-action.active {
+    color: #444;
+}
+
+#maxui-activity-sort .maxui-sort-action.active:hover {
+    text-decoration:none;
+    color: #000;
+}
+
+
+#maxui-activity-sort .maxui-sort-action.maxui-most-recent {
+    padding-right: 5px;
 }
 
 #maxui-activity-sort .maxui-sort-action.maxui-most-recent {
-    text-align:right;
-    padding-right:20px;
-    border-right: 1px #b2b2b2 solid;
+    padding-right: 5px;
 }
 
 #maxui-activity-sort .maxui-sort-action.maxui-most-valued {
-    text-align:left;
-    padding-left:20px;
+    padding-left: 5px;
 }
 
 #maxui-activity-sort .maxui-sort-action a {
@@ -1069,28 +1073,6 @@ top: 3px;
 }
 
 #maxui-activity-sort .maxui-sort-action a:hover {
-    color: #555;
-}
-
-#maxui-activity-sort .maxui-sort-action.maxui-most-recent a {
-    padding-left: 20px;
-    background: url('/maxui-dev/img/sort-recent-bright.png') no-repeat 0px 0px;
-}
-
-#maxui-activity-sort .maxui-sort-action.maxui-most-recent.active a {
-    padding-left: 20px;
-    background: url('/maxui-dev/img/sort-recent.png') no-repeat 0px 0px;
-    color: #555;
-}
-
-#maxui-activity-sort .maxui-sort-action.maxui-most-valued  a{
-    padding-left: 20px;
-    background: url('/maxui-dev/img/sort-valued-bright.png') no-repeat 0px 0px;
-}
-
-#maxui-activity-sort .maxui-sort-action.maxui-most-valued.active  a{
-    padding-left: 20px;
-    background: url('/maxui-dev/img/sort-valued.png') no-repeat 0px 0px;
     color: #555;
 }
 
