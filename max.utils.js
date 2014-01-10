@@ -115,6 +115,7 @@ max.utils = function() {
     *    @param {String} timestamp    A date represented as a string in rfc3339 format '2012-02-09T13:06:43Z'
     **/
     formatDate: function(timestamp, lang) {
+        var today = new Date()
         var thisdate = new Date()
         var match = timestamp.match(
           "^([-+]?)(\\d{4,})(?:-?(\\d{2})(?:-?(\\d{2})" +
@@ -141,7 +142,11 @@ max.utils = function() {
           if (match[2] >= 0 && match[2] <= 99) // 1-99 AD
            ms -= 59958144000000;
           thisdate.setTime(ms);
-          formatted = jQuery.easydate.format_date(thisdate, lang)
+          if ((today.getTime() - ms ) < 259200000) {
+              formatted = jQuery.easydate.format_date(thisdate, lang)
+          } else {
+            formatted = match[4] + '-' + (match[3]) + '-' + match[2]
+          }
           return formatted
          }
          else
