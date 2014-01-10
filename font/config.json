@@ -95,6 +95,12 @@
       "css": "angle-circled-down",
       "code": 59402,
       "src": "fontawesome"
+    },
+    {
+      "uid": "c91522256a4c3972e9a2765b995b7252",
+      "css": "pinboard",
+      "code": 59407,
+      "src": "zocial"
     }
   ]
 }

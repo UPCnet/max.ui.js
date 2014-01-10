@@ -55,7 +55,7 @@ var MSTCH_MAXUI_MAIN_UI = '\
    </div>\
 \
    <div id="maxui-search" class="folded">\
-       <a id="maxui-search-toggle" class="maxui-disabled" href="#" alt="obre-tanca"></a>\
+       <a id="maxui-search-toggle" class="maxui-disabled maxui-icon-" href="#" alt="obre-tanca"></a>\
        <div id="maxui-search-box">\
           <input id="maxui-search-text" type="search" data-literal="{{literals.search_text}}" class="maxui-empty maxui-text-input" value="{{literals.search_text}}" />\
           <a href="#" id="maxui-favorites-filter">{{literals.favorites}}</a>\
@@ -121,7 +121,7 @@ var MSTCH_MAXUI_ACTIVITY = '\
     </div>\
     <div class="maxui-footer">\
         {{#publishedIn}}\
-        <div class="maxui-origin">\
+        <div class="maxui-origin maxui-icon-">\
                {{literals.context_published_in}}\
                <a href="{{publishedIn.url}}">{{publishedIn.displayName}}</a>\
                {{#via}}\
@@ -226,7 +226,7 @@ var MSTCH_MAXUI_COMMENT = '\
        <div>\
            <p class="maxui-body">{{&text}}</p>\
            {{#canDeleteComment}}\
-           <span class="maxui-delete-comment"></span>\
+           <span class="maxui-delete-comment maxui-icon-"></span>\
            <div class="maxui-popover left">\
                 <div class="maxui-arrow"></div>\
                     <h3 class="maxui-popover-title">{{literals.delete_activity_confirmation}}</h3>\
