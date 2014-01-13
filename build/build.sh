@@ -85,8 +85,8 @@ echo "Joining css files"
 
 
 rm -f $CSS_FILENAME
-cp ../css/max.ui.css $CSS_FILENAME
-cat ../font/maxicons.css >> $CSS_FILENAME
+cp ../font/maxicons.css $CSS_FILENAME
+cat  ../css/max.ui.css >> $CSS_FILENAME
 
 
 
