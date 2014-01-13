@@ -221,11 +221,6 @@ p.maxui-body {margin:0;font-size:13px;}
    font-style:italic;
    color:#666
 }
-.maxui-publisheddate {
-font-size:11px;
-color:  #6e6e6e;
-text-align: right;
-}
 
 .maxui-topright{
 float:right;
@@ -1079,6 +1074,12 @@ cursor:pointer;
 #maxui-search-toggle.maxui-disabled:before { content: '\e80e'; color: #666; font-size: 120%; margin-top:3px;}
 #maxui-search-toggle:before { content: '\e80d'; color: #666; font-size: 120%; margin-top: 3px;}
 
+
+.maxui-publisheddate, .maxui-likescount {
+    font-size:11px;
+    color:  #6e6e6e;
+    text-align: right;
+}
 
 /*
 

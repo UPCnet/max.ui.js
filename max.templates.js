@@ -108,7 +108,8 @@ var MSTCH_MAXUI_ACTIVITY = '\
 <div class="maxui-activity" id="{{id}}" userid="{{actor.id}}" username="{{actor.username}}">\
     <div class="maxui-activity-content">\
         <div class="maxui-topright">\
-            <span class="maxui-publisheddate">{{date}}</span>\
+            {{^showLikesCount}}<span class="maxui-publisheddate">{{date}}</span>{{/showLikesCount}}\
+            {{#showLikesCount}}<span class="maxui-likescount"><strong>{{likes}}</strong> {{literals.like}}</span>{{/showLikesCount}}\
         </div>\
         <div class="maxui-actor">\
               <a href="#"><span class="maxui-avatar"><img src="{{avatarURL}}"></span>\
@@ -144,7 +145,6 @@ var MSTCH_MAXUI_ACTIVITY = '\
             <a href="" class="maxui-action maxui-likes {{#liked}}maxui-liked{{/liked}} maxui-icon-">\
                        {{#liked}}{{literals.unlike}}{{/liked}}\
                        {{^liked}}{{literals.like}}{{/liked}}\
-                       {{#showLikesCount}}(<strong>{{likes}}</strong>){{/showLikesCount}}\
             </a>\
             {{#canDeleteActivity}}\
             <a href="" class="maxui-action maxui-delete maxui-icon-">\

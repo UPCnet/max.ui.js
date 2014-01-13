@@ -498,17 +498,16 @@
             var $activity = jq(this).closest('.maxui-activity')
             var activityid = $activity.attr('id')
             var favorited = $favorites.hasClass('maxui-favorited')
-            var $span = $favorites.find('span')
 
             if (favorited) {
                 maxui.maxClient.unfavoriteActivity(activityid, function(event) {
                     $favorites.toggleClass('maxui-favorited', false)
-                    $span.text(maxui.settings.literals.favorite)
+                    $favorites.text(maxui.settings.literals.favorite)
                 })
             } else {
                 maxui.maxClient.favoriteActivity(activityid, function(event) {
                     $favorites.toggleClass('maxui-favorited', true)
-                    $span.text(maxui.settings.literals.unfavorite)
+                    $favorites.text(maxui.settings.literals.unfavorite)
                 })
 
             }
@@ -521,17 +520,16 @@
             var $activity = jq(this).closest('.maxui-activity')
             var activityid = $activity.attr('id')
             var liked = $likes.hasClass('maxui-liked')
-            var $span = $likes.find('span')
 
             if (liked) {
                 maxui.maxClient.unlikeActivity(activityid, function(event) {
                     $likes.toggleClass('maxui-liked', false)
-                    $span.text(maxui.settings.literals.like)
+                    $likes.text(maxui.settings.literals.like)
                 })
             } else {
                 maxui.maxClient.likeActivity(activityid, function(event) {
                     $likes.toggleClass('maxui-liked', true)
-                    $span.text(maxui.settings.literals.unlike)
+                    $likes.text(maxui.settings.literals.unlike)
                 })
             }
         })
