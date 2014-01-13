@@ -28,6 +28,7 @@ compile_js "../libs/stomp.js" "stomp-min.js"
 
 VERSION=`cat ../version`
 FILENAME="max.ui-$VERSION.js"
+CSS_FILENAME="max.ui-$VERSION.css"
 
 if [ -e $FILENAME ]
 then
@@ -77,4 +78,14 @@ comment "max.loader.js"
 cat ../max.loader.js | grep -v '//' >> $FILENAME
 
 echo "$FILENAME build completed."
+echo
+echo "Joining css files"
+
+
+
+rm -f $CSS_FILENAME
+cp ../css/max.ui.css $CSS_FILENAME
+cat ../font/maxicons.css >> $CSS_FILENAME
+
+
 
