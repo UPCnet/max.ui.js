@@ -460,8 +460,6 @@ box-sizing:border-box;
 }
 
 
-#maxui-search-box {padding-left:56px; width:auto; text-align:left;}
-
 #maxui-newactivity .maxui-avatar {left:0; top:0; position:relative;}
 #maxui-container a img {border:0;}
 
@@ -1173,6 +1171,8 @@ cursor:pointer;
     min-height: 58px;
     box-sizing: border-box;
 }
+
+#maxui-search-box {padding-left:25px; width:auto; text-align:left;}
 
 #maxui-search-toggle {
     float:left;
