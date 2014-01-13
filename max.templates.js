@@ -58,7 +58,8 @@ var MSTCH_MAXUI_MAIN_UI = '\
        <a id="maxui-search-toggle" class="maxui-disabled maxui-icon-" href="#" alt="obre-tanca"></a>\
        <div id="maxui-search-box">\
           <input id="maxui-search-text" type="search" data-literal="{{literals.search_text}}" class="maxui-empty maxui-text-input" value="{{literals.search_text}}" />\
-          <a href="#" id="maxui-favorites-filter">{{literals.favorites}}</a>\
+          <a href="#" id="maxui-favorites-filter"><i class="maxui-icon-star"/>{{literals.favorites}}\
+          </a>\
           <!--<input disabled="disabled" id="maxui-search-action" type="button" class="maxui-button maxui-disabled"></input>-->\
        </div>\
        <div id="maxui-search-filters"></div>\

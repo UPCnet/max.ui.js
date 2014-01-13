@@ -351,7 +351,7 @@ top: 3px;
 
 #maxui-search-text {
 -webkit-appearance: none; -moz-appearance:none; appearance:none;
-width:80%;
+width:82%;
 width:77.5% \0/;
 *width:77.5%;
 color:#666;
@@ -993,10 +993,21 @@ top: 3px;
     color: #555;
 }
 
-#maxui-favorites-filter {
-    margin-left:10px;
+#maxui-container #maxui-favorites-filter {
+    color:#bbb;
+    width:50px;
+    float:right;
+    text-align: center;
+    margin-right: 5px;
 }
 
+#maxui-container #maxui-favorites-filter.active {
+    color:#ff9b00;
+}
+
+#maxui-favorites-filter .maxui-icon-star{
+ font-size: 175%;
+}
 
 
 /* maxicons styles*/
@@ -1066,6 +1077,10 @@ cursor:pointer;
 
 .maxui-delete-comment:before { content: '\e806'; color: #666;}
 .maxui-delete-comment:hover:before { content: '\e806'; color: #555;}
+
+#maxui-search {
+    min-height: 35px;
+}
 
 #maxui-search-toggle {
     float:left;
