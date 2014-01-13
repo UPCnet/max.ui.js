@@ -1,6 +1,16 @@
 CHANGELOG
 =========
 
+
+3.6 (2014-01-13)
+----------------
+ * Social features: Like and Favorite
+ * Refactor image icons to fontello-generated font
+ * Adapt build scripts 
+ * Format dates conditionally: Dates older thatn 3 days, in day-month format
+ * When printing activities, read current active filters from filters object instead of passing parameter
+
+
 3.5.5 (2013-11-13)
 ------------------
  * Literals [Carles Bruguera]
