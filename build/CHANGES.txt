@@ -6,9 +6,12 @@ CHANGELOG
 ----------------
  * Social features: Like and Favorite
  * Refactor image icons to fontello-generated font
- * Adapt build scripts 
+ * Adapt build scripts
  * Format dates conditionally: Dates older thatn 3 days, in day-month format
  * When printing activities, read current active filters from filters object instead of passing parameter
+ * Add padding to messages to give air between actions
+ * Restyle search box
+ * Reduce actions section text size
 
 
 3.5.5 (2013-11-13)
@@ -30,8 +33,8 @@ CHANGELOG
 3.5.3 (2013-10-26)
 ------------------
  * Fix minor syntax to avoid warnings in compiler [Carles Bruguera]
- * Optimize and unify insertion of messages 
- * Fix bug that cleared current text when receiving a message 
+ * Optimize and unify insertion of messages
+ * Fix bug that cleared current text when receiving a message
  * Add mousewheel support to scrolls
  * Refactored scroll with an acceptable smooth drag [Carles Bruguera]
  * Moved participants interface to the bottom UI
@@ -61,7 +64,7 @@ CHANGELOG
  * Fix visual glitches
  * Add a confirmation dialog before deleting activities and comments
  * Add option to delete comments
- * Change way of show trashbin to new "deletable" permission in activities 
+ * Change way of show trashbin to new "deletable" permission in activities
  * Refactor to get rid of totalItems schema
 
 3.4 (2013-06-17)
