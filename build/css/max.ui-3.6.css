@@ -1170,7 +1170,8 @@ cursor:pointer;
 .maxui-delete-comment:hover:before { content: '\e806'; color: #555;}
 
 #maxui-search {
-    min-height: 35px;
+    min-height: 58px;
+    box-sizing: border-box;
 }
 
 #maxui-search-toggle {
