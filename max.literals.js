@@ -8,7 +8,8 @@ var max = max || {};
 max.literals = function(language) {
 
     var maxui = {}
-    maxui['en'] = {'new_activity_text': 'Write something...',
+    maxui['en'] = {'months': ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
+                       'new_activity_text': 'Write something...',
                        'activity': 'activity',
                        'conversations': 'private conversations',
                        'conversations_list': 'conversations list',
@@ -45,7 +46,8 @@ max.literals = function(language) {
                        'valued_activity': "Most valued activity"
         }
 
-    maxui['es'] = {'new_activity_text': 'Escribe algo...',
+    maxui['es'] = {'months': ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'],
+                       'new_activity_text': 'Escribe algo...',
                        'activity': 'actividad',
                        'conversations': 'conversaciones privadas',
                        'conversations_list': 'lista de conversaciones',
@@ -82,7 +84,8 @@ max.literals = function(language) {
                        'valued_activity': "Actividades más valoradas"
         }
 
-    maxui['ca'] = {'new_activity_text': 'Escriu alguna cosa...',
+    maxui['ca'] = {'months': ['gener', 'febrer', 'març', 'abril', 'maig', 'juny', 'juliol', 'agost', 'setembre', 'octubre', 'novembre', 'desembre'],
+                       'new_activity_text': 'Escriu alguna cosa...',
                        'activity': 'activitat',
                        'conversations': 'converses privades',
                        'conversations_list': 'llista de converses',

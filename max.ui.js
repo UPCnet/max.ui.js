@@ -128,6 +128,9 @@
                                }
         this.maxClient.configure(maxclient_config)
 
+        // Make settings available to utils package
+        maxui.utils.setSettings(maxui.settings)
+
         // Get user data and start ui rendering when completed
         this.maxClient.getUserData(maxui.settings.username, function() {
 
