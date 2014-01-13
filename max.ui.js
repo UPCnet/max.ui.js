@@ -1110,10 +1110,7 @@
         maxui.printActivities()
 
         //Enable or disable filter toogle if there are visible filters defined (or not)
-        if (filters.visible) {
-            jq('#maxui-search-toggle').toggleClass('maxui-disabled', maxui.filters.length==0)
-            jq('#maxui-search').toggleClass('folded',maxui.filters.length==0)
-        }
+        jq('#maxui-search').toggleClass('folded',!filters.visible)
    }
 
 

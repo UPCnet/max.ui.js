@@ -252,14 +252,14 @@ var MSTCH_MAXUI_PREDICTIVE_ITEM = '\
 var MSTCH_MAXUI_FILTERS = '\
 {{#filters}}\
     {{#visible}}\
-    <div class="maxui-filter maxui-{{type}}" type="{{type}}" value="{{value}}"><span>{{prepend}}{{value}}<a class="maxui-close" href=""><img class="maxui-img" src="/maxui-dev/img/x.png" alt="tanca"></a></span></div>\
+    <div class="maxui-filter maxui-{{type}}" type="{{type}}" value="{{value}}"><span>{{prepend}}{{value}}<a class="maxui-close" href=""><i class="maxui-icon-cancel-circled" alt="tanca"/></a></span></div>\
     {{/visible}}\
 {{/filters}}\
 ';
 
 var MSTCH_MAXUI_PARTICIPANTS = '\
 {{#persons}}\
-<div class="maxui-filter maxui-participant" type="participant" username="{{username}}"><span>{{prepend}}{{username}}<a class="maxui-close" href=""><img class="maxui-img" src="/maxui-dev/img/x.png" alt="tanca"></a></span></div>\
+<div class="maxui-filter maxui-participant" type="participant" username="{{username}}"><span>{{prepend}}{{username}}<a class="maxui-close" href=""><i class="maxui-icon-cancel-circled" alt="tanca"/></a></span></div>\
 {{/persons}}\
 ';
 
