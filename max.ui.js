@@ -502,12 +502,10 @@
             if (favorited) {
                 maxui.maxClient.unfavoriteActivity(activityid, function(event) {
                     $favorites.toggleClass('maxui-favorited', false)
-                    $favorites.text(maxui.settings.literals.favorite)
                 })
             } else {
                 maxui.maxClient.favoriteActivity(activityid, function(event) {
                     $favorites.toggleClass('maxui-favorited', true)
-                    $favorites.text(maxui.settings.literals.unfavorite)
                 })
 
             }
@@ -524,12 +522,10 @@
             if (liked) {
                 maxui.maxClient.unlikeActivity(activityid, function(event) {
                     $likes.toggleClass('maxui-liked', false)
-                    $likes.text(maxui.settings.literals.like)
                 })
             } else {
                 maxui.maxClient.likeActivity(activityid, function(event) {
                     $likes.toggleClass('maxui-liked', true)
-                    $likes.text(maxui.settings.literals.unlike)
                 })
             }
         })

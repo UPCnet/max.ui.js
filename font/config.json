@@ -25,6 +25,12 @@
       "src": "fontawesome"
     },
     {
+      "uid": "5b0772e9484a1a11646793a82edd622a",
+      "css": "pin",
+      "code": 59409,
+      "src": "fontawesome"
+    },
+    {
       "uid": "acf41aa4018e58d49525665469e35665",
       "css": "thumbs-up",
       "code": 59394,
@@ -101,12 +107,6 @@
       "css": "angle-circled-down",
       "code": 59402,
       "src": "fontawesome"
-    },
-    {
-      "uid": "c91522256a4c3972e9a2765b995b7252",
-      "css": "pinboard",
-      "code": 59407,
-      "src": "zocial"
     }
   ]
 }

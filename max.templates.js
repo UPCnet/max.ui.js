@@ -110,7 +110,7 @@ var MSTCH_MAXUI_ACTIVITY = '\
     <div class="maxui-activity-content">\
         <div class="maxui-topright">\
             {{^showLikesCount}}<span class="maxui-publisheddate">{{date}}</span>{{/showLikesCount}}\
-            {{#showLikesCount}}<span class="maxui-likescount"><strong>{{likes}}</strong> {{literals.like}}</span>{{/showLikesCount}}\
+            {{#showLikesCount}}<span class="maxui-likescount"><strong>{{likes}}</strong><i class="maxui-icon-thumbs-up"></i></span>{{/showLikesCount}}\
         </div>\
         <div class="maxui-actor">\
               <a href="#"><span class="maxui-avatar"><img src="{{avatarURL}}"></span>\
@@ -136,8 +136,8 @@ var MSTCH_MAXUI_ACTIVITY = '\
         {{/publishedIn}}\
         <div class="maxui-actions">\
             <a href="" class="maxui-action maxui-commentaction maxui-icon- {{^replies}}maxui-empty{{/replies}}"><strong>{{replies.length}}</strong> {{literals.toggle_comments}}</a>\
-            <a href="" class="maxui-action maxui-favorites {{#favorited}}maxui-favorited{{/favorited}} maxui-icon-">{{#favorited}}{{literals.unfavorite}}{{/favorited}}{{^favorited}}{{literals.favorite}}{{/favorited}}</a>\
-            <a href="" class="maxui-action maxui-likes {{#liked}}maxui-liked{{/liked}} maxui-icon-">{{#liked}}{{literals.unlike}}{{/liked}}{{^liked}}{{literals.like}}{{/liked}}</a>\
+            <a href="" class="maxui-action maxui-favorites {{#favorited}}maxui-favorited{{/favorited}} maxui-icon-">{{literals.favorite}}</a>\
+            <a href="" class="maxui-action maxui-likes {{#liked}}maxui-liked{{/liked}} maxui-icon-">{{literals.like}}</a>\
             {{#canDeleteActivity}}\
             <a href="" class="maxui-action maxui-delete maxui-icon-">{{literals.delete_activity_icon}}</a>\
             <div class="maxui-popover left">\

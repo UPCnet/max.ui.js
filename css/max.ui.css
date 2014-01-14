@@ -931,6 +931,7 @@ top: 3px;
 
 #maxui-activity-sort .maxui-sort-action.active {
     color: #444;
+    font-weight: bold;
 }
 
 #maxui-activity-sort .maxui-sort-action.active:hover {
@@ -1038,7 +1039,7 @@ top: 3px;
     font-size:11px;
 }
 
-.maxui-origin:before { content: '\e80f';}
+.maxui-origin:before { content: '\e811'; font-size: 12px;}
 
 
 .maxui-delete-comment, .maxui-delete-comment:hover

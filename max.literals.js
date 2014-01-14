@@ -118,7 +118,7 @@ max.literals = function(language) {
                        'unfavorite': 'treure favorit',
                        'like': "m'agrada",
                        'unlike': "ja no m'agrada",
-                       'recent_activity': "Darreres Activitats",
+                       'recent_activity': "Darreres activitats",
                        'valued_activity': "Activitats més valorades"
 
         }
