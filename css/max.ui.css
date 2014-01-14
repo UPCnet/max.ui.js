@@ -1055,7 +1055,8 @@ top: 3px;
     font-size:11px;
 }
 
-.maxui-origin:before { content: '\e811'; font-size: 12px;}
+.maxui-origin.maxui-icon-:before { content: '\e811'; font-size: 12px; margin-right: 0px;}
+
 
 
 .maxui-delete-comment, .maxui-delete-comment:hover
