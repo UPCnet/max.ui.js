@@ -29,10 +29,27 @@ module.exports = function(grunt) {
         // The tasks to run
         tasks: [ 'less' ]
       }
+    },
+
+    fontello: {
+    dist: {
+      options: {
+          config  : 'font/config.json',
+          zip     : 'tmp',
+          fonts   : 'font',
+          styles  : 'font',
+          force   : true,
+          sass    : true
+      }
     }
+  }
+
+
   });
 
   // Load tasks
   grunt.loadNpmTasks('grunt-contrib-less');
   grunt.loadNpmTasks('grunt-contrib-watch');
+  grunt.loadNpmTasks('grunt-fontello');
 };
+  
