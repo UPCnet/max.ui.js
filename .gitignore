@@ -3,3 +3,4 @@ presets/timeline.json
 presets/context.json
 .DS_Store
 tmp
+.fontello-session
