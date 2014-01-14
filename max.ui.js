@@ -985,6 +985,8 @@
                       jq(button).attr('class','maxui-button maxui-disabled')
                       jq(this).attr('class','maxui-empty maxui-text-input')
                       jq(this).removeAttr('title')
+                      jq('.maxui-error-box').animate({'margin-top': -25}, 200)                                  
+
                   }
                   else
                   {   if (maxui.settings.canwrite && !options.ignore_button) {
@@ -1218,12 +1220,14 @@
                 $button.removeAttr('disabled')
                 $button.attr('class','maxui-button')
                 $newmessagebox.find('textarea').attr('class','maxui-text-input')
+                $newmessagebox.find('.maxui-error-box').animate({'margin-top': -25}, 200)
             } else {
                 $button.attr('disabled', 'disabled')
                 $button.attr('class','maxui-button maxui-disabled')
                 if (displayName=='') {
                     $newmessagebox.find('textarea').attr('class','maxui-text-input error')
-                    $newmessagebox.find('textarea').attr('title', maxui.settings.literals.post_permission_missing_displayName)
+                    $newmessagebox.find('.maxui-error-box').text(maxui.settings.literals.post_permission_missing_displayName)
+                    $newmessagebox.find('.maxui-error-box').animate({'margin-top': -4}, 200)
                 }
             }
 
@@ -1241,7 +1245,8 @@
             $button.attr('class','maxui-button maxui-disabled')
             $participants_box.hide()
             $newmessagebox.find('textarea').attr('class','maxui-text-input error')
-            $newmessagebox.find('textarea').attr('title', maxui.settings.literals.post_permission_not_enough_participants)
+            $newmessagebox.find('.maxui-error-box').text(maxui.settings.literals.post_permission_not_enough_participants)
+            $newmessagebox.find('.maxui-error-box').animate({'margin-top': -4}, 200)
 
             $newdisplaynamebox.hide()
             $newdisplaynamebox.find('.maxui-text-input').val('')

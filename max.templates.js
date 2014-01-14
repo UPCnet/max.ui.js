@@ -98,6 +98,7 @@ var MSTCH_MAXUI_POSTBOX = '\
       </a>\
       <div id="maxui-newactivity-box">\
            <textarea class="maxui-empty maxui-text-input" data-literal="{{textLiteral}}">{{textLiteral}}</textarea>\
+           <div class="maxui-error-box"></div>\
            <input disabled="disabled" type="button" class="maxui-button maxui-disabled" value="{{buttonLiteral}}">\
       </div>\
       <div id="maxui-predictive" class="maxui-predictive" style="display:none;"><ul></ul></div>\
