@@ -1363,6 +1363,7 @@
     jq.fn.toggleSection = function(sectionToEnable) {
         maxui = this
         var $search = jq('#maxui-search')
+        var $activitysort = jq('#maxui-activity-sort')
         var $timeline = jq('#maxui-timeline')
         var $timeline_wrapper = jq('#maxui-timeline .maxui-wrapper')
         var $conversations = jq('#maxui-conversations')
@@ -1399,6 +1400,7 @@
           $conversations_list.width(sectionsWidth)
           $timeline.animate({'height':0}, 400)
           $search.hide(400)
+          $activitysort.hide(400)
           maxui.settings.UISection='conversations'
           $postbutton.val(maxui.settings.literals.new_message_post)
           $conversationsbutton.hide()
@@ -1418,6 +1420,7 @@
               $addpeople.hide()
           })
           $search.show(400)
+          $activitysort.show(400)
           //maxui.settings.currentConversationSection=='conversations'
           maxui.settings.UISection='timeline'
           $postbutton.val(maxui.settings.literals.new_activity_post)
