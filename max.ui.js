@@ -447,13 +447,19 @@
             $area.focus()
             })
 
+        // Close predictive window if clicked outside
+        jq(document).on('click', function(event) {
+            var $predictive = jq('#maxui-conversation-predictive')
+            $predictive.hide()
+        })
+
        //Assign user mention suggestion to input by click
         jq('#maxui-conversation-predictive').on('click','.maxui-prediction',function (event) {
             event.preventDefault()
-
+            console.log('click')
             var $selected = jq(this)
             var $area = jq('#maxui-add-people-box .maxui-text-input')
-            var $predictive = jq('#maxui-conversations #maxui-predictive')
+            var $predictive = jq('#maxui-conversation-predictive')
             var text = $area.val()
 
             var matchMention = new RegExp('^\\s*([\\w\\.]+)\s*')
@@ -1573,6 +1579,8 @@
         // String to store the generated html pieces of each conversation item
         var predictions = ''
 
+
+
         // Iterate through all the conversations
         for (i=0;i<items.length;i++)
             {
@@ -1590,6 +1598,11 @@
                 predictions = predictions + maxui.templates.predictive.render(params)
                 }
             }
+
+        if (predictions == '') {
+            predictions = '<li>' + maxui.settings.literals.no_match_found + '</li>'
+        }
+
         jq(predictive_selector + ' ul').html(predictions)
 
         if (arguments.length>2) {

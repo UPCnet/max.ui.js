@@ -792,7 +792,7 @@ padding: 8px 10px 12px 0px;
     background-color: transparent;
     color:#929292;
     width:250px;
-
+    display: block;
 
 }
 
@@ -803,8 +803,8 @@ padding: 8px 10px 12px 0px;
     outline: 0;}
 
 #maxui-conversation-predictive {
-    margin-top: 35px;
-    margin-left: 130px;
+    margin-top: 50px;
+    margin-left: 10px;
 }
 
 
