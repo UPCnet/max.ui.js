@@ -390,10 +390,16 @@
             var filterFavorites = !favoritesButton.hasClass('active')
             if (filterFavorites) {
                 maxui.addFilter({type:'favorites', value:true, visible:false})
+                var valued_literal = maxui.settings.literals.valued_favorited_activity
+                var recent_literal = maxui.settings.literals.recent_favorited_activity
             } else {
                 maxui.delFilter({type:'favorites', value:true})
+                var valued_literal = maxui.settings.literals.valued_activity
+                var recent_literal = maxui.settings.literals.recent_activity                
             }
             favoritesButton.toggleClass('active', filterFavorites)
+            jq('#maxui-activity-sort .maxui-most-recent').text(recent_literal)
+            jq('#maxui-activity-sort .maxui-most-valued').text(valued_literal)
             })
 
         //Assign hashtag filtering via delegating the click to the activities container
@@ -621,7 +627,7 @@
         })
 
 
-        jq('#maxui-timeline').on('click', 'a.maxui-sort-action.maxui-most-recent', function (event) {
+        jq('#maxui-activity-sort').on('click', 'a.maxui-sort-action.maxui-most-recent', function (event) {
             event.preventDefault()
             $sortbutton = jq(this)
             if (!$sortbutton.hasClass('active')) {
@@ -632,7 +638,7 @@
 
         })
 
-        jq('#maxui-timeline').on('click', 'a.maxui-sort-action.maxui-most-valued', function (event) {
+        jq('#maxui-activity-sort').on('click', 'a.maxui-sort-action.maxui-most-valued', function (event) {
             event.preventDefault()
             $sortbutton = jq(this)
             if (!$sortbutton.hasClass('active')) {
@@ -1976,7 +1982,7 @@
             {insert_at = 'beggining'}
 
         if (!filters.sortBy) {
-            if (jq('#maxui-timeline .maxui-sort-action.maxui-most-valued').hasClass('active')) {
+            if (jq('#maxui-activity-sort .maxui-sort-action.maxui-most-valued').hasClass('active')) {
                 filters.sortBy = 'likes'
             } else {
                 filters.sortBy = maxui.settings.activitySortOrder

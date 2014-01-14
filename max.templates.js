@@ -56,23 +56,21 @@ var MSTCH_MAXUI_MAIN_UI = '\
 \
    <div id="maxui-search" class="folded">\
        <a id="maxui-search-toggle" class="maxui-disabled maxui-icon-" href="#" alt="obre-tanca"></a>\
+       <a href="#" id="maxui-favorites-filter" title="{{literals.favorites_filter_hint}}"><i class="maxui-icon-star"/></a>\
        <div id="maxui-search-box">\
           <input id="maxui-search-text" type="search" data-literal="{{literals.search_text}}" class="maxui-empty maxui-text-input" value="{{literals.search_text}}" />\
-          <a href="#" id="maxui-favorites-filter"><i class="maxui-icon-star"/>{{literals.favorites}}\
-          </a>\
-          <!--<input disabled="disabled" id="maxui-search-action" type="button" class="maxui-button maxui-disabled"></input>-->\
        </div>\
        <div id="maxui-search-filters"></div>\
    </div>\
 \
    <div id="maxui-show-timeline" class="maxui-togglebar maxui-icon-" style="{{showTimelineToggle}}"><a href="#">{{literals.activity}}</a></div>\
 \
-   <div id="maxui-timeline" style="{{showTimeline}}">\
       <div id="maxui-activity-sort">\
         <a class="maxui-sort-action maxui-most-recent active" href="#">{{literals.recent_activity}}</a>\
         /\
         <a class="maxui-sort-action maxui-most-valued" href="#">{{literals.valued_activity}}</a>\
       </div>\
+   <div id="maxui-timeline" style="{{showTimeline}}">\
       <div class="maxui-wrapper">\
           <div id="maxui-preload" class="maxui-activities" style="height:0px;overflow:hidden">\
               <div class="maxui-wrapper">\
