@@ -45,8 +45,8 @@ max.literals = function(language) {
                        'unlike': 'unlike',
                        'recent_activity': "Latest activity",
                        'valued_activity': "Most valued activity",
-                       'recent_favorited_activity': "Favorited activity",
-                       'valued_favorited_activity': "Most valued favorited activity"                       
+                       'recent_favorited_activity': "Latest favorites",
+                       'valued_favorited_activity': "Most valued favorites"                       
         }
 
     maxui['es'] = {'months': ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'],
@@ -78,7 +78,7 @@ max.literals = function(language) {
                        'delete_activity_delete': "Borrar",
                        'delete_activity_cancel': "Cancelar",
                        'delete_activity_icon': "borrar",
-                       'favorites_filter_hint': 'Filtrar por actividad favorita',
+                       'favorites_filter_hint': 'Filtra por actividad favorita',
                        'favorites': 'Favoritos',
                        'favorite': 'favorito',
                        'unfavorite': 'quitar favorito',
@@ -86,8 +86,8 @@ max.literals = function(language) {
                        'unlike': 'ya no me gusta',
                        'recent_activity': "Últimas actividades",
                        'valued_activity': "Actividades más valoradas",
-                       'recent_favorited_activity': "Actividades favoritas",
-                       'valued_favorited_activity': "Act. favoritas más valoradas"                       
+                       'recent_favorited_activity': "Últimas favoritas",
+                       'valued_favorited_activity': "Favoritas más valoradas"                       
         }
 
     maxui['ca'] = {'months': ['gener', 'febrer', 'març', 'abril', 'maig', 'juny', 'juliol', 'agost', 'setembre', 'octubre', 'novembre', 'desembre'],
@@ -119,7 +119,7 @@ max.literals = function(language) {
                        'delete_activity_delete': "Esborra",
                        'delete_activity_cancel': "No ho toquis!",
                        'delete_activity_icon': "esborra",
-                       'favorites_filter_hint': 'Filtrar per activitat favorita',
+                       'favorites_filter_hint': 'Filtra per activitat favorita',
                        'favorites': 'Favorits',
                        'favorite': 'favorit',
                        'unfavorite': 'treure favorit',
@@ -127,8 +127,8 @@ max.literals = function(language) {
                        'unlike': "ja no m'agrada",
                        'recent_activity': "Darreres activitats",
                        'valued_activity': "Activitats més valorades",
-                       'recent_favorited_activity': "Activitats favorites",
-                       'valued_favorited_activity': "Act. favorites més valorades"
+                       'recent_favorited_activity': "Darreres favorites",
+                       'valued_favorited_activity': "Favorites més valorades"
 
         }
 

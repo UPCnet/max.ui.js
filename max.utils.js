@@ -153,9 +153,9 @@ max.utils = function() {
                 formatted = jQuery.easydate.format_date(thisdate, lang)
             } else {
                 if (lang == 'en') {
-                  formatted = '{0} {1}'.format(match[4], settings.literals.months[match[3]])
+                  formatted = '{0} {1}'.format(match[4], settings.literals.months[match[3]-1])
                 } else if (lang == 'es') {
-                  formatted = '{0} de {1}'.format(match[4], settings.literals.months[match[3]])
+                  formatted = '{0} de {1}'.format(match[4], settings.literals.months[match[3]-1])
                 } else if (lang == 'ca') {
                   prefix = 'de '
                   if (match[3] == 4 || match[3] == 8 || match[3] == 10 ) {

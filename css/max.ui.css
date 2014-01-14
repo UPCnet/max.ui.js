@@ -1085,7 +1085,7 @@ cursor:pointer;
 
 
 #maxui-search.folded #maxui-search-toggle:before { content: '\e80e'; color: #666; font-size: 120%; margin-top:4px;margin-left:19px;}
-#maxui-search #maxui-search-toggle:before { content: '\e80d'; color: #666; font-size: 120%; margin-top: 3px;}
+#maxui-search #maxui-search-toggle:before { content: '\e80d'; color: #666; font-size: 120%; margin-top: 4px;margin-left:18px;}
 
 
 .maxui-publisheddate, .maxui-likescount {
