@@ -45,7 +45,7 @@ max.literals = function(language) {
                        'unlike': 'unlike',
                        'recent_activity': "Latest activity",
                        'valued_activity': "Most valued activity",
-                       'recent_favorited_activity': "Latest favorited activity",
+                       'recent_favorited_activity': "Favorited activity",
                        'valued_favorited_activity': "Most valued favorited activity"                       
         }
 
@@ -86,8 +86,8 @@ max.literals = function(language) {
                        'unlike': 'ya no me gusta',
                        'recent_activity': "Últimas actividades",
                        'valued_activity': "Actividades más valoradas",
-                       'recent_favorited_activity': "Últimas actividades favoritas",
-                       'valued_favorited_activity': "Actividades favoritas más valoradas"                       
+                       'recent_favorited_activity': "Actividades favoritas",
+                       'valued_favorited_activity': "Act. favoritas más valoradas"                       
         }
 
     maxui['ca'] = {'months': ['gener', 'febrer', 'març', 'abril', 'maig', 'juny', 'juliol', 'agost', 'setembre', 'octubre', 'novembre', 'desembre'],
@@ -127,8 +127,8 @@ max.literals = function(language) {
                        'unlike': "ja no m'agrada",
                        'recent_activity': "Darreres activitats",
                        'valued_activity': "Activitats més valorades",
-                       'recent_favorited_activity': "Darreres activitats favorites",
-                       'valued_favorited_activity': "Activitats favorites més valorades"
+                       'recent_favorited_activity': "Activitats favorites",
+                       'valued_favorited_activity': "Act. favorites més valorades"
 
         }
 
