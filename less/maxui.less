@@ -126,6 +126,18 @@
                                 a {
                                     .maxui-avatar:extend(.mm-Avatar all) {}
                                     .maxui-displayname:extend(.mm-DisplayName) {}
+                                    .maxui-message-count {
+                                        -moz-border-radius: 3px; -webkit-border-radius: 3px; border-radius: 3px;
+                                        background-color: #3A87AD;
+                                        color:white;
+                                        font-size: 10px;
+                                        padding:0px 1px;
+                                        font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+                                        display:inline-block;
+                                        min-width: 17px;
+                                        text-align: center;
+
+                                    }
                                 }
                             }
                             .maxui-body:extend(.mm-Body) {}
@@ -243,8 +255,11 @@
             &.maxui-togglebar :extend(.mm-toggleBar all){  }
 
         }
-        #maxui-conversations-predictive { }
-        #maxui-add-people-box { }
+        #maxui-conversations-predictive { 
+            margin-top: 50px;
+            margin-left: 10px;
+        }
+        #maxui-add-people-box:extend(.mm-AddPeopleBox all) { }
         #maxui-newactivity {
             &:extend(.mm-texturedBackground);
             padding:10px;
@@ -349,6 +364,7 @@
                             }
                             .maxui-actor:extend(.mm-Actor all) {}
                             .maxui-activity-message {
+                                position:relative;
                                 .maxui-body:extend(.mm-Body) {}
                             }
                         }
@@ -397,6 +413,8 @@
 
                                     }
                                 }
+
+                                .maxui-popover:extend(.mm-Popover all) {}
                             }
                         }
                         .maxui-comments {
@@ -448,6 +466,11 @@
                                         }
                                         .maxui-body:extend(.m-Body) {
                                             font-size: 12px !important;
+                                        }
+
+                                        .maxui-delete-comment {}
+                                        .maxui-popover:extend(.mm-Popover all) {
+                                            margin-left:64px;
                                         }
                                     }
                                 }
