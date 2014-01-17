@@ -1,5 +1,122 @@
 @import "hacks.css";
-@import "../font/maxicons.css";
+@font-face {
+  font-family: 'maxicons';
+  src: url('../font/maxicons.eot?59062278');
+  src: url('../font/maxicons.eot?59062278#iefix') format('embedded-opentype'), url('../font/maxicons.woff?59062278') format('woff'), url('../font/maxicons.ttf?59062278') format('truetype'), url('../font/maxicons.svg?59062278#maxicons') format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+/* Chrome hack: SVG is rendered more smooth in Windozze. 100% magic, uncomment if you need it. */
+/* Note, that will break hinting! In other OS-es font will be not as sharp as it could be */
+/*
+@media screen and (-webkit-min-device-pixel-ratio:0) {
+  @font-face {
+    font-family: 'maxicons';
+    src: url('../font/maxicons.svg?59062278#maxicons') format('svg');
+  }
+}
+*/
+[class^="maxui-icon-"]:before,
+[class*=" maxui-icon-"]:before {
+  font-family: "maxicons";
+  font-style: normal;
+  font-weight: normal;
+  speak: none;
+  display: inline-block;
+  text-decoration: inherit;
+  width: 1em;
+  margin-right: .2em;
+  text-align: center;
+  /* opacity: .8; */
+  /* For safety - reset parent styles, that can break glyph codes*/
+  font-variant: normal;
+  text-transform: none;
+  /* fix buttons height, for twitter bootstrap */
+  line-height: 1em;
+  /* Animation center compensation - margins should be symmetric */
+  /* remove if not needed */
+  margin-left: .2em;
+  /* you can be more comfortable with increased icons size */
+  /* font-size: 120%; */
+  /* Uncomment for 3D effect */
+  /* text-shadow: 1px 1px 1px rgba(127, 127, 127, 0.3); */
+}
+.maxui-icon-mail-alt:before {
+  content: '\e812';
+}
+/* '' */
+.maxui-icon-angle-circled-down:before {
+  content: '\e80a';
+}
+/* '' */
+.maxui-icon-star-empty:before {
+  content: '\e801';
+}
+/* '' */
+.maxui-icon-ok-circled:before {
+  content: '\e80f';
+}
+/* '' */
+.maxui-icon-cancel-circled:before {
+  content: '\e810';
+}
+/* '' */
+.maxui-icon-pin:before {
+  content: '\e811';
+}
+/* '' */
+.maxui-icon-thumbs-up:before {
+  content: '\e802';
+}
+/* '' */
+.maxui-icon-thumbs-up-alt:before {
+  content: '\e803';
+}
+/* '' */
+.maxui-icon-chat:before {
+  content: '\e805';
+}
+/* '' */
+.maxui-icon-star:before {
+  content: '\e800';
+}
+/* '' */
+.maxui-icon-trash:before {
+  content: '\e806';
+}
+/* '' */
+.maxui-icon-down-dir:before {
+  content: '\e80d';
+}
+/* '' */
+.maxui-icon-right-dir:before {
+  content: '\e80e';
+}
+/* '' */
+.maxui-icon-left-open:before {
+  content: '\e80c';
+}
+/* '' */
+.maxui-icon-right-open:before {
+  content: '\e80b';
+}
+/* '' */
+.maxui-icon-angle-circled-left:before {
+  content: '\e807';
+}
+/* '' */
+.maxui-icon-angle-circled-right:before {
+  content: '\e808';
+}
+/* '' */
+.maxui-icon-angle-circled-up:before {
+  content: '\e809';
+}
+/* '' */
+.maxui-icon-chat-empty:before {
+  content: '\e804';
+}
+/* '' */
 /* Main*/
 .mm-bordered,
 #maxui-container {
@@ -815,6 +932,9 @@
 #maxui-container #maxui-mainpanel #maxui-search #maxui-favorites-filter.active {
   color: #ff9b00;
 }
+#maxui-container #maxui-mainpanel #maxui-search #maxui-favorites-filter .maxui-icon-star {
+  font-size: 23px;
+}
 #maxui-container #maxui-mainpanel #maxui-search #maxui-search-box #maxui-search-text {
   -webkit-appearance: none;
   -moz-appearance: none;
@@ -894,44 +1014,38 @@
 #maxui-container #maxui-mainpanel #maxui-timeline #maxui-wrapper #maxui-activities .maxui-activity .maxui-footer .maxui-actions {
   position: relative;
 }
-#maxui-container #maxui-mainpanel #maxui-timeline #maxui-wrapper #maxui-activities .maxui-activity .maxui-footer .maxui-actions a {
+#maxui-container #maxui-mainpanel #maxui-timeline #maxui-wrapper #maxui-activities .maxui-activity .maxui-footer .maxui-actions a.maxui-action {
   display: inline;
-  padding-right: 10px;
-}
-#maxui-container #maxui-mainpanel #maxui-timeline #maxui-wrapper #maxui-activities .maxui-activity .maxui-footer .maxui-actions .maxui-action {
   font-size: 12px;
   color: #007bc0;
   text-decoration: none;
-  padding-left: 18px;
-  padding-right: 8px;
+  padding-right: 5px;
   cursor: pointer;
 }
-#maxui-container #maxui-mainpanel #maxui-timeline #maxui-wrapper #maxui-activities .maxui-activity .maxui-footer .maxui-actions .maxui-action:hover {
+#maxui-container #maxui-mainpanel #maxui-timeline #maxui-wrapper #maxui-activities .maxui-activity .maxui-footer .maxui-actions a.maxui-action:before {
+  font-size: 12px;
+  margin-right: .22em;
+}
+#maxui-container #maxui-mainpanel #maxui-timeline #maxui-wrapper #maxui-activities .maxui-activity .maxui-footer .maxui-actions a.maxui-action:hover {
   color: #005ea0;
   text-decoration: underline;
 }
-#maxui-container #maxui-mainpanel #maxui-timeline #maxui-wrapper #maxui-activities .maxui-activity .maxui-footer .maxui-actions .maxui-action.commentaction {
-  background: url('/maxui-dev/img/maxcomm.png') no-repeat 0 2px;
-}
-#maxui-container #maxui-mainpanel #maxui-timeline #maxui-wrapper #maxui-activities .maxui-activity .maxui-footer .maxui-actions .maxui-action.commentaction:hover {
-  background: url('/maxui-dev/img/maxcomm.png') no-repeat 0 -18px;
-}
-#maxui-container #maxui-mainpanel #maxui-timeline #maxui-wrapper #maxui-activities .maxui-activity .maxui-footer .maxui-actions .maxui-action.maxui-likes {
+#maxui-container #maxui-mainpanel #maxui-timeline #maxui-wrapper #maxui-activities .maxui-activity .maxui-footer .maxui-actions a.maxui-action.maxui-likes {
   background: url('/maxui-dev/img/nolike.png') no-repeat 0 1px;
 }
-#maxui-container #maxui-mainpanel #maxui-timeline #maxui-wrapper #maxui-activities .maxui-activity .maxui-footer .maxui-actions .maxui-action.maxui-likes.maxui-liked {
+#maxui-container #maxui-mainpanel #maxui-timeline #maxui-wrapper #maxui-activities .maxui-activity .maxui-footer .maxui-actions a.maxui-action.maxui-likes.maxui-liked {
   background: url('/maxui-dev/img/like.png') no-repeat 0 1px;
 }
-#maxui-container #maxui-mainpanel #maxui-timeline #maxui-wrapper #maxui-activities .maxui-activity .maxui-footer .maxui-actions .maxui-action.maxui-favorites {
+#maxui-container #maxui-mainpanel #maxui-timeline #maxui-wrapper #maxui-activities .maxui-activity .maxui-footer .maxui-actions a.maxui-action.maxui-favorites {
   background: url('/maxui-dev/img/nofav.png') no-repeat 0 1px;
 }
-#maxui-container #maxui-mainpanel #maxui-timeline #maxui-wrapper #maxui-activities .maxui-activity .maxui-footer .maxui-actions .maxui-action.maxui-favorites.maxui-favorited {
+#maxui-container #maxui-mainpanel #maxui-timeline #maxui-wrapper #maxui-activities .maxui-activity .maxui-footer .maxui-actions a.maxui-action.maxui-favorites.maxui-favorited {
   background: url('/maxui-dev/img/fav.png') no-repeat 0 1px;
 }
-#maxui-container #maxui-mainpanel #maxui-timeline #maxui-wrapper #maxui-activities .maxui-activity .maxui-footer .maxui-actions .maxui-action.maxui-delete {
+#maxui-container #maxui-mainpanel #maxui-timeline #maxui-wrapper #maxui-activities .maxui-activity .maxui-footer .maxui-actions a.maxui-action.maxui-delete {
   background: url('/maxui-dev/img/trashbin.png') 5px 1px no-repeat;
 }
-#maxui-container #maxui-mainpanel #maxui-timeline #maxui-wrapper #maxui-activities .maxui-activity .maxui-footer .maxui-actions .maxui-action.maxui-delete:hover {
+#maxui-container #maxui-mainpanel #maxui-timeline #maxui-wrapper #maxui-activities .maxui-activity .maxui-footer .maxui-actions a.maxui-action.maxui-delete:hover {
   background: url('/maxui-dev/img/trashbino.png') 5px 0px no-repeat;
 }
 #maxui-container #maxui-mainpanel #maxui-timeline #maxui-wrapper #maxui-activities .maxui-activity .maxui-comments {

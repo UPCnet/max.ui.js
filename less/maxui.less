@@ -1,9 +1,7 @@
+@import "../font/maxicons.less";
 @import "variables.less";
 @import "mixins.less";
 @import "hacks.css";
-@import "../font/maxicons.css";
-
-
 
 #maxui-container{
 
@@ -33,6 +31,11 @@
 
 
     /* ====== TO IMPROVE or put in classes/extends============================*/
+
+    .maxui-icon-cancel-circled:before {
+    color:white;
+    font-size: 130%;
+}
     .maxui-clear {
         clear:both;
         float:none;
@@ -83,6 +86,14 @@
         -moz-box-shadow: inset 0 1px 3px rgba(0,0,0,.05),0 0 8px rgba(0,123,192,.5) !important;
         box-shadow: inset 0 1px 3px rgba(0,0,0,.05),0 0 8px rgba(0,123,192,.5) !important;
      }
+    
+    textarea.error {
+        border: 1px solid red !important;
+        -webkit-box-shadow: inset 0 1px 3px rgba(255,0,0,.05),0 0 8px rgba(255,123,192,.5) !important;
+        -moz-box-shadow: inset 0 1px 3px rgba(255,0,0,.05),0 0 8px rgba(255,123,192,.5) !important;
+        box-shadow: inset 0 1px 3px rgba(255,0,0,.05),0 0 8px rgba(255,123,192,.5) !important;
+
+     }
 
     /* ==================================*/
     #maxui-mainpanel {
@@ -98,7 +109,10 @@
             #maxui-common-header {
                 overflow: hidden;
                 #maxui-back-conversations {
-                    &:extend(.mm-toggleBar all);
+                    &:extend(.mm-toggleBar all) {
+                        a:before { content: '\e807'; color:#929292;}
+                         a:hover:before { content: '\e807'; color:#555;}
+                    };
                     height:41px;
                     h3.maxui-title{
                         margin: 3px 0px 7px;
@@ -122,6 +136,12 @@
                                 .maxui-enterconversation {
                                     float:right;
                                     padding-top:6px;
+                                    &:before {
+                                        font-size: 150%; content: '\e80b'; color:#929292;                                         
+                                    }
+                                    &:hover:before {
+                                        color:#555;
+                                    }
                                 }
                             }
                             .maxui-actor {
@@ -331,6 +351,19 @@
             #maxui-newactivity-box {
                 margin-left:56px;
                 text-align:right;
+                .maxui-error-box {
+                    height: 15px;
+                    border: 1px red solid;
+                    background-color: rgb(253, 90, 75);
+                    color: #fff;
+                    border-radius: 3px;
+                    margin-top: -25px;
+                    z-index: 100;
+                    text-align: left;
+                    padding: 4px 5px;
+                    text-shadow: none;
+                }
+
                 textarea {
                     position:relative;
                 }
@@ -338,21 +371,29 @@
             #maxui-predictive.maxui-predictive:extend(.mm-predictive) { }
         }
         #maxui-search {
-            border-top:1px solid #666;
-            border-bottom:1px solid #666;
-            background:#e5faff; padding:10px;
+            box-sizing: border-box;
+            border-top:1px #b2b2b2 solid;
+            border-bottom:1px #b2b2b2 solid;
+            background:#f1f1f1;
+            padding:10px;
             &.folded {
                 #maxui-search-filters {
                     display: none;
-
+                    zoom:1;
+                    margin-top: 7px;
                     &:before, &:after {content: ""; display:table;}
                     &:after {clear:both;}
 
                     .maxui-filter:extend(.mm-Filter all) {}
                 }
+                #maxui-search-toggle:before { content: '\e80e'; color: #666; font-size: 120%; margin-top:4px;margin-left:19px;}
+
             }
 
-            #maxui-search-toggle {}
+            #maxui-search-toggle {
+                float:left;
+                &:before{content: '\e80d'; color: #666; font-size: 120%; margin-top: 4px;margin-left:18px;}
+            }
             #maxui-favorites-filter {
                 color:#bbb;
                 width:56px;
@@ -366,11 +407,16 @@
                 &.active {
                     color:#ff9b00;
                 }
+
+                .maxui-icon-star {
+                    font-size: 23px;
+                }
             }
             #maxui-search-box {
+                padding:0px 56px; width:auto; text-align:left;
                 #maxui-search-text {
                     -webkit-appearance: none; -moz-appearance:none; appearance:none;
-                    width:82%;
+                    width:100%;
                     color:#666;
                     height:24px; min-height:24px;
                     border: 1px #b2b2b2 solid;
@@ -388,11 +434,11 @@
             }
             #maxui-search-filters {}
         }
-        #maxui-show-timeline :extend(.mm-texturedBackground) {
+        #maxui-show-timeline:extend(.mm-texturedBackground) {
                 padding-bottom:3px;
                 text-align:center;
                 border-top: 1px #b2b2b2 solid;
-            &.maxui-togglebar :extend(.mm-toggleBar all){ }
+            &.maxui-togglebar:extend(.mm-toggleBar all){ }
 
         }
         #maxui-timeline {
@@ -437,10 +483,12 @@
 
                             .maxui-topright {
                                 .maxui-published-date:extend(.mm-PublishedDate) {}
+                                .maxui-likescount:extend(.mm-PublishedDate) {}
                             }
                             .maxui-actor:extend(.mm-Actor all) {}
                             .maxui-activity-message {
                                 position:relative;
+                                margin-bottom:5px;
                                 .maxui-body:extend(.mm-Body) {}
                             }
                         }
@@ -453,28 +501,44 @@
                                 font-size:11px;
                                 background:url('/maxui-dev/img/maxcomm.png') 0 -77px no-repeat;
                                 padding-left:10px;
+                                &.maxui-icon-:before { content: '\e811'; font-size: 12px; margin-right: 0px;}
                             }
                             .maxui-actions {
                                 position:relative;
-                                a {
+                                line-height: 14px;
+                                a.maxui-action {
                                     display:inline;
-                                    padding-right: 10px;
-                                }
-                                .maxui-action {
-                                    font-size:12px;
+                                    font-size:11px;
                                     color:#007bc0;
                                     text-decoration:none;
-                                    padding-left:18px;
-                                    padding-right: 8px;
+                                    padding-right: 5px;
                                     cursor:pointer;
+
+                                    &:before { font-size:12px; margin-right:.22em;}
                                     &:hover {
                                         color:#005ea0;
                                         text-decoration:underline;
                                     }
 
-                                    &.commentaction { background: url('/maxui-dev/img/maxcomm.png') no-repeat 0 2px;
-                                                      &:hover { background: url('/maxui-dev/img/maxcomm.png') no-repeat 0 -18px; }
-                                                    }
+                                    &.maxui-commentaction.maxui-empty:before { content: '\e804'; }
+                                    &.maxui-commentaction:before             { content: '\e805'; }
+                                    &.maxui-likes:before                     { content: '\e802'; }
+                                    &.maxui-likes.maxui-liked:before         { content: '\e803'; color:#007bc0;}
+                                    &.maxui-likes.maxui-liked:hover:before   { color:#026399;}
+                                    &.maxui-favorites:before                 { content: '\e801'; }
+                                    &.maxui-favorites:hover:before           { content: '\e801'; color:#ff9b00;}
+                                    &.maxui-favorites.maxui-favorited:before { content: '\e800'; color:#007bc0;}
+                                    &.maxui-favorites.maxui-favorited:hover:before { color:#ff9b00;}
+                                    &.maxui-delete:before                    { content: '\e806'; }
+                                    &.maxui-commentaction {color:#007bc0;}
+                                    &.maxui-commentaction:hover {color:#026399;}
+                                    &.maxui-commentaction.maxui-empty {color:#666;}
+                                    &.maxui-commentaction.maxui-empty:hover {color:#333;}
+                                    &.maxui-likes.maxui-liked { color:#007bc0; }
+                                    &.maxui-favorites.maxui-favorited { color:#007bc0; }
+                                    &.maxui-likes.maxui-liked:hover { color:#026399; }
+                                    &.maxui-favorites.maxui-favorited:hover { color:#026399; }
+                                        
                                     &.maxui-likes { background: url('/maxui-dev/img/nolike.png') no-repeat 0 1px;
                                                     &.maxui-liked { background: url('/maxui-dev/img/like.png') no-repeat 0 1px; }
                                                   }
@@ -544,7 +608,15 @@
                                             font-size: 12px !important;
                                         }
 
-                                        .maxui-delete-comment {}
+                                        .maxui-delete-comment, .maxui-delete-comment:hover {
+                                            float:right;
+                                            margin-top:-12px;
+                                            cursor:pointer;
+                                        }
+
+                                        .maxui-delete-comment:before { content: '\e806'; color: #666;}
+                                        .maxui-delete-comment:hover:before { content: '\e806'; color: #555;}
+
                                         .maxui-popover:extend(.mm-Popover all) {
                                             margin-left:64px;
                                         }

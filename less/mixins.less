@@ -82,7 +82,7 @@
     font-size:13px;
 }
 
-.mm-PublishedData {
+.mm-PublishedDate {
     font-size:11px;
     color: #6e6e6e;
     text-align: right;
@@ -312,7 +312,7 @@
     margin-top:2px;
     float:left;
     span {
-        padding:0 2px 3px 4px;
+        padding:0px 0px 4px 4px;
         -moz-border-radius: 5px;-webkit-border-radius: 5px;border-radius: 5px;
         -moz-box-shadow:0 1px 0 #fff;-webkit-box-shadow:0 1px 0 #fff;box-shadow:0 1px 0 #fff;
         text-shadow: 0 -1px rgba(0,0,0,.5);
@@ -336,6 +336,10 @@
     padding-bottom:3px;
     text-align:center;
     border-bottom: 1px darken(@borderColor, 10%) solid;
+
+    &:after { content: '\e80a'; color:#929292;}
+    &:hover:after { content: '\e80a'; color:#555;}
+
     &:extend(.mm-texturedBackground);
     &:extend(.mm-borderBox);
     height:21px;
