@@ -1,6 +1,7 @@
 @import "variables.less";
 @import "mixins.less";
 @import "hacks.css";
+@import "../font/maxicons.css";
 
 
 
@@ -95,6 +96,7 @@
             border-bottom:1px @borderColor solid;
 
             #maxui-common-header {
+                overflow: hidden;
                 #maxui-back-conversations {
                     &:extend(.mm-toggleBar all);
                     height:41px;
@@ -248,7 +250,26 @@
                     }
                 }
             }
-            #maxui-scrollbar { }
+            #maxui-scrollbar { 
+                position:absolute;
+                top:0px;
+                right:0px;
+                width:10px;
+                border-left:1px solid #ccc;
+                z-index: 2;
+                padding:1px 0px;
+                background-color: white;
+                .maxui-dragger {
+                    background: #bbb;
+                    cursor: pointer;
+                    margin: 0px 1px;
+                    width:8px;
+                    height:20px;
+                    -moz-border-radius: 4px;
+                    -webkit-border-radius: 4px;
+                    border-radius: 4px;                    
+                }
+            }
 
         }
         #maxui-show-conversations {
@@ -259,7 +280,38 @@
             margin-top: 50px;
             margin-left: 10px;
         }
-        #maxui-add-people-box:extend(.mm-AddPeopleBox all) { }
+        #maxui-add-people-box:extend(.mm-AddPeopleBox all) { 
+            #maxui-new-participants {
+                zoom:1;
+                padding-left:0px;
+                margin-top: 5px;        
+                        
+                &:before, &:after {content: ""; display:table;}
+                &:after {clear:both;}
+            }
+
+            #maxui-new-displayName {
+                border-top: 1px solid #ccc;
+                margin-top: 5px;
+                padding-top: 3px;
+                .maxui-simple-text-input {
+                    width:50%;
+                    border:none !important;
+                    background-color: transparent;
+                    font-family: Arial, Helvetica, sans-serif;
+                    font-size: 13px;
+                    color:#333;      
+                    &:focus {
+                        -webkit-box-shadow: none !important;
+                        -moz-box-shadow: none! important;
+                        box-shadow: none !important;
+                        outline: 0;
+                        border: none !important;                        
+                    }              
+                }
+            }
+
+        }
         #maxui-newactivity {
             &:extend(.mm-texturedBackground);
             padding:10px;
@@ -296,24 +348,25 @@
                     &:before, &:after {content: ""; display:table;}
                     &:after {clear:both;}
 
-                    .maxui-filter {
-                        padding:2px 4px 2px 0;
-                        margin-top:2px;
-                        float:left;
-                        span.hashtag {background-color:#008564;border:1px solid #007355;}
-                        span.person {background-color:#837800;border:1px solid #706923;}
-                        .maxui-close {
-                            padding: 0 2px 0 4px;
-                            opacity:.8; filter: alpha(opacity=80);
-                            position: relative;
-                            top: 3px;
-                            &:hover {opacity:1; filter: alpha(opacity=100);}
-                        }
-                    }
+                    .maxui-filter:extend(.mm-Filter all) {}
                 }
             }
 
             #maxui-search-toggle {}
+            #maxui-favorites-filter {
+                color:#bbb;
+                width:56px;
+                float:right;
+                text-align: center;
+                margin-top: 1px;
+
+                &:hover {
+                    color:#666;
+                }
+                &.active {
+                    color:#ff9b00;
+                }
+            }
             #maxui-search-box {
                 #maxui-search-text {
                     -webkit-appearance: none; -moz-appearance:none; appearance:none;
@@ -348,7 +401,30 @@
             overflow: hidden;
             padding:0 10px;
             background:@mainBackgroundColor;
-            #maxui-activity-sort { }
+            #maxui-activity-sort { 
+                box-sizing: border-box;
+                background-color: white;
+                border-bottom: 1px #b2b2b2 solid;
+                padding: 5px 10px;                
+                .maxui-sort-action {
+
+                    &:hover {
+                        text-decoration:none;
+                    }
+
+                    &.active {
+                        color: #444;
+                        font-weight: bold;                        
+                        &:hover {
+                            text-decoration:none;
+                            color: #000;
+                        }
+                    }
+
+                    .maxui-most-recent {padding-right: 5px;}
+                    .maxui-most-valued {padding-left: 5px;}
+                }
+            }
             #maxui-wrapper:extend(.mm-wrapper) {
                 #maxui-preload {
                     height: 0px;

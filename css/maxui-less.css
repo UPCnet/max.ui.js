@@ -1,4 +1,5 @@
 @import "hacks.css";
+@import "../font/maxicons.css";
 /* Main*/
 .mm-bordered,
 #maxui-container {
@@ -407,6 +408,50 @@
   box-shadow: none !important;
   outline: 0;
 }
+.mm-Filter,
+#maxui-container #maxui-mainpanel #maxui-search.folded #maxui-search-filters .maxui-filter {
+  padding: 2px 4px 2px 0;
+  margin-top: 2px;
+  float: left;
+}
+.mm-Filter span,
+#maxui-container #maxui-mainpanel #maxui-search.folded #maxui-search-filters .maxui-filter span {
+  padding: 0 2px 3px 4px;
+  -moz-border-radius: 5px;
+  -webkit-border-radius: 5px;
+  border-radius: 5px;
+  -moz-box-shadow: 0 1px 0 #fff;
+  -webkit-box-shadow: 0 1px 0 #fff;
+  box-shadow: 0 1px 0 #fff;
+  text-shadow: 0 -1px rgba(0, 0, 0, 0.5);
+  background-color: #007ca5;
+  color: #fff;
+  border: 1px solid #006989;
+  display: block;
+}
+.mm-Filter span.hashtag,
+#maxui-container #maxui-mainpanel #maxui-search.folded #maxui-search-filters .maxui-filter span.hashtag {
+  background-color: #008564;
+  border: 1px solid #007355;
+}
+.mm-Filter span.person,
+#maxui-container #maxui-mainpanel #maxui-search.folded #maxui-search-filters .maxui-filter span.person {
+  background-color: #837800;
+  border: 1px solid #706923;
+}
+.mm-Filter .maxui-close,
+#maxui-container #maxui-mainpanel #maxui-search.folded #maxui-search-filters .maxui-filter .maxui-close {
+  padding: 0 2px 0 4px;
+  opacity: .8;
+  filter: alpha(opacity=80);
+  position: relative;
+  top: 3px;
+}
+.mm-Filter .maxui-close:hover,
+#maxui-container #maxui-mainpanel #maxui-search.folded #maxui-search-filters .maxui-filter .maxui-close:hover {
+  opacity: 1;
+  filter: alpha(opacity=100);
+}
 .mm-toggleBar,
 #maxui-container #maxui-mainpanel #maxui-conversations #maxui-common-header #maxui-back-conversations {
   padding-bottom: 3px;
@@ -531,6 +576,9 @@
   padding: 0 0 0 0px;
   background: #ffffff;
   border-bottom: 1px #cccccc solid;
+}
+#maxui-container #maxui-mainpanel #maxui-conversations #maxui-common-header {
+  overflow: hidden;
 }
 #maxui-container #maxui-mainpanel #maxui-conversations #maxui-common-header #maxui-back-conversations {
   height: 41px;
@@ -658,9 +706,62 @@
   top: 0px;
   border-bottom: 3px solid transparent;
 }
+#maxui-container #maxui-mainpanel #maxui-conversations #maxui-scrollbar {
+  position: absolute;
+  top: 0px;
+  right: 0px;
+  width: 10px;
+  border-left: 1px solid #ccc;
+  z-index: 2;
+  padding: 1px 0px;
+  background-color: white;
+}
+#maxui-container #maxui-mainpanel #maxui-conversations #maxui-scrollbar .maxui-dragger {
+  background: #bbb;
+  cursor: pointer;
+  margin: 0px 1px;
+  width: 8px;
+  height: 20px;
+  -moz-border-radius: 4px;
+  -webkit-border-radius: 4px;
+  border-radius: 4px;
+}
 #maxui-container #maxui-mainpanel #maxui-conversations-predictive {
   margin-top: 50px;
   margin-left: 10px;
+}
+#maxui-container #maxui-mainpanel #maxui-add-people-box #maxui-new-participants {
+  zoom: 1;
+  padding-left: 0px;
+  margin-top: 5px;
+}
+#maxui-container #maxui-mainpanel #maxui-add-people-box #maxui-new-participants:before,
+#maxui-container #maxui-mainpanel #maxui-add-people-box #maxui-new-participants:after {
+  content: "";
+  display: table;
+}
+#maxui-container #maxui-mainpanel #maxui-add-people-box #maxui-new-participants:after {
+  clear: both;
+}
+#maxui-container #maxui-mainpanel #maxui-add-people-box #maxui-new-displayName {
+  border-top: 1px solid #ccc;
+  margin-top: 5px;
+  padding-top: 3px;
+}
+#maxui-container #maxui-mainpanel #maxui-add-people-box #maxui-new-displayName .maxui-simple-text-input {
+  width: 50%;
+  border: none !important;
+  background-color: transparent;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 13px;
+  color: #333;
+}
+#maxui-container #maxui-mainpanel #maxui-add-people-box #maxui-new-displayName .maxui-simple-text-input:focus {
+  -webkit-box-shadow: none !important;
+  -moz-box-shadow: none! important;
+  box-shadow: none !important;
+  outline: 0;
+  border: none !important;
 }
 #maxui-container #maxui-mainpanel #maxui-newactivity {
   padding: 10px;
@@ -701,29 +802,18 @@
 #maxui-container #maxui-mainpanel #maxui-search.folded #maxui-search-filters:after {
   clear: both;
 }
-#maxui-container #maxui-mainpanel #maxui-search.folded #maxui-search-filters .maxui-filter {
-  padding: 2px 4px 2px 0;
-  margin-top: 2px;
-  float: left;
+#maxui-container #maxui-mainpanel #maxui-search #maxui-favorites-filter {
+  color: #bbb;
+  width: 56px;
+  float: right;
+  text-align: center;
+  margin-top: 1px;
 }
-#maxui-container #maxui-mainpanel #maxui-search.folded #maxui-search-filters .maxui-filter span.hashtag {
-  background-color: #008564;
-  border: 1px solid #007355;
+#maxui-container #maxui-mainpanel #maxui-search #maxui-favorites-filter:hover {
+  color: #666;
 }
-#maxui-container #maxui-mainpanel #maxui-search.folded #maxui-search-filters .maxui-filter span.person {
-  background-color: #837800;
-  border: 1px solid #706923;
-}
-#maxui-container #maxui-mainpanel #maxui-search.folded #maxui-search-filters .maxui-filter .maxui-close {
-  padding: 0 2px 0 4px;
-  opacity: .8;
-  filter: alpha(opacity=80);
-  position: relative;
-  top: 3px;
-}
-#maxui-container #maxui-mainpanel #maxui-search.folded #maxui-search-filters .maxui-filter .maxui-close:hover {
-  opacity: 1;
-  filter: alpha(opacity=100);
+#maxui-container #maxui-mainpanel #maxui-search #maxui-favorites-filter.active {
+  color: #ff9b00;
 }
 #maxui-container #maxui-mainpanel #maxui-search #maxui-search-box #maxui-search-text {
   -webkit-appearance: none;
@@ -759,6 +849,29 @@
   overflow: hidden;
   padding: 0 10px;
   background: #ffffff;
+}
+#maxui-container #maxui-mainpanel #maxui-timeline #maxui-activity-sort {
+  box-sizing: border-box;
+  background-color: white;
+  border-bottom: 1px #b2b2b2 solid;
+  padding: 5px 10px;
+}
+#maxui-container #maxui-mainpanel #maxui-timeline #maxui-activity-sort .maxui-sort-action:hover {
+  text-decoration: none;
+}
+#maxui-container #maxui-mainpanel #maxui-timeline #maxui-activity-sort .maxui-sort-action.active {
+  color: #444;
+  font-weight: bold;
+}
+#maxui-container #maxui-mainpanel #maxui-timeline #maxui-activity-sort .maxui-sort-action.active:hover {
+  text-decoration: none;
+  color: #000;
+}
+#maxui-container #maxui-mainpanel #maxui-timeline #maxui-activity-sort .maxui-sort-action .maxui-most-recent {
+  padding-right: 5px;
+}
+#maxui-container #maxui-mainpanel #maxui-timeline #maxui-activity-sort .maxui-sort-action .maxui-most-valued {
+  padding-left: 5px;
 }
 #maxui-container #maxui-mainpanel #maxui-timeline #maxui-wrapper #maxui-preload {
   height: 0px;
