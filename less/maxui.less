@@ -22,8 +22,11 @@
 
     a {
         text-decoration: none;
-        .baseLinkStyle
-        &:hover:extend(.mm-hoverLinkStyle) { }
+        color:@linkColor;
+        &:hover {
+            text-decoration: none;
+            color: @hoverLinkColor;
+        }
         &:focus:extend(.mm-removeOutline) { }
 
         img {
@@ -33,6 +36,8 @@
 
 
     /* ====== TO IMPROVE or put in classes/extends============================*/
+
+    .maxui-publisheddate:extend(.mm-PublishedDate all) {}
 
     .maxui-icon-cancel-circled:before {
     color:white;
@@ -88,7 +93,7 @@
         -moz-box-shadow: inset 0 1px 3px rgba(0,0,0,.05),0 0 8px rgba(0,123,192,.5) !important;
         box-shadow: inset 0 1px 3px rgba(0,0,0,.05),0 0 8px rgba(0,123,192,.5) !important;
      }
-    
+
     textarea.error {
         border: 1px solid red !important;
         -webkit-box-shadow: inset 0 1px 3px rgba(255,0,0,.05),0 0 8px rgba(255,123,192,.5) !important;
@@ -132,12 +137,12 @@
                         .maxui-activity-content {
                             position:relative;
                             .maxui-topright {
-                                .maxui-published-date:extend(.mm-PublishedDate) {}
+                                .maxui-published-date { }
                                 .maxui-enterconversation {
                                     float:right;
                                     padding-top:6px;
                                     &:before {
-                                        font-size: 150%; content: '\e80b'; color:#929292;                                         
+                                        font-size: 150%; content: '\e80b'; color:#929292;
                                     }
                                     &:hover:before {
                                         color:#555;
@@ -248,7 +253,7 @@
                                     padding: 2px 10px;
                                     min-height: 25px;
 
-                                    .maxui-published-date:extend(.mm-PublishedDate) {
+                                    .maxui-published-date {
                                         font-size: 9px;
                                         font-style: italic;
                                         color: #888;
@@ -270,7 +275,7 @@
                     }
                 }
             }
-            #maxui-scrollbar { 
+            #maxui-scrollbar {
                 position:absolute;
                 top:0px;
                 right:0px;
@@ -287,23 +292,23 @@
                     height:20px;
                     -moz-border-radius: 4px;
                     -webkit-border-radius: 4px;
-                    border-radius: 4px;                    
+                    border-radius: 4px;
                 }
             }
 
         }
         #maxui-show-conversations.maxui-togglebar:extend(.mm-toggleBar all){  }
 
-        #maxui-conversations-predictive { 
+        #maxui-conversations-predictive {
             margin-top: 50px;
             margin-left: 10px;
         }
-        #maxui-add-people-box:extend(.mm-AddPeopleBox all) { 
+        #maxui-add-people-box:extend(.mm-AddPeopleBox all) {
             #maxui-new-participants {
                 zoom:1;
                 padding-left:0px;
-                margin-top: 5px;        
-                        
+                margin-top: 5px;
+
                 &:before, &:after {content: ""; display:table;}
                 &:after {clear:both;}
             }
@@ -318,14 +323,14 @@
                     background-color: transparent;
                     font-family: Arial, Helvetica, sans-serif;
                     font-size: 13px;
-                    color:#333;      
+                    color:#333;
                     &:focus {
                         -webkit-box-shadow: none !important;
                         -moz-box-shadow: none! important;
                         box-shadow: none !important;
                         outline: 0;
-                        border: none !important;                        
-                    }              
+                        border: none !important;
+                    }
                 }
             }
 
@@ -379,12 +384,6 @@
             &.folded {
                 #maxui-search-filters {
                     display: none;
-                    zoom:1;
-                    margin-top: 7px;
-                    &:before, &:after {content: ""; display:table;}
-                    &:after {clear:both;}
-
-                    .maxui-filter:extend(.mm-Filter all) {}
                 }
                 #maxui-search-toggle:before { content: '\e80e'; color: #666; font-size: 120%; margin-top:4px;margin-left:19px;}
 
@@ -432,7 +431,7 @@
                     -webkit-box-sizing:border-box;
                 }
             }
-            #maxui-search-filters {}
+            #maxui-search-filters:extend(.mm-Filters all) {}
         }
         #maxui-show-timeline:extend(.mm-texturedBackground) {
                 padding-bottom:3px;
@@ -442,11 +441,11 @@
 
         }
 
-        #maxui-activity-sort { 
+        #maxui-activity-sort {
             box-sizing: border-box;
             background-color: white;
             border-bottom: 1px #b2b2b2 solid;
-            padding: 5px 10px;                
+            padding: 5px 10px;
             .maxui-sort-action {
 
                 &:hover {
@@ -455,7 +454,7 @@
 
                 &.active {
                     color: #444;
-                    font-weight: bold;                        
+                    font-weight: bold;
                     &:hover {
                         text-decoration:none;
                         color: #000;
@@ -465,25 +464,24 @@
                 .maxui-most-recent {padding-right: 5px;}
                 .maxui-most-valued {padding-left: 5px;}
             }
-        }        
+        }
         #maxui-timeline {
             clear:both;
             margin:0;
             overflow: hidden;
             padding:0 10px;
             background:@mainBackgroundColor;
-            #maxui-wrapper:extend(.mm-wrapper) {
+            .maxui-wrapper:extend(.mm-wrapper) {
                 #maxui-preload {
                     height: 0px;
                 }
                 #maxui-activities {
                     .maxui-activity:extend(.mm-Activity all) {
                         .maxui-activity-content {
-                            position:relative;
                             margin:-5px 0 0 55px;
 
                             .maxui-topright {
-                                .maxui-published-date:extend(.mm-PublishedDate) {}
+                                .maxui-publisheddate:extend { }
                                 .maxui-likescount:extend(.mm-PublishedDate) {}
                             }
                             .maxui-actor:extend(.mm-Actor all) {}
@@ -500,8 +498,6 @@
                                 padding-right:10px;
                                 color:#6e6e6e;
                                 font-size:11px;
-                                background:url('/maxui-dev/img/maxcomm.png') 0 -77px no-repeat;
-                                padding-left:10px;
                                 &.maxui-icon-:before { content: '\e811'; font-size: 12px; margin-right: 0px;}
                             }
                             .maxui-actions {
@@ -510,19 +506,18 @@
                                 a.maxui-action {
                                     display:inline;
                                     font-size:11px;
-                                    color:#007bc0;
                                     text-decoration:none;
                                     padding-right: 5px;
                                     cursor:pointer;
+                                    color: #666;
 
                                     &:before { font-size:12px; margin-right:.22em;}
                                     &:hover {
-                                        color:#005ea0;
-                                        text-decoration:underline;
+                                        color:#333;
                                     }
 
-                                    &.maxui-commentaction.maxui-empty:before { content: '\e804'; }
-                                    &.maxui-commentaction:before             { content: '\e805'; }
+                                    &.maxui-commentaction.maxui-has-comments:before { content: '\e805'; }
+                                    &.maxui-commentaction:before             { content: '\e804'; }
                                     &.maxui-likes:before                     { content: '\e802'; }
                                     &.maxui-likes.maxui-liked:before         { content: '\e803'; color:#007bc0;}
                                     &.maxui-likes.maxui-liked:hover:before   { color:#026399;}
@@ -531,28 +526,11 @@
                                     &.maxui-favorites.maxui-favorited:before { content: '\e800'; color:#007bc0;}
                                     &.maxui-favorites.maxui-favorited:hover:before { color:#ff9b00;}
                                     &.maxui-delete:before                    { content: '\e806'; }
-                                    &.maxui-commentaction {color:#007bc0;}
-                                    &.maxui-commentaction:hover {color:#026399;}
-                                    &.maxui-commentaction.maxui-empty {color:#666;}
-                                    &.maxui-commentaction.maxui-empty:hover {color:#333;}
+                                    &.maxui-commentaction.maxui-has-comments {color:@linkColor;}
+                                    &.maxui-commentaction.maxui-has-comments:hover {@linkColor;}
                                     &.maxui-likes.maxui-liked { color:#007bc0; }
                                     &.maxui-favorites.maxui-favorited { color:#007bc0; }
-                                    &.maxui-likes.maxui-liked:hover { color:#026399; }
-                                    &.maxui-favorites.maxui-favorited:hover { color:#026399; }
-                                        
-                                    &.maxui-likes { background: url('/maxui-dev/img/nolike.png') no-repeat 0 1px;
-                                                    &.maxui-liked { background: url('/maxui-dev/img/like.png') no-repeat 0 1px; }
-                                                  }
 
-                                    &.maxui-favorites { background: url('/maxui-dev/img/nofav.png') no-repeat 0 1px;
-                                                    &.maxui-favorited { background: url('/maxui-dev/img/fav.png') no-repeat 0 1px; }
-                                                  }
-
-                                    &.maxui-delete { background:url('/maxui-dev/img/trashbin.png') 5px 1px no-repeat;
-                                                      &:hover { background:url('/maxui-dev/img/trashbino.png') 5px 0px no-repeat; }
-
-
-                                    }
                                 }
 
                                 .maxui-popover:extend(.mm-Popover all) {}
@@ -576,36 +554,36 @@
                                 border-bottom: 8px solid #f2f2f2;
                             }
 
-                            #maxui-commentsbox {
+                            .maxui-commentsbox {
                                 .maxui-comment {
                                     padding: 1px 0 0;
 
-                                    #maxui-activity-content {
+                                    .maxui-activity-content {
                                         margin-left:41px;
                                         margin-right:0;
                                         margin-top:-5px;
                                         margin-bottom:18px;
                                         position:relative;
 
-                                        .maxui-published-date:extend(.mm-PublishedDate) {}
+                                        .maxui-publisheddate:extend {}
                                         .maxui-actor:extend(.mm-Actor all) {
-                                            .maxui-avatar {
-                                                margin-left:0!important;
-                                                margin-top:5px;
-                                                position: absolute;
-                                                left: -41px;
-                                                top:0;
+                                            a {
+                                                .maxui-avatar {
+                                                    margin-top:5px;
+                                                    left: -41px;
+                                                    top:0;
 
-                                                img {
-                                                    width:36px!important;
-                                                    height:36px!important;
-                                                    float:left;
+                                                    img {
+                                                        width:36px;
+                                                        height:36px;
+                                                        float:left;
+                                                    }
+
+                                                    a {height:36px;}
                                                 }
-
-                                                a {height:36px;}
                                             }
                                         }
-                                        .maxui-body:extend(.m-Body) {
+                                        .maxui-body:extend(.mm-Body) {
                                             font-size: 12px !important;
                                         }
 
@@ -624,15 +602,17 @@
                                     }
                                 }
                             }
-                            #maxui-newcommentbox {
+                            .maxui-newcommentbox {
                                 text-align: right;
                                 textarea:extend(.mm-Textarea all) {}
+                                .maxui-button:extend(.mm-Button all) {}
                             }
                         }
                     }
                 }
                 #maxui-more-activities {
                     .maxui-button:extend(.mm-Button all) {
+                        border:1px solid #b2b2b2;
                         width: 100% !important;
                         margin: 10px 0px !important;
                         color:#007bc0;
