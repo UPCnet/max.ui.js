@@ -150,10 +150,9 @@
 .mm-texturedBackground,
 .mm-toggleBar,
 #maxui-container #maxui-mainpanel #maxui-newactivity,
-#maxui-container #maxui-mainpanel #maxui-show-timeline,
-#maxui-container #maxui-mainpanel #maxui-show-timeline.maxui-togglebar,
 #maxui-container #maxui-mainpanel #maxui-conversations #maxui-common-header #maxui-back-conversations,
-#maxui-container #maxui-mainpanel #maxui-show-conversations.maxui-togglebar {
+#maxui-container #maxui-mainpanel #maxui-show-conversations.maxui-togglebar,
+#maxui-container #maxui-mainpanel #maxui-show-timeline.maxui-togglebar {
   background: #f2f2f2 url('/maxui-dev/img/bgact.gif') 0 0 repeat;
 }
 /* Typography */
@@ -604,7 +603,8 @@
 }
 .mm-toggleBar,
 #maxui-container #maxui-mainpanel #maxui-conversations #maxui-common-header #maxui-back-conversations,
-#maxui-container #maxui-mainpanel #maxui-show-conversations.maxui-togglebar {
+#maxui-container #maxui-mainpanel #maxui-show-conversations.maxui-togglebar,
+#maxui-container #maxui-mainpanel #maxui-show-timeline.maxui-togglebar {
   padding-bottom: 3px;
   text-align: center;
   border-bottom: 1px #b3b3b3 solid;
@@ -612,25 +612,29 @@
 }
 .mm-toggleBar:after,
 #maxui-container #maxui-mainpanel #maxui-conversations #maxui-common-header #maxui-back-conversations:after,
-#maxui-container #maxui-mainpanel #maxui-show-conversations.maxui-togglebar:after {
+#maxui-container #maxui-mainpanel #maxui-show-conversations.maxui-togglebar:after,
+#maxui-container #maxui-mainpanel #maxui-show-timeline.maxui-togglebar:after {
   content: '\e80a';
   color: #929292;
 }
 .mm-toggleBar:hover:after,
 #maxui-container #maxui-mainpanel #maxui-conversations #maxui-common-header #maxui-back-conversations:hover:after,
-#maxui-container #maxui-mainpanel #maxui-show-conversations.maxui-togglebar:hover:after {
+#maxui-container #maxui-mainpanel #maxui-show-conversations.maxui-togglebar:hover:after,
+#maxui-container #maxui-mainpanel #maxui-show-timeline.maxui-togglebar:hover:after {
   content: '\e80a';
   color: #555;
 }
 .mm-toggleBar a,
 #maxui-container #maxui-mainpanel #maxui-conversations #maxui-common-header #maxui-back-conversations a,
-#maxui-container #maxui-mainpanel #maxui-show-conversations.maxui-togglebar a {
+#maxui-container #maxui-mainpanel #maxui-show-conversations.maxui-togglebar a,
+#maxui-container #maxui-mainpanel #maxui-show-timeline.maxui-togglebar a {
   color: #929292 !important;
   font-weight: bold;
 }
 .mm-toggleBar a:hover,
 #maxui-container #maxui-mainpanel #maxui-conversations #maxui-common-header #maxui-back-conversations a:hover,
-#maxui-container #maxui-mainpanel #maxui-show-conversations.maxui-togglebar a:hover {
+#maxui-container #maxui-mainpanel #maxui-show-conversations.maxui-togglebar a:hover,
+#maxui-container #maxui-mainpanel #maxui-show-timeline.maxui-togglebar a:hover {
   color: #555555 !important;
   text-decoration: none !important;
 }
@@ -669,7 +673,8 @@
 .mm-borderBox,
 .mm-toggleBar,
 #maxui-container #maxui-mainpanel #maxui-conversations #maxui-common-header #maxui-back-conversations,
-#maxui-container #maxui-mainpanel #maxui-show-conversations.maxui-togglebar {
+#maxui-container #maxui-mainpanel #maxui-show-conversations.maxui-togglebar,
+#maxui-container #maxui-mainpanel #maxui-show-timeline.maxui-togglebar {
   box-sizing: border-box;
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
@@ -1065,7 +1070,7 @@
   -moz-box-sizing: border-box;
   -webkit-box-sizing: border-box;
 }
-#maxui-container #maxui-mainpanel #maxui-show-timeline {
+#maxui-container #maxui-mainpanel #maxui-show-timeline.maxui-togglebar {
   padding-bottom: 3px;
   text-align: center;
   border-top: 1px #b2b2b2 solid;
