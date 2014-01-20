@@ -168,9 +168,10 @@
 /* blocks */
 .mm-Avatar,
 .mm-Actor a .maxui-avatar,
-#maxui-container #maxui-mainpanel #maxui-conversations #maxui-wrapper #maxui-conversations-list .maxui-conversation .maxui-activity-content .maxui-actor a .maxui-avatar,
-#maxui-container #maxui-mainpanel #maxui-conversations #maxui-wrapper #maxui-messages #maxui-message-list #maxui-message .maxui-user-notme .maxui-avatar,
-#maxui-container #maxui-mainpanel #maxui-conversations #maxui-wrapper #maxui-messages #maxui-message-list #maxui-message .maxui-activity-content .maxui-avatar,
+#maxui-container #maxui-mainpanel #maxui-conversations .maxui-wrapper #maxui-conversations-list .maxui-conversation .maxui-activity-content .maxui-actor a .maxui-avatar,
+#maxui-container #maxui-mainpanel #maxui-conversations .maxui-wrapper #maxui-messages #maxui-message-list .maxui-message.maxui-user-me .maxui-avatar,
+#maxui-container #maxui-mainpanel #maxui-conversations .maxui-wrapper #maxui-messages #maxui-message-list .maxui-message.maxui-user-notme .maxui-avatar,
+#maxui-container #maxui-mainpanel #maxui-conversations .maxui-wrapper #maxui-messages #maxui-message-list .maxui-message .maxui-activity-content .maxui-avatar,
 #maxui-container #maxui-mainpanel #maxui-newactivity .maxui-avatar,
 #maxui-container #maxui-mainpanel #maxui-timeline .maxui-wrapper #maxui-activities .maxui-activity .maxui-activity-content .maxui-actor a .maxui-avatar,
 #maxui-container #maxui-mainpanel #maxui-timeline .maxui-wrapper #maxui-activities .maxui-activity .maxui-comments .maxui-commentsbox .maxui-comment .maxui-activity-content .maxui-actor a .maxui-avatar {
@@ -181,9 +182,10 @@
 }
 .mm-Avatar a,
 .mm-Actor a .maxui-avatar a,
-#maxui-container #maxui-mainpanel #maxui-conversations #maxui-wrapper #maxui-conversations-list .maxui-conversation .maxui-activity-content .maxui-actor a .maxui-avatar a,
-#maxui-container #maxui-mainpanel #maxui-conversations #maxui-wrapper #maxui-messages #maxui-message-list #maxui-message .maxui-user-notme .maxui-avatar a,
-#maxui-container #maxui-mainpanel #maxui-conversations #maxui-wrapper #maxui-messages #maxui-message-list #maxui-message .maxui-activity-content .maxui-avatar a,
+#maxui-container #maxui-mainpanel #maxui-conversations .maxui-wrapper #maxui-conversations-list .maxui-conversation .maxui-activity-content .maxui-actor a .maxui-avatar a,
+#maxui-container #maxui-mainpanel #maxui-conversations .maxui-wrapper #maxui-messages #maxui-message-list .maxui-message.maxui-user-me .maxui-avatar a,
+#maxui-container #maxui-mainpanel #maxui-conversations .maxui-wrapper #maxui-messages #maxui-message-list .maxui-message.maxui-user-notme .maxui-avatar a,
+#maxui-container #maxui-mainpanel #maxui-conversations .maxui-wrapper #maxui-messages #maxui-message-list .maxui-message .maxui-activity-content .maxui-avatar a,
 #maxui-container #maxui-mainpanel #maxui-newactivity .maxui-avatar a,
 #maxui-container #maxui-mainpanel #maxui-timeline .maxui-wrapper #maxui-activities .maxui-activity .maxui-activity-content .maxui-actor a .maxui-avatar a,
 #maxui-container #maxui-mainpanel #maxui-timeline .maxui-wrapper #maxui-activities .maxui-activity .maxui-comments .maxui-commentsbox .maxui-comment .maxui-activity-content .maxui-actor a .maxui-avatar a {
@@ -192,9 +194,10 @@
 }
 .mm-Avatar img,
 .mm-Actor a .maxui-avatar img,
-#maxui-container #maxui-mainpanel #maxui-conversations #maxui-wrapper #maxui-conversations-list .maxui-conversation .maxui-activity-content .maxui-actor a .maxui-avatar img,
-#maxui-container #maxui-mainpanel #maxui-conversations #maxui-wrapper #maxui-messages #maxui-message-list #maxui-message .maxui-user-notme .maxui-avatar img,
-#maxui-container #maxui-mainpanel #maxui-conversations #maxui-wrapper #maxui-messages #maxui-message-list #maxui-message .maxui-activity-content .maxui-avatar img,
+#maxui-container #maxui-mainpanel #maxui-conversations .maxui-wrapper #maxui-conversations-list .maxui-conversation .maxui-activity-content .maxui-actor a .maxui-avatar img,
+#maxui-container #maxui-mainpanel #maxui-conversations .maxui-wrapper #maxui-messages #maxui-message-list .maxui-message.maxui-user-me .maxui-avatar img,
+#maxui-container #maxui-mainpanel #maxui-conversations .maxui-wrapper #maxui-messages #maxui-message-list .maxui-message.maxui-user-notme .maxui-avatar img,
+#maxui-container #maxui-mainpanel #maxui-conversations .maxui-wrapper #maxui-messages #maxui-message-list .maxui-message .maxui-activity-content .maxui-avatar img,
 #maxui-container #maxui-mainpanel #maxui-newactivity .maxui-avatar img,
 #maxui-container #maxui-mainpanel #maxui-timeline .maxui-wrapper #maxui-activities .maxui-activity .maxui-activity-content .maxui-actor a .maxui-avatar img,
 #maxui-container #maxui-mainpanel #maxui-timeline .maxui-wrapper #maxui-activities .maxui-activity .maxui-comments .maxui-commentsbox .maxui-comment .maxui-activity-content .maxui-actor a .maxui-avatar img {
@@ -211,12 +214,14 @@
 .mm-Avatar::before,
 .mm-Actor a .maxui-avatar:before,
 .mm-Actor a .maxui-avatar::before,
-#maxui-container #maxui-mainpanel #maxui-conversations #maxui-wrapper #maxui-conversations-list .maxui-conversation .maxui-activity-content .maxui-actor a .maxui-avatar:before,
-#maxui-container #maxui-mainpanel #maxui-conversations #maxui-wrapper #maxui-conversations-list .maxui-conversation .maxui-activity-content .maxui-actor a .maxui-avatar::before,
-#maxui-container #maxui-mainpanel #maxui-conversations #maxui-wrapper #maxui-messages #maxui-message-list #maxui-message .maxui-user-notme .maxui-avatar:before,
-#maxui-container #maxui-mainpanel #maxui-conversations #maxui-wrapper #maxui-messages #maxui-message-list #maxui-message .maxui-user-notme .maxui-avatar::before,
-#maxui-container #maxui-mainpanel #maxui-conversations #maxui-wrapper #maxui-messages #maxui-message-list #maxui-message .maxui-activity-content .maxui-avatar:before,
-#maxui-container #maxui-mainpanel #maxui-conversations #maxui-wrapper #maxui-messages #maxui-message-list #maxui-message .maxui-activity-content .maxui-avatar::before,
+#maxui-container #maxui-mainpanel #maxui-conversations .maxui-wrapper #maxui-conversations-list .maxui-conversation .maxui-activity-content .maxui-actor a .maxui-avatar:before,
+#maxui-container #maxui-mainpanel #maxui-conversations .maxui-wrapper #maxui-conversations-list .maxui-conversation .maxui-activity-content .maxui-actor a .maxui-avatar::before,
+#maxui-container #maxui-mainpanel #maxui-conversations .maxui-wrapper #maxui-messages #maxui-message-list .maxui-message.maxui-user-me .maxui-avatar:before,
+#maxui-container #maxui-mainpanel #maxui-conversations .maxui-wrapper #maxui-messages #maxui-message-list .maxui-message.maxui-user-me .maxui-avatar::before,
+#maxui-container #maxui-mainpanel #maxui-conversations .maxui-wrapper #maxui-messages #maxui-message-list .maxui-message.maxui-user-notme .maxui-avatar:before,
+#maxui-container #maxui-mainpanel #maxui-conversations .maxui-wrapper #maxui-messages #maxui-message-list .maxui-message.maxui-user-notme .maxui-avatar::before,
+#maxui-container #maxui-mainpanel #maxui-conversations .maxui-wrapper #maxui-messages #maxui-message-list .maxui-message .maxui-activity-content .maxui-avatar:before,
+#maxui-container #maxui-mainpanel #maxui-conversations .maxui-wrapper #maxui-messages #maxui-message-list .maxui-message .maxui-activity-content .maxui-avatar::before,
 #maxui-container #maxui-mainpanel #maxui-newactivity .maxui-avatar:before,
 #maxui-container #maxui-mainpanel #maxui-newactivity .maxui-avatar::before,
 #maxui-container #maxui-mainpanel #maxui-timeline .maxui-wrapper #maxui-activities .maxui-activity .maxui-activity-content .maxui-actor a .maxui-avatar:before,
@@ -238,7 +243,7 @@
 }
 .mm-DisplayName,
 .mm-Actor a .maxui-displayname,
-#maxui-container #maxui-mainpanel #maxui-conversations #maxui-wrapper #maxui-conversations-list .maxui-conversation .maxui-activity-content .maxui-actor a .maxui-displayname,
+#maxui-container #maxui-mainpanel #maxui-conversations .maxui-wrapper #maxui-conversations-list .maxui-conversation .maxui-activity-content .maxui-actor a .maxui-displayname,
 #maxui-container #maxui-mainpanel #maxui-timeline .maxui-wrapper #maxui-activities .maxui-activity .maxui-activity-content .maxui-actor a .maxui-displayname,
 #maxui-container #maxui-mainpanel #maxui-timeline .maxui-wrapper #maxui-activities .maxui-activity .maxui-comments .maxui-commentsbox .maxui-comment .maxui-activity-content .maxui-actor a .maxui-displayname {
   font-weight: bold;
@@ -251,8 +256,8 @@
   font-size: 93%;
 }
 .mm-Body,
-#maxui-container #maxui-mainpanel #maxui-conversations #maxui-wrapper #maxui-conversations-list .maxui-conversation .maxui-activity-content .maxui-body,
-#maxui-container #maxui-mainpanel #maxui-conversations #maxui-wrapper #maxui-messages #maxui-message-list #maxui-message .maxui-activity-content .maxui-balloon .maxui-body,
+#maxui-container #maxui-mainpanel #maxui-conversations .maxui-wrapper #maxui-conversations-list .maxui-conversation .maxui-activity-content .maxui-body,
+#maxui-container #maxui-mainpanel #maxui-conversations .maxui-wrapper #maxui-messages #maxui-message-list .maxui-message .maxui-activity-content .maxui-balloon .maxui-body,
 #maxui-container #maxui-mainpanel #maxui-timeline .maxui-wrapper #maxui-activities .maxui-activity .maxui-activity-content .maxui-activity-message .maxui-body,
 #maxui-container #maxui-mainpanel #maxui-timeline .maxui-wrapper #maxui-activities .maxui-activity .maxui-comments .maxui-commentsbox .maxui-comment .maxui-activity-content .maxui-body {
   margin: 0;
@@ -665,7 +670,7 @@
 }
 /* Helpers */
 .mm-wrapper,
-#maxui-container #maxui-mainpanel #maxui-conversations #maxui-wrapper,
+#maxui-container #maxui-mainpanel #maxui-conversations .maxui-wrapper,
 #maxui-container #maxui-mainpanel #maxui-timeline .maxui-wrapper {
   overflow: hidden;
   position: relative;
@@ -786,12 +791,12 @@
   font-size: 18px;
   font-weight: bold;
 }
-#maxui-container #maxui-mainpanel #maxui-conversations #maxui-wrapper #maxui-conversations-list {
+#maxui-container #maxui-mainpanel #maxui-conversations .maxui-wrapper #maxui-conversations-list {
   position: absolute;
   outline: none;
   padding: 0 10px 0 10px;
 }
-#maxui-container #maxui-mainpanel #maxui-conversations #maxui-wrapper #maxui-conversations-list .maxui-conversation {
+#maxui-container #maxui-mainpanel #maxui-conversations .maxui-wrapper #maxui-conversations-list .maxui-conversation {
   border-top: 1px #fff solid;
   border-bottom: 1px #cccccc solid;
   width: 100%;
@@ -799,22 +804,25 @@
   padding-left: 0;
   min-height: 51px;
 }
-#maxui-container #maxui-mainpanel #maxui-conversations #maxui-wrapper #maxui-conversations-list .maxui-conversation .maxui-activity-content {
+#maxui-container #maxui-mainpanel #maxui-conversations .maxui-wrapper #maxui-conversations-list .maxui-conversation .maxui-activity-content {
+  margin: -5px 0 0 55px;
+}
+#maxui-container #maxui-mainpanel #maxui-conversations .maxui-wrapper #maxui-conversations-list .maxui-conversation .maxui-activity-content a {
   position: relative;
 }
-#maxui-container #maxui-mainpanel #maxui-conversations #maxui-wrapper #maxui-conversations-list .maxui-conversation .maxui-activity-content .maxui-topright .maxui-enterconversation {
+#maxui-container #maxui-mainpanel #maxui-conversations .maxui-wrapper #maxui-conversations-list .maxui-conversation .maxui-activity-content .maxui-topright .maxui-enterconversation {
   float: right;
   padding-top: 6px;
 }
-#maxui-container #maxui-mainpanel #maxui-conversations #maxui-wrapper #maxui-conversations-list .maxui-conversation .maxui-activity-content .maxui-topright .maxui-enterconversation:before {
+#maxui-container #maxui-mainpanel #maxui-conversations .maxui-wrapper #maxui-conversations-list .maxui-conversation .maxui-activity-content .maxui-topright .maxui-enterconversation:before {
   font-size: 150%;
   content: '\e80b';
   color: #929292;
 }
-#maxui-container #maxui-mainpanel #maxui-conversations #maxui-wrapper #maxui-conversations-list .maxui-conversation .maxui-activity-content .maxui-topright .maxui-enterconversation:hover:before {
+#maxui-container #maxui-mainpanel #maxui-conversations .maxui-wrapper #maxui-conversations-list .maxui-conversation .maxui-activity-content .maxui-topright .maxui-enterconversation:hover:before {
   color: #555;
 }
-#maxui-container #maxui-mainpanel #maxui-conversations #maxui-wrapper #maxui-conversations-list .maxui-conversation .maxui-activity-content .maxui-actor a .maxui-message-count {
+#maxui-container #maxui-mainpanel #maxui-conversations .maxui-wrapper #maxui-conversations-list .maxui-conversation .maxui-activity-content .maxui-actor a .maxui-message-count {
   -moz-border-radius: 3px;
   -webkit-border-radius: 3px;
   border-radius: 3px;
@@ -827,25 +835,27 @@
   min-width: 17px;
   text-align: center;
 }
-#maxui-container #maxui-mainpanel #maxui-conversations #maxui-wrapper #maxui-messages {
+#maxui-container #maxui-mainpanel #maxui-conversations .maxui-wrapper #maxui-messages {
   position: absolute;
   background-color: #fff;
 }
-#maxui-container #maxui-mainpanel #maxui-conversations #maxui-wrapper #maxui-messages #maxui-message-list #maxui-message {
+#maxui-container #maxui-mainpanel #maxui-conversations .maxui-wrapper #maxui-messages #maxui-message-list .maxui-message {
   position: relative;
   min-height: 36px;
   margin-bottom: 10px;
   margin-top: 5px;
 }
-#maxui-container #maxui-mainpanel #maxui-conversations #maxui-wrapper #maxui-messages #maxui-message-list #maxui-message:first-child {
+#maxui-container #maxui-mainpanel #maxui-conversations .maxui-wrapper #maxui-messages #maxui-message-list .maxui-message:first-child {
   margin-top: 10px;
 }
-#maxui-container #maxui-mainpanel #maxui-conversations #maxui-wrapper #maxui-messages #maxui-message-list #maxui-message.maxui-user-me {
+#maxui-container #maxui-mainpanel #maxui-conversations .maxui-wrapper #maxui-messages #maxui-message-list .maxui-message.maxui-user-me {
   text-align: right;
+}
+#maxui-container #maxui-mainpanel #maxui-conversations .maxui-wrapper #maxui-messages #maxui-message-list .maxui-message.maxui-user-me .maxui-avatar {
   right: 5px;
   left: auto;
 }
-#maxui-container #maxui-mainpanel #maxui-conversations #maxui-wrapper #maxui-messages #maxui-message-list #maxui-message.maxui-user-me .maxui-balloon {
+#maxui-container #maxui-mainpanel #maxui-conversations .maxui-wrapper #maxui-messages #maxui-message-list .maxui-message.maxui-user-me .maxui-balloon {
   border: 1px solid #f2f2f2;
   background-color: #f2f2f2;
   margin-right: 50px;
@@ -855,16 +865,16 @@
   -webkit-border-top-right-radius: 0px;
   border-top-right-radius: 0px;
 }
-#maxui-container #maxui-mainpanel #maxui-conversations #maxui-wrapper #maxui-messages #maxui-message-list #maxui-message.maxui-user-me .maxui-balloon:after {
+#maxui-container #maxui-mainpanel #maxui-conversations .maxui-wrapper #maxui-messages #maxui-message-list .maxui-message.maxui-user-me .maxui-balloon:after {
   right: 44px;
   border-top: 3px solid #f2f2f2;
   border-left: 3px solid #f2f2f2;
   border-right: 3px solid transparent;
 }
-#maxui-container #maxui-mainpanel #maxui-conversations #maxui-wrapper #maxui-messages #maxui-message-list #maxui-message .maxui-user-notme .maxui-avatar {
+#maxui-container #maxui-mainpanel #maxui-conversations .maxui-wrapper #maxui-messages #maxui-message-list .maxui-message.maxui-user-notme .maxui-avatar {
   left: 5px;
 }
-#maxui-container #maxui-mainpanel #maxui-conversations #maxui-wrapper #maxui-messages #maxui-message-list #maxui-message .maxui-user-notme .maxui-balloon {
+#maxui-container #maxui-mainpanel #maxui-conversations .maxui-wrapper #maxui-messages #maxui-message-list .maxui-message.maxui-user-notme .maxui-balloon {
   border: 1px solid #EDF3FF;
   background-color: #EDF3FF;
   margin-left: 50px;
@@ -874,35 +884,34 @@
   -webkit-border-top-left-radius: 0px;
   border-top-left-radius: 0px;
 }
-#maxui-container #maxui-mainpanel #maxui-conversations #maxui-wrapper #maxui-messages #maxui-message-list #maxui-message .maxui-user-notme .maxui-balloon:after {
+#maxui-container #maxui-mainpanel #maxui-conversations .maxui-wrapper #maxui-messages #maxui-message-list .maxui-message.maxui-user-notme .maxui-balloon:after {
   left: 44px;
   border-top: 3px solid #EDF3FF;
   border-left: 3px solid transparent;
   border-right: 3px solid #EDF3FF;
 }
-#maxui-container #maxui-mainpanel #maxui-conversations #maxui-wrapper #maxui-messages #maxui-message-list #maxui-message .maxui-activity-content {
-  position: relative;
+#maxui-container #maxui-mainpanel #maxui-conversations .maxui-wrapper #maxui-messages #maxui-message-list .maxui-message .maxui-activity-content {
   display: inline-block;
 }
-#maxui-container #maxui-mainpanel #maxui-conversations #maxui-wrapper #maxui-messages #maxui-message-list #maxui-message .maxui-activity-content .maxui-avatar {
+#maxui-container #maxui-mainpanel #maxui-conversations .maxui-wrapper #maxui-messages #maxui-message-list .maxui-message .maxui-activity-content .maxui-avatar {
   top: 0px;
 }
-#maxui-container #maxui-mainpanel #maxui-conversations #maxui-wrapper #maxui-messages #maxui-message-list #maxui-message .maxui-activity-content .maxui-avatar img {
+#maxui-container #maxui-mainpanel #maxui-conversations .maxui-wrapper #maxui-messages #maxui-message-list .maxui-message .maxui-activity-content .maxui-avatar img {
   width: 30px;
 }
-#maxui-container #maxui-mainpanel #maxui-conversations #maxui-wrapper #maxui-messages #maxui-message-list #maxui-message .maxui-activity-content .maxui-balloon {
+#maxui-container #maxui-mainpanel #maxui-conversations .maxui-wrapper #maxui-messages #maxui-message-list .maxui-message .maxui-activity-content .maxui-balloon {
   -moz-border-radius: 3px;
   -webkit-border-radius: 3px;
   border-radius: 3px;
   padding: 2px 10px;
   min-height: 25px;
 }
-#maxui-container #maxui-mainpanel #maxui-conversations #maxui-wrapper #maxui-messages #maxui-message-list #maxui-message .maxui-activity-content .maxui-balloon .maxui-published-date {
+#maxui-container #maxui-mainpanel #maxui-conversations .maxui-wrapper #maxui-messages #maxui-message-list .maxui-message .maxui-activity-content .maxui-balloon .maxui-published-date {
   font-size: 9px;
   font-style: italic;
   color: #888;
 }
-#maxui-container #maxui-mainpanel #maxui-conversations #maxui-wrapper #maxui-messages #maxui-message-list #maxui-message .maxui-activity-content .maxui-balloon:after {
+#maxui-container #maxui-mainpanel #maxui-conversations .maxui-wrapper #maxui-messages #maxui-message-list .maxui-message .maxui-activity-content .maxui-balloon:after {
   content: "";
   width: 0px;
   height: 0px;

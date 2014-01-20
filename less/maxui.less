@@ -127,7 +127,7 @@
                     }
                 }
             }
-            #maxui-wrapper:extend(.mm-wrapper) {
+            .maxui-wrapper:extend(.mm-wrapper) {
                 #maxui-conversations-list {
                     position:absolute;
                     outline:none;
@@ -135,7 +135,10 @@
 
                     .maxui-conversation {
                         .maxui-activity-content {
-                            position:relative;
+                            margin: -5px 0 0 55px;
+                            a {
+                                position: relative;
+                            }
                             .maxui-topright {
                                 .maxui-published-date { }
                                 .maxui-enterconversation {
@@ -185,7 +188,7 @@
                     background-color: #fff;
 
                     #maxui-message-list {
-                        #maxui-message {
+                        .maxui-message {
                             position:relative;
                             min-height:36px;
                             margin-bottom:10px;
@@ -197,8 +200,11 @@
 
                             &.maxui-user-me {
                                 text-align: right;
-                                right:5px;
-                                left:auto;
+
+                                .maxui-avatar:extend(.mm-Avatar all) {
+                                    right:5px;
+                                    left:auto;
+                                }                                
                                 .maxui-balloon {
                                     border:1px solid #f2f2f2;
                                     background-color: #f2f2f2;
@@ -217,7 +223,7 @@
                                 }
                             }
 
-                            .maxui-user-notme {
+                            &.maxui-user-notme {
                                 .maxui-avatar:extend(.mm-Avatar all) {
                                     left:5px;
                                 }
@@ -241,7 +247,6 @@
                             }
 
                             .maxui-activity-content {
-                                position:relative;
                                 display: inline-block;
 
                                 .maxui-avatar:extend(.mm-Avatar all) {
