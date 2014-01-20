@@ -53,9 +53,9 @@
         padding-top:1px;
     }
 
-    .maxui-info {
+    #maxui-info {
        font-style:italic;
-       color:#666
+       color:@textColorLT;
     }
 
     .maxui-filter .maxui-img {
@@ -131,10 +131,10 @@
                                     float:right;
                                     padding-top:6px;
                                     &:before {
-                                        font-size: 150%; content: '\e80b'; color:#929292;
+                                        font-size: 150%; content: '\e80b'; color:@textColor;
                                     }
                                     &:hover:before {
-                                        color:#555;
+                                        color:@textColorDK;
                                     }
                                 }
                             }
@@ -142,19 +142,20 @@
                                 a {
                                     .maxui-avatar:extend(.mm-Avatar all) {}
                                     .maxui-displayname:extend(.mm-DisplayName) {}
-                                    .maxui-message-count {
-                                        -moz-border-radius: 3px; -webkit-border-radius: 3px; border-radius: 3px;
-                                        background-color: #3A87AD;
-                                        color:white;
-                                        font-size: 10px;
-                                        padding:0px 1px;
-                                        font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-                                        display:inline-block;
-                                        min-width: 17px;
-                                        text-align: center;
-
-                                    }
                                 }
+                                .maxui-message-count {
+                                    .mm-borderRadius(3px);
+                                    background-color: @linkColor;
+                                    color:white;
+                                    font-size: 10px;
+                                    padding:0px 1px;
+                                    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+                                    display:inline-block;
+                                    min-width: 17px;
+                                    text-align: center;
+
+                                }
+
                             }
                             .maxui-body:extend(.mm-Body) {}
                         }
@@ -191,8 +192,9 @@
                                     left:auto;
                                 }                                
                                 .maxui-balloon {
-                                    border:1px solid #f2f2f2;
-                                    background-color: #f2f2f2;
+                                    border:1px solid @messageMeBorderColor;
+                                    background-color: @messageMeBackgroundColor;
+                                    color: @messageMeTextColor;
                                     margin-right:50px;
                                     margin-left:10px;
                                     text-align: right;
@@ -200,8 +202,8 @@
 
                                     &:after {
                                         right: 44px;
-                                        border-top: 3px solid #f2f2f2;
-                                        border-left: 3px solid #f2f2f2;
+                                        border-top: 3px solid @messageMeBorderColor;
+                                        border-left: 3px solid @messageMeBorderColor;
                                         border-right: 3px solid transparent;
                                     }
 
@@ -214,8 +216,9 @@
                                 }
 
                                 .maxui-balloon {
-                                    border:1px solid #EDF3FF;
-                                    background-color: #EDF3FF;
+                                    border:1px solid @messageOthersBorderColor;
+                                    background-color: @messageOthersBackgroundColor;
+                                    color: @messageOthersTextColor;
                                     margin-left:50px;
                                     margin-right:10px;
                                     text-align: left;
@@ -223,9 +226,9 @@
 
                                     &:after {
                                         left: 44px;
-                                        border-top: 3px solid #EDF3FF;
+                                        border-top: 3px solid @messageOthersBorderColor;
                                         border-left: 3px solid transparent;
-                                        border-right: 3px solid #EDF3FF;
+                                        border-right: 3px solid @messageOthersBorderColor;
 
                                     }
                                 }
@@ -246,7 +249,7 @@
                                     .maxui-published-date {
                                         font-size: 9px;
                                         font-style: italic;
-                                        color: #888;
+                                        color: @textColorLT;
                                     }
                                     .maxui-body:extend(.mm-Body) {}
 
@@ -293,42 +296,11 @@
             &:hover:after { content: '\e809';}            
          }
 
-        #maxui-conversations-predictive {
+        #maxui-conversation-predictive:extend(.mm-predictive all) {
             margin-top: 50px;
             margin-left: 10px;
         }
-        #maxui-add-people-box:extend(.mm-AddPeopleBox all) {
-            #maxui-new-participants {
-                zoom:1;
-                padding-left:0px;
-                margin-top: 5px;
-
-                &:before, &:after {content: ""; display:table;}
-                &:after {clear:both;}
-            }
-
-            #maxui-new-displayName {
-                border-top: 1px solid #ccc;
-                margin-top: 5px;
-                padding-top: 3px;
-                .maxui-simple-text-input {
-                    width:50%;
-                    border:none !important;
-                    background-color: transparent;
-                    font-family: Arial, Helvetica, sans-serif;
-                    font-size: 13px;
-                    color:#333;
-                    &:focus {
-                        -webkit-box-shadow: none !important;
-                        -moz-box-shadow: none! important;
-                        box-shadow: none !important;
-                        outline: 0;
-                        border: none !important;
-                    }
-                }
-            }
-
-        }
+        #maxui-add-people-box:extend(.mm-AddPeopleBox all) { }
         #maxui-newactivity {
             background-color: @secondaryBackgroundColor;
             padding:10px;
@@ -548,7 +520,7 @@
                             margin-left:56px;
                             width:auto;
                             margin-top:5px;
-                            background:#f2f2f2;
+                            background-color:@commentsBackgroundColor;
                             padding:5px;
                             position:relative;
                             .mm-borderRadius(6px);
@@ -592,7 +564,7 @@
                                             }
                                         }
                                         .maxui-body:extend(.mm-Body) {
-                                            font-size: 12px !important;
+                                            font-size: 12px;
                                         }
 
                                         .maxui-delete-comment, .maxui-delete-comment:hover {
@@ -601,8 +573,8 @@
                                             cursor:pointer;
                                         }
 
-                                        .maxui-delete-comment:before { content: '\e806'; color: #666;}
-                                        .maxui-delete-comment:hover:before { content: '\e806'; color: #555;}
+                                        .maxui-delete-comment:before { content: '\e806'; color: @actionLinkColor;}
+                                        .maxui-delete-comment:hover:before { content: '\e806'; color: @actionHoverLinkColor;}
 
                                         .maxui-popover:extend(.mm-Popover all) {
                                             margin-left:64px;
@@ -621,8 +593,8 @@
                 #maxui-more-activities {
                     .maxui-button:extend(.mm-Button all) {
                         border:1px solid @borderColor;
-                        width: 100% !important;
-                        margin: 10px 0px !important;
+                        width: 100%;
+                        margin: 10px 0px;
                         color: @actionLinkColor;
                         background: #f2f2f2;
                         &:hover,

@@ -5,10 +5,12 @@
 @togglebarBackgroundColor: #f2f2f2;			/* BG color for toggle bars */
 @searchBackgroundColor: #f2f2f2;			/* BG color of search section */
 @selectedBackgroundColor: #f2f2f2;			/* BG Color of selected list elements*/
+@commentsBackgroundColor: #f2f2f2;
 
 @textColor: #6f6f6f;						/* Text color */
-@textColorLT: lighten(@textColor, 20%);
+@textColorLT: lighten(@textColor, 10%);
 @textColorDK: darken(@textColor, 10%);
+@textShadowColor: #fff;
 
 @togglebarLinkColor: @textColor;
 @togglebarHoverLinkColor: @textColorDK;
@@ -18,7 +20,7 @@
 
 @favoriteColor: #ff9b00;
 
-@linkColor: orange;
+@linkColor: #007bc0;
 @hoverLinkColor: darken(@linkColor, 10%);
 
 @buttonTextColor: #fff;
@@ -27,3 +29,12 @@
 @disabledButtonTextColor: @textColorLT;
 @disabledButtonBorderColor: @borderColor;
 @disabledButtonBackgroundColor: @secondaryBackgroundColor;
+
+/* Conversation messages colors */
+
+@messageMeBorderColor: #f2f2f2;
+@messageMeBackgroundColor: #f2f2f2;
+@messageMeTextColor: @textColor;
+@messageOthersBorderColor: #edf3ff;
+@messageOthersBackgroundColor: #edf3ff;
+@messageOthersTextColor: @textColor;

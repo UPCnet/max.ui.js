@@ -9,7 +9,7 @@
 /* Typography */
 
 .mm-textStyle {
-    text-shadow: 0 1px #fff;
+    text-shadow: 0 1px @textShadowColor;
     font:13px/18px Arial, "HelveticaNeue","Helvetica Neue",Helvetica,sans-serif;
     color:@textColor;
 }
@@ -34,7 +34,7 @@
         float:left;
         width:48px;
         .mm-borderRadius(3px);
-        .mm-boxShadow(1px, #fff);
+        .mm-boxShadow(1px, @textShadowColor);
     }
 
     &:before, &::before {
@@ -74,42 +74,38 @@
 .mm-Actor {
     a {
         position:relative;
-        .maxui-avatar:extend(.mm-Avatar all) {
-            // margin-top:5px;
-            // margin-left: 0!important;
-            // position: absolute;
-            // left:-41px;
-            // top: 0;
-        }
-        .maxui-displayname:extend(.mm-DisplayName) {}
+        .maxui-avatar:extend(.mm-Avatar all) { }
+        .maxui-displayname:extend(.mm-DisplayName) { }
     }
     .maxui-username:extend(.mm-Username) {}
 }
 
-.mm-Button {
-    border:1px solid @buttonBorderColor;
+.mm-BaseButton {
     .mm-borderRadius(3px);
-    margin: 5px 0 0 0;
+    margin: 5px 0 0 0;    
     font-family: Arial, "HelveticaNeue", "Helvetica Neue", Helvetica, sans-serif;
     font-size:13px;
     padding:3px 6px;
+    border:1px solid;
+    cursor:pointer;
+}
+
+.mm-Button:extend(.mm-BaseButton) {
+    border-color:@buttonBorderColor;
     color:@buttonTextColor;
     background: @buttonBackgroundColor;
 
     &:hover,
     &:focus {
-        border:1px solid @buttonBorderColor;
+        border-color:@buttonBorderColor;
         background: @buttonBackgroundColor;
         cursor:pointer;
         color:@buttonTextColor;
         box-shadow:none; -webkit-box-shadow:none;
     }
-    &.active {
-        background: #e5e5e5;
-    }
     &[disabled] {
         -webkit-appearance: none;
-        border:1px solid @disabledButtonBorderColor;
+        border-color:@disabledButtonBorderColor;
         color:@disabledButtonTextColor;
         background-color: @disabledButtonBackgroundColor;
         box-shadow:none; -webkit-box-shadow:none;
@@ -127,8 +123,6 @@
     position:relative;
     padding:0 3px;
     font-family: Arial, Helvetica, sans-serif;
-    -webkit-box-shadow:inset 0 1px 3px rgba(0,0,0,.05),0 1px 0 #fff;
-    box-shadow:inset 0 1px 3px rgba(0,0,0,.1),0 1px 0 #fff;
     font-size: 13px;
     line-height: 18px;
     overflow: auto;
@@ -165,12 +159,10 @@
     margin-left:68px;
     text-align: left;
     white-space: normal;
-    background-color: #ffffff;
-    border: 1px solid #ccc;
-    border: 1px solid rgba(0, 0, 0, 0.2);
-    -webkit-border-radius: 6px;
-    -moz-border-radius: 6px;
-    border-radius: 6px;
+    background-color: @mainBackgroundColor;
+    border: 1px solid fade(@borderColor, 20%);
+
+    .mm-borderRadius(6px);
     -webkit-box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
     -moz-box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
     box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
@@ -178,20 +170,18 @@
     -moz-background-clip: padding;
     background-clip: padding-box;
 
-    .maxui-button.delete {
-        filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ee5f5b', endColorstr='#bd362f'); /* for IE */
-        background: -webkit-gradient(linear, left top, left bottom, from(#ee5f5b), to(#bd362f)); /* for webkit browsers */
-        background: -moz-linear-gradient(top,  #ee5f5b,  #bd362f); /* for firefox 3.6+ */
-        border-color: #bd362f #bd362f #802420;
-    }
+    .maxui-button:extend(.mm-BaseButton) {
+        &.delete {
+            background-color: #bd362f;
+            border-color: #bd362f;  
+            color: #fff;
+       }
 
-    .maxui-button.cancel {
-        filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffff', endColorstr='#e6e6e6'); /* for IE */
-        background: -webkit-gradient(linear, left top, left bottom, from(#ffffff), to(#e6e6e6)); /* for webkit browsers */
-        background: -moz-linear-gradient(top,  #ffffff,  #e6e6e6); /* for firefox 3.6+ */
-        border-color: #e6e6e6 #e6e6e6 #bfbfbf;
-        color:#333;
-        text-shadow: 0 -1px rgba(255,255,255,.5);
+        &.cancel {
+            background-color: @disabledButtonBackgroundColor;
+            border-color: @borderColor;
+            color:@textColor;
+        }
     }
 
     .maxui-popover-title {
@@ -200,11 +190,11 @@
         font-size: 14px;
         font-weight: bold;
         line-height: 18px;
-        background-color: #f7f7f7;
-        border-bottom: 1px solid #ebebeb;
-        -webkit-border-radius: 5px 5px 0 0;
-        -moz-border-radius: 5px 5px 0 0;
-        border-radius: 5px 5px 0 0;
+        background-color: lighten(@secondaryBackgroundColor, 5%);
+        border-bottom: 1px solid @borderColor;
+        .mm-borderRadius(5px);
+        border-bottom-left-radius: 0;
+        border-bottom-right-radius: 0;
     }
 
     .maxui-popover-content {
@@ -230,7 +220,6 @@
             border-style: solid;
             border-width: 10px;
             content: "";
-
         }
     }
 
@@ -239,7 +228,6 @@
             top: 50%;
             right: -11px;
             margin-top: -11px;
-            border-left-color: #999;
             border-left-color: rgba(0, 0, 0, 0.25);
             border-right-width: 0;
             &:after {
@@ -253,7 +241,7 @@
 }
 
 .mm-AddPeopleBox {
-    border-bottom:1px #ccc solid;
+    border-bottom:1px @borderColor solid;
     padding:6px 10px 5px 10px;
     background-color: @secondaryBackgroundColor;
     position:relative;
@@ -270,7 +258,7 @@
         right: 10px;
     }
 
-    input#add-user-input.maxui-text-input {
+    input#add-user-input {
         border:none;
         background-color: transparent;
         color:@textColor;
@@ -278,11 +266,46 @@
         display: block;
         &:focus {
             -webkit-box-shadow: none !important;
-            -moz-box-shadow: none! important;
+            -moz-box-shadow: none !important;
             box-shadow: none !important;
             outline: 0;
+            border:none !important;
         }
+    }
 
+    #maxui-new-participants:extend(.mm-Filters all) {
+        zoom:1;
+        padding-left:0px;
+        margin-top: 5px;
+        border: none;
+        background-color: transparent;
+        color: @textColor;
+        width: 100%;
+        display: block;
+
+        &:before, &:after {content: ""; display:table;}
+        &:after {clear:both;}
+    }
+
+    #maxui-new-displayName {
+        border-top: 1px @borderColor solid;
+        margin-top: 5px;
+        padding-top: 3px;
+        .maxui-simple-text-input {
+            width:50%;
+            border:none;
+            background-color: transparent;
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 13px;
+            color:@textColor;
+            &:focus {
+                -webkit-box-shadow: none !important;
+                -moz-box-shadow: none! important;
+                box-shadow: none !important;
+                outline: 0;
+                border: none !important;
+            }
+        }
     }
 }
 .mm-Filters {
@@ -296,17 +319,17 @@
         margin-top:2px;
         float:left;
         span {
-            padding:0px 0px 4px 4px;
-            -moz-border-radius: 5px;-webkit-border-radius: 5px;border-radius: 5px;
-            -moz-box-shadow:0 1px 0 #fff;-webkit-box-shadow:0 1px 0 #fff;box-shadow:0 1px 0 #fff;
+            padding:0px 0px 3px 4px;
+            .mm-borderRadius(5px);
+            .mm-boxShadow(1px, #fff);
             text-shadow: 0 -1px rgba(0,0,0,.5);
             background-color:#007ca5;
             color:#fff;
             border:1px solid #006989;
             display:block;
 
-            &.hashtag {background-color:#008564;border:1px solid #007355;}
-            &.person {background-color:#837800;border:1px solid #706923;}
+            &.hashtag { background-color:#008564; border:1px solid #007355;}
+            &.person {  background-color:#837800; border:1px solid #706923;}
         }
         .maxui-close {
             padding: 0 2px 0 4px;
@@ -329,11 +352,10 @@
     &:extend(.mm-borderBox);
 
     a {
-        color: @togglebarLinkColor !important;
+        color: @togglebarLinkColor;
         font-weight: bold;
         &:hover {
-            color: @togglebarHoverLinkColor !important;
-            text-decoration: none !important;
+            color: @togglebarHoverLinkColor;
         }
     }
 }
@@ -372,12 +394,6 @@
     -webkit-box-shadow: inset 0 1px 3px rgba(0,0,0,.05),0 0 8px @faded50 !important;
     -moz-box-shadow: inset 0 1px 3px rgba(0,0,0,.05),0 0 8px @faded50 !important;
     box-shadow: inset 0 1px 3px rgba(0,0,0,.05),0 0 8px @faded50 !important;
-}
-
-.mm-gradient(@colorA, @colorB) {
-    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='@colorA', endColorstr='@colorB'); /* for IE */
-    background: -webkit-gradient(linear, left top, left bottom, from(@colorA), to(@colorB)); /* for webkit browsers */
-    background: -moz-linear-gradient(top,  @colorA,  @colorB); /* for firefox 3.6+ */
 }
 
 .mm-wrapper {
