@@ -6,10 +6,6 @@
     border: 1px solid @borderColor;
 }
 
-.mm-texturedBackground {
-    background: @secondaryBackgroundColor url('@{base-url}/img/bgact.gif') 0 0 repeat;
-}
-
 /* Typography */
 
 .mm-textStyle {
@@ -60,7 +56,7 @@
 }
 
 .mm-Username {
-    color: #6e6e6e;
+    color: @textColor;
     font-size: 93%;
 }
 
@@ -71,7 +67,7 @@
 
 .mm-PublishedDate {
     font-size:11px;
-    color: #6e6e6e;
+    color: @textColorLT;
     text-align: right;
 }
 
@@ -91,15 +87,14 @@
 }
 
 .mm-Button {
-    border:1px solid #015ea4;
+    border:1px solid @buttonBorderColor;
     .mm-borderRadius(3px);
     margin: 5px 0 0 0;
     font-family: Arial, "HelveticaNeue", "Helvetica Neue", Helvetica, sans-serif;
     font-size:13px;
     padding:3px 6px;
-    color:#fff;
-    text-shadow: 0 -1px rgba(0,0,0,.5);
-    background: #007bc0;
+    color:@buttonTextColor;
+    background: @buttonBackgroundColor;
 
     &:hover,
     &:focus {
@@ -107,28 +102,25 @@
         background: @buttonBackgroundColor;
         cursor:pointer;
         color:@buttonTextColor;
-        box-shadow:0 1px 5px rgba(0,0,0,.1);
+        box-shadow:none; -webkit-box-shadow:none;
     }
-    .mm-gradient(#33bbee, #007bc0);
     &.active {
-        .mm-gradient(#005ea0, #007bc0);
         background: #e5e5e5;
     }
     &[disabled] {
         -webkit-appearance: none;
-        border:1px solid #b2b2b2;
-        color:#666;
-        text-shadow:0 1px #fff;
-        box-shadow:none;
+        border:1px solid @disabledButtonBorderColor;
+        color:@disabledButtonTextColor;
+        background-color: @disabledButtonBackgroundColor;
+        box-shadow:none; -webkit-box-shadow:none;
         cursor: default;
-        .mm-gradient(#e5e5e5, #f2f2f2);
     }
 
 }
 
 .mm-Textarea {
     width:100%;
-    color:#666;
+    color:@textColor;
     height:48px;
     min-height:48px;
     border: 1px darken(@borderColor, 10%) solid;
@@ -263,12 +255,12 @@
 .mm-AddPeopleBox {
     border-bottom:1px #ccc solid;
     padding:6px 10px 5px 10px;
-    background: #f2f2f2 url('/maxui-dev/img/bgact.gif') 0 0 repeat;
+    background-color: @secondaryBackgroundColor;
     position:relative;
 
     .maxui-label {
         font-weight: bold;
-        color: #666 !important;
+        color: @textColorDK;
         line-height: 14px;
     }
 
@@ -281,7 +273,7 @@
     input#add-user-input.maxui-text-input {
         border:none;
         background-color: transparent;
-        color:#929292;
+        color:@textColor;
         width:250px;
         display: block;
         &:focus {
@@ -327,16 +319,15 @@
 }
 
 .mm-toggleBar {
-    padding-bottom:3px;
+    background-color: @togglebarBackgroundColor;
     text-align:center;
-    border-bottom: 1px darken(@borderColor, 10%) solid;
-
-    &:after { content: '\e80a'; color:#929292;}
-    &:hover:after { content: '\e80a'; color:#555;}
-
-    &:extend(.mm-texturedBackground);
-    &:extend(.mm-borderBox);
     height:21px;
+
+    &:after, &:before { color:@togglebarLinkColor; height:auto;}
+    &:hover:after, &:hover:before { color:@togglebarHoverLinkColor; height:auto;}
+
+    &:extend(.mm-borderBox);
+
     a {
         color: @togglebarLinkColor !important;
         font-weight: bold;
@@ -374,6 +365,14 @@
 }
 
 /* Helpers */
+
+.mm-borderGlow(@color) {
+    border: 1px solid @color !important;
+    @faded50: fade(@color, 50%);
+    -webkit-box-shadow: inset 0 1px 3px rgba(0,0,0,.05),0 0 8px @faded50 !important;
+    -moz-box-shadow: inset 0 1px 3px rgba(0,0,0,.05),0 0 8px @faded50 !important;
+    box-shadow: inset 0 1px 3px rgba(0,0,0,.05),0 0 8px @faded50 !important;
+}
 
 .mm-gradient(@colorA, @colorB) {
     filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='@colorA', endColorstr='@colorB'); /* for IE */

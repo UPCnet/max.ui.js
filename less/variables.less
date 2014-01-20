@@ -1,17 +1,29 @@
-@borderColor: #cccccc;
-@mainBackgroundColor: #ffffff;
-@secondaryBackgroundColor: #f2f2f2;
-@selectedBackgroundColor: #ddd;
+@borderColor: #cccccc;						/* Color for all borders in the interface */
 
-@textColor: #333333;
-@darkTextColor: #727272;
-@linkColor: #007bc0;
-@hoverLinkColor: #005ea0;
+@mainBackgroundColor: #ffffff;				/* BG color of the parent interface, will be seen if anything is transparent */
+@secondaryBackgroundColor: #e8e8e8;			/* BG color of the add activity and add conversation section */
+@togglebarBackgroundColor: #f2f2f2;			/* BG color for toggle bars */
+@searchBackgroundColor: #f2f2f2;			/* BG color of search section */
+@selectedBackgroundColor: #f2f2f2;			/* BG Color of selected list elements*/
 
-@buttonTextColor: #ffffff;
-@buttonBorderColor: #003f6e;
-@buttonBackgroundColor: #007bc0;
+@textColor: #6f6f6f;						/* Text color */
+@textColorLT: lighten(@textColor, 20%);
+@textColorDK: darken(@textColor, 10%);
 
-@togglebarLinkColor: #929292;
-@togglebarHoverLinkColor: #555555;
-@base-url: "/maxui-dev";
+@togglebarLinkColor: @textColor;
+@togglebarHoverLinkColor: @textColorDK;
+
+@actionLinkColor: @textColor;
+@actionHoverLinkColor: @textColorDK;
+
+@favoriteColor: #ff9b00;
+
+@linkColor: orange;
+@hoverLinkColor: darken(@linkColor, 10%);
+
+@buttonTextColor: #fff;
+@buttonBorderColor: @linkColor;
+@buttonBackgroundColor: lighten(@linkColor, 10%);
+@disabledButtonTextColor: @textColorLT;
+@disabledButtonBorderColor: @borderColor;
+@disabledButtonBackgroundColor: @secondaryBackgroundColor;

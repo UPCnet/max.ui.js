@@ -73,37 +73,20 @@
      transition: .3s ease-in-out;
     }
 
-    textarea:focus, #maxui-container input[type="search"]:focus {
-        border: 1px solid #4999cb !important;
-        -webkit-box-shadow: inset 0 1px 3px rgba(0,0,0,.05),0 0 8px rgba(100,123,192,.5) !important;
-        -moz-box-shadow: inset 0 1px 3px rgba(0,0,0,.05),0 0 8px rgba(100,123,192,.5) !important;
-        box-shadow: inset 0 1px 3px rgba(0,0,0,.05),0 0 8px rgba(100,123,192,.5) !important;
+    textarea:focus, 
+    input[type="search"]:focus,
+    input[type='text']:focus {
+        .mm-borderGlow(@linkColor)
      }
 
+    textarea.error,
     textarea.error:focus {
-        border: 1px solid red !important;
-        -webkit-box-shadow: inset 0 1px 3px rgba(255,0,0,.05),0 0 8px rgba(255,123,192,.5) !important;
-        -moz-box-shadow: inset 0 1px 3px rgba(255,0,0,.05),0 0 8px rgba(255,123,192,.5) !important;
-        box-shadow: inset 0 1px 3px rgba(255,0,0,.05),0 0 8px rgba(255,123,192,.5) !important;
-
-     }
-
-    input:focus {
-        -webkit-box-shadow: inset 0 1px 3px rgba(0,0,0,.05),0 0 8px rgba(0,123,192,.5) !important;
-        -moz-box-shadow: inset 0 1px 3px rgba(0,0,0,.05),0 0 8px rgba(0,123,192,.5) !important;
-        box-shadow: inset 0 1px 3px rgba(0,0,0,.05),0 0 8px rgba(0,123,192,.5) !important;
-     }
-
-    textarea.error {
-        border: 1px solid red !important;
-        -webkit-box-shadow: inset 0 1px 3px rgba(255,0,0,.05),0 0 8px rgba(255,123,192,.5) !important;
-        -moz-box-shadow: inset 0 1px 3px rgba(255,0,0,.05),0 0 8px rgba(255,123,192,.5) !important;
-        box-shadow: inset 0 1px 3px rgba(255,0,0,.05),0 0 8px rgba(255,123,192,.5) !important;
-
+        .mm-borderGlow(red)
      }
 
     /* ==================================*/
     #maxui-mainpanel {
+        background-color: @mainBackgroundColor;
         #maxui-conversations {
             position:relative;
             clear:both;
@@ -116,12 +99,15 @@
             #maxui-common-header {
                 overflow: hidden;
                 #maxui-back-conversations:extend(.mm-toggleBar all) {
-                    a:before { content: '\e807'; color:#929292;}
-                    a:hover:before { content: '\e807'; color:#555;}
-                    height:41px;
+                    height:45px;
+                    border-bottom:1px @borderColor solid;
+
+                    a:before { content: '\e807';}
+                    a:hover:before { content: '\e807';}
+
                     h3.maxui-title{
                         margin: 3px 0px 7px;
-                        color:@darkTextColor;
+                        color:@textColorDK;
                         font-size: 18px;
                         font-weight: bold;
                     }
@@ -185,7 +171,6 @@
                 }
                 #maxui-messages {
                     position:absolute;
-                    background-color: #fff;
 
                     #maxui-message-list {
                         .maxui-message {
@@ -285,7 +270,7 @@
                 top:0px;
                 right:0px;
                 width:10px;
-                border-left:1px solid #ccc;
+                border-left:1px @borderColor solid;
                 z-index: 2;
                 padding:1px 0px;
                 background-color: white;
@@ -302,7 +287,11 @@
             }
 
         }
-        #maxui-show-conversations.maxui-togglebar:extend(.mm-toggleBar all){  }
+        #maxui-show-conversations.maxui-togglebar:extend(.mm-toggleBar all){ 
+            border-bottom: 1px @borderColor solid;
+            &:after { content: '\e809';}
+            &:hover:after { content: '\e809';}            
+         }
 
         #maxui-conversations-predictive {
             margin-top: 50px;
@@ -341,7 +330,7 @@
 
         }
         #maxui-newactivity {
-            &:extend(.mm-texturedBackground);
+            background-color: @secondaryBackgroundColor;
             padding:10px;
             position:relative;
             &:after {
@@ -382,34 +371,46 @@
         }
         #maxui-search {
             box-sizing: border-box;
-            border-top:1px #b2b2b2 solid;
-            border-bottom:1px #b2b2b2 solid;
-            background:#f1f1f1;
+            border-top:1px @borderColor solid;
+            border-bottom:1px @borderColor solid;
+            background-color:@secondaryBackgroundColor;
             padding:10px;
+
             &.folded {
                 #maxui-search-filters {
                     display: none;
                 }
-                #maxui-search-toggle:before { content: '\e80e'; color: #666; font-size: 120%; margin-top:4px;margin-left:19px;}
-
+                #maxui-search-toggle:before { 
+                    content: '\e80e'; 
+                    color: @textColorDK; 
+                    font-size: 120%; 
+                    margin-top:4px;
+                    margin-left:19px;
+                }
             }
 
             #maxui-search-toggle {
                 float:left;
-                &:before{content: '\e80d'; color: #666; font-size: 120%; margin-top: 4px;margin-left:18px;}
+                &:before{
+                    content: '\e80d'; 
+                    color: @textColorDK; 
+                    font-size: 120%; 
+                    margin-top: 4px;
+                    margin-left:18px;
+                }
             }
             #maxui-favorites-filter {
-                color:#bbb;
+                color:@actionLinkColor;
                 width:56px;
                 float:right;
                 text-align: center;
                 margin-top: 1px;
 
                 &:hover {
-                    color:#666;
+                    color:@actionHoverLinkColor;
                 }
                 &.active {
-                    color:#ff9b00;
+                    color:@favoriteColor;
                 }
 
                 .maxui-icon-star {
@@ -421,7 +422,7 @@
                 #maxui-search-text {
                     -webkit-appearance: none; -moz-appearance:none; appearance:none;
                     width:100%;
-                    color:#666;
+                    color:@textColor;
                     height:24px; min-height:24px;
                     border: 1px #b2b2b2 solid;
                     position:relative;
@@ -439,15 +440,14 @@
             #maxui-search-filters:extend(.mm-Filters all) {}
         }
         #maxui-show-timeline.maxui-togglebar:extend(.mm-toggleBar all){
-                padding-bottom:3px;
-                text-align:center;
-                border-top: 1px #b2b2b2 solid;
+                border-top: 1px @borderColor solid;
+                &:after { content: '\e80a';}
+                &:hover:after { content: '\e80a';}
         }
 
         #maxui-activity-sort {
             box-sizing: border-box;
-            background-color: white;
-            border-bottom: 1px #b2b2b2 solid;
+            border-bottom: 1px @borderColor solid;
             padding: 5px 10px;
             .maxui-sort-action {
 
@@ -456,11 +456,11 @@
                 }
 
                 &.active {
-                    color: #444;
+                    color: @actionLinkColor;
                     font-weight: bold;
                     &:hover {
                         text-decoration:none;
-                        color: #000;
+                        color: @actionHoverLinkColor;
                     }
                 }
 
@@ -499,7 +499,7 @@
                             .maxui-origin {
                                 display:inline;
                                 padding-right:10px;
-                                color:#6e6e6e;
+                                color:@textColor;
                                 font-size:11px;
                                 &.maxui-icon-:before { content: '\e811'; font-size: 12px; margin-right: 0px;}
                             }
@@ -512,28 +512,33 @@
                                     text-decoration:none;
                                     padding-right: 5px;
                                     cursor:pointer;
-                                    color: #666;
+                                    color: @actionLinkColor;
 
                                     &:before { font-size:12px; margin-right:.22em;}
                                     &:hover {
-                                        color:#333;
+                                        color:@actionHoverLinkColor;
                                     }
 
                                     &.maxui-commentaction.maxui-has-comments:before { content: '\e805'; }
-                                    &.maxui-commentaction:before             { content: '\e804'; }
-                                    &.maxui-likes:before                     { content: '\e802'; }
-                                    &.maxui-likes.maxui-liked:before         { content: '\e803'; color:#007bc0;}
-                                    &.maxui-likes.maxui-liked:hover:before   { color:#026399;}
-                                    &.maxui-favorites:before                 { content: '\e801'; }
-                                    &.maxui-favorites:hover:before           { content: '\e801'; color:#ff9b00;}
-                                    &.maxui-favorites.maxui-favorited:before { content: '\e800'; color:#007bc0;}
-                                    &.maxui-favorites.maxui-favorited:hover:before { color:#ff9b00;}
-                                    &.maxui-delete:before                    { content: '\e806'; }
-                                    &.maxui-commentaction.maxui-has-comments {color:@linkColor;}
-                                    &.maxui-commentaction.maxui-has-comments:hover {@linkColor;}
-                                    &.maxui-likes.maxui-liked { color:#007bc0; }
-                                    &.maxui-favorites.maxui-favorited { color:#007bc0; }
+                                    &.maxui-commentaction:before                    { content: '\e804'; }
+                                    &.maxui-commentaction.maxui-has-comments        { color: @linkColor;}
+                                    &.maxui-commentaction.maxui-has-comments:hover  { color: @linkColor;}
 
+                                    &.maxui-likes:before                            { content: '\e802'; }
+                                    &.maxui-likes.maxui-liked                       { color: @linkColor; }
+                                    &.maxui-likes.maxui-liked:before                { content: '\e803'; color: @linkColor;}
+                                    &.maxui-likes.maxui-liked:hover:before          { color:@hoverLinkColor;}
+                                    &.maxui-likes.maxui-liked:hover                 { color:@hoverLinkColor;}
+
+                                    &.maxui-favorites:before                        { content: '\e801'; }
+                                    &.maxui-favorites:hover:before                  { content: '\e801'; color: @favoriteColor;}
+                                    &.maxui-favorites.maxui-favorited               { color: @linkColor; }
+                                    &.maxui-favorites.maxui-favorited:hover         { color: @hoverLinkColor; }
+                                    &.maxui-favorites.maxui-favorited:before        { content: '\e800'; color: @linkColor}
+                                    &.maxui-favorites.maxui-favorited:hover:before  { color : favoriteColor}
+                                    
+
+                                    &.maxui-delete:before                           { content: '\e806'; }
                                 }
 
                                 .maxui-popover:extend(.mm-Popover all) {}
@@ -615,25 +620,15 @@
                 }
                 #maxui-more-activities {
                     .maxui-button:extend(.mm-Button all) {
-                        border:1px solid #b2b2b2;
+                        border:1px solid @borderColor;
                         width: 100% !important;
                         margin: 10px 0px !important;
-                        color:#007bc0;
+                        color: @actionLinkColor;
                         background: #f2f2f2;
-                        text-shadow: 0 1px #fff;
-                        .mm-gradient(#fff, #f2f2f2);
                         &:hover,
                         &:focus {
-                            border:1px solid #999;
-                            background: #f2f2f2;
-                            cursor:pointer;
-                            color:#005ea0;
-                            box-shadow:0 1px 5px rgba(0,0,0,.1);
-                        }
-                        &.active {
-                            .mm-gradient(#e5e5e5, #f2f2f2)
-                        }
-
+                            box-shadow:none; -webkit-box-shadow:none;
+                        }   
                     }
                 }
             }
