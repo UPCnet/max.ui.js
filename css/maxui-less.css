@@ -218,35 +218,6 @@
   outline: 0;
   border: none !important;
 }
-.mm-predictive,
-#maxui-container #maxui-mainpanel #maxui-conversation-predictive,
-#maxui-container #maxui-mainpanel #maxui-newactivity #maxui-predictive.maxui-predictive {
-  width: 200px;
-  background-color: #ffffff;
-  margin-top: -32px;
-  margin-left: 57px;
-  position: absolute;
-  z-index: 100;
-  border: 1px #b3b3b3 solid;
-  -moz-border-radius: 3px;
-  -webkit-border-radius: 3px;
-  border-radius: 3px;
-}
-.mm-predictive ul,
-#maxui-container #maxui-mainpanel #maxui-conversation-predictive ul {
-  list-style: none;
-  margin: 0px;
-  padding: 1px;
-}
-.mm-predictive ul .maxui-prediction,
-#maxui-container #maxui-mainpanel #maxui-conversation-predictive ul .maxui-prediction {
-  padding: 0px 4px 2px 0px;
-  cursor: pointer;
-}
-.mm-predictive ul .maxui-prediction.selected,
-#maxui-container #maxui-mainpanel #maxui-conversation-predictive ul .maxui-prediction.selected {
-  background-color: #f2f2f2;
-}
 /* Helpers */
 #maxui-container .maxui-wrapper {
   overflow: hidden;
@@ -793,6 +764,30 @@
   width: 100%;
   display: block;
 }
+#maxui-container .maxui-predictive {
+  margin-top: 50px;
+  margin-left: 10px;
+  width: 200px;
+  background-color: #ffffff;
+  position: absolute;
+  z-index: 100;
+  border: 1px #b3b3b3 solid;
+  -moz-border-radius: 3px;
+  -webkit-border-radius: 3px;
+  border-radius: 3px;
+}
+#maxui-container .maxui-predictive ul {
+  list-style: none;
+  margin: 0px;
+  padding: 1px;
+}
+#maxui-container .maxui-predictive ul .maxui-prediction {
+  padding: 0px 4px 2px 0px;
+  cursor: pointer;
+}
+#maxui-container .maxui-predictive ul .maxui-prediction.selected {
+  background-color: #f2f2f2;
+}
 #maxui-container {
   border: 1px solid #cccccc;
   text-shadow: 0 1px #ffffff;
@@ -949,10 +944,6 @@
   -moz-border-radius: 4px;
   -webkit-border-radius: 4px;
   border-radius: 4px;
-}
-#maxui-container #maxui-mainpanel #maxui-conversation-predictive {
-  margin-top: 50px;
-  margin-left: 10px;
 }
 #maxui-container #maxui-mainpanel #maxui-newactivity {
   background-color: #e8e8e8;

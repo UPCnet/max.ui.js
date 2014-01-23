@@ -101,7 +101,6 @@ var MSTCH_MAXUI_POSTBOX = '\
            <div class="maxui-error-box"></div>\
            <input disabled="disabled" type="button" class="maxui-button maxui-disabled" value="{{buttonLiteral}}">\
       </div>\
-      <div id="maxui-predictive" class="maxui-predictive" style="display:none;"><ul></ul></div>\
 ';
 
 var MSTCH_MAXUI_ACTIVITY = '\
