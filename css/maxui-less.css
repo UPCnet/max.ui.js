@@ -248,11 +248,13 @@
   background-color: #f2f2f2;
 }
 /* Helpers */
-.mm-wrapper,
-#maxui-container #maxui-mainpanel #maxui-conversations .maxui-wrapper,
-#maxui-container #maxui-mainpanel #maxui-timeline .maxui-wrapper {
+#maxui-container .maxui-wrapper {
   overflow: hidden;
   position: relative;
+}
+#maxui-container .maxui-clear {
+  clear: both;
+  float: none;
 }
 .mm-borderBox {
   box-sizing: border-box;
@@ -825,10 +827,6 @@
 #maxui-container .maxui-icon-cancel-circled:before {
   color: white;
   font-size: 130%;
-}
-#maxui-container .maxui-clear {
-  clear: both;
-  float: none;
 }
 #maxui-container .maxui-topright {
   float: right;

@@ -43,11 +43,7 @@
     color:white;
     font-size: 130%;
 }
-    .maxui-clear {
-        clear:both;
-        float:none;
-    }
-
+    
     .maxui-topright{
         float:right;
         padding-top:1px;
@@ -80,7 +76,7 @@
                 overflow: hidden;
 
             }
-            .maxui-wrapper:extend(.mm-wrapper) {
+            .maxui-wrapper{
                 #maxui-conversations-list {
                     position:absolute;
                     outline:none;
@@ -326,7 +322,7 @@
             overflow: hidden;
             padding:0 10px;
             background:@mainBackgroundColor;
-            .maxui-wrapper:extend(.mm-wrapper) {
+            .maxui-wrapper {
                 #maxui-preload {
                     height: 0px;
                 }
