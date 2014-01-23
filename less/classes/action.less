@@ -1,0 +1,41 @@
+/* activity footer actions definition*/
+
+
+#maxui-container {
+    a.maxui-action {
+        display:inline;
+        font-size:11px;
+        padding-right: 5px;
+        cursor:pointer;
+        color: @actionLinkColor;
+
+        &:before { 
+            font-size:12px; 
+            margin-right:.22em;
+        }
+
+        &:hover {
+            color:@actionHoverLinkColor;
+        }
+
+        &.maxui-commentaction.maxui-has-comments:before { content: '\e805'; }
+        &.maxui-commentaction:before                    { content: '\e804'; }
+        &.maxui-commentaction.maxui-has-comments        { color: @linkColor;}
+        &.maxui-commentaction.maxui-has-comments:hover  { color: @linkColor;}
+
+        &.maxui-likes:before                            { content: '\e802'; }
+        &.maxui-likes.maxui-liked                       { color: @linkColor; }
+        &.maxui-likes.maxui-liked:before                { content: '\e803'; color: @linkColor;}
+        &.maxui-likes.maxui-liked:hover:before          { color:@hoverLinkColor;}
+        &.maxui-likes.maxui-liked:hover                 { color:@hoverLinkColor;}
+
+        &.maxui-favorites:before                        { content: '\e801'; }
+        &.maxui-favorites:hover:before                  { content: '\e801'; color: @favoriteColor;}
+        &.maxui-favorites.maxui-favorited               { color: @linkColor; }
+        &.maxui-favorites.maxui-favorited:hover         { color: @hoverLinkColor; }
+        &.maxui-favorites.maxui-favorited:before        { content: '\e800'; color: @linkColor}
+        &.maxui-favorites.maxui-favorited:hover:before  { color : favoriteColor}
+        
+        &.maxui-delete:before                           { content: '\e806'; }
+    }
+}

@@ -166,81 +166,6 @@
   outline: none;
 }
 /* blocks */
-.mm-Avatar,
-.mm-Actor a .maxui-avatar,
-#maxui-container #maxui-mainpanel #maxui-conversations .maxui-wrapper #maxui-conversations-list .maxui-conversation .maxui-activity-content .maxui-actor a .maxui-avatar,
-#maxui-container #maxui-mainpanel #maxui-conversations .maxui-wrapper #maxui-messages #maxui-message-list .maxui-message.maxui-user-me .maxui-avatar,
-#maxui-container #maxui-mainpanel #maxui-conversations .maxui-wrapper #maxui-messages #maxui-message-list .maxui-message.maxui-user-notme .maxui-avatar,
-#maxui-container #maxui-mainpanel #maxui-conversations .maxui-wrapper #maxui-messages #maxui-message-list .maxui-message .maxui-activity-content .maxui-avatar,
-#maxui-container #maxui-mainpanel #maxui-newactivity .maxui-avatar,
-#maxui-container #maxui-mainpanel #maxui-timeline .maxui-wrapper #maxui-activities .maxui-activity .maxui-activity-content .maxui-actor a .maxui-avatar,
-#maxui-container #maxui-mainpanel #maxui-timeline .maxui-wrapper #maxui-activities .maxui-activity .maxui-comments .maxui-commentsbox .maxui-comment .maxui-activity-content .maxui-actor a .maxui-avatar {
-  position: absolute;
-  float: left;
-  left: -55px;
-  top: 5px;
-}
-.mm-Avatar a,
-.mm-Actor a .maxui-avatar a,
-#maxui-container #maxui-mainpanel #maxui-conversations .maxui-wrapper #maxui-conversations-list .maxui-conversation .maxui-activity-content .maxui-actor a .maxui-avatar a,
-#maxui-container #maxui-mainpanel #maxui-conversations .maxui-wrapper #maxui-messages #maxui-message-list .maxui-message.maxui-user-me .maxui-avatar a,
-#maxui-container #maxui-mainpanel #maxui-conversations .maxui-wrapper #maxui-messages #maxui-message-list .maxui-message.maxui-user-notme .maxui-avatar a,
-#maxui-container #maxui-mainpanel #maxui-conversations .maxui-wrapper #maxui-messages #maxui-message-list .maxui-message .maxui-activity-content .maxui-avatar a,
-#maxui-container #maxui-mainpanel #maxui-newactivity .maxui-avatar a,
-#maxui-container #maxui-mainpanel #maxui-timeline .maxui-wrapper #maxui-activities .maxui-activity .maxui-activity-content .maxui-actor a .maxui-avatar a,
-#maxui-container #maxui-mainpanel #maxui-timeline .maxui-wrapper #maxui-activities .maxui-activity .maxui-comments .maxui-commentsbox .maxui-comment .maxui-activity-content .maxui-actor a .maxui-avatar a {
-  display: block;
-  height: 48px;
-}
-.mm-Avatar img,
-.mm-Actor a .maxui-avatar img,
-#maxui-container #maxui-mainpanel #maxui-conversations .maxui-wrapper #maxui-conversations-list .maxui-conversation .maxui-activity-content .maxui-actor a .maxui-avatar img,
-#maxui-container #maxui-mainpanel #maxui-conversations .maxui-wrapper #maxui-messages #maxui-message-list .maxui-message.maxui-user-me .maxui-avatar img,
-#maxui-container #maxui-mainpanel #maxui-conversations .maxui-wrapper #maxui-messages #maxui-message-list .maxui-message.maxui-user-notme .maxui-avatar img,
-#maxui-container #maxui-mainpanel #maxui-conversations .maxui-wrapper #maxui-messages #maxui-message-list .maxui-message .maxui-activity-content .maxui-avatar img,
-#maxui-container #maxui-mainpanel #maxui-newactivity .maxui-avatar img,
-#maxui-container #maxui-mainpanel #maxui-timeline .maxui-wrapper #maxui-activities .maxui-activity .maxui-activity-content .maxui-actor a .maxui-avatar img,
-#maxui-container #maxui-mainpanel #maxui-timeline .maxui-wrapper #maxui-activities .maxui-activity .maxui-comments .maxui-commentsbox .maxui-comment .maxui-activity-content .maxui-actor a .maxui-avatar img {
-  float: left;
-  width: 48px;
-  -moz-border-radius: 3px;
-  -webkit-border-radius: 3px;
-  border-radius: 3px;
-  -moz-box-shadow: 0 1px #ffffff;
-  -webkit-box-shadow: 0 1px #ffffff;
-  box-shadow: 0 1px #ffffff;
-}
-.mm-Avatar:before,
-.mm-Avatar::before,
-.mm-Actor a .maxui-avatar:before,
-.mm-Actor a .maxui-avatar::before,
-#maxui-container #maxui-mainpanel #maxui-conversations .maxui-wrapper #maxui-conversations-list .maxui-conversation .maxui-activity-content .maxui-actor a .maxui-avatar:before,
-#maxui-container #maxui-mainpanel #maxui-conversations .maxui-wrapper #maxui-conversations-list .maxui-conversation .maxui-activity-content .maxui-actor a .maxui-avatar::before,
-#maxui-container #maxui-mainpanel #maxui-conversations .maxui-wrapper #maxui-messages #maxui-message-list .maxui-message.maxui-user-me .maxui-avatar:before,
-#maxui-container #maxui-mainpanel #maxui-conversations .maxui-wrapper #maxui-messages #maxui-message-list .maxui-message.maxui-user-me .maxui-avatar::before,
-#maxui-container #maxui-mainpanel #maxui-conversations .maxui-wrapper #maxui-messages #maxui-message-list .maxui-message.maxui-user-notme .maxui-avatar:before,
-#maxui-container #maxui-mainpanel #maxui-conversations .maxui-wrapper #maxui-messages #maxui-message-list .maxui-message.maxui-user-notme .maxui-avatar::before,
-#maxui-container #maxui-mainpanel #maxui-conversations .maxui-wrapper #maxui-messages #maxui-message-list .maxui-message .maxui-activity-content .maxui-avatar:before,
-#maxui-container #maxui-mainpanel #maxui-conversations .maxui-wrapper #maxui-messages #maxui-message-list .maxui-message .maxui-activity-content .maxui-avatar::before,
-#maxui-container #maxui-mainpanel #maxui-newactivity .maxui-avatar:before,
-#maxui-container #maxui-mainpanel #maxui-newactivity .maxui-avatar::before,
-#maxui-container #maxui-mainpanel #maxui-timeline .maxui-wrapper #maxui-activities .maxui-activity .maxui-activity-content .maxui-actor a .maxui-avatar:before,
-#maxui-container #maxui-mainpanel #maxui-timeline .maxui-wrapper #maxui-activities .maxui-activity .maxui-activity-content .maxui-actor a .maxui-avatar::before,
-#maxui-container #maxui-mainpanel #maxui-timeline .maxui-wrapper #maxui-activities .maxui-activity .maxui-comments .maxui-commentsbox .maxui-comment .maxui-activity-content .maxui-actor a .maxui-avatar:before,
-#maxui-container #maxui-mainpanel #maxui-timeline .maxui-wrapper #maxui-activities .maxui-activity .maxui-comments .maxui-commentsbox .maxui-comment .maxui-activity-content .maxui-actor a .maxui-avatar::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  -moz-border-radius: 3px;
-  -webkit-border-radius: 3px;
-  border-radius: 3px;
-  -moz-box-shadow: inset 0 0 8px rgba(0, 0, 0, 0.5);
-  -webkit-box-shadow: inset 0 0 8px rgba(0, 0, 0, 0.5);
-  box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.5), inset 0 0 4px rgba(0, 0, 0, 0.25);
-}
 .mm-DisplayName,
 .mm-Actor a .maxui-displayname,
 #maxui-container #maxui-mainpanel #maxui-conversations .maxui-wrapper #maxui-conversations-list .maxui-conversation .maxui-activity-content .maxui-actor a .maxui-displayname,
@@ -829,6 +754,142 @@
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
 }
+/* Avatar style definitions*/
+.maxui-avatar {
+  position: absolute;
+}
+.maxui-avatar img {
+  float: left;
+  -moz-border-radius: 3px;
+  -webkit-border-radius: 3px;
+  border-radius: 3px;
+  -moz-box-shadow: 0 1px #ffffff;
+  -webkit-box-shadow: 0 1px #ffffff;
+  box-shadow: 0 1px #ffffff;
+}
+.maxui-avatar:before,
+.maxui-avatar::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  -moz-border-radius: 3px;
+  -webkit-border-radius: 3px;
+  border-radius: 3px;
+  -moz-box-shadow: inset 0 0 8px rgba(0, 0, 0, 0.5);
+  -webkit-box-shadow: inset 0 0 8px rgba(0, 0, 0, 0.5);
+  box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.5), inset 0 0 4px rgba(0, 0, 0, 0.25);
+}
+/* Avatar sizes*/
+.maxui-avatar.maxui-big {
+  width: 48px;
+  height: 48px;
+}
+.maxui-avatar.maxui-big img {
+  width: 48px;
+  height: 48px:;
+}
+.maxui-avatar.maxui-little {
+  width: 30px;
+  height: 30px;
+}
+.maxui-avatar.maxui-little img {
+  width: 30px;
+  height: 30px;
+}
+/* Positioning for diferent avatar locations*/
+.maxui-conversation .maxui-avatar {
+  left: -55px;
+  top: 5px;
+}
+.maxui-message.maxui-user-me .maxui-avatar {
+  right: 5px;
+  top: 0px;
+}
+.maxui-message.maxui-user-notme .maxui-avatar {
+  left: 5px;
+  top: 0px;
+}
+#maxui-newactivity .maxui-avatar {
+  left: 10px;
+  top: 10px;
+}
+.maxui-activity .maxui-avatar {
+  left: -55px;
+  top: 5px;
+}
+.maxui-comment .maxui-avatar {
+  left: -41px;
+  top: 5;
+}
+/* activity footer actions definition*/
+#maxui-container a.maxui-action {
+  display: inline;
+  font-size: 11px;
+  padding-right: 5px;
+  cursor: pointer;
+  color: #6f6f6f;
+}
+#maxui-container a.maxui-action:before {
+  font-size: 12px;
+  margin-right: .22em;
+}
+#maxui-container a.maxui-action:hover {
+  color: #565656;
+}
+#maxui-container a.maxui-action.maxui-commentaction.maxui-has-comments:before {
+  content: '\e805';
+}
+#maxui-container a.maxui-action.maxui-commentaction:before {
+  content: '\e804';
+}
+#maxui-container a.maxui-action.maxui-commentaction.maxui-has-comments {
+  color: #007bc0;
+}
+#maxui-container a.maxui-action.maxui-commentaction.maxui-has-comments:hover {
+  color: #007bc0;
+}
+#maxui-container a.maxui-action.maxui-likes:before {
+  content: '\e802';
+}
+#maxui-container a.maxui-action.maxui-likes.maxui-liked {
+  color: #007bc0;
+}
+#maxui-container a.maxui-action.maxui-likes.maxui-liked:before {
+  content: '\e803';
+  color: #007bc0;
+}
+#maxui-container a.maxui-action.maxui-likes.maxui-liked:hover:before {
+  color: #005a8d;
+}
+#maxui-container a.maxui-action.maxui-likes.maxui-liked:hover {
+  color: #005a8d;
+}
+#maxui-container a.maxui-action.maxui-favorites:before {
+  content: '\e801';
+}
+#maxui-container a.maxui-action.maxui-favorites:hover:before {
+  content: '\e801';
+  color: #ff9b00;
+}
+#maxui-container a.maxui-action.maxui-favorites.maxui-favorited {
+  color: #007bc0;
+}
+#maxui-container a.maxui-action.maxui-favorites.maxui-favorited:hover {
+  color: #005a8d;
+}
+#maxui-container a.maxui-action.maxui-favorites.maxui-favorited:before {
+  content: '\e800';
+  color: #007bc0;
+}
+#maxui-container a.maxui-action.maxui-favorites.maxui-favorited:hover:before {
+  color: favoriteColor;
+}
+#maxui-container a.maxui-action.maxui-delete:before {
+  content: '\e806';
+}
 #maxui-container {
   /*Draw a line to define widget boudaries*/
   /* ====== TO IMPROVE or put in classes/extends============================*/
@@ -988,10 +1049,6 @@
 #maxui-container #maxui-mainpanel #maxui-conversations .maxui-wrapper #maxui-messages #maxui-message-list .maxui-message.maxui-user-me {
   text-align: right;
 }
-#maxui-container #maxui-mainpanel #maxui-conversations .maxui-wrapper #maxui-messages #maxui-message-list .maxui-message.maxui-user-me .maxui-avatar {
-  right: 5px;
-  left: auto;
-}
 #maxui-container #maxui-mainpanel #maxui-conversations .maxui-wrapper #maxui-messages #maxui-message-list .maxui-message.maxui-user-me .maxui-balloon {
   border: 1px solid #f2f2f2;
   background-color: #f2f2f2;
@@ -1008,9 +1065,6 @@
   border-top: 3px solid #f2f2f2;
   border-left: 3px solid #f2f2f2;
   border-right: 3px solid transparent;
-}
-#maxui-container #maxui-mainpanel #maxui-conversations .maxui-wrapper #maxui-messages #maxui-message-list .maxui-message.maxui-user-notme .maxui-avatar {
-  left: 5px;
 }
 #maxui-container #maxui-mainpanel #maxui-conversations .maxui-wrapper #maxui-messages #maxui-message-list .maxui-message.maxui-user-notme .maxui-balloon {
   border: 1px solid #edf3ff;
@@ -1031,12 +1085,6 @@
 }
 #maxui-container #maxui-mainpanel #maxui-conversations .maxui-wrapper #maxui-messages #maxui-message-list .maxui-message .maxui-activity-content {
   display: inline-block;
-}
-#maxui-container #maxui-mainpanel #maxui-conversations .maxui-wrapper #maxui-messages #maxui-message-list .maxui-message .maxui-activity-content .maxui-avatar {
-  top: 0px;
-}
-#maxui-container #maxui-mainpanel #maxui-conversations .maxui-wrapper #maxui-messages #maxui-message-list .maxui-message .maxui-activity-content .maxui-avatar img {
-  width: 30px;
 }
 #maxui-container #maxui-mainpanel #maxui-conversations .maxui-wrapper #maxui-messages #maxui-message-list .maxui-message .maxui-activity-content .maxui-balloon {
   -moz-border-radius: 3px;
@@ -1102,11 +1150,6 @@
   display: block;
   height: 0;
   clear: both;
-}
-#maxui-container #maxui-mainpanel #maxui-newactivity .maxui-avatar {
-  left: 0px;
-  top: 0px;
-  position: relative;
 }
 #maxui-container #maxui-mainpanel #maxui-newactivity #maxui-newactivity-box {
   margin-left: 56px;
@@ -1258,72 +1301,6 @@
   position: relative;
   line-height: 14px;
 }
-#maxui-container #maxui-mainpanel #maxui-timeline .maxui-wrapper #maxui-activities .maxui-activity .maxui-footer .maxui-actions a.maxui-action {
-  display: inline;
-  font-size: 11px;
-  text-decoration: none;
-  padding-right: 5px;
-  cursor: pointer;
-  color: #6f6f6f;
-}
-#maxui-container #maxui-mainpanel #maxui-timeline .maxui-wrapper #maxui-activities .maxui-activity .maxui-footer .maxui-actions a.maxui-action:before {
-  font-size: 12px;
-  margin-right: .22em;
-}
-#maxui-container #maxui-mainpanel #maxui-timeline .maxui-wrapper #maxui-activities .maxui-activity .maxui-footer .maxui-actions a.maxui-action:hover {
-  color: #565656;
-}
-#maxui-container #maxui-mainpanel #maxui-timeline .maxui-wrapper #maxui-activities .maxui-activity .maxui-footer .maxui-actions a.maxui-action.maxui-commentaction.maxui-has-comments:before {
-  content: '\e805';
-}
-#maxui-container #maxui-mainpanel #maxui-timeline .maxui-wrapper #maxui-activities .maxui-activity .maxui-footer .maxui-actions a.maxui-action.maxui-commentaction:before {
-  content: '\e804';
-}
-#maxui-container #maxui-mainpanel #maxui-timeline .maxui-wrapper #maxui-activities .maxui-activity .maxui-footer .maxui-actions a.maxui-action.maxui-commentaction.maxui-has-comments {
-  color: #007bc0;
-}
-#maxui-container #maxui-mainpanel #maxui-timeline .maxui-wrapper #maxui-activities .maxui-activity .maxui-footer .maxui-actions a.maxui-action.maxui-commentaction.maxui-has-comments:hover {
-  color: #007bc0;
-}
-#maxui-container #maxui-mainpanel #maxui-timeline .maxui-wrapper #maxui-activities .maxui-activity .maxui-footer .maxui-actions a.maxui-action.maxui-likes:before {
-  content: '\e802';
-}
-#maxui-container #maxui-mainpanel #maxui-timeline .maxui-wrapper #maxui-activities .maxui-activity .maxui-footer .maxui-actions a.maxui-action.maxui-likes.maxui-liked {
-  color: #007bc0;
-}
-#maxui-container #maxui-mainpanel #maxui-timeline .maxui-wrapper #maxui-activities .maxui-activity .maxui-footer .maxui-actions a.maxui-action.maxui-likes.maxui-liked:before {
-  content: '\e803';
-  color: #007bc0;
-}
-#maxui-container #maxui-mainpanel #maxui-timeline .maxui-wrapper #maxui-activities .maxui-activity .maxui-footer .maxui-actions a.maxui-action.maxui-likes.maxui-liked:hover:before {
-  color: #005a8d;
-}
-#maxui-container #maxui-mainpanel #maxui-timeline .maxui-wrapper #maxui-activities .maxui-activity .maxui-footer .maxui-actions a.maxui-action.maxui-likes.maxui-liked:hover {
-  color: #005a8d;
-}
-#maxui-container #maxui-mainpanel #maxui-timeline .maxui-wrapper #maxui-activities .maxui-activity .maxui-footer .maxui-actions a.maxui-action.maxui-favorites:before {
-  content: '\e801';
-}
-#maxui-container #maxui-mainpanel #maxui-timeline .maxui-wrapper #maxui-activities .maxui-activity .maxui-footer .maxui-actions a.maxui-action.maxui-favorites:hover:before {
-  content: '\e801';
-  color: #ff9b00;
-}
-#maxui-container #maxui-mainpanel #maxui-timeline .maxui-wrapper #maxui-activities .maxui-activity .maxui-footer .maxui-actions a.maxui-action.maxui-favorites.maxui-favorited {
-  color: #007bc0;
-}
-#maxui-container #maxui-mainpanel #maxui-timeline .maxui-wrapper #maxui-activities .maxui-activity .maxui-footer .maxui-actions a.maxui-action.maxui-favorites.maxui-favorited:hover {
-  color: #005a8d;
-}
-#maxui-container #maxui-mainpanel #maxui-timeline .maxui-wrapper #maxui-activities .maxui-activity .maxui-footer .maxui-actions a.maxui-action.maxui-favorites.maxui-favorited:before {
-  content: '\e800';
-  color: #007bc0;
-}
-#maxui-container #maxui-mainpanel #maxui-timeline .maxui-wrapper #maxui-activities .maxui-activity .maxui-footer .maxui-actions a.maxui-action.maxui-favorites.maxui-favorited:hover:before {
-  color: favoriteColor;
-}
-#maxui-container #maxui-mainpanel #maxui-timeline .maxui-wrapper #maxui-activities .maxui-activity .maxui-footer .maxui-actions a.maxui-action.maxui-delete:before {
-  content: '\e806';
-}
 #maxui-container #maxui-mainpanel #maxui-timeline .maxui-wrapper #maxui-activities .maxui-activity .maxui-comments {
   margin-left: 56px;
   width: auto;
@@ -1355,19 +1332,6 @@
   margin-top: -5px;
   margin-bottom: 18px;
   position: relative;
-}
-#maxui-container #maxui-mainpanel #maxui-timeline .maxui-wrapper #maxui-activities .maxui-activity .maxui-comments .maxui-commentsbox .maxui-comment .maxui-activity-content .maxui-actor a .maxui-avatar {
-  margin-top: 5px;
-  left: -41px;
-  top: 0;
-}
-#maxui-container #maxui-mainpanel #maxui-timeline .maxui-wrapper #maxui-activities .maxui-activity .maxui-comments .maxui-commentsbox .maxui-comment .maxui-activity-content .maxui-actor a .maxui-avatar img {
-  width: 36px;
-  height: 36px;
-  float: left;
-}
-#maxui-container #maxui-mainpanel #maxui-timeline .maxui-wrapper #maxui-activities .maxui-activity .maxui-comments .maxui-commentsbox .maxui-comment .maxui-activity-content .maxui-actor a .maxui-avatar a {
-  height: 36px;
 }
 #maxui-container #maxui-mainpanel #maxui-timeline .maxui-wrapper #maxui-activities .maxui-activity .maxui-comments .maxui-commentsbox .maxui-comment .maxui-activity-content .maxui-body {
   font-size: 12px;

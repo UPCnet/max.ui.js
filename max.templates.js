@@ -93,7 +93,7 @@ var MSTCH_MAXUI_MAIN_UI = '\
 ';
 
 var MSTCH_MAXUI_POSTBOX = '\
-      <a href="#" class="maxui-avatar">\
+      <a href="#" class="maxui-avatar maxui-big">\
           <img src="{{avatar}}">\
       </a>\
       <div id="maxui-newactivity-box">\
@@ -112,7 +112,7 @@ var MSTCH_MAXUI_ACTIVITY = '\
             {{#showLikesCount}}<span class="maxui-likescount"><strong>{{likes}}</strong><i class="maxui-icon-thumbs-up"></i></span>{{/showLikesCount}}\
         </div>\
         <div class="maxui-actor">\
-              <a href="#"><span class="maxui-avatar"><img src="{{avatarURL}}"></span>\
+              <a href="#"><span class="maxui-avatar maxui-big"><img src="{{avatarURL}}"></span>\
 		          <span class="maxui-displayname">{{actor.displayName}}</span></a>\
           <span class="maxui-username">{{actor.username}}&nbsp;</span>\
         </div>\
@@ -176,7 +176,7 @@ var MSTCH_MAXUI_CONVERSATION = '\
             <a class="maxui-enterconversation maxui-icon-" href="#"></a>\
         </div>\
         <div class="maxui-actor">\
-              <a href="#"><span class="maxui-avatar"><img src="{{avatarURL}}"></span>\
+              <a href="#"><span class="maxui-avatar maxui-big"><img src="{{avatarURL}}"></span>\
               <span class="maxui-displayname">{{displayName}}</span></a>\
               <span class="maxui-message-count">{{messages}}</span>\
         </div>\
@@ -192,7 +192,7 @@ var MSTCH_MAXUI_CONVERSATION = '\
 var MSTCH_MAXUI_MESSAGE = '\
 <div class="maxui-message {{origin}}" id="{{id}}">\
     <div class="maxui-activity-content">\
-        <span class="maxui-avatar"><img src="{{avatarURL}}"></span>\
+        <span class="maxui-avatar maxui-little"><img src="{{avatarURL}}"></span>\
         <div class="maxui-balloon">\
             <p class="maxui-body">{{&text}}</p>\
             <span class="maxui-publisheddate">{{date}}</span>\
@@ -208,7 +208,7 @@ var MSTCH_MAXUI_COMMENT = '\
        <span class="maxui-publisheddate">{{date}}</span>\
        <div class="maxui-actor">\
       	   <a href="#">\
-		       <span class="maxui-avatar"><img src="{{avatarURL}}"></span>\
+		       <span class="maxui-avatar maxui-little"><img src="{{avatarURL}}"></span>\
 		       <span class="maxui-displayname">{{actor.displayName}}</span></a> \
 	         <span class="maxui-username">{{actor.username}}</span>\
        </div>\

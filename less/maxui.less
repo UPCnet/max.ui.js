@@ -2,7 +2,9 @@
 @import "maxicons-custom.less";
 @import "variables.less";
 @import "mixins.less";
+@import "classes.less";
 @import "hacks.css";
+
 
 #maxui-container{
 
@@ -140,7 +142,6 @@
                             }
                             .maxui-actor {
                                 a {
-                                    .maxui-avatar:extend(.mm-Avatar all) {}
                                     .maxui-displayname:extend(.mm-DisplayName) {}
                                 }
                                 .maxui-message-count {
@@ -187,10 +188,6 @@
                             &.maxui-user-me {
                                 text-align: right;
 
-                                .maxui-avatar:extend(.mm-Avatar all) {
-                                    right:5px;
-                                    left:auto;
-                                }                                
                                 .maxui-balloon {
                                     border:1px solid @messageMeBorderColor;
                                     background-color: @messageMeBackgroundColor;
@@ -211,9 +208,6 @@
                             }
 
                             &.maxui-user-notme {
-                                .maxui-avatar:extend(.mm-Avatar all) {
-                                    left:5px;
-                                }
 
                                 .maxui-balloon {
                                     border:1px solid @messageOthersBorderColor;
@@ -237,10 +231,6 @@
                             .maxui-activity-content {
                                 display: inline-block;
 
-                                .maxui-avatar:extend(.mm-Avatar all) {
-                                    top: 0px;
-                                    img { width:30px; }
-                                }
                                 .maxui-balloon {
                                     -moz-border-radius: 3px; -webkit-border-radius: 3px; border-radius: 3px;
                                     padding: 2px 10px;
@@ -310,12 +300,6 @@
                 display: block;
                 height: 0;
                 clear: both;
-            }
-            .maxui-avatar:extend(.mm-Avatar all) {
-                left: 0px;
-                top: 0px;
-                position: relative;
-
             }
             #maxui-newactivity-box {
                 margin-left:56px;
@@ -478,41 +462,6 @@
                             .maxui-actions {
                                 position:relative;
                                 line-height: 14px;
-                                a.maxui-action {
-                                    display:inline;
-                                    font-size:11px;
-                                    text-decoration:none;
-                                    padding-right: 5px;
-                                    cursor:pointer;
-                                    color: @actionLinkColor;
-
-                                    &:before { font-size:12px; margin-right:.22em;}
-                                    &:hover {
-                                        color:@actionHoverLinkColor;
-                                    }
-
-                                    &.maxui-commentaction.maxui-has-comments:before { content: '\e805'; }
-                                    &.maxui-commentaction:before                    { content: '\e804'; }
-                                    &.maxui-commentaction.maxui-has-comments        { color: @linkColor;}
-                                    &.maxui-commentaction.maxui-has-comments:hover  { color: @linkColor;}
-
-                                    &.maxui-likes:before                            { content: '\e802'; }
-                                    &.maxui-likes.maxui-liked                       { color: @linkColor; }
-                                    &.maxui-likes.maxui-liked:before                { content: '\e803'; color: @linkColor;}
-                                    &.maxui-likes.maxui-liked:hover:before          { color:@hoverLinkColor;}
-                                    &.maxui-likes.maxui-liked:hover                 { color:@hoverLinkColor;}
-
-                                    &.maxui-favorites:before                        { content: '\e801'; }
-                                    &.maxui-favorites:hover:before                  { content: '\e801'; color: @favoriteColor;}
-                                    &.maxui-favorites.maxui-favorited               { color: @linkColor; }
-                                    &.maxui-favorites.maxui-favorited:hover         { color: @hoverLinkColor; }
-                                    &.maxui-favorites.maxui-favorited:before        { content: '\e800'; color: @linkColor}
-                                    &.maxui-favorites.maxui-favorited:hover:before  { color : favoriteColor}
-                                    
-
-                                    &.maxui-delete:before                           { content: '\e806'; }
-                                }
-
                                 .maxui-popover:extend(.mm-Popover all) {}
                             }
                         }
@@ -546,23 +495,7 @@
                                         position:relative;
 
                                         .maxui-publisheddate:extend {}
-                                        .maxui-actor:extend(.mm-Actor all) {
-                                            a {
-                                                .maxui-avatar {
-                                                    margin-top:5px;
-                                                    left: -41px;
-                                                    top:0;
-
-                                                    img {
-                                                        width:36px;
-                                                        height:36px;
-                                                        float:left;
-                                                    }
-
-                                                    a {height:36px;}
-                                                }
-                                            }
-                                        }
+                                        .maxui-actor:extend(.mm-Actor all) { }
                                         .maxui-body:extend(.mm-Body) {
                                             font-size: 12px;
                                         }
