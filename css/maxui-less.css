@@ -150,74 +150,6 @@
 /* BG Color of selected list elements*/
 /* Text color */
 /* Conversation messages colors */
-/* blocks */
-.mm-Activity,
-#maxui-container #maxui-mainpanel #maxui-timeline .maxui-wrapper #maxui-activities .maxui-activity {
-  border-top: 1px #ffffff solid;
-  border-bottom: 1px solid #cccccc;
-  width: 100%;
-  padding: 8px 0px;
-  padding-left: 0px;
-  min-height: 51px;
-}
-.mm-AddPeopleBox,
-#maxui-container #maxui-mainpanel #maxui-add-people-box {
-  border-bottom: 1px #cccccc solid;
-  padding: 6px 10px 5px 10px;
-  background-color: #e8e8e8;
-  position: relative;
-}
-.mm-AddPeopleBox .maxui-label,
-#maxui-container #maxui-mainpanel #maxui-add-people-box .maxui-label {
-  font-weight: bold;
-  color: #565656;
-  line-height: 14px;
-}
-.mm-AddPeopleBox input.maxui-button,
-#maxui-container #maxui-mainpanel #maxui-add-people-box input.maxui-button {
-  position: absolute;
-  top: 5px;
-  right: 10px;
-}
-.mm-AddPeopleBox input#add-user-input,
-#maxui-container #maxui-mainpanel #maxui-add-people-box input#add-user-input {
-  border: none;
-  background-color: transparent;
-  color: #6f6f6f;
-  width: 250px;
-  display: block;
-}
-.mm-AddPeopleBox input#add-user-input:focus,
-#maxui-container #maxui-mainpanel #maxui-add-people-box input#add-user-input:focus {
-  -webkit-box-shadow: none !important;
-  -moz-box-shadow: none !important;
-  box-shadow: none !important;
-  outline: 0;
-  border: none !important;
-}
-.mm-AddPeopleBox #maxui-new-displayName,
-#maxui-container #maxui-mainpanel #maxui-add-people-box #maxui-new-displayName {
-  border-top: 1px #cccccc solid;
-  margin-top: 5px;
-  padding-top: 3px;
-}
-.mm-AddPeopleBox #maxui-new-displayName .maxui-simple-text-input,
-#maxui-container #maxui-mainpanel #maxui-add-people-box #maxui-new-displayName .maxui-simple-text-input {
-  width: 50%;
-  border: none;
-  background-color: transparent;
-  font-family: Arial, Helvetica, sans-serif;
-  font-size: 13px;
-  color: #6f6f6f;
-}
-.mm-AddPeopleBox #maxui-new-displayName .maxui-simple-text-input:focus,
-#maxui-container #maxui-mainpanel #maxui-add-people-box #maxui-new-displayName .maxui-simple-text-input:focus {
-  -webkit-box-shadow: none !important;
-  -moz-box-shadow: none! important;
-  box-shadow: none !important;
-  outline: 0;
-  border: none !important;
-}
 /* Helpers */
 #maxui-container .maxui-wrapper {
   overflow: hidden;
@@ -945,6 +877,56 @@
   -webkit-border-radius: 4px;
   border-radius: 4px;
 }
+#maxui-container #maxui-mainpanel #maxui-add-people-box {
+  border-bottom: 1px #cccccc solid;
+  padding: 6px 10px 5px 10px;
+  background-color: #e8e8e8;
+  position: relative;
+}
+#maxui-container #maxui-mainpanel #maxui-add-people-box .maxui-label {
+  font-weight: bold;
+  color: #565656;
+  line-height: 14px;
+}
+#maxui-container #maxui-mainpanel #maxui-add-people-box input.maxui-button {
+  position: absolute;
+  top: 5px;
+  right: 10px;
+}
+#maxui-container #maxui-mainpanel #maxui-add-people-box input#add-user-input {
+  border: none;
+  background-color: transparent;
+  color: #6f6f6f;
+  width: 250px;
+  display: block;
+}
+#maxui-container #maxui-mainpanel #maxui-add-people-box input#add-user-input:focus {
+  -webkit-box-shadow: none !important;
+  -moz-box-shadow: none !important;
+  box-shadow: none !important;
+  outline: 0;
+  border: none !important;
+}
+#maxui-container #maxui-mainpanel #maxui-add-people-box #maxui-new-displayName {
+  border-top: 1px #cccccc solid;
+  margin-top: 5px;
+  padding-top: 3px;
+}
+#maxui-container #maxui-mainpanel #maxui-add-people-box #maxui-new-displayName .maxui-simple-text-input {
+  width: 50%;
+  border: none;
+  background-color: transparent;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 13px;
+  color: #6f6f6f;
+}
+#maxui-container #maxui-mainpanel #maxui-add-people-box #maxui-new-displayName .maxui-simple-text-input:focus {
+  -webkit-box-shadow: none !important;
+  -moz-box-shadow: none! important;
+  box-shadow: none !important;
+  outline: 0;
+  border: none !important;
+}
 #maxui-container #maxui-mainpanel #maxui-newactivity {
   background-color: #e8e8e8;
   padding: 10px;
@@ -1074,6 +1056,14 @@
 }
 #maxui-container #maxui-mainpanel #maxui-timeline .maxui-wrapper #maxui-preload {
   height: 0px;
+}
+#maxui-container #maxui-mainpanel #maxui-timeline .maxui-wrapper #maxui-activities .maxui-activity {
+  border-top: 1px #ffffff solid;
+  border-bottom: 1px solid #cccccc;
+  width: 100%;
+  padding: 8px 0px;
+  padding-left: 0px;
+  min-height: 51px;
 }
 #maxui-container #maxui-mainpanel #maxui-timeline .maxui-wrapper #maxui-activities .maxui-activity .maxui-activity-content {
   margin: -5px 0 0 55px;
