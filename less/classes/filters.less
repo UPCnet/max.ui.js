@@ -1,0 +1,48 @@
+.maxui-filters {
+    zoom:1;
+    margin-top: 7px;
+    &:before, &:after {content: ""; display:table;}
+    &:after {clear:both;}
+
+    .maxui-filter {
+        padding:2px 4px 2px 0;
+        margin-top:2px;
+        float:left;
+        span {
+            padding:0px 0px 3px 4px;
+            .mm-borderRadius(5px);
+            .mm-boxShadow(1px, #fff);
+            text-shadow: 0 -1px rgba(0,0,0,.5);
+            background-color:#007ca5;
+            color:#fff;
+            border:1px solid #006989;
+            display:block;
+
+            &.hashtag { background-color:#008564; border:1px solid #007355;}
+            &.person {  background-color:#837800; border:1px solid #706923;}
+        }
+        .maxui-close {
+            padding: 0 2px 0 4px;
+            opacity:.8; filter: alpha(opacity=80);
+            position: relative;
+            top: 3px;
+            &:hover {opacity:1; filter: alpha(opacity=100);}
+        }
+    }
+}
+
+#maxui-container {
+
+    #maxui-new-participants:extend(.maxui-filters all) {
+        padding-left:0px;
+        margin-top: 5px;
+        border: none;
+        background-color: transparent;
+        color: @textColor;
+        width: 100%;
+        display: block;
+    }
+
+	#maxui-search-filters:extend(.maxui-filters all) {}
+
+}
