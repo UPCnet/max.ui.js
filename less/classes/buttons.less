@@ -1,0 +1,73 @@
+/* Button style definitions*/
+
+.maxui-base-button {
+    .mm-borderRadius(3px);
+    &:focus:extend(.mm-removeOutline) { }
+    margin: 5px 0 0 0;    
+    font-family: Arial, "HelveticaNeue", "Helvetica Neue", Helvetica, sans-serif;
+    font-size:13px;
+    padding:3px 6px;
+    border:1px solid;
+    cursor:pointer;
+}
+    
+
+#maxui-container {
+    .maxui-button:extend(.maxui-base-button all) {
+        border-color:@buttonBorderColor;
+        color:@buttonTextColor;
+        background: @buttonBackgroundColor;
+
+        &:hover,
+        &:focus {
+            border-color:@buttonBorderColor;
+            background: @buttonBackgroundColor;
+            cursor:pointer;
+            color:@buttonTextColor;
+            box-shadow:none; -webkit-box-shadow:none;
+        }
+        &[disabled] {
+            -webkit-appearance: none;
+            border-color:@disabledButtonBorderColor;
+            color:@disabledButtonTextColor;
+            background-color: @disabledButtonBackgroundColor;
+            box-shadow:none; -webkit-box-shadow:none;
+            cursor: default;
+        }
+
+    }
+
+    /* customization for different togglebar locations*/
+
+    #maxui-more-activities {
+        .maxui-button{
+            border-color: @borderColor;
+            color: @actionLinkColor;
+            width: 100%;
+            margin: 10px 0px;
+            background: @togglebarBackgroundColor;
+            &:hover,
+            &:focus {
+                box-shadow:none; 
+                -webkit-box-shadow:none;
+            }   
+        }
+    }
+
+    .maxui-popover {
+
+        .maxui-button-delete:extend(.maxui-base-button all) {
+            background-color: #bd362f;
+            border-color: #bd362f;  
+            color: #fff;
+        }
+
+        .maxui-button-cancel:extend(.maxui-base-button all) {
+            background-color: @disabledButtonBackgroundColor;
+            border-color: @borderColor;
+            color:@textColor;
+        }
+
+    }
+
+}

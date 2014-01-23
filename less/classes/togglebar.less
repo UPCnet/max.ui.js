@@ -1,0 +1,66 @@
+/* togglebar styles definition*/
+
+#maxui-container {
+	.maxui-togglebar {
+	    background-color: @togglebarBackgroundColor;
+	    text-align:center;
+	    height:21px;
+
+	    &:after, 
+	    &:before { 
+	    	color:@togglebarLinkColor; 
+	    	height:auto;
+	    }
+
+	    &:hover:after, 
+	    &:hover:before { 
+	    	color:@togglebarHoverLinkColor; 
+	    	height:auto;
+	    }
+
+	    .mm-borderBox();
+
+	    a {
+	        color: @togglebarLinkColor;
+	        font-weight: bold;
+	        &:hover {
+	            color: @togglebarHoverLinkColor;
+	        }
+	    }
+	}
+
+	/* customization for different togglebar locations*/
+
+	#maxui-show-conversations {
+		&.maxui-togglebar {
+	    	border-bottom: 1px @borderColor solid;
+		    &:after { content: '\e809';}
+		    &:hover:after { content: '\e809';}            
+		} 
+	 }
+
+	#maxui-show-timeline {
+		&.maxui-togglebar {
+	        border-top: 1px @borderColor solid;
+	        &:after { content: '\e80a';}
+	        &:hover:after { content: '\e80a';}
+	    }
+	}         
+
+	#maxui-back-conversations {
+		&.maxui-togglebar {
+		    height:45px;
+		    border-bottom:1px @borderColor solid;
+
+		    a:before { content: '\e807';}
+		    a:hover:before { content: '\e807';}
+
+		    h3.maxui-title{
+		        margin: 3px 0px 7px;
+		        color:@textColorDK;
+		        font-size: 18px;
+		        font-weight: bold;
+		    }
+		}
+	}        
+}

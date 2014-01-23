@@ -1,0 +1,54 @@
+#maxui-container {
+    .maxui-message {
+
+        /* Message balloons style defeiniton, distinct for
+           logged user and rest of users of a conversation
+        */
+
+        &.maxui-user-me {
+            text-align: right;
+
+            .maxui-balloon {
+                border:1px solid @messageMeBorderColor;
+                background-color: @messageMeBackgroundColor;
+                color: @messageMeTextColor;
+                margin-right:50px;
+                margin-left:10px;
+                text-align: right;
+                -moz-border-top-right-radius: 0px; -webkit-border-top-right-radius: 0px; border-top-right-radius: 0px;
+
+                &:after {
+                    right: 44px;
+                    border-top: 3px solid @messageMeBorderColor;
+                    border-left: 3px solid @messageMeBorderColor;
+                    border-right: 3px solid transparent;
+                }
+
+            }
+        }
+
+        &.maxui-user-notme {
+            .maxui-balloon {
+                border:1px solid @messageOthersBorderColor;
+                background-color: @messageOthersBackgroundColor;
+                color: @messageOthersTextColor;
+                margin-left:50px;
+                margin-right:10px;
+                text-align: left;
+                -moz-border-top-left-radius: 0px; -webkit-border-top-left-radius: 0px; border-top-left-radius: 0px;
+
+                &:after {
+                    left: 44px;
+                    border-top: 3px solid @messageOthersBorderColor;
+                    border-left: 3px solid transparent;
+                    border-right: 3px solid @messageOthersBorderColor;
+
+                }
+            }
+        }
+
+    }
+}
+
+
+

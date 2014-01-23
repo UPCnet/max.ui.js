@@ -560,7 +560,7 @@
         })
 
         //Assign activity removal confirmation dialog via delegating the click to the activities container
-        jq('#maxui-activities').on('click','.maxui-actions .maxui-button.cancel',function (event) {
+        jq('#maxui-activities').on('click','.maxui-actions .maxui-button-cancel',function (event) {
             event.preventDefault()
             var $activity = jq(this).closest('.maxui-activity')
             // Hide all visible dialogs
@@ -569,7 +569,7 @@
         })
 
         //Assign activity removal via delegating the click to the activities container
-        jq('#maxui-activities').on('click','.maxui-actions .maxui-button.delete',function (event) {
+        jq('#maxui-activities').on('click','.maxui-actions .maxui-button-delete',function (event) {
             console.log('delete activityid')
             event.preventDefault()
             var $activity = jq(this).closest('.maxui-activity')
@@ -603,7 +603,7 @@
         })
 
         //Assign activity comment removal confirmation dialog via delegating the click to the activities container
-        jq('#maxui-activities').on('click','.maxui-comment .maxui-button.cancel',function (event) {
+        jq('#maxui-activities').on('click','.maxui-comment .maxui-button-cancel',function (event) {
             event.preventDefault()
             var $comment = jq(this).closest('.maxui-comment')
             var $dialog = $comment.find('.maxui-popover')
@@ -614,7 +614,7 @@
 
 
         //Assign activity comment removal via delegating the click to the activities container
-        jq('#maxui-activities').on('click','.maxui-comment .maxui-button.delete',function (event) {
+        jq('#maxui-activities').on('click','.maxui-comment .maxui-button-delete',function (event) {
             console.log('delete comment')
             event.preventDefault()
             var $comment = jq(this).closest('.maxui-comment')

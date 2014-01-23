@@ -49,40 +49,6 @@
     .maxui-username:extend(.mm-Username) {}
 }
 
-.mm-BaseButton {
-    .mm-borderRadius(3px);
-    margin: 5px 0 0 0;    
-    font-family: Arial, "HelveticaNeue", "Helvetica Neue", Helvetica, sans-serif;
-    font-size:13px;
-    padding:3px 6px;
-    border:1px solid;
-    cursor:pointer;
-}
-
-.mm-Button:extend(.mm-BaseButton) {
-    border-color:@buttonBorderColor;
-    color:@buttonTextColor;
-    background: @buttonBackgroundColor;
-
-    &:hover,
-    &:focus {
-        border-color:@buttonBorderColor;
-        background: @buttonBackgroundColor;
-        cursor:pointer;
-        color:@buttonTextColor;
-        box-shadow:none; -webkit-box-shadow:none;
-    }
-    &[disabled] {
-        -webkit-appearance: none;
-        border-color:@disabledButtonBorderColor;
-        color:@disabledButtonTextColor;
-        background-color: @disabledButtonBackgroundColor;
-        box-shadow:none; -webkit-box-shadow:none;
-        cursor: default;
-    }
-
-}
-
 .mm-Textarea {
     width:100%;
     color:@textColor;
@@ -138,20 +104,6 @@
     -webkit-background-clip: padding-box;
     -moz-background-clip: padding;
     background-clip: padding-box;
-
-    .maxui-button:extend(.mm-BaseButton) {
-        &.delete {
-            background-color: #bd362f;
-            border-color: #bd362f;  
-            color: #fff;
-       }
-
-        &.cancel {
-            background-color: @disabledButtonBackgroundColor;
-            border-color: @borderColor;
-            color:@textColor;
-        }
-    }
 
     .maxui-popover-title {
         padding: 6px 12px;
@@ -306,25 +258,6 @@
             position: relative;
             top: 3px;
             &:hover {opacity:1; filter: alpha(opacity=100);}
-        }
-    }
-}
-
-.mm-toggleBar {
-    background-color: @togglebarBackgroundColor;
-    text-align:center;
-    height:21px;
-
-    &:after, &:before { color:@togglebarLinkColor; height:auto;}
-    &:hover:after, &:hover:before { color:@togglebarHoverLinkColor; height:auto;}
-
-    &:extend(.mm-borderBox);
-
-    a {
-        color: @togglebarLinkColor;
-        font-weight: bold;
-        &:hover {
-            color: @togglebarHoverLinkColor;
         }
     }
 }

@@ -162,7 +162,14 @@
   font: 13px/18px Arial, "HelveticaNeue", "Helvetica Neue", Helvetica, sans-serif;
   color: #6f6f6f;
 }
-.mm-removeOutline {
+.mm-removeOutline,
+.maxui-base-button:focus,
+#maxui-container .maxui-button:focus,
+#maxui-container .maxui-button:hover:focus,
+#maxui-container .maxui-button:focus:focus,
+#maxui-container .maxui-button[disabled]:focus,
+#maxui-container .maxui-popover .maxui-button-delete:focus,
+#maxui-container .maxui-popover .maxui-button-cancel:focus {
   outline: none;
 }
 /* blocks */
@@ -199,75 +206,6 @@
 #maxui-container #maxui-mainpanel #maxui-timeline .maxui-wrapper #maxui-activities .maxui-activity .maxui-activity-content .maxui-actor a,
 #maxui-container #maxui-mainpanel #maxui-timeline .maxui-wrapper #maxui-activities .maxui-activity .maxui-comments .maxui-commentsbox .maxui-comment .maxui-activity-content .maxui-actor a {
   position: relative;
-}
-.mm-BaseButton,
-.mm-Button,
-.mm-Popover .maxui-button,
-.mm-Popover .maxui-button.delete,
-.mm-Popover .maxui-button.cancel,
-#maxui-container #maxui-mainpanel #maxui-newactivity #maxui-newactivity-box input.maxui-button,
-#maxui-container #maxui-mainpanel #maxui-timeline .maxui-wrapper #maxui-activities .maxui-activity .maxui-footer .maxui-actions .maxui-popover .maxui-button,
-#maxui-container #maxui-mainpanel #maxui-timeline .maxui-wrapper #maxui-activities .maxui-activity .maxui-footer .maxui-actions .maxui-popover .maxui-button.delete,
-#maxui-container #maxui-mainpanel #maxui-timeline .maxui-wrapper #maxui-activities .maxui-activity .maxui-footer .maxui-actions .maxui-popover .maxui-button.cancel,
-#maxui-container #maxui-mainpanel #maxui-timeline .maxui-wrapper #maxui-activities .maxui-activity .maxui-comments .maxui-commentsbox .maxui-comment .maxui-activity-content .maxui-popover .maxui-button,
-#maxui-container #maxui-mainpanel #maxui-timeline .maxui-wrapper #maxui-activities .maxui-activity .maxui-comments .maxui-commentsbox .maxui-comment .maxui-activity-content .maxui-popover .maxui-button.delete,
-#maxui-container #maxui-mainpanel #maxui-timeline .maxui-wrapper #maxui-activities .maxui-activity .maxui-comments .maxui-commentsbox .maxui-comment .maxui-activity-content .maxui-popover .maxui-button.cancel,
-#maxui-container #maxui-mainpanel #maxui-timeline .maxui-wrapper #maxui-activities .maxui-activity .maxui-comments .maxui-newcommentbox .maxui-button,
-#maxui-container #maxui-mainpanel #maxui-timeline .maxui-wrapper #maxui-more-activities .maxui-button,
-#maxui-container #maxui-mainpanel #maxui-timeline .maxui-wrapper #maxui-more-activities .maxui-button:hover,
-#maxui-container #maxui-mainpanel #maxui-timeline .maxui-wrapper #maxui-more-activities .maxui-button:focus {
-  -moz-border-radius: 3px;
-  -webkit-border-radius: 3px;
-  border-radius: 3px;
-  margin: 5px 0 0 0;
-  font-family: Arial, "HelveticaNeue", "Helvetica Neue", Helvetica, sans-serif;
-  font-size: 13px;
-  padding: 3px 6px;
-  border: 1px solid;
-  cursor: pointer;
-}
-.mm-Button,
-#maxui-container #maxui-mainpanel #maxui-newactivity #maxui-newactivity-box input.maxui-button,
-#maxui-container #maxui-mainpanel #maxui-timeline .maxui-wrapper #maxui-activities .maxui-activity .maxui-comments .maxui-newcommentbox .maxui-button,
-#maxui-container #maxui-mainpanel #maxui-timeline .maxui-wrapper #maxui-more-activities .maxui-button,
-#maxui-container #maxui-mainpanel #maxui-timeline .maxui-wrapper #maxui-more-activities .maxui-button:hover,
-#maxui-container #maxui-mainpanel #maxui-timeline .maxui-wrapper #maxui-more-activities .maxui-button:focus {
-  border-color: #007bc0;
-  color: #ffffff;
-  background: #009cf3;
-}
-.mm-Button:hover,
-.mm-Button:focus,
-#maxui-container #maxui-mainpanel #maxui-newactivity #maxui-newactivity-box input.maxui-button:hover,
-#maxui-container #maxui-mainpanel #maxui-newactivity #maxui-newactivity-box input.maxui-button:focus,
-#maxui-container #maxui-mainpanel #maxui-timeline .maxui-wrapper #maxui-activities .maxui-activity .maxui-comments .maxui-newcommentbox .maxui-button:hover,
-#maxui-container #maxui-mainpanel #maxui-timeline .maxui-wrapper #maxui-activities .maxui-activity .maxui-comments .maxui-newcommentbox .maxui-button:focus,
-#maxui-container #maxui-mainpanel #maxui-timeline .maxui-wrapper #maxui-more-activities .maxui-button:hover,
-#maxui-container #maxui-mainpanel #maxui-timeline .maxui-wrapper #maxui-more-activities .maxui-button:focus,
-#maxui-container #maxui-mainpanel #maxui-timeline .maxui-wrapper #maxui-more-activities .maxui-button:hover:hover,
-#maxui-container #maxui-mainpanel #maxui-timeline .maxui-wrapper #maxui-more-activities .maxui-button:hover:focus,
-#maxui-container #maxui-mainpanel #maxui-timeline .maxui-wrapper #maxui-more-activities .maxui-button:focus:hover,
-#maxui-container #maxui-mainpanel #maxui-timeline .maxui-wrapper #maxui-more-activities .maxui-button:focus:focus {
-  border-color: #007bc0;
-  background: #009cf3;
-  cursor: pointer;
-  color: #ffffff;
-  box-shadow: none;
-  -webkit-box-shadow: none;
-}
-.mm-Button[disabled],
-#maxui-container #maxui-mainpanel #maxui-newactivity #maxui-newactivity-box input.maxui-button[disabled],
-#maxui-container #maxui-mainpanel #maxui-timeline .maxui-wrapper #maxui-activities .maxui-activity .maxui-comments .maxui-newcommentbox .maxui-button[disabled],
-#maxui-container #maxui-mainpanel #maxui-timeline .maxui-wrapper #maxui-more-activities .maxui-button[disabled],
-#maxui-container #maxui-mainpanel #maxui-timeline .maxui-wrapper #maxui-more-activities .maxui-button:hover[disabled],
-#maxui-container #maxui-mainpanel #maxui-timeline .maxui-wrapper #maxui-more-activities .maxui-button:focus[disabled] {
-  -webkit-appearance: none;
-  border-color: #cccccc;
-  color: #898989;
-  background-color: #e8e8e8;
-  box-shadow: none;
-  -webkit-box-shadow: none;
-  cursor: default;
 }
 .mm-Textarea,
 #maxui-container #maxui-mainpanel #maxui-newactivity #maxui-newactivity-box textarea,
@@ -331,20 +269,6 @@
   -webkit-background-clip: padding-box;
   -moz-background-clip: padding;
   background-clip: padding-box;
-}
-.mm-Popover .maxui-button.delete,
-#maxui-container #maxui-mainpanel #maxui-timeline .maxui-wrapper #maxui-activities .maxui-activity .maxui-footer .maxui-actions .maxui-popover .maxui-button.delete,
-#maxui-container #maxui-mainpanel #maxui-timeline .maxui-wrapper #maxui-activities .maxui-activity .maxui-comments .maxui-commentsbox .maxui-comment .maxui-activity-content .maxui-popover .maxui-button.delete {
-  background-color: #bd362f;
-  border-color: #bd362f;
-  color: #fff;
-}
-.mm-Popover .maxui-button.cancel,
-#maxui-container #maxui-mainpanel #maxui-timeline .maxui-wrapper #maxui-activities .maxui-activity .maxui-footer .maxui-actions .maxui-popover .maxui-button.cancel,
-#maxui-container #maxui-mainpanel #maxui-timeline .maxui-wrapper #maxui-activities .maxui-activity .maxui-comments .maxui-commentsbox .maxui-comment .maxui-activity-content .maxui-popover .maxui-button.cancel {
-  background-color: #e8e8e8;
-  border-color: #cccccc;
-  color: #6f6f6f;
 }
 .mm-Popover .maxui-popover-title,
 #maxui-container #maxui-mainpanel #maxui-timeline .maxui-wrapper #maxui-activities .maxui-activity .maxui-footer .maxui-actions .maxui-popover .maxui-popover-title,
@@ -634,77 +558,6 @@
   opacity: 1;
   filter: alpha(opacity=100);
 }
-.mm-toggleBar,
-#maxui-container #maxui-mainpanel #maxui-conversations #maxui-common-header #maxui-back-conversations,
-#maxui-container #maxui-mainpanel #maxui-show-conversations.maxui-togglebar,
-#maxui-container #maxui-mainpanel #maxui-show-conversations.maxui-togglebar:after,
-#maxui-container #maxui-mainpanel #maxui-show-conversations.maxui-togglebar:hover:after,
-#maxui-container #maxui-mainpanel #maxui-show-timeline.maxui-togglebar,
-#maxui-container #maxui-mainpanel #maxui-show-timeline.maxui-togglebar:after,
-#maxui-container #maxui-mainpanel #maxui-show-timeline.maxui-togglebar:hover:after {
-  background-color: #f2f2f2;
-  text-align: center;
-  height: 21px;
-}
-.mm-toggleBar:after,
-.mm-toggleBar:before,
-#maxui-container #maxui-mainpanel #maxui-conversations #maxui-common-header #maxui-back-conversations:after,
-#maxui-container #maxui-mainpanel #maxui-conversations #maxui-common-header #maxui-back-conversations:before,
-#maxui-container #maxui-mainpanel #maxui-show-conversations.maxui-togglebar:after,
-#maxui-container #maxui-mainpanel #maxui-show-conversations.maxui-togglebar:before,
-#maxui-container #maxui-mainpanel #maxui-show-conversations.maxui-togglebar:after:after,
-#maxui-container #maxui-mainpanel #maxui-show-conversations.maxui-togglebar:after:before,
-#maxui-container #maxui-mainpanel #maxui-show-conversations.maxui-togglebar:hover:after:after,
-#maxui-container #maxui-mainpanel #maxui-show-conversations.maxui-togglebar:hover:after:before,
-#maxui-container #maxui-mainpanel #maxui-show-timeline.maxui-togglebar:after,
-#maxui-container #maxui-mainpanel #maxui-show-timeline.maxui-togglebar:before,
-#maxui-container #maxui-mainpanel #maxui-show-timeline.maxui-togglebar:after:after,
-#maxui-container #maxui-mainpanel #maxui-show-timeline.maxui-togglebar:after:before,
-#maxui-container #maxui-mainpanel #maxui-show-timeline.maxui-togglebar:hover:after:after,
-#maxui-container #maxui-mainpanel #maxui-show-timeline.maxui-togglebar:hover:after:before {
-  color: #6f6f6f;
-  height: auto;
-}
-.mm-toggleBar:hover:after,
-.mm-toggleBar:hover:before,
-#maxui-container #maxui-mainpanel #maxui-conversations #maxui-common-header #maxui-back-conversations:hover:after,
-#maxui-container #maxui-mainpanel #maxui-conversations #maxui-common-header #maxui-back-conversations:hover:before,
-#maxui-container #maxui-mainpanel #maxui-show-conversations.maxui-togglebar:hover:after,
-#maxui-container #maxui-mainpanel #maxui-show-conversations.maxui-togglebar:hover:before,
-#maxui-container #maxui-mainpanel #maxui-show-conversations.maxui-togglebar:after:hover:after,
-#maxui-container #maxui-mainpanel #maxui-show-conversations.maxui-togglebar:after:hover:before,
-#maxui-container #maxui-mainpanel #maxui-show-conversations.maxui-togglebar:hover:after:hover:after,
-#maxui-container #maxui-mainpanel #maxui-show-conversations.maxui-togglebar:hover:after:hover:before,
-#maxui-container #maxui-mainpanel #maxui-show-timeline.maxui-togglebar:hover:after,
-#maxui-container #maxui-mainpanel #maxui-show-timeline.maxui-togglebar:hover:before,
-#maxui-container #maxui-mainpanel #maxui-show-timeline.maxui-togglebar:after:hover:after,
-#maxui-container #maxui-mainpanel #maxui-show-timeline.maxui-togglebar:after:hover:before,
-#maxui-container #maxui-mainpanel #maxui-show-timeline.maxui-togglebar:hover:after:hover:after,
-#maxui-container #maxui-mainpanel #maxui-show-timeline.maxui-togglebar:hover:after:hover:before {
-  color: #565656;
-  height: auto;
-}
-.mm-toggleBar a,
-#maxui-container #maxui-mainpanel #maxui-conversations #maxui-common-header #maxui-back-conversations a,
-#maxui-container #maxui-mainpanel #maxui-show-conversations.maxui-togglebar a,
-#maxui-container #maxui-mainpanel #maxui-show-conversations.maxui-togglebar:after a,
-#maxui-container #maxui-mainpanel #maxui-show-conversations.maxui-togglebar:hover:after a,
-#maxui-container #maxui-mainpanel #maxui-show-timeline.maxui-togglebar a,
-#maxui-container #maxui-mainpanel #maxui-show-timeline.maxui-togglebar:after a,
-#maxui-container #maxui-mainpanel #maxui-show-timeline.maxui-togglebar:hover:after a {
-  color: #6f6f6f;
-  font-weight: bold;
-}
-.mm-toggleBar a:hover,
-#maxui-container #maxui-mainpanel #maxui-conversations #maxui-common-header #maxui-back-conversations a:hover,
-#maxui-container #maxui-mainpanel #maxui-show-conversations.maxui-togglebar a:hover,
-#maxui-container #maxui-mainpanel #maxui-show-conversations.maxui-togglebar:after a:hover,
-#maxui-container #maxui-mainpanel #maxui-show-conversations.maxui-togglebar:hover:after a:hover,
-#maxui-container #maxui-mainpanel #maxui-show-timeline.maxui-togglebar a:hover,
-#maxui-container #maxui-mainpanel #maxui-show-timeline.maxui-togglebar:after a:hover,
-#maxui-container #maxui-mainpanel #maxui-show-timeline.maxui-togglebar:hover:after a:hover {
-  color: #565656;
-}
 .mm-predictive,
 #maxui-container #maxui-mainpanel #maxui-conversation-predictive,
 #maxui-container #maxui-mainpanel #maxui-newactivity #maxui-predictive.maxui-predictive {
@@ -741,15 +594,7 @@
   overflow: hidden;
   position: relative;
 }
-.mm-borderBox,
-.mm-toggleBar,
-#maxui-container #maxui-mainpanel #maxui-conversations #maxui-common-header #maxui-back-conversations,
-#maxui-container #maxui-mainpanel #maxui-show-conversations.maxui-togglebar,
-#maxui-container #maxui-mainpanel #maxui-show-conversations.maxui-togglebar:after,
-#maxui-container #maxui-mainpanel #maxui-show-conversations.maxui-togglebar:hover:after,
-#maxui-container #maxui-mainpanel #maxui-show-timeline.maxui-togglebar,
-#maxui-container #maxui-mainpanel #maxui-show-timeline.maxui-togglebar:after,
-#maxui-container #maxui-mainpanel #maxui-show-timeline.maxui-togglebar:hover:after {
+.mm-borderBox {
   box-sizing: border-box;
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
@@ -890,13 +735,183 @@
 #maxui-container a.maxui-action.maxui-delete:before {
   content: '\e806';
 }
+/* togglebar styles definition*/
+#maxui-container {
+  /* customization for different togglebar locations*/
+}
+#maxui-container .maxui-togglebar {
+  background-color: #f2f2f2;
+  text-align: center;
+  height: 21px;
+  box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+}
+#maxui-container .maxui-togglebar:after,
+#maxui-container .maxui-togglebar:before {
+  color: #6f6f6f;
+  height: auto;
+}
+#maxui-container .maxui-togglebar:hover:after,
+#maxui-container .maxui-togglebar:hover:before {
+  color: #565656;
+  height: auto;
+}
+#maxui-container .maxui-togglebar a {
+  color: #6f6f6f;
+  font-weight: bold;
+}
+#maxui-container .maxui-togglebar a:hover {
+  color: #565656;
+}
+#maxui-container #maxui-show-conversations.maxui-togglebar {
+  border-bottom: 1px #cccccc solid;
+}
+#maxui-container #maxui-show-conversations.maxui-togglebar:after {
+  content: '\e809';
+}
+#maxui-container #maxui-show-conversations.maxui-togglebar:hover:after {
+  content: '\e809';
+}
+#maxui-container #maxui-show-timeline.maxui-togglebar {
+  border-top: 1px #cccccc solid;
+}
+#maxui-container #maxui-show-timeline.maxui-togglebar:after {
+  content: '\e80a';
+}
+#maxui-container #maxui-show-timeline.maxui-togglebar:hover:after {
+  content: '\e80a';
+}
+#maxui-container #maxui-back-conversations.maxui-togglebar {
+  height: 45px;
+  border-bottom: 1px #cccccc solid;
+}
+#maxui-container #maxui-back-conversations.maxui-togglebar a:before {
+  content: '\e807';
+}
+#maxui-container #maxui-back-conversations.maxui-togglebar a:hover:before {
+  content: '\e807';
+}
+#maxui-container #maxui-back-conversations.maxui-togglebar h3.maxui-title {
+  margin: 3px 0px 7px;
+  color: #565656;
+  font-size: 18px;
+  font-weight: bold;
+}
+#maxui-container .maxui-message {
+  /* Message balloons style defeiniton, distinct for
+           logged user and rest of users of a conversation
+        */
+}
+#maxui-container .maxui-message.maxui-user-me {
+  text-align: right;
+}
+#maxui-container .maxui-message.maxui-user-me .maxui-balloon {
+  border: 1px solid #f2f2f2;
+  background-color: #f2f2f2;
+  color: #6f6f6f;
+  margin-right: 50px;
+  margin-left: 10px;
+  text-align: right;
+  -moz-border-top-right-radius: 0px;
+  -webkit-border-top-right-radius: 0px;
+  border-top-right-radius: 0px;
+}
+#maxui-container .maxui-message.maxui-user-me .maxui-balloon:after {
+  right: 44px;
+  border-top: 3px solid #f2f2f2;
+  border-left: 3px solid #f2f2f2;
+  border-right: 3px solid transparent;
+}
+#maxui-container .maxui-message.maxui-user-notme .maxui-balloon {
+  border: 1px solid #edf3ff;
+  background-color: #edf3ff;
+  color: #6f6f6f;
+  margin-left: 50px;
+  margin-right: 10px;
+  text-align: left;
+  -moz-border-top-left-radius: 0px;
+  -webkit-border-top-left-radius: 0px;
+  border-top-left-radius: 0px;
+}
+#maxui-container .maxui-message.maxui-user-notme .maxui-balloon:after {
+  left: 44px;
+  border-top: 3px solid #edf3ff;
+  border-left: 3px solid transparent;
+  border-right: 3px solid #edf3ff;
+}
+/* Button style definitions*/
+.maxui-base-button,
+#maxui-container .maxui-button,
+#maxui-container .maxui-button:hover,
+#maxui-container .maxui-button:focus,
+#maxui-container .maxui-button[disabled],
+#maxui-container .maxui-popover .maxui-button-delete,
+#maxui-container .maxui-popover .maxui-button-cancel {
+  -moz-border-radius: 3px;
+  -webkit-border-radius: 3px;
+  border-radius: 3px;
+  margin: 5px 0 0 0;
+  font-family: Arial, "HelveticaNeue", "Helvetica Neue", Helvetica, sans-serif;
+  font-size: 13px;
+  padding: 3px 6px;
+  border: 1px solid;
+  cursor: pointer;
+}
+#maxui-container {
+  /* customization for different togglebar locations*/
+}
+#maxui-container .maxui-button {
+  border-color: #007bc0;
+  color: #ffffff;
+  background: #009cf3;
+}
+#maxui-container .maxui-button:hover,
+#maxui-container .maxui-button:focus {
+  border-color: #007bc0;
+  background: #009cf3;
+  cursor: pointer;
+  color: #ffffff;
+  box-shadow: none;
+  -webkit-box-shadow: none;
+}
+#maxui-container .maxui-button[disabled] {
+  -webkit-appearance: none;
+  border-color: #cccccc;
+  color: #898989;
+  background-color: #e8e8e8;
+  box-shadow: none;
+  -webkit-box-shadow: none;
+  cursor: default;
+}
+#maxui-container #maxui-more-activities .maxui-button {
+  border-color: #cccccc;
+  color: #6f6f6f;
+  width: 100%;
+  margin: 10px 0px;
+  background: #f2f2f2;
+}
+#maxui-container #maxui-more-activities .maxui-button:hover,
+#maxui-container #maxui-more-activities .maxui-button:focus {
+  box-shadow: none;
+  -webkit-box-shadow: none;
+}
+#maxui-container .maxui-popover .maxui-button-delete {
+  background-color: #bd362f;
+  border-color: #bd362f;
+  color: #fff;
+}
+#maxui-container .maxui-popover .maxui-button-cancel {
+  background-color: #e8e8e8;
+  border-color: #cccccc;
+  color: #6f6f6f;
+}
 #maxui-container {
   /*Draw a line to define widget boudaries*/
   /* ====== TO IMPROVE or put in classes/extends============================*/
   /* ==================================*/
 }
 #maxui-container a:focus,
-#maxui-container .maxui-button:focus,
 #maxui-container maxui-text-input:focus,
 #maxui-container .maxui-simple-text-input:focus {
   outline: none;
@@ -974,22 +989,6 @@
 #maxui-container #maxui-mainpanel #maxui-conversations #maxui-common-header {
   overflow: hidden;
 }
-#maxui-container #maxui-mainpanel #maxui-conversations #maxui-common-header #maxui-back-conversations {
-  height: 45px;
-  border-bottom: 1px #cccccc solid;
-}
-#maxui-container #maxui-mainpanel #maxui-conversations #maxui-common-header #maxui-back-conversations a:before {
-  content: '\e807';
-}
-#maxui-container #maxui-mainpanel #maxui-conversations #maxui-common-header #maxui-back-conversations a:hover:before {
-  content: '\e807';
-}
-#maxui-container #maxui-mainpanel #maxui-conversations #maxui-common-header #maxui-back-conversations h3.maxui-title {
-  margin: 3px 0px 7px;
-  color: #565656;
-  font-size: 18px;
-  font-weight: bold;
-}
 #maxui-container #maxui-mainpanel #maxui-conversations .maxui-wrapper #maxui-conversations-list {
   position: absolute;
   outline: none;
@@ -1046,43 +1045,6 @@
 #maxui-container #maxui-mainpanel #maxui-conversations .maxui-wrapper #maxui-messages #maxui-message-list .maxui-message:first-child {
   margin-top: 10px;
 }
-#maxui-container #maxui-mainpanel #maxui-conversations .maxui-wrapper #maxui-messages #maxui-message-list .maxui-message.maxui-user-me {
-  text-align: right;
-}
-#maxui-container #maxui-mainpanel #maxui-conversations .maxui-wrapper #maxui-messages #maxui-message-list .maxui-message.maxui-user-me .maxui-balloon {
-  border: 1px solid #f2f2f2;
-  background-color: #f2f2f2;
-  color: #6f6f6f;
-  margin-right: 50px;
-  margin-left: 10px;
-  text-align: right;
-  -moz-border-top-right-radius: 0px;
-  -webkit-border-top-right-radius: 0px;
-  border-top-right-radius: 0px;
-}
-#maxui-container #maxui-mainpanel #maxui-conversations .maxui-wrapper #maxui-messages #maxui-message-list .maxui-message.maxui-user-me .maxui-balloon:after {
-  right: 44px;
-  border-top: 3px solid #f2f2f2;
-  border-left: 3px solid #f2f2f2;
-  border-right: 3px solid transparent;
-}
-#maxui-container #maxui-mainpanel #maxui-conversations .maxui-wrapper #maxui-messages #maxui-message-list .maxui-message.maxui-user-notme .maxui-balloon {
-  border: 1px solid #edf3ff;
-  background-color: #edf3ff;
-  color: #6f6f6f;
-  margin-left: 50px;
-  margin-right: 10px;
-  text-align: left;
-  -moz-border-top-left-radius: 0px;
-  -webkit-border-top-left-radius: 0px;
-  border-top-left-radius: 0px;
-}
-#maxui-container #maxui-mainpanel #maxui-conversations .maxui-wrapper #maxui-messages #maxui-message-list .maxui-message.maxui-user-notme .maxui-balloon:after {
-  left: 44px;
-  border-top: 3px solid #edf3ff;
-  border-left: 3px solid transparent;
-  border-right: 3px solid #edf3ff;
-}
 #maxui-container #maxui-mainpanel #maxui-conversations .maxui-wrapper #maxui-messages #maxui-message-list .maxui-message .maxui-activity-content {
   display: inline-block;
 }
@@ -1126,15 +1088,6 @@
   -moz-border-radius: 4px;
   -webkit-border-radius: 4px;
   border-radius: 4px;
-}
-#maxui-container #maxui-mainpanel #maxui-show-conversations.maxui-togglebar {
-  border-bottom: 1px #cccccc solid;
-}
-#maxui-container #maxui-mainpanel #maxui-show-conversations.maxui-togglebar:after {
-  content: '\e809';
-}
-#maxui-container #maxui-mainpanel #maxui-show-conversations.maxui-togglebar:hover:after {
-  content: '\e809';
 }
 #maxui-container #maxui-mainpanel #maxui-conversation-predictive {
   margin-top: 50px;
@@ -1237,15 +1190,6 @@
   box-sizing: border-box;
   -moz-box-sizing: border-box;
   -webkit-box-sizing: border-box;
-}
-#maxui-container #maxui-mainpanel #maxui-show-timeline.maxui-togglebar {
-  border-top: 1px #cccccc solid;
-}
-#maxui-container #maxui-mainpanel #maxui-show-timeline.maxui-togglebar:after {
-  content: '\e80a';
-}
-#maxui-container #maxui-mainpanel #maxui-show-timeline.maxui-togglebar:hover:after {
-  content: '\e80a';
 }
 #maxui-container #maxui-mainpanel #maxui-activity-sort {
   box-sizing: border-box;
@@ -1355,16 +1299,4 @@
 }
 #maxui-container #maxui-mainpanel #maxui-timeline .maxui-wrapper #maxui-activities .maxui-activity .maxui-comments .maxui-newcommentbox {
   text-align: right;
-}
-#maxui-container #maxui-mainpanel #maxui-timeline .maxui-wrapper #maxui-more-activities .maxui-button {
-  border: 1px solid #cccccc;
-  width: 100%;
-  margin: 10px 0px;
-  color: #6f6f6f;
-  background: #f2f2f2;
-}
-#maxui-container #maxui-mainpanel #maxui-timeline .maxui-wrapper #maxui-more-activities .maxui-button:hover,
-#maxui-container #maxui-mainpanel #maxui-timeline .maxui-wrapper #maxui-more-activities .maxui-button:focus {
-  box-shadow: none;
-  -webkit-box-shadow: none;
 }
