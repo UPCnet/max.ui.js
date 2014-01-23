@@ -150,36 +150,7 @@
 /* BG Color of selected list elements*/
 /* Text color */
 /* Conversation messages colors */
-/* Main*/
-.mm-bordered,
-#maxui-container {
-  border: 1px solid #cccccc;
-}
-/* Typography */
-.mm-textStyle,
-#maxui-container {
-  text-shadow: 0 1px #ffffff;
-  font: 13px/18px Arial, "HelveticaNeue", "Helvetica Neue", Helvetica, sans-serif;
-  color: #6f6f6f;
-}
-.mm-removeOutline {
-  outline: none;
-}
 /* blocks */
-.mm-DisplayName,
-.mm-Actor a .maxui-displayname,
-#maxui-container #maxui-mainpanel #maxui-conversations .maxui-wrapper #maxui-conversations-list .maxui-conversation .maxui-activity-content .maxui-actor a .maxui-displayname,
-#maxui-container #maxui-mainpanel #maxui-timeline .maxui-wrapper #maxui-activities .maxui-activity .maxui-activity-content .maxui-actor a .maxui-displayname,
-#maxui-container #maxui-mainpanel #maxui-timeline .maxui-wrapper #maxui-activities .maxui-activity .maxui-comments .maxui-commentsbox .maxui-comment .maxui-activity-content .maxui-actor a .maxui-displayname {
-  font-weight: bold;
-}
-.mm-Username,
-.mm-Actor .maxui-username,
-#maxui-container #maxui-mainpanel #maxui-timeline .maxui-wrapper #maxui-activities .maxui-activity .maxui-activity-content .maxui-actor .maxui-username,
-#maxui-container #maxui-mainpanel #maxui-timeline .maxui-wrapper #maxui-activities .maxui-activity .maxui-comments .maxui-commentsbox .maxui-comment .maxui-activity-content .maxui-actor .maxui-username {
-  color: #6f6f6f;
-  font-size: 93%;
-}
 .mm-Body,
 #maxui-container #maxui-mainpanel #maxui-conversations .maxui-wrapper #maxui-conversations-list .maxui-conversation .maxui-activity-content .maxui-body,
 #maxui-container #maxui-mainpanel #maxui-conversations .maxui-wrapper #maxui-messages #maxui-message-list .maxui-message .maxui-activity-content .maxui-balloon .maxui-body,
@@ -188,41 +159,21 @@
   margin: 0;
   font-size: 13px;
 }
-.mm-PublishedDate,
-#maxui-container .maxui-publisheddate,
-#maxui-container #maxui-mainpanel #maxui-timeline .maxui-wrapper #maxui-activities .maxui-activity .maxui-activity-content .maxui-topright .maxui-likescount {
-  font-size: 11px;
-  color: #898989;
-  text-align: right;
-}
 .mm-Actor a,
 #maxui-container #maxui-mainpanel #maxui-timeline .maxui-wrapper #maxui-activities .maxui-activity .maxui-activity-content .maxui-actor a,
 #maxui-container #maxui-mainpanel #maxui-timeline .maxui-wrapper #maxui-activities .maxui-activity .maxui-comments .maxui-commentsbox .maxui-comment .maxui-activity-content .maxui-actor a {
   position: relative;
 }
-.mm-Textarea,
-#maxui-container #maxui-mainpanel #maxui-newactivity #maxui-newactivity-box textarea,
-#maxui-container #maxui-mainpanel #maxui-timeline .maxui-wrapper #maxui-activities .maxui-activity .maxui-comments .maxui-newcommentbox textarea {
-  width: 100%;
-  color: #6f6f6f;
-  height: 48px;
-  min-height: 48px;
-  border: 1px #b3b3b3 solid;
-  position: relative;
-  padding: 0 3px;
-  font-family: Arial, Helvetica, sans-serif;
-  font-size: 13px;
-  line-height: 18px;
-  overflow: auto;
-  resize: vertical ;
-  -moz-border-radius: 3px;
-  -webkit-border-radius: 3px;
-  border-radius: 3px;
+.mm-Actor a .maxui-displayname,
+#maxui-container #maxui-mainpanel #maxui-timeline .maxui-wrapper #maxui-activities .maxui-activity .maxui-activity-content .maxui-actor a .maxui-displayname,
+#maxui-container #maxui-mainpanel #maxui-timeline .maxui-wrapper #maxui-activities .maxui-activity .maxui-comments .maxui-commentsbox .maxui-comment .maxui-activity-content .maxui-actor a .maxui-displayname {
+  font-weight: bold;
 }
-.mm-Textarea:focus,
-#maxui-container #maxui-mainpanel #maxui-newactivity #maxui-newactivity-box textarea:focus,
-#maxui-container #maxui-mainpanel #maxui-timeline .maxui-wrapper #maxui-activities .maxui-activity .maxui-comments .maxui-newcommentbox textarea:focus {
+.mm-Actor .maxui-username,
+#maxui-container #maxui-mainpanel #maxui-timeline .maxui-wrapper #maxui-activities .maxui-activity .maxui-activity-content .maxui-actor .maxui-username,
+#maxui-container #maxui-mainpanel #maxui-timeline .maxui-wrapper #maxui-activities .maxui-activity .maxui-comments .maxui-commentsbox .maxui-comment .maxui-activity-content .maxui-actor .maxui-username {
   color: #6f6f6f;
+  font-size: 93%;
 }
 .mm-Activity,
 #maxui-container #maxui-mainpanel #maxui-timeline .maxui-wrapper #maxui-activities .maxui-activity {
@@ -908,15 +859,59 @@
   border-color: #cccccc;
   color: #6f6f6f;
 }
-#maxui-container {
-  /*Draw a line to define widget boudaries*/
-  /* ====== TO IMPROVE or put in classes/extends============================*/
-  /* ==================================*/
+#maxui-container .maxui-text-input {
+  outline: none;
+  -webkit-transition: 0.3s ease-in-out;
+  -moz-transition: 0.3s ease-in-out;
+  transition: 0.3s ease-in-out;
 }
-#maxui-container a:focus,
-#maxui-container maxui-text-input:focus,
+#maxui-container .maxui-text-input:focus {
+  outline: none;
+}
+#maxui-container textarea:focus,
+#maxui-container input[type="search"]:focus,
+#maxui-container input[type='text']:focus {
+  border: 1px solid #007bc0 !important;
+  -webkit-box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.05), 0 0 8px rgba(0, 123, 192, 0.5) !important;
+  -moz-box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.05), 0 0 8px rgba(0, 123, 192, 0.5) !important;
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.05), 0 0 8px rgba(0, 123, 192, 0.5) !important;
+}
+#maxui-container textarea.error,
+#maxui-container textarea.error:focus {
+  border: 1px solid #ff0000 !important;
+  -webkit-box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.05), 0 0 8px rgba(255, 0, 0, 0.5) !important;
+  -moz-box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.05), 0 0 8px rgba(255, 0, 0, 0.5) !important;
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.05), 0 0 8px rgba(255, 0, 0, 0.5) !important;
+}
 #maxui-container .maxui-simple-text-input:focus {
   outline: none;
+}
+#maxui-container textarea.maxui-text-input {
+  width: 100%;
+  color: #6f6f6f;
+  height: 48px;
+  min-height: 48px;
+  border: 1px #b3b3b3 solid;
+  position: relative;
+  padding: 0 3px;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 13px;
+  line-height: 18px;
+  overflow: auto;
+  resize: vertical ;
+  -moz-border-radius: 3px;
+  -webkit-border-radius: 3px;
+  border-radius: 3px;
+}
+#maxui-container textarea.maxui-text-input:focus {
+  color: #6f6f6f;
+}
+#maxui-container {
+  border: 1px solid #cccccc;
+  text-shadow: 0 1px #ffffff;
+  font: 13px/18px Arial, "HelveticaNeue", "Helvetica Neue", Helvetica, sans-serif;
+  color: #6f6f6f;
+  /* ==================================*/
 }
 #maxui-container img {
   -ms-interpolation-mode: bicubic;
@@ -930,8 +925,17 @@
   text-decoration: none;
   color: #005a8d;
 }
+#maxui-container a:focus {
+  outline: none;
+}
 #maxui-container a img {
   border: 0;
+}
+#maxui-container .maxui-publisheddate,
+#maxui-container .maxui-likescount {
+  font-size: 10px;
+  color: #898989;
+  text-align: right;
 }
 #maxui-container .maxui-icon-cancel-circled:before {
   color: white;
@@ -948,33 +952,6 @@
 #maxui-container #maxui-info {
   font-style: italic;
   color: #898989;
-}
-#maxui-container .maxui-filter .maxui-img {
-  vertical-align: inherit;
-}
-#maxui-container .maxui-footer {
-  margin-left: 56px;
-}
-#maxui-container .maxui-text-input {
-  outline: none;
-  -webkit-transition: 0.3s ease-in-out;
-  -moz-transition: 0.3s ease-in-out;
-  transition: 0.3s ease-in-out;
-}
-#maxui-container textarea:focus,
-#maxui-container input[type="search"]:focus,
-#maxui-container input[type='text']:focus {
-  border: 1px solid #007bc0 !important;
-  -webkit-box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.05), 0 0 8px rgba(0, 123, 192, 0.5) !important;
-  -moz-box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.05), 0 0 8px rgba(0, 123, 192, 0.5) !important;
-  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.05), 0 0 8px rgba(0, 123, 192, 0.5) !important;
-}
-#maxui-container textarea.error,
-#maxui-container textarea.error:focus {
-  border: 1px solid #ff0000 !important;
-  -webkit-box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.05), 0 0 8px rgba(255, 0, 0, 0.5) !important;
-  -moz-box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.05), 0 0 8px rgba(255, 0, 0, 0.5) !important;
-  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.05), 0 0 8px rgba(255, 0, 0, 0.5) !important;
 }
 #maxui-container #maxui-mainpanel {
   background-color: #ffffff;
@@ -1056,11 +1033,6 @@
   border-radius: 3px;
   padding: 2px 10px;
   min-height: 25px;
-}
-#maxui-container #maxui-mainpanel #maxui-conversations .maxui-wrapper #maxui-messages #maxui-message-list .maxui-message .maxui-activity-content .maxui-balloon .maxui-published-date {
-  font-size: 9px;
-  font-style: italic;
-  color: #898989;
 }
 #maxui-container #maxui-mainpanel #maxui-conversations .maxui-wrapper #maxui-messages #maxui-message-list .maxui-message .maxui-activity-content .maxui-balloon:after {
   content: "";
@@ -1231,6 +1203,9 @@
 #maxui-container #maxui-mainpanel #maxui-timeline .maxui-wrapper #maxui-activities .maxui-activity .maxui-activity-content .maxui-activity-message {
   position: relative;
   margin-bottom: 5px;
+}
+#maxui-container #maxui-mainpanel #maxui-timeline .maxui-wrapper #maxui-activities .maxui-activity .maxui-footer {
+  margin-left: 54px;
 }
 #maxui-container #maxui-mainpanel #maxui-timeline .maxui-wrapper #maxui-activities .maxui-activity .maxui-footer .maxui-origin {
   display: inline;

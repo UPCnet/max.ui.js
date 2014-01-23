@@ -13,11 +13,6 @@
     font:13px/18px Arial, "HelveticaNeue","Helvetica Neue",Helvetica,sans-serif;
     color:@textColor;
 
-    maxui-text-input:focus,
-    .maxui-simple-text-input:focus {
-        outline:none
-    }
-
     img { -ms-interpolation-mode: bicubic; image-rendering: optimizeQuality;}
 
     a {
@@ -27,7 +22,8 @@
             text-decoration: none;
             color: @hoverLinkColor;
         }
-        &:focus:{
+
+        &:focus{
             outline: none;
         }
 
@@ -35,9 +31,6 @@
             border:0;
         }
     }
-
-
-    /* ====== TO IMPROVE or put in classes/extends============================*/
 
     .maxui-publisheddate,
     .maxui-likescount {
@@ -65,31 +58,6 @@
        color:@textColorLT;
     }
 
-    .maxui-filter .maxui-img {
-        vertical-align: inherit;
-    }
-
-    .maxui-footer {
-    margin-left: 56px;
-    }
-
-   .maxui-text-input {
-     outline: none;
-     -webkit-transition: .3s ease-in-out;
-     -moz-transition: .3s ease-in-out;
-     transition: .3s ease-in-out;
-    }
-
-    textarea:focus, 
-    input[type="search"]:focus,
-    input[type='text']:focus {
-        .mm-borderGlow(@linkColor)
-     }
-
-    textarea.error,
-    textarea.error:focus {
-        .mm-borderGlow(red)
-     }
 
     /* ==================================*/
     #maxui-mainpanel {
@@ -244,8 +212,6 @@
                 margin-left:56px;
                 text-align:right;
 
-                textarea:extend(.mm-Textarea all) { }
-
                 .maxui-error-box {
                     height: 15px;
                     border: 1px red solid;
@@ -381,6 +347,7 @@
                         }
 
                         .maxui-footer {
+                            margin-left: 54px;
                             .maxui-origin {
                                 display:inline;
                                 padding-right:10px;
@@ -445,8 +412,6 @@
                             }
                             .maxui-newcommentbox {
                                 text-align: right;
-                                textarea:extend(.mm-Textarea all) {}
-                                
                             }
                         }
                     }
