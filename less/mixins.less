@@ -2,12 +2,6 @@
 
 /* blocks */
 
-.mm-Body {
-    margin:0;
-    font-size:13px;
-}
-
-
 
 .mm-Actor {
     a {
@@ -31,90 +25,6 @@
     padding:8px 0px;
     padding-left: 0px;
     min-height: 51px;
-    textarea :extend(.mm-textarea all) {}
-}
-
-.mm-Popover {
-    display:none;
-    position: absolute;
-    float: left;
-    width: 180px;
-    opacity: 0;
-    margin: 20px;
-    bottom: 0;
-    left: 0;
-    z-index: 1010;
-    max-width: 276px;
-    padding: 1px;
-    margin-bottom: -31px;
-    margin-left:68px;
-    text-align: left;
-    white-space: normal;
-    background-color: @mainBackgroundColor;
-    border: 1px solid fade(@borderColor, 20%);
-
-    .mm-borderRadius(6px);
-    -webkit-box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
-    -moz-box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
-    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
-    -webkit-background-clip: padding-box;
-    -moz-background-clip: padding;
-    background-clip: padding-box;
-
-    .maxui-popover-title {
-        padding: 6px 12px;
-        margin: 0;
-        font-size: 14px;
-        font-weight: bold;
-        line-height: 18px;
-        background-color: lighten(@secondaryBackgroundColor, 5%);
-        border-bottom: 1px solid @borderColor;
-        .mm-borderRadius(5px);
-        border-bottom-left-radius: 0;
-        border-bottom-right-radius: 0;
-    }
-
-    .maxui-popover-content {
-        text-align: right;
-        padding: 8px 10px 12px 0px;
-    }
-
-
-    .maxui-arrow, .maxui-arrow{
-        border-width: 11px;
-        position: absolute;
-        display: block;
-        width: 0;
-        height: 0;
-        border-color: transparent;
-        border-style: solid;
-        &:after {
-            position: absolute;
-            display: block;
-            width: 0;
-            height: 0;
-            border-color: transparent;
-            border-style: solid;
-            border-width: 10px;
-            content: "";
-        }
-    }
-
-    &.left {
-        .maxui-arrow {
-            top: 50%;
-            right: -11px;
-            margin-top: -11px;
-            border-left-color: rgba(0, 0, 0, 0.25);
-            border-right-width: 0;
-            &:after {
-                right: 1px;
-                bottom: -10px;
-                border-left-color: #ffffff;
-                border-right-width: 0;
-            }
-        }
-    }
 }
 
 .mm-AddPeopleBox {

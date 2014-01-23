@@ -58,6 +58,11 @@
        color:@textColorLT;
     }
 
+    .maxui-body {
+        margin:0;
+        font-size:13px;
+    }    
+
 
     /* ==================================*/
     #maxui-mainpanel {
@@ -100,9 +105,6 @@
                                 }
                             }
                             .maxui-actor {
-                                a {
-                                    .maxui-displayname:extend(.mm-DisplayName) {}
-                                }
                                 .maxui-message-count {
                                     .mm-borderRadius(3px);
                                     background-color: @linkColor;
@@ -117,11 +119,8 @@
                                 }
 
                             }
-                            .maxui-body:extend(.mm-Body) {}
                         }
-                        .maxui-clear {
 
-                        }
                         border-top: 1px #fff solid;
                         border-bottom: 1px @borderColor solid;
                         width:100%;
@@ -151,8 +150,6 @@
                                     -moz-border-radius: 3px; -webkit-border-radius: 3px; border-radius: 3px;
                                     padding: 2px 10px;
                                     min-height: 25px;
-
-                                    .maxui-body:extend(.mm-Body) {}
 
                                     &:after {
                                         content: "";
@@ -342,7 +339,6 @@
                             .maxui-activity-message {
                                 position:relative;
                                 margin-bottom:5px;
-                                .maxui-body:extend(.mm-Body) {}
                             }
                         }
 
@@ -358,7 +354,6 @@
                             .maxui-actions {
                                 position:relative;
                                 line-height: 14px;
-                                .maxui-popover:extend(.mm-Popover all) {}
                             }
                         }
                         .maxui-comments {
@@ -391,9 +386,6 @@
                                         position:relative;
 
                                         .maxui-actor:extend(.mm-Actor all) { }
-                                        .maxui-body:extend(.mm-Body) {
-                                            font-size: 12px;
-                                        }
 
                                         .maxui-delete-comment, .maxui-delete-comment:hover {
                                             float:right;
@@ -404,7 +396,7 @@
                                         .maxui-delete-comment:before { content: '\e806'; color: @actionLinkColor;}
                                         .maxui-delete-comment:hover:before { content: '\e806'; color: @actionHoverLinkColor;}
 
-                                        .maxui-popover:extend(.mm-Popover all) {
+                                        .maxui-popover{
                                             margin-left:64px;
                                         }
                                     }
