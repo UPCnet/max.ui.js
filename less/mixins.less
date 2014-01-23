@@ -6,28 +6,7 @@
     border: 1px solid @borderColor;
 }
 
-/* Typography */
-
-.mm-textStyle {
-    text-shadow: 0 1px @textShadowColor;
-    font:13px/18px Arial, "HelveticaNeue","Helvetica Neue",Helvetica,sans-serif;
-    color:@textColor;
-}
-
-.mm-removeOutline {
-    outline: none;
-}
-
 /* blocks */
-
-.mm-DisplayName {
-    font-weight: bold;
-}
-
-.mm-Username {
-    color: @textColor;
-    font-size: 93%;
-}
 
 .mm-Body {
     margin:0;
@@ -43,10 +22,14 @@
 .mm-Actor {
     a {
         position:relative;
-        .maxui-avatar:extend(.mm-Avatar all) { }
-        .maxui-displayname:extend(.mm-DisplayName) { }
+        .maxui-displayname {
+            font-weight: bold;
+         }
     }
-    .maxui-username:extend(.mm-Username) {}
+    .maxui-username {
+        color: @textColor;
+        font-size: 93%;
+    }
 }
 
 .mm-Textarea {

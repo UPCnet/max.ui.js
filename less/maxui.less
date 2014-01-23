@@ -8,14 +8,14 @@
 
 #maxui-container{
 
-    /*Draw a line to define widget boudaries*/
-    &:extend(.mm-bordered);
-    &:extend(.mm-textStyle);
+    border: 1px solid @borderColor;
+    text-shadow: 0 1px @textShadowColor;
+    font:13px/18px Arial, "HelveticaNeue","Helvetica Neue",Helvetica,sans-serif;
+    color:@textColor;
 
-    a:focus,
     maxui-text-input:focus,
     .maxui-simple-text-input:focus {
-        .mm-removeOutline;
+        outline:none
     }
 
     img { -ms-interpolation-mode: bicubic; image-rendering: optimizeQuality;}
@@ -27,7 +27,9 @@
             text-decoration: none;
             color: @hoverLinkColor;
         }
-        &:focus:extend(.mm-removeOutline) { }
+        &:focus:{
+            outline: none;
+        }
 
         img {
             border:0;
@@ -37,7 +39,12 @@
 
     /* ====== TO IMPROVE or put in classes/extends============================*/
 
-    .maxui-publisheddate:extend(.mm-PublishedDate all) {}
+    .maxui-publisheddate,
+    .maxui-likescount {
+        font-size:10px;
+        color: @textColorLT;
+        text-align: right;
+}
 
     .maxui-icon-cancel-circled:before {
     color:white;
@@ -113,7 +120,6 @@
                                 position: relative;
                             }
                             .maxui-topright {
-                                .maxui-published-date { }
                                 .maxui-enterconversation {
                                     float:right;
                                     padding-top:6px;
@@ -178,11 +184,6 @@
                                     padding: 2px 10px;
                                     min-height: 25px;
 
-                                    .maxui-published-date {
-                                        font-size: 9px;
-                                        font-style: italic;
-                                        color: @textColorLT;
-                                    }
                                     .maxui-body:extend(.mm-Body) {}
 
                                     &:after {
@@ -371,10 +372,6 @@
                         .maxui-activity-content {
                             margin:-5px 0 0 55px;
 
-                            .maxui-topright {
-                                .maxui-publisheddate:extend { }
-                                .maxui-likescount:extend(.mm-PublishedDate) {}
-                            }
                             .maxui-actor:extend(.mm-Actor all) {}
                             .maxui-activity-message {
                                 position:relative;
@@ -426,7 +423,6 @@
                                         margin-bottom:18px;
                                         position:relative;
 
-                                        .maxui-publisheddate:extend {}
                                         .maxui-actor:extend(.mm-Actor all) { }
                                         .maxui-body:extend(.mm-Body) {
                                             font-size: 12px;

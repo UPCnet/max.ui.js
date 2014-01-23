@@ -162,14 +162,7 @@
   font: 13px/18px Arial, "HelveticaNeue", "Helvetica Neue", Helvetica, sans-serif;
   color: #6f6f6f;
 }
-.mm-removeOutline,
-.maxui-base-button:focus,
-#maxui-container .maxui-button:focus,
-#maxui-container .maxui-button:hover:focus,
-#maxui-container .maxui-button:focus:focus,
-#maxui-container .maxui-button[disabled]:focus,
-#maxui-container .maxui-popover .maxui-button-delete:focus,
-#maxui-container .maxui-popover .maxui-button-cancel:focus {
+.mm-removeOutline {
   outline: none;
 }
 /* blocks */
@@ -857,6 +850,15 @@
   padding: 3px 6px;
   border: 1px solid;
   cursor: pointer;
+}
+.maxui-base-button:focus,
+#maxui-container .maxui-button:focus,
+#maxui-container .maxui-button:hover:focus,
+#maxui-container .maxui-button:focus:focus,
+#maxui-container .maxui-button[disabled]:focus,
+#maxui-container .maxui-popover .maxui-button-delete:focus,
+#maxui-container .maxui-popover .maxui-button-cancel:focus {
+  outline: none;
 }
 #maxui-container {
   /* customization for different togglebar locations*/
