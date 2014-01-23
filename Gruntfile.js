@@ -31,6 +31,16 @@ module.exports = function(grunt) {
       }
     },
 
+    cssmin: {
+      minify: {
+        expand: true,
+        cwd: 'css/',
+        src: ['maxui-less.css'],
+        dest: 'css/',
+        ext: '.min.css'
+      }
+    },
+
     fontello: {
     dist: {
       options: {
@@ -50,6 +60,7 @@ module.exports = function(grunt) {
   // Load tasks
   grunt.loadNpmTasks('grunt-contrib-less');
   grunt.loadNpmTasks('grunt-contrib-watch');
+  grunt.loadNpmTasks('grunt-contrib-cssmin');
   grunt.loadNpmTasks('grunt-fontello');
 };
   
