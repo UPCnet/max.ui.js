@@ -1,0 +1,83 @@
+#maxui-container {
+    #maxui-activities {
+        .maxui-activity {
+            border-top: 1px @mainBackgroundColor solid;
+            border-bottom: 1px solid @borderColor;
+            width:100%;
+            padding:8px 0px;
+            padding-left: 0px;
+            min-height: 51px;                        
+            .maxui-activity-content {
+                margin:-5px 0 0 55px;
+
+                .maxui-activity-message {
+                    position:relative;
+                    margin-bottom:5px;
+                }
+            }
+
+            .maxui-footer {
+                margin-left: 54px;
+                .maxui-origin {
+                    display:inline;
+                    padding-right:10px;
+                    color:@textColor;
+                    font-size:11px;
+                    &.maxui-icon-:before { content: '\e811'; font-size: 12px; margin-right: 0px;}
+                }
+                .maxui-actions {
+                    position:relative;
+                    line-height: 14px;
+                }
+            }
+            .maxui-comments {
+                margin-left:56px;
+                width:auto;
+                margin-top:5px;
+                background-color:@commentsBackgroundColor;
+                padding:5px;
+                position:relative;
+                .mm-borderRadius(6px);
+                &:before {
+                    content: "";
+                    display: block;
+                    width: 0; height: 0;
+                    position:absolute; margin-top:-12px;
+                    border-left: 8px solid #fff;
+                    border-right: 8px solid #fff;
+                    border-bottom: 8px solid #f2f2f2;
+                }
+
+                .maxui-commentsbox {
+                    .maxui-comment {
+                        padding: 1px 0 0;
+
+                        .maxui-activity-content {
+                            margin-left:41px;
+                            margin-right:0;
+                            margin-top:-5px;
+                            margin-bottom:18px;
+                            position:relative;
+
+                            .maxui-delete-comment, .maxui-delete-comment:hover {
+                                float:right;
+                                margin-top:-12px;
+                                cursor:pointer;
+                            }
+
+                            .maxui-delete-comment:before { content: '\e806'; color: @actionLinkColor;}
+                            .maxui-delete-comment:hover:before { content: '\e806'; color: @actionHoverLinkColor;}
+
+                            .maxui-popover{
+                                margin-left:64px;
+                            }
+                        }
+                    }
+                }
+                .maxui-newcommentbox {
+                    text-align: right;
+                }
+            }
+        }
+    }
+}
