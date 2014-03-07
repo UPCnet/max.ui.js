@@ -27,7 +27,7 @@ max.literals = function(language) {
                        'load_more': "Load more",
                        'context_published_in': "Published in",
                        'generator_via': "via",
-                       'search_text': "Search...",
+                       'search_text': "Search in posts...",
                        'and_more': "and more...",
                        'new_message_post': "Send message",
                        'post_permission_unauthorized': "You''re not authorized to post on this context",
@@ -47,7 +47,7 @@ max.literals = function(language) {
                        'recent_activity': "Latest activity",
                        'valued_activity': "Most valued activity",
                        'recent_favorited_activity': "Latest favorites",
-                       'valued_favorited_activity': "Most valued favorites"                       
+                       'valued_favorited_activity': "Most valued favorites"
         }
 
     maxui['es'] = {'months': ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'],
@@ -69,7 +69,7 @@ max.literals = function(language) {
                        'load_more': "Cargar más",
                        'context_published_in': "Publicado en",
                        'generator_via': "via",
-                       'search_text': "Busca...",
+                       'search_text': "Busca en las entradas...",
                        'and_more': "i más...",
                        'new_message_post':'Envia el mensaje',
                        'post_permission_unauthorized': 'No estas autorizado a publicar en este contexto',
@@ -89,7 +89,7 @@ max.literals = function(language) {
                        'recent_activity': "Últimas actividades",
                        'valued_activity': "Actividades más valoradas",
                        'recent_favorited_activity': "Últimas favoritas",
-                       'valued_favorited_activity': "Favoritas más valoradas"                       
+                       'valued_favorited_activity': "Favoritas más valoradas"
         }
 
     maxui['ca'] = {'months': ['gener', 'febrer', 'març', 'abril', 'maig', 'juny', 'juliol', 'agost', 'setembre', 'octubre', 'novembre', 'desembre'],
@@ -111,7 +111,7 @@ max.literals = function(language) {
                        'load_more': "Carrega'n més",
                        'context_published_in': "Publicat a",
                        'generator_via': "via",
-                       'search_text': "Busca...",
+                       'search_text': "Cerca a les entrades...",
                        'and_more': "i més...",
                        'new_message_post':'Envia el missatge',
                        'post_permission_unauthorized': 'No estàs autoritzat a publicar en aquest contexte',
