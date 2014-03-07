@@ -12,7 +12,7 @@ module.exports = function(grunt) {
           yuicompress: false,
           sourceMap: true,
           sourceMapFilename: 'css/max.ui.css.map',
-          sourceMapBasepath: "css/",
+          sourceMapRootpath: "../",
           sourceMapURL: 'http://localhost:8081/maxui-dev/css/max.ui.css.map'
         },
         files: {
