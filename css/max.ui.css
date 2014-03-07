@@ -182,9 +182,9 @@
   bottom: 0;
   left: 0;
   right: 0;
-  -moz-box-shadow: inset 0 0 8px rgba(0, 0, 0, 0.5);
-  -webkit-box-shadow: inset 0 0 8px rgba(0, 0, 0, 0.5);
-  box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.5), inset 0 0 4px rgba(0, 0, 0, 0.25);
+  -moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.2);
+  -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.2);
+  box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.2), inset 0 0 1px rgba(0, 0, 0, 0.25);
 }
 /* Avatar sizes*/
 .maxui-avatar.maxui-big {
@@ -384,6 +384,11 @@
   color: #565656;
   font-size: 18px;
   font-weight: bold;
+}
+#maxui-container #maxui-back-conversations.maxui-togglebar input#maxui-conversation-info {
+  float: right;
+  margin-top: -36px;
+  margin-right: 5px;
 }
 #maxui-container .maxui-message {
   /* Message balloons style defeiniton, distinct for
@@ -970,6 +975,7 @@
 }
 #maxui-container #maxui-mainpanel {
   background-color: #ffffff;
+  position: relative;
 }
 #maxui-container #maxui-mainpanel #maxui-add-people-box {
   border-bottom: 1px #cccccc solid;
@@ -1150,5 +1156,33 @@
 }
 #maxui-container #maxui-mainpanel #maxui-timeline .maxui-wrapper #maxui-preload {
   height: 0px;
+}
+#maxui-container #maxui-mainpanel .maxui-overlay {
+  display: none;
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0px;
+}
+#maxui-container #maxui-mainpanel #maxui-overlay-background {
+  background-color: black;
+  opacity: .5;
+  z-index: 1000;
+}
+#maxui-container #maxui-mainpanel #maxui-overlay-wrapper {
+  z-index: 1001;
+}
+#maxui-container #maxui-mainpanel #maxui-overlay-wrapper #maxui-overlay-panel {
+  border: #cccccc;
+  -moz-border-radius: 5px;
+  -webkit-border-radius: 5px;
+  border-radius: 5px;
+  margin: 20px;
+  padding: 20px;
+  background-color: #fff;
+  text-align: center;
+}
+#maxui-container #maxui-mainpanel #maxui-overlay-wrapper #maxui-overlay-panel h3 {
+  margin: 0px;
 }
 /*# sourceMappingURL=http://localhost:8081/maxui-dev/css/max.ui.css.map */

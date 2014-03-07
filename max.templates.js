@@ -17,8 +17,9 @@ var MSTCH_MAXUI_MAIN_UI = '\
    <div id="maxui-conversations" style="height:0px; {{showConversations}}">\
        <div id="maxui-common-header" style="height:0px;">\
           <div id="maxui-back-conversations" class="maxui-togglebar">\
-              <a class="maxui-icon-" href="#"> {{literals.conversations_list}}</a>\
-              <h3 class="maxui-title">displayName</h3>\
+              <a class="maxui-icon-" href="#"> {{literals.conversations_list}}\
+              <h3 class="maxui-title">displayName</h3></a>\
+              <input type="button" class="maxui-button" id="maxui-conversation-info" value="{{literals.conversations_info}}">\
           </div>\
        </div>\
        <div class="maxui-wrapper">\
@@ -82,6 +83,15 @@ var MSTCH_MAXUI_MAIN_UI = '\
               <input type="button" class="maxui-button" value="{{literals.load_more}}">\
           </div>\
       </div>\
+   </div>\
+   <div id="maxui-overlay-background" class="maxui-overlay">\
+   </div>\
+   <div id="maxui-overlay-wrapper" class="maxui-overlay">\
+       <div id="maxui-overlay-panel">\
+           <h3 id="maxui-overlay-title">I\'m a overlay</h3>\
+           <div id="maxui-overlay-content">\
+           </div>\
+       </div>\
    </div>\
   </div>\
  </div>\

@@ -6,15 +6,15 @@
 	    text-align:center;
 	    height:21px;
 
-	    &:after, 
-	    &:before { 
-	    	color:@togglebarLinkColor; 
+	    &:after,
+	    &:before {
+	    	color:@togglebarLinkColor;
 	    	height:auto;
 	    }
 
-	    &:hover:after, 
-	    &:hover:before { 
-	    	color:@togglebarHoverLinkColor; 
+	    &:hover:after,
+	    &:hover:before {
+	    	color:@togglebarHoverLinkColor;
 	    	height:auto;
 	    }
 
@@ -35,8 +35,8 @@
 		&.maxui-togglebar {
 	    	border-bottom: 1px @borderColor solid;
 		    &:after { content: '\e809';}
-		    &:hover:after { content: '\e809';}            
-		} 
+		    &:hover:after { content: '\e809';}
+		}
 	 }
 
 	#maxui-show-timeline {
@@ -45,7 +45,7 @@
 	        &:after { content: '\e80a';}
 	        &:hover:after { content: '\e80a';}
 	    }
-	}         
+	}
 
 	#maxui-back-conversations {
 		&.maxui-togglebar {
@@ -61,6 +61,11 @@
 		        font-size: 18px;
 		        font-weight: bold;
 		    }
+		    input#maxui-conversation-info {
+				float:right;
+				margin-top:-36px;
+				margin-right: 5px;
+		    }
 		}
-	}        
+	}
 }
