@@ -9,13 +9,17 @@ module.exports = function(grunt) {
       production: {
         options: {
           // Set the option to compress the resulting css.
-          yuicompress: false
+          yuicompress: false,
+          sourceMap: true,
+          sourceMapFilename: 'css/max.ui.css.map',
+          sourceMapBasepath: "css/",
+          sourceMapURL: 'http://localhost:8081/maxui-dev/css/max.ui.css.map'
         },
         files: {
           // Create a file called "public/css/site.css" from "less/site.less".
           // Note: If the directory public/css does not exist, it will be
           // created by the task.
-          "css/maxui-less.css": "less/maxui.less"
+          "css/max.ui.css": "less/maxui.less"
         }
       }
     },
@@ -35,7 +39,7 @@ module.exports = function(grunt) {
       minify: {
         expand: true,
         cwd: 'css/',
-        src: ['maxui-less.css'],
+        src: ['max.ui.css'],
         dest: 'css/',
         ext: '.min.css'
       }
@@ -63,4 +67,4 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-cssmin');
   grunt.loadNpmTasks('grunt-fontello');
 };
-  
+
