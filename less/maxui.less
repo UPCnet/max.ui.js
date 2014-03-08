@@ -279,21 +279,95 @@
                 position:relative;
                 border: #333;
                 .mm-borderRadius(5px);
-                margin:20px;
-                padding:20px;
+                margin:10px;
+                padding:10px;
                 background-color: #fff;
-                text-align: center;
                 -moz-box-shadow: 0 5px 15px rgba(0,0,0,.2);
                 -webkit-box-shadow:  0 5px 15px rgba(0,0,0,.2);
                 box-shadow:  0 5px 15px rgba(0,0,0,.5);
                 #maxui-overlay-header {
-                    h3 { margin:0px; }
+                    h3 {
+                        margin:0px;
+                        color:#111;
+                        font-weight: normal;
+                        font-size: 16px;
+                        border-bottom: 1px solid #ddd;
+                        margin-bottom:5px;
+                        padding: 5px;
+                    }
                     i {
                         position:absolute;
                         top:5px;
                         right:2px;
                         color:#111;
                         cursor:pointer;
+                    }
+                }
+                #maxui-overlay-content {
+                    padding: 5px;
+                    margin-bottom:10px;
+
+                }
+            }
+        }
+
+        #maxui-conversation-settings-panel {
+            .maxui-displayname {
+                margin-left:60px;
+                color: #111;
+                font-size: 20px;
+                padding-top: 16px;
+                display:block;
+
+            }
+            .maxui-participants {
+                padding-top: 10px;
+                h4 {
+                    color: #111;
+                    font-weight: normal;
+                    font-size: 14px;
+                    background-color: #f8f8f8;
+                    border-top: 1px #ddd solid;
+                    border-bottom: 1px #ddd solid;
+                    padding: 5px;
+                    padding-left:10px;
+                    margin: 15px 0 10px;
+                }
+                &>ul {
+                    margin:0px;
+                    padding: 0px;
+                    list-style:none;
+                    .maxui-participant {
+                        .maxui-avatar {
+                            margin-top:3px;
+                        }
+                        border-bottom: 1px #eee solid;
+                        height:36px;
+                        .maxui-displayname {
+                            margin-left: 40px;
+                            font-size: 14px;
+                            line-height: 15px;
+                            padding-top: 3px;
+                        }
+
+                        label {
+                            float:right;
+                            display: inline-block;
+                            padding: 2px 4px;
+                            font-size: 11.844px;
+                            font-weight: bold;
+                            line-height: 14px;
+                            color: #ffffff;
+                            text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
+                            white-space: nowrap;
+                            vertical-align: baseline;
+                            background-color: #3a87ad;
+                            .mm-borderRadius(3px);
+                        }
+                        .maxui-username {
+                            margin-left: 40px;
+                        }
+
                     }
                 }
             }

@@ -263,16 +263,36 @@ var MSTCH_MAXUI_PARTICIPANTS = '\
 {{/persons}}\
 ';
 
+var MSTCH_MAXUI_CONVERSATION_SETTINGS = '\
+<div id="maxui-{{panelID}}">\
+  <span class="maxui-avatar maxui-big"><img src="{{conversationAvatarURL}}"></span>\
+  <span class="maxui-displayname">{{displayName}}</span>\
+  <div class="maxui-participants">\
+    <h4>Participants</h4>\
+    <ul>\
+      {{#participants}}\
+      <li class="maxui-participant">\
+          <span class="maxui-avatar maxui-little"><img src="{{avatarURL}}"></span>\
+          <span class="maxui-displayname">{{displayName}}{{#owner}}<label>propietari</label>{{/owner}}</span>\
+          <span class="maxui-username">{{username}}</span>\
+      </li>\
+      {{/participants}}\
+    </ul>\
+  </div>\
+</div>\
+';
 var templates = {
-         mainUI: Hogan.compile(MSTCH_MAXUI_MAIN_UI),
-        postBox: Hogan.compile(MSTCH_MAXUI_POSTBOX),
-       activity: Hogan.compile(MSTCH_MAXUI_ACTIVITY),
-        comment: Hogan.compile(MSTCH_MAXUI_COMMENT),
-        filters: Hogan.compile(MSTCH_MAXUI_FILTERS),
-   participants: Hogan.compile(MSTCH_MAXUI_PARTICIPANTS),
-   conversation: Hogan.compile(MSTCH_MAXUI_CONVERSATION),
-        message: Hogan.compile(MSTCH_MAXUI_MESSAGE),
-     predictive: Hogan.compile(MSTCH_MAXUI_PREDICTIVE_ITEM)
+                mainUI: Hogan.compile(MSTCH_MAXUI_MAIN_UI),
+               postBox: Hogan.compile(MSTCH_MAXUI_POSTBOX),
+              activity: Hogan.compile(MSTCH_MAXUI_ACTIVITY),
+               comment: Hogan.compile(MSTCH_MAXUI_COMMENT),
+               filters: Hogan.compile(MSTCH_MAXUI_FILTERS),
+          participants: Hogan.compile(MSTCH_MAXUI_PARTICIPANTS),
+          conversation: Hogan.compile(MSTCH_MAXUI_CONVERSATION),
+  conversationSettings: Hogan.compile(MSTCH_MAXUI_CONVERSATION_SETTINGS),
+               message: Hogan.compile(MSTCH_MAXUI_MESSAGE),
+            predictive: Hogan.compile(MSTCH_MAXUI_PREDICTIVE_ITEM)
+
   }
 
   return templates

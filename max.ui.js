@@ -36,26 +36,41 @@
             }
         }
 
-        maxui.overlay = {
-            title: 'Overlay Title',
-            content: '',
-            setTitle: function(title) {
-                jq('#maxui-overlay-panel #maxui-overlay-title').text(title)
-            },
-            setContent: function(content) {
-                jq('#maxui-overlay-panel #maxui-overlay-content').html(content)
-            },
-            show: function() {
+        // Object representing an overlay wrapper
 
-                jq('.maxui-overlay').show()
-                jq('#maxui-overlay-panel').animate({opacity: 1}, 200)
-            },
-            hide: function() {
-                jq('#maxui-overlay-panel').animate({opacity: 0}, 200, function(event) {
-                    jq('.maxui-overlay').hide()
-                })
-            }
+        function MaxOverlay() {
+            this.title= 'Overlay Title',
+            this.content= ''
+        };
+
+        MaxOverlay.prototype.setTitle = function(title) {
+            jq('#maxui-overlay-panel #maxui-overlay-title').text(title)
+        },
+        MaxOverlay.prototype.setContent = function(content) {
+            jq('#maxui-overlay-panel #maxui-overlay-content').html(content)
+        },
+        MaxOverlay.prototype.configure = function(overlay) {
+            this.setTitle(overlay.title)
+            this.setContent(overlay.content)
+            overlay.bind(this)
+        },
+        MaxOverlay.prototype.show = function(overlay) {
+            maxoverlay = this
+            overlay.load(function(data) {
+                maxoverlay.configure(data)
+            })
+
+            jq('.maxui-overlay').show()
+            jq('#maxui-overlay-panel').animate({opacity: 1}, 200)
+
+        },
+        MaxOverlay.prototype.hide = function() {
+            jq('#maxui-overlay-panel').animate({opacity: 0}, 200, function(event) {
+                jq('.maxui-overlay').hide()
+            })
         }
+
+        maxui.overlay = new MaxOverlay()
 
         // extend defaults with user-defined settings
         maxui.settings = jq.extend(defaults,options)
@@ -141,13 +156,59 @@
         })
 
         // Init MAX Client
-        this.maxClient = new MaxClient()
+        maxui.maxClient = new MaxClient()
         var maxclient_config = {  server:    maxui.settings.maxServerURL,
                                     mode:    maxui.settings.maxRequestsAPI,
                                    username: maxui.settings.username,
                                    token:    maxui.settings.oAuthToken
                                }
-        this.maxClient.configure(maxclient_config)
+        maxui.maxClient.configure(maxclient_config)
+
+        // Object representing a conversation configuration panel
+        maxui.conversationSettings = {
+            title: 'Conversation settings',
+            content: '<div>Hello world</div>',
+            panelID: 'conversation-settings-panel',
+            bind: function(overlay) {
+
+
+            },
+            load: function(configurator) {
+                var conversation = this
+                maxui.maxClient.getConversation(maxui.settings.currentConversation.hash, function() {
+                    conversation.data = this
+                    var participants = []
+                    for (pt=0;pt<conversation.data.participants.length;pt++) {
+                        var participant = conversation.data.participants[pt]
+                        participant.avatarURL = maxui.settings.avatarURLpattern.format(participant.username)
+                        participant.owner = participant.username == conversation.data.owner
+                        participants.push(participant)
+                    }
+
+                if (conversation.data.participants.length <= 2) {
+                    if (conversation.data.participants[0].username == maxui.settings.username) {
+                        var partner = conversation.data.participants[1]
+                    } else {
+                        var partner = conversation.data.participants[0]
+                    }
+                    var avatar_url = maxui.settings.avatarURLpattern.format(partner.username)
+                } else {
+                    var avatar_url = maxui.settings.conversationAvatarURLpattern.format(conversation.data.id)
+                }
+
+                    var params = {
+                                    displayName: conversation.data.displayName,
+                                      conversationAvatarURL: avatar_url,
+                                   participants: participants,
+                                       literals: maxui.literals,
+                                        panelID: conversation.panelID,
+                                      canManage: maxui.settings.username == conversation.data.owner
+                                 }
+                    conversation.content = maxui.templates.conversationSettings.render(params)
+                    configurator(conversation)
+                })
+            }
+        }
 
         // Make settings available to utils package
         maxui.utils.setSettings(maxui.settings)
@@ -366,9 +427,7 @@
         jq('#maxui-conversation-info.maxui-button').click(function (event) {
             event.preventDefault()
             event.stopPropagation()
-            maxui.overlay.setTitle('Conversation settings')
-            maxui.overlay.setContent('<div>Hello world</div>')
-            maxui.overlay.show()
+            maxui.overlay.show(maxui.conversationSettings)
         })
 
         //Assign click to conversations info close
