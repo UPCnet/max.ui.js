@@ -32,7 +32,12 @@ module.exports = function(grunt) {
         files: [ 'less/*.less' , 'font/maxicons.less', 'less/classes/*.less'],
         // The tasks to run
         tasks: [ 'less' ]
+      },
+      livereload: {
+        options: { livereload: true },
+        files: ['css/*.css']
       }
+
     },
 
     cssmin: {
