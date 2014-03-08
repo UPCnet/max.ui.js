@@ -40,14 +40,19 @@
 
         function MaxOverlay() {
             this.title= 'Overlay Title',
-            this.content= ''
+            this.content= '',
+            this.el='#maxui-overlay-panel',
+            this.overlay_show_class='.maxui-overlay'
         };
+        MaxOverlay.prototype.$el = function() {
+            return jq(this.el)
+        },
 
         MaxOverlay.prototype.setTitle = function(title) {
-            jq('#maxui-overlay-panel #maxui-overlay-title').text(title)
+            this.$el().find('#maxui-overlay-title').text(title)
         },
         MaxOverlay.prototype.setContent = function(content) {
-            jq('#maxui-overlay-panel #maxui-overlay-content').html(content)
+            this.$el().find('#maxui-overlay-content').html(content)
         },
         MaxOverlay.prototype.configure = function(overlay) {
             this.setTitle(overlay.title)
@@ -60,13 +65,14 @@
                 maxoverlay.configure(data)
             })
 
-            jq('.maxui-overlay').show()
-            jq('#maxui-overlay-panel').animate({opacity: 1}, 200)
+            jq(this.overlay_show_class).show()
+            this.$el().animate({opacity: 1}, 200)
 
         },
         MaxOverlay.prototype.hide = function() {
-            jq('#maxui-overlay-panel').animate({opacity: 0}, 200, function(event) {
-                jq('.maxui-overlay').hide()
+            overlay = this
+            this.$el().animate({opacity: 0}, 200, function(event) {
+                jq(overlay.overlay_show_class).hide()
             })
         }
 
@@ -169,7 +175,17 @@
             title: maxui.settings.literals.conversations_info_title,
             content: '<div>Hello world</div>',
             panelID: 'conversation-settings-panel',
+            getOwnerSelector: function(selector) {
+                return '#maxui-' + this.panelID + '.maxui-owner ' + selector
+            },
+            getSelector: function(selector) {
+                return '#maxui-' + this.panelID + ' ' + selector
+            },
             bind: function(overlay) {
+                overlay.$el().unbind()
+                overlay.$el().on('click', this.getOwnerSelector('> .maxui-displayname'), function(event) {
+                    console.log('click displayName')
+                })
 
 
             },
@@ -183,7 +199,6 @@
                         participant.avatarURL = maxui.settings.avatarURLpattern.format(participant.username)
                         participant.owner = participant.username == conversation.data.owner
                         participants.push(participant)
-                        console.log(conversation.data)
                     }
 
                 if (conversation.data.participants.length <= 2) {

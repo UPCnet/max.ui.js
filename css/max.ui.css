@@ -1211,6 +1211,9 @@
   line-height: 24px;
   display: block;
 }
+#maxui-container #maxui-mainpanel #maxui-conversation-settings-panel input.maxui-displayname {
+  display: none;
+}
 #maxui-container #maxui-mainpanel #maxui-conversation-settings-panel .maxui-published {
   padding-top: 2px;
   display: inline-block;
