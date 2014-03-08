@@ -88,7 +88,10 @@ var MSTCH_MAXUI_MAIN_UI = '\
    </div>\
    <div id="maxui-overlay-wrapper" class="maxui-overlay">\
        <div id="maxui-overlay-panel">\
-           <h3 id="maxui-overlay-title">I\'m a overlay</h3>\
+           <div id="maxui-overlay-header">\
+                <h3 id="maxui-overlay-title">I\'m a overlay</h3>\
+                <i class="maxui-close maxui-icon-cancel"/>\
+           </div>\
            <div id="maxui-overlay-content">\
            </div>\
        </div>\

@@ -36,6 +36,27 @@
             }
         }
 
+        maxui.overlay = {
+            title: 'Overlay Title',
+            content: '',
+            setTitle: function(title) {
+                jq('#maxui-overlay-panel #maxui-overlay-title').text(title)
+            },
+            setContent: function(content) {
+                jq('#maxui-overlay-panel #maxui-overlay-content').html(content)
+            },
+            show: function() {
+
+                jq('.maxui-overlay').show()
+                jq('#maxui-overlay-panel').animate({opacity: 1}, 200)
+            },
+            hide: function() {
+                jq('#maxui-overlay-panel').animate({opacity: 0}, 200, function(event) {
+                    jq('.maxui-overlay').hide()
+                })
+            }
+        }
+
         // extend defaults with user-defined settings
         maxui.settings = jq.extend(defaults,options)
 
@@ -308,6 +329,8 @@
             return maxui.scrollbar.$target.height() > maxui.scrollbar.maxtop
         }
 
+
+
         jq(document).on('mousemove' ,function(event) {
 
             if (maxui.scrollbar.dragging) {
@@ -337,6 +360,22 @@
 
         jq(document).on('mouseup', function(event) {
             maxui.scrollbar.dragging = false
+        })
+
+        //Assign click to conversations info
+        jq('#maxui-conversation-info.maxui-button').click(function (event) {
+            event.preventDefault()
+            event.stopPropagation()
+            maxui.overlay.setTitle('Conversation settings')
+            maxui.overlay.setContent('<div>Hello world</div>')
+            maxui.overlay.show()
+        })
+
+        //Assign click to conversations info close
+        jq('#maxui-overlay-panel .maxui-close').click(function (event) {
+            event.preventDefault()
+            event.stopPropagation()
+            maxui.overlay.hide()
         })
 
 
@@ -395,7 +434,7 @@
             } else {
                 maxui.delFilter({type:'favorites', value:true})
                 var valued_literal = maxui.settings.literals.valued_activity
-                var recent_literal = maxui.settings.literals.recent_activity                
+                var recent_literal = maxui.settings.literals.recent_activity
             }
             favoritesButton.toggleClass('active', filterFavorites)
             jq('#maxui-activity-sort .maxui-most-recent').text(recent_literal)
@@ -985,7 +1024,7 @@
                       jq(button).attr('class','maxui-button maxui-disabled')
                       jq(this).attr('class','maxui-empty maxui-text-input')
                       jq(this).removeAttr('title')
-                      jq('.maxui-error-box').animate({'margin-top': -25}, 200)                                  
+                      jq('.maxui-error-box').animate({'margin-top': -25}, 200)
 
                   }
                   else
