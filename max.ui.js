@@ -166,7 +166,7 @@
 
         // Object representing a conversation configuration panel
         maxui.conversationSettings = {
-            title: 'Conversation settings',
+            title: maxui.settings.literals.conversations_info_title,
             content: '<div>Hello world</div>',
             panelID: 'conversation-settings-panel',
             bind: function(overlay) {
@@ -183,6 +183,7 @@
                         participant.avatarURL = maxui.settings.avatarURLpattern.format(participant.username)
                         participant.owner = participant.username == conversation.data.owner
                         participants.push(participant)
+                        console.log(conversation.data)
                     }
 
                 if (conversation.data.participants.length <= 2) {
@@ -200,8 +201,9 @@
                                     displayName: conversation.data.displayName,
                                       conversationAvatarURL: avatar_url,
                                    participants: participants,
-                                       literals: maxui.literals,
+                                       literals: maxui.settings.literals,
                                         panelID: conversation.panelID,
+                                      published: maxui.utils.formatDate(conversation.data.published, maxui.language),
                                       canManage: maxui.settings.username == conversation.data.owner
                                  }
                     conversation.content = maxui.templates.conversationSettings.render(params)

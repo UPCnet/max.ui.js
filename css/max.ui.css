@@ -1189,12 +1189,13 @@
   font-size: 16px;
   border-bottom: 1px solid #ddd;
   margin-bottom: 5px;
-  padding: 5px;
+  padding: 0px;
+  padding-bottom: 5px;
 }
-#maxui-container #maxui-mainpanel #maxui-overlay-wrapper #maxui-overlay-panel #maxui-overlay-header i {
+#maxui-container #maxui-mainpanel #maxui-overlay-wrapper #maxui-overlay-panel #maxui-overlay-header i.maxui-close {
   position: absolute;
-  top: 5px;
-  right: 2px;
+  top: 10px;
+  right: 8px;
   color: #111;
   cursor: pointer;
 }
@@ -1205,12 +1206,18 @@
 #maxui-container #maxui-mainpanel #maxui-conversation-settings-panel .maxui-displayname {
   margin-left: 60px;
   color: #111;
-  font-size: 20px;
-  padding-top: 16px;
+  font-size: 24px;
+  padding-top: 4px;
+  line-height: 24px;
   display: block;
 }
+#maxui-container #maxui-mainpanel #maxui-conversation-settings-panel .maxui-published {
+  padding-top: 2px;
+  display: inline-block;
+  margin-left: 60px;
+}
 #maxui-container #maxui-mainpanel #maxui-conversation-settings-panel .maxui-participants {
-  padding-top: 10px;
+  padding-top: 5px;
 }
 #maxui-container #maxui-mainpanel #maxui-conversation-settings-panel .maxui-participants h4 {
   color: #111;

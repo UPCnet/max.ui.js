@@ -267,13 +267,14 @@ var MSTCH_MAXUI_CONVERSATION_SETTINGS = '\
 <div id="maxui-{{panelID}}">\
   <span class="maxui-avatar maxui-big"><img src="{{conversationAvatarURL}}"></span>\
   <span class="maxui-displayname">{{displayName}}</span>\
+  <span class="maxui-published">{{literals.conversations_info_created}} {{published}}</span>\
   <div class="maxui-participants">\
-    <h4>Participants</h4>\
+    <h4>{{literals.conversations_info_participants}}</h4>\
     <ul>\
       {{#participants}}\
       <li class="maxui-participant">\
           <span class="maxui-avatar maxui-little"><img src="{{avatarURL}}"></span>\
-          <span class="maxui-displayname">{{displayName}}{{#owner}}<label>propietari</label>{{/owner}}</span>\
+          <span class="maxui-displayname">{{displayName}}{{#owner}}<label>{{literals.conversations_info_owner}}</label>{{/owner}}</span>\
           <span class="maxui-username">{{username}}</span>\
       </li>\
       {{/participants}}\
