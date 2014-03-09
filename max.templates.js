@@ -266,8 +266,12 @@ var MSTCH_MAXUI_PARTICIPANTS = '\
 var MSTCH_MAXUI_CONVERSATION_SETTINGS = '\
 <div id="maxui-{{panelID}}" {{#canManage}}class="maxui-owner"{{/canManage}}>\
   <span class="maxui-avatar maxui-big"><img src="{{conversationAvatarURL}}"></span>\
+  <div id="maxui-conversation-displayname-edit">\
+      <input type="text" class="maxui-displayname" value="{{displayName}}"/>\
+      <i class="maxui-icon-cancel-circled"></i>\
+      <i class="maxui-icon-ok-circled"></i>\
+  </div>\
   <span class="maxui-displayname">{{displayName}}</span>\
-  <input class="maxui-displayname" value="{{displayName}}"/>\
   <span class="maxui-published">{{literals.conversations_info_created}} {{published}}</span>\
   <div class="maxui-participants">\
     <h4>{{literals.conversations_info_participants}}</h4>\

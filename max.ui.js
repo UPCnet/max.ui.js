@@ -185,25 +185,28 @@
                 show: function() {
                     var self = maxui.conversationSettings
                     var $panel = jq(self.getOwnerSelector(''))
+                    var $displayNameEdit = jq(self.getOwnerSelector('> #maxui-conversation-displayname-edit'))
                     var $displayName = jq(self.getOwnerSelector('> .maxui-displayname'))
-                    var $displayNameInput = jq(conversation.getOwnerSelector('> input.maxui-displayname'))
+                    var $displayNameInput = jq(conversation.getOwnerSelector('> #maxui-conversation-displayname-edit input.maxui-displayname'))
 
-                    $displayNameInput.width($panel.width() - 62)
+                    $displayNameInput.width($panel.width() - 82)
                     $displayName.hide()
-                    $displayNameInput.show().val($displayName.text()).focus()
+                    $displayNameEdit.show().val($displayName.text()).focus()
                 },
                 hide: function() {
                     var self = maxui.conversationSettings
+                    var $displayNameEdit = jq(self.getOwnerSelector('> #maxui-conversation-displayname-edit'))
                     var $displayName = jq(self.getOwnerSelector('> .maxui-displayname'))
-                    var $displayNameInput = jq(self.getOwnerSelector('> input.maxui-displayname'))
+                    var $displayNameInput = jq(conversation.getOwnerSelector('> #maxui-conversation-displayname-edit input.maxui-displayname'))
 
                     $displayName.show()
-                    $displayNameInput.hide().val('')
+                    $displayNameEdit.hide().val('')
                 },
                 save: function() {
                     var self = maxui.conversationSettings
+                    var $displayNameEdit = jq(self.getOwnerSelector('> #maxui-conversation-displayname-edit'))
                     var $displayName = jq(self.getOwnerSelector('> .maxui-displayname'))
-                    var $displayNameInput = jq(self.getOwnerSelector('> input.maxui-displayname'))
+                    var $displayNameInput = jq(conversation.getOwnerSelector('> #maxui-conversation-displayname-edit input.maxui-displayname'))
                     maxui.maxClient.modifyConversation(conversation.data.id, $displayNameInput.val(), function(event) {
                         self.displayNameSlot.hide()
                         $displayName.text(this.displayName)
@@ -218,12 +221,18 @@
                 overlay.$el().on('click', conversation.getOwnerSelector('> .maxui-displayname'), function(event) {
                     conversation.displayNameSlot.show()
                 })
-                overlay.$el().on('keyup', conversation.getOwnerSelector('> input.maxui-displayname'), function(event) {
+                overlay.$el().on('keyup', conversation.getOwnerSelector('> #maxui-conversation-displayname-edit input.maxui-displayname'), function(event) {
                     if (event.which==27) {
                         conversation.displayNameSlot.hide()
                     } else if (event.which==13) {
                         conversation.displayNameSlot.save()
                     }
+                })
+                overlay.$el().on('click', conversation.getOwnerSelector('#maxui-conversation-displayname-edit i.maxui-icon-ok-circled'), function(event) {
+                    conversation.displayNameSlot.save()
+                })
+                overlay.$el().on('click', conversation.getOwnerSelector('#maxui-conversation-displayname-edit i.maxui-icon-cancel-circled'), function(event) {
+                    conversation.displayNameSlot.hide()
                 })
 
 

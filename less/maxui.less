@@ -39,11 +39,6 @@
         text-align: right;
 }
 
-    .maxui-icon-cancel-circled:before {
-    color:white;
-    font-size: 130%;
-}
-
     .maxui-topright{
         float:right;
         padding-top:1px;
@@ -317,19 +312,44 @@
                 margin-left:60px;
                 color: #111;
                 font-size: 24px;
-                padding-top: 4px;
+                padding-top: 5px;
                 line-height: 24px;
                 display:block;
 
             }
-            input.maxui-displayname {
-                display:none;
-                margin-top:-3px;
-                padding-top: 2px;
+            #maxui-conversation-displayname-edit {
+                position:relative;
+                display: none;
+                border: 1px solid #ddd;
                 margin-left: 57px;
-                padding-right: 0px;
-                margin-right: 0px;
-                font-family: inherit;
+                input.maxui-displayname {
+                    border:none !important;
+                    margin-left:1px;
+
+                    padding-top: 0px;
+                    padding-right: 0px;
+                    margin-right: 0px;
+                    font-family: inherit;
+                    outline-style: none;
+                    outline-color:transparent;
+                    box-shadow: none !important;
+                    -webkit-box-shadow:none !important;
+                    -moz-box-shadow:none !important;
+                }
+                i {
+                    position:absolute;
+                    font-size: 15px;
+                    right:-3px;
+                    cursor: pointer;
+                }
+                i.maxui-icon-ok-circled {
+                    color: green;
+                    top:2px;
+                }
+                i.maxui-icon-cancel-circled {
+                    color: red;
+                    top:18px;
+                }
             }
            .maxui-published {
                 padding-top:2px;

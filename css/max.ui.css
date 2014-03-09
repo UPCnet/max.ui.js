@@ -1,8 +1,8 @@
 @import "../css/hacks.css";
 @font-face {
   font-family: 'maxicons';
-  src: url('../font/maxicons.eot?71682924');
-  src: url('../font/maxicons.eot?71682924#iefix') format('embedded-opentype'), url('../font/maxicons.woff?71682924') format('woff'), url('../font/maxicons.ttf?71682924') format('truetype'), url('../font/maxicons.svg?71682924#maxicons') format('svg');
+  src: url('../font/maxicons.eot?55984048');
+  src: url('../font/maxicons.eot?55984048#iefix') format('embedded-opentype'), url('../font/maxicons.woff?55984048') format('woff'), url('../font/maxicons.ttf?55984048') format('truetype'), url('../font/maxicons.svg?55984048#maxicons') format('svg');
   font-weight: normal;
   font-style: normal;
 }
@@ -12,7 +12,7 @@
 @media screen and (-webkit-min-device-pixel-ratio:0) {
   @font-face {
     font-family: 'maxicons';
-    src: url('../font/maxicons.svg?71682924#maxicons') format('svg');
+    src: url('../font/maxicons.svg?55984048#maxicons') format('svg');
   }
 }
 */
@@ -49,6 +49,10 @@
   content: '\e80a';
 }
 /* '' */
+.maxui-icon-ok-circled:before {
+  content: '\e812';
+}
+/* '' */
 .maxui-icon-cancel:before {
   content: '\e80f';
 }
@@ -73,14 +77,14 @@
   content: '\e805';
 }
 /* '' */
-.maxui-icon-chat-empty:before {
-  content: '\e804';
-}
-/* '' */
 .maxui-icon-star-empty:before {
   content: '\e801';
 }
 /* '' */
+.maxui-icon-trash:before {
+  content: '\e806';
+}
+/* '' */
 .maxui-icon-down-dir:before {
   content: '\e80d';
 }
@@ -109,10 +113,10 @@
   content: '\e809';
 }
 /* '' */
-.maxui-icon-trash:before {
-  content: '\e806';
+.maxui-icon-chat-empty:before {
+  content: '\e804';
 }
-/* '' */
+/* '' */
 [class^="maxui-icon-"]:after,
 [class*=" maxui-icon-"]:after {
   font-family: "maxicons";
@@ -700,6 +704,12 @@
   opacity: 1;
   filter: alpha(opacity=100);
 }
+.maxui-filters .maxui-filter .maxui-close .maxui-icon-cancel-circled:before,
+#maxui-container #maxui-new-participants .maxui-filter .maxui-close .maxui-icon-cancel-circled:before,
+#maxui-container #maxui-search-filters .maxui-filter .maxui-close .maxui-icon-cancel-circled:before {
+  color: white;
+  font-size: 130%;
+}
 #maxui-container #maxui-new-participants {
   padding-left: 0px;
   margin-top: 5px;
@@ -953,10 +963,6 @@
   color: #898989;
   text-align: right;
 }
-#maxui-container .maxui-icon-cancel-circled:before {
-  color: white;
-  font-size: 130%;
-}
 #maxui-container .maxui-topright {
   float: right;
   padding-top: 1px;
@@ -1207,18 +1213,42 @@
   margin-left: 60px;
   color: #111;
   font-size: 24px;
-  padding-top: 4px;
+  padding-top: 5px;
   line-height: 24px;
   display: block;
 }
-#maxui-container #maxui-mainpanel #maxui-conversation-settings-panel input.maxui-displayname {
+#maxui-container #maxui-mainpanel #maxui-conversation-settings-panel #maxui-conversation-displayname-edit {
+  position: relative;
   display: none;
-  margin-top: -3px;
-  padding-top: 2px;
+  border: 1px solid #ddd;
   margin-left: 57px;
+}
+#maxui-container #maxui-mainpanel #maxui-conversation-settings-panel #maxui-conversation-displayname-edit input.maxui-displayname {
+  border: none !important;
+  margin-left: 1px;
+  padding-top: 0px;
   padding-right: 0px;
   margin-right: 0px;
   font-family: inherit;
+  outline-style: none;
+  outline-color: transparent;
+  box-shadow: none !important;
+  -webkit-box-shadow: none !important;
+  -moz-box-shadow: none !important;
+}
+#maxui-container #maxui-mainpanel #maxui-conversation-settings-panel #maxui-conversation-displayname-edit i {
+  position: absolute;
+  font-size: 15px;
+  right: -3px;
+  cursor: pointer;
+}
+#maxui-container #maxui-mainpanel #maxui-conversation-settings-panel #maxui-conversation-displayname-edit i.maxui-icon-ok-circled {
+  color: green;
+  top: 2px;
+}
+#maxui-container #maxui-mainpanel #maxui-conversation-settings-panel #maxui-conversation-displayname-edit i.maxui-icon-cancel-circled {
+  color: red;
+  top: 18px;
 }
 #maxui-container #maxui-mainpanel #maxui-conversation-settings-panel .maxui-published {
   padding-top: 2px;
