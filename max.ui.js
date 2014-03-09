@@ -181,10 +181,49 @@
             getSelector: function(selector) {
                 return '#maxui-' + this.panelID + ' ' + selector
             },
+            displayNameSlot: {
+                show: function() {
+                    var self = maxui.conversationSettings
+                    var $panel = jq(self.getOwnerSelector(''))
+                    var $displayName = jq(self.getOwnerSelector('> .maxui-displayname'))
+                    var $displayNameInput = jq(conversation.getOwnerSelector('> input.maxui-displayname'))
+
+                    $displayNameInput.width($panel.width() - 62)
+                    $displayName.hide()
+                    $displayNameInput.show().val($displayName.text()).focus()
+                },
+                hide: function() {
+                    var self = maxui.conversationSettings
+                    var $displayName = jq(self.getOwnerSelector('> .maxui-displayname'))
+                    var $displayNameInput = jq(self.getOwnerSelector('> input.maxui-displayname'))
+
+                    $displayName.show()
+                    $displayNameInput.hide().val('')
+                },
+                save: function() {
+                    var self = maxui.conversationSettings
+                    var $displayName = jq(self.getOwnerSelector('> .maxui-displayname'))
+                    var $displayNameInput = jq(self.getOwnerSelector('> input.maxui-displayname'))
+                    maxui.maxClient.modifyConversation(conversation.data.id, $displayNameInput.val(), function(event) {
+                        self.displayNameSlot.hide()
+                        $displayName.text(this.displayName)
+                    })
+
+                }
+
+            },
             bind: function(overlay) {
+                conversation = this
                 overlay.$el().unbind()
-                overlay.$el().on('click', this.getOwnerSelector('> .maxui-displayname'), function(event) {
-                    console.log('click displayName')
+                overlay.$el().on('click', conversation.getOwnerSelector('> .maxui-displayname'), function(event) {
+                    conversation.displayNameSlot.show()
+                })
+                overlay.$el().on('keyup', conversation.getOwnerSelector('> input.maxui-displayname'), function(event) {
+                    if (event.which==27) {
+                        conversation.displayNameSlot.hide()
+                    } else if (event.which==13) {
+                        conversation.displayNameSlot.save()
+                    }
                 })
 
 

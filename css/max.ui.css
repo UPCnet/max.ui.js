@@ -1213,6 +1213,12 @@
 }
 #maxui-container #maxui-mainpanel #maxui-conversation-settings-panel input.maxui-displayname {
   display: none;
+  margin-top: -3px;
+  padding-top: 2px;
+  margin-left: 57px;
+  padding-right: 0px;
+  margin-right: 0px;
+  font-family: inherit;
 }
 #maxui-container #maxui-mainpanel #maxui-conversation-settings-panel .maxui-published {
   padding-top: 2px;

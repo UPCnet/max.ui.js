@@ -113,6 +113,61 @@ MaxClient.prototype.POST = function(route, query, callback) {
     return true
 };
 
+MaxClient.prototype.PUT = function(route, query, callback) {
+    maxclient = this
+    resource_uri = '{0}{1}'.format(this.url, route)
+    // Get method-defined triggers
+    var triggers = {}
+    if (arguments.length>3) triggers = arguments[3]
+
+    if (this.mode=='jquery')
+    {
+           jQuery.ajax( {url: resource_uri,
+             beforeSend: function(xhr) {
+                 xhr.setRequestHeader("X-Oauth-Token", maxclient.token);
+                 xhr.setRequestHeader("X-Oauth-Username", maxclient.actor.username);
+                 xhr.setRequestHeader("X-Oauth-Scope", 'widgetcli');
+                 xhr.setRequestHeader("X-HTTP-Method-Override", 'PUT');
+             },
+           type: 'POST',
+           data: JSON.stringify(query),
+           async: true,
+           dataType: 'json'
+          })
+         .done( function(result) {
+            callback.call(result)
+            if (triggers.done) jQuery(window).trigger(triggers.done, result)
+          })
+         .fail( function(xhr) {
+            jQuery(window).trigger('maxclienterror',xhr)
+            if (triggers.fail) jQuery(window).trigger(triggers.fail, xhr)
+          })
+
+    }
+    else
+    {
+      var params = {}
+      params[gadgets.io.RequestParameters.CONTENT_TYPE] = gadgets.io.ContentType.JSON
+      params[gadgets.io.RequestParameters.METHOD] = gadgets.io.MethodType.POST
+      params[gadgets.io.RequestParameters.REFRESH_INTERVAL] = 1
+      params[gadgets.io.RequestParameters.POST_DATA] = JSON.stringify(query)
+
+      var headers = {"X-Oauth-Token": maxclient.token,
+                     "X-Oauth-Username": maxclient.actor.username,
+                     "X-Oauth-Scope": 'widgetcli'}
+      params[gadgets.io.RequestParameters.HEADERS] = headers
+
+      gadgets.io.makeRequest(
+                     resource_uri,
+                     function(result) { callback.call(result.data) },
+                     params
+                      )
+
+
+    }
+    return true
+};
+
 MaxClient.prototype.DELETE = function(route, query, callback) {
     maxclient = this
     resource_uri = '{0}{1}'.format(this.url, route)
@@ -266,6 +321,17 @@ MaxClient.prototype.getConversation = function(chash, callback) {
     var route = this.ROUTES['conversation'].format(chash)
     var query = {}
     this.GET(route,query,callback)
+};
+
+MaxClient.prototype.modifyConversation = function(chash, displayName, callback) {
+
+    var query = {
+        "displayName": displayName,
+    }
+
+    route = this.ROUTES['conversation'].format(chash);
+    this.PUT(route, query, callback)
+
 };
 
 MaxClient.prototype.getConversationsForUser = function(username, callback) {
