@@ -217,10 +217,16 @@
             },
             bind: function(overlay) {
                 conversation = this
+
+                // Clear previous overla usage bindings
                 overlay.$el().unbind()
+
+                // Open displayName editing box when user clicks on displayName
                 overlay.$el().on('click', conversation.getOwnerSelector('> .maxui-displayname'), function(event) {
                     conversation.displayNameSlot.show()
                 })
+
+                // Saves or hides displayName editing box when user presses ENTER or ESC
                 overlay.$el().on('keyup', conversation.getOwnerSelector('> #maxui-conversation-displayname-edit input.maxui-displayname'), function(event) {
                     if (event.which==27) {
                         conversation.displayNameSlot.hide()
@@ -228,11 +234,37 @@
                         conversation.displayNameSlot.save()
                     }
                 })
+
+                // Saves displayName when user clicks the ok button
                 overlay.$el().on('click', conversation.getOwnerSelector('#maxui-conversation-displayname-edit i.maxui-icon-ok-circled'), function(event) {
                     conversation.displayNameSlot.save()
                 })
+
+                // Hides displayName wediting box hen user clicks the cancel button
                 overlay.$el().on('click', conversation.getOwnerSelector('#maxui-conversation-displayname-edit i.maxui-icon-cancel-circled'), function(event) {
                     conversation.displayNameSlot.hide()
+                })
+
+                // Displays per-user transfer buttons when Owner clicks on transfer ownership button
+                overlay.$el().on('click', conversation.getSelector('#maxui-conversation-transfer .maxui-button'), function(event) {
+                    jq(conversation.getSelector('.maxui-participant .maxui-conversation-transfer-to')).show()
+                    jq(conversation.getSelector('#maxui-conversation-transfer p')).show()
+                })
+
+                // Transfers ownership to selected user and toggles ownership labels and classes accordingly
+                overlay.$el().on('click', conversation.getSelector('.maxui-participant .maxui-conversation-transfer-to'), function(event) {
+                    var $participant = jq(event.currentTarget).closest('.maxui-participant')
+                    var new_owner = $participant.attr('data-username')
+                    maxui.maxClient.transferConversationOwnership(conversation.data.id, new_owner, function(event) {
+                        jq(conversation.getSelector('.maxui-participant .maxui-conversation-transfer-to')).hide()
+                        jq(conversation.getSelector('#maxui-conversation-transfer p')).hide()
+                        var $label = jq(conversation.getSelector('.maxui-participant .maxui-displayname label'))
+                        var $new_owner = jq(conversation.getSelector('.maxui-participant[data-username="'+ new_owner +'"]'))
+                        $new_owner.find('.maxui-displayname').append($label[0].outerHTML)
+                        $label.remove()
+                        overlay.$el().find(conversation.getSelector('')).toggleClass('maxui-owner', false)
+                    })
+
                 })
 
 

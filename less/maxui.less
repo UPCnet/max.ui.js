@@ -301,7 +301,6 @@
                 }
                 #maxui-overlay-content {
                     padding: 5px;
-                    margin-bottom:10px;
 
                 }
             }
@@ -315,6 +314,10 @@
                 padding-top: 5px;
                 line-height: 24px;
                 display:block;
+                .maxui-button.maxui-conversation-transfer-to {
+                    float:right;
+                    display: none;
+                }
 
             }
             #maxui-conversation-displayname-edit {
@@ -374,6 +377,9 @@
                     padding: 0px;
                     list-style:none;
                     .maxui-participant {
+                        &.maxui-owner .maxui-conversation-transfer-to {
+                            display:none !important;
+                        }
                         .maxui-avatar {
                             margin-top:3px;
                         }
@@ -405,6 +411,17 @@
                         }
 
                     }
+                }
+            }
+            #maxui-conversation-transfer {
+                p {
+                    margin-top: 0px;
+                    padding:5px;
+                    display:none;
+                    color: #b94a48;
+                    background-color: #f2dede;
+                    border: 1px solid #eed3d7;
+                    .mm-borderRadius(5px);
                 }
             }
         }

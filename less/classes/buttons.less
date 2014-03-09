@@ -2,19 +2,40 @@
 
 .maxui-base-button {
     .mm-borderRadius(3px);
-    &:focus { 
+    &:focus {
         outline:none;
     }
-    margin: 5px 0 0 0;    
+    margin: 5px 0 0 0;
     font-family: Arial, "HelveticaNeue", "Helvetica Neue", Helvetica, sans-serif;
     font-size:13px;
     padding:3px 6px;
     border:1px solid;
     cursor:pointer;
 }
-    
+
 
 #maxui-container {
+
+    .maxui-button.maxui-button-red {
+        border-color: #bd362f;
+        color: #fff;
+        background: #da4f49;
+            &:hover,
+            &:focus {
+                border-color: #bd362f;
+                color: #fff;
+                background: darken(#da4f49, 10%);
+            }
+    }
+
+    .maxui-button.maxui-button-wide {
+        border-color: #bd362f;
+        color: #fff;
+        background: #da4f49;
+        width: 100%;
+        margin: 10px 0px;
+
+    }
     .maxui-button:extend(.maxui-base-button all) {
         border-color:@buttonBorderColor;
         color:@buttonTextColor;
@@ -39,7 +60,7 @@
 
     }
 
-    /* customization for different togglebar locations*/
+    /* customization for different button locations*/
 
     #maxui-more-activities {
         .maxui-button{
@@ -50,17 +71,28 @@
             background: @togglebarBackgroundColor;
             &:hover,
             &:focus {
-                box-shadow:none; 
+                box-shadow:none;
                 -webkit-box-shadow:none;
-            }   
+            }
         }
     }
 
+    #maxui-conversation-leave,
+    #maxui-conversation-transfer {
+        .maxui-button{
+            font-size: 16px;
+            &:hover,
+            &:focus {
+                box-shadow:none;
+                -webkit-box-shadow:none;
+            }
+        }
+    }
     .maxui-popover {
 
         .maxui-button-delete:extend(.maxui-base-button all) {
             background-color: #bd362f;
-            border-color: #bd362f;  
+            border-color: #bd362f;
             color: #fff;
         }
 

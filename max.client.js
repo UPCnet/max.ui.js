@@ -42,6 +42,7 @@ function MaxClient () {
                       share : '/activities/{0}/shares/{1}',
                       conversations : '/conversations',
                       conversation : '/conversations/{0}',
+                      conversation_owner : '/conversations/{0}/owner',
                       messages: '/conversations/{0}/messages',
                       context: '/contexts/{0}'
 
@@ -330,6 +331,19 @@ MaxClient.prototype.modifyConversation = function(chash, displayName, callback) 
     }
 
     route = this.ROUTES['conversation'].format(chash);
+    this.PUT(route, query, callback)
+
+};
+
+MaxClient.prototype.transferConversationOwnership = function(chash, username, callback) {
+
+    var query = {
+        "actor": {
+          "username": username
+        },
+    }
+
+    route = this.ROUTES['conversation_owner'].format(chash);
     this.PUT(route, query, callback)
 
 };

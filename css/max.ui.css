@@ -460,7 +460,25 @@
   outline: none;
 }
 #maxui-container {
-  /* customization for different togglebar locations*/
+  /* customization for different button locations*/
+}
+#maxui-container .maxui-button.maxui-button-red {
+  border-color: #bd362f;
+  color: #fff;
+  background: #da4f49;
+}
+#maxui-container .maxui-button.maxui-button-red:hover,
+#maxui-container .maxui-button.maxui-button-red:focus {
+  border-color: #bd362f;
+  color: #fff;
+  background: #c72f29;
+}
+#maxui-container .maxui-button.maxui-button-wide {
+  border-color: #bd362f;
+  color: #fff;
+  background: #da4f49;
+  width: 100%;
+  margin: 10px 0px;
 }
 #maxui-container .maxui-button {
   border-color: #007bc0;
@@ -494,6 +512,17 @@
 }
 #maxui-container #maxui-more-activities .maxui-button:hover,
 #maxui-container #maxui-more-activities .maxui-button:focus {
+  box-shadow: none;
+  -webkit-box-shadow: none;
+}
+#maxui-container #maxui-conversation-leave .maxui-button,
+#maxui-container #maxui-conversation-transfer .maxui-button {
+  font-size: 16px;
+}
+#maxui-container #maxui-conversation-leave .maxui-button:hover,
+#maxui-container #maxui-conversation-transfer .maxui-button:hover,
+#maxui-container #maxui-conversation-leave .maxui-button:focus,
+#maxui-container #maxui-conversation-transfer .maxui-button:focus {
   box-shadow: none;
   -webkit-box-shadow: none;
 }
@@ -1207,7 +1236,6 @@
 }
 #maxui-container #maxui-mainpanel #maxui-overlay-wrapper #maxui-overlay-panel #maxui-overlay-content {
   padding: 5px;
-  margin-bottom: 10px;
 }
 #maxui-container #maxui-mainpanel #maxui-conversation-settings-panel .maxui-displayname {
   margin-left: 60px;
@@ -1216,6 +1244,10 @@
   padding-top: 5px;
   line-height: 24px;
   display: block;
+}
+#maxui-container #maxui-mainpanel #maxui-conversation-settings-panel .maxui-displayname .maxui-button.maxui-conversation-transfer-to {
+  float: right;
+  display: none;
 }
 #maxui-container #maxui-mainpanel #maxui-conversation-settings-panel #maxui-conversation-displayname-edit {
   position: relative;
@@ -1278,6 +1310,9 @@
   border-bottom: 1px #eee solid;
   height: 36px;
 }
+#maxui-container #maxui-mainpanel #maxui-conversation-settings-panel .maxui-participants > ul .maxui-participant.maxui-owner .maxui-conversation-transfer-to {
+  display: none !important;
+}
 #maxui-container #maxui-mainpanel #maxui-conversation-settings-panel .maxui-participants > ul .maxui-participant .maxui-avatar {
   margin-top: 3px;
 }
@@ -1305,5 +1340,16 @@
 }
 #maxui-container #maxui-mainpanel #maxui-conversation-settings-panel .maxui-participants > ul .maxui-participant .maxui-username {
   margin-left: 40px;
+}
+#maxui-container #maxui-mainpanel #maxui-conversation-settings-panel #maxui-conversation-transfer p {
+  margin-top: 0px;
+  padding: 5px;
+  display: none;
+  color: #b94a48;
+  background-color: #f2dede;
+  border: 1px solid #eed3d7;
+  -moz-border-radius: 5px;
+  -webkit-border-radius: 5px;
+  border-radius: 5px;
 }
 /*# sourceMappingURL=http://localhost:8081/maxui-dev/css/max.ui.css.map */

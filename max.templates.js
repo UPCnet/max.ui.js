@@ -277,14 +277,28 @@ var MSTCH_MAXUI_CONVERSATION_SETTINGS = '\
     <h4>{{literals.conversations_info_participants}}</h4>\
     <ul>\
       {{#participants}}\
-      <li class="maxui-participant">\
+      <li class="maxui-participant {{#owner}}maxui-owner{{/owner}}" data-username="{{username}}">\
           <span class="maxui-avatar maxui-little"><img src="{{avatarURL}}"></span>\
-          <span class="maxui-displayname">{{displayName}}{{#owner}}<label>{{literals.conversations_info_owner}}</label>{{/owner}}</span>\
+          <span class="maxui-displayname">{{displayName}}\
+              {{#owner}}<label>{{literals.conversations_info_owner}}</label>{{/owner}}\
+              <button class="maxui-button maxui-button-red maxui-conversation-transfer-to">Transfer</button>\
+          </span>\
           <span class="maxui-username">{{username}}</span>\
       </li>\
       {{/participants}}\
     </ul>\
   </div>\
+  {{^canManage}}\
+  <div id="maxui-conversation-leave">\
+      <input type="button" class="maxui-button maxui-button-red maxui-button-wide" value="{{literals.conversations_info_leave}}">\
+  </div>\
+  {{/canManage}}\
+  {{#canManage}}\
+  <div id="maxui-conversation-transfer">\
+      <input type="button" class="maxui-button maxui-button-red maxui-button-wide" value="{{literals.conversations_info_transfer}}">\
+      <p>{{literals.conversations_info_transfer_help}}</p>\
+  </div>\
+  {{/canManage}}\
 </div>\
 ';
 var templates = {
