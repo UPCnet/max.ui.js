@@ -1,6 +1,8 @@
 module.exports = function(grunt) {
   // Configure
   grunt.initConfig({
+
+    pkg: grunt.file.readJSON('package.json'),
     // The less task.
     less: {
       // This is the target's name "production".
@@ -134,7 +136,13 @@ module.exports = function(grunt) {
               {src: 'font/maxicons.ttf', dest: 'dist/font/maxicons.ttf'},
               {src: 'font/maxicons.woff', dest: 'dist/font/maxicons.woff'},
           ]
-        }
+        },
+        build: {
+          files: [
+              {expand:true, cwd: 'dist/', src: 'font', dest: 'builds/<%= uglify.pkg.version %>/'},
+              {expand:true, cwd: 'dist/', src: 'maxui*', dest: 'builds/<%= uglify.pkg.version %>/'}
+          ]
+        },
       }
 
   });
@@ -152,6 +160,7 @@ module.exports = function(grunt) {
 
 
   grunt.registerTask('dist', ['concat:dist', 'uglify:dist', 'cssmin:dist', 'replace:dist', 'copy:dist'])
+  grunt.registerTask('build', ['copy:build'])
 
 };
 
