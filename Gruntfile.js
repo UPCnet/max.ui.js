@@ -11,15 +11,15 @@ module.exports = function(grunt) {
           // Set the option to compress the resulting css.
           yuicompress: false,
           sourceMap: true,
-          sourceMapFilename: 'css/max.ui.css.map',
+          sourceMapFilename: 'css/maxui.css.map',
           sourceMapRootpath: "../",
-          sourceMapURL: 'http://localhost:8081/maxui-dev/css/max.ui.css.map'
+          sourceMapURL: 'http://localhost:8081/maxui-dev/css/maxui.css.map'
         },
         files: {
           // Create a file called "public/css/site.css" from "less/site.less".
           // Note: If the directory public/css does not exist, it will be
           // created by the task.
-          "css/max.ui.css": "less/maxui.less"
+          "css/maxui.css": "less/maxui.less"
         }
       }
     },
@@ -43,11 +43,11 @@ module.exports = function(grunt) {
 
     // Minify less-compiled css
     cssmin: {
-      minify: {
+      dist: {
         expand: true,
         cwd: 'css/',
-        src: ['max.ui.css'],
-        dest: 'css/',
+        src: ['maxui.css'],
+        dest: 'dist/',
         ext: '.min.css'
       }
     },
@@ -90,13 +90,30 @@ module.exports = function(grunt) {
               'max.ui.js',
               'max.loader.js'
           ],
-          dest: 'dist/built.js',
+          dest: 'dist/maxui.js',
       },
     },
 
+    // Syntax checker
     jshint: {
       all: ['max.*.js',]
-    }
+    },
+
+    // JS Compressor
+    uglify: {
+        pkg: grunt.file.readJSON('package.json'),
+        dist: {
+           options: {
+            sourceMap: true,
+            banner: '/*! <%= uglify.pkg.name %> - v<%= uglify.pkg.version %> - ' +
+              '<%= grunt.template.today("yyyy-mm-dd") %> */'
+          },
+
+          files: {
+            'dist/maxui.min.js': ['dist/maxui.js']
+          }
+        }
+      }
 
   });
 
@@ -107,5 +124,9 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-fontello');
   grunt.loadNpmTasks('grunt-contrib-concat');
   grunt.loadNpmTasks('grunt-contrib-jshint');
+  grunt.loadNpmTasks('grunt-contrib-uglify');
+
+  grunt.registerTask('build', ['concat:dist', 'uglify:dist', 'cssmin:dist'])
+
 };
 

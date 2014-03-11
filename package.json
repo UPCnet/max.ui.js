@@ -1,0 +1,21 @@
+
+{
+  "name": "max.ui.js",
+  "description": "MAX javascript widget",
+  "version": "3.7",
+  "homepage": "https://github.com/UPCnet/max.ui.js",
+  "author": {
+    "name": "UPCnet",
+    "url": "https://github.com/UPCnet"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/UPCnet/max.ui.js.git"
+  },
+  "dependencies": {
+    "jquery": "1.11.0"
+  },
+  "keywords": [
+    "max"
+  ]
+}

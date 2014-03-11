@@ -4,3 +4,4 @@ presets/context.json
 .DS_Store
 tmp
 .fontello-session
+dist/*
