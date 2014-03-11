@@ -52,6 +52,17 @@ module.exports = function(grunt) {
       }
     },
 
+    replace: {
+      dist: {
+        src: ['dist/maxui.min.css'],
+        overwrite: true,                 // overwrite matched source files
+        replacements: [{
+          from: "../font/maxicons",
+          to: "font/maxicons"
+        }]
+      }
+    },
+
     // Download Fontello fonts based on local configuration
     // A session ID is stored in .fontello-session to be able to
     // download fonts afer a session save on the web
@@ -113,6 +124,17 @@ module.exports = function(grunt) {
             'dist/maxui.min.js': ['dist/maxui.js']
           }
         }
+      },
+
+      copy: {
+        dist: {
+          files: [
+              {src: 'font/maxicons.eot', dest: 'dist/font/maxicons.eot'},
+              {src: 'font/maxicons.svg', dest: 'dist/font/maxicons.svg'},
+              {src: 'font/maxicons.ttf', dest: 'dist/font/maxicons.ttf'},
+              {src: 'font/maxicons.woff', dest: 'dist/font/maxicons.woff'},
+          ]
+        }
       }
 
   });
@@ -121,12 +143,15 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-less');
   grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-contrib-cssmin');
+  grunt.loadNpmTasks('grunt-text-replace');
   grunt.loadNpmTasks('grunt-fontello');
   grunt.loadNpmTasks('grunt-contrib-concat');
   grunt.loadNpmTasks('grunt-contrib-jshint');
   grunt.loadNpmTasks('grunt-contrib-uglify');
+  grunt.loadNpmTasks('grunt-contrib-copy');
 
-  grunt.registerTask('build', ['concat:dist', 'uglify:dist', 'cssmin:dist'])
+
+  grunt.registerTask('dist', ['concat:dist', 'uglify:dist', 'cssmin:dist', 'replace:dist', 'copy:dist'])
 
 };
 
