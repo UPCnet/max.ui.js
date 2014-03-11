@@ -1,6 +1,9 @@
 (function(jQuery)
 {
     /*
+
+    Trimmed down to only the necessary bits
+
      * jQuery EasyDate 0.2.4 (jQueryRev: 54 jQuery)
      * Copyright (c) 2009 Parsha Pourkhomami (parshap@gmail.com)
      * Licensed under the MIT license.

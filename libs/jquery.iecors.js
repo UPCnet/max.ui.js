@@ -14,22 +14,21 @@
   if ( jQuery.support.iecors ) {
 
     jQuery.ajaxTransport(function( s ) {
-      var callback;
+      var callback,
+        xdr = s.xdr();
 
       return {
         send: function( headers, complete ) {
-          var xdr = s.xdr();
-
           xdr.onload = function() {
             var headers = { 'Content-Type': xdr.contentType };
             complete(200, 'OK', { text: xdr.responseText }, headers);
           };
 
           // Apply custom fields if provided
-					if ( s.xhrFields ) {
+          if ( s.xhrFields ) {
             xhr.onerror = s.xhrFields.error;
             xhr.ontimeout = s.xhrFields.timeout;
-					}
+          }
 
           xdr.open( s.type, s.url );
 
