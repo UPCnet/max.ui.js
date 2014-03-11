@@ -1,3 +1,5 @@
+/*jshint multistr: true */
+
 var max = max || {};
 
 /**

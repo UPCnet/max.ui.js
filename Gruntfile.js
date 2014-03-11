@@ -94,6 +94,10 @@ module.exports = function(grunt) {
       },
     },
 
+    jshint: {
+      all: ['max.*.js',]
+    }
+
   });
 
   // Load tasks
@@ -102,5 +106,6 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-cssmin');
   grunt.loadNpmTasks('grunt-fontello');
   grunt.loadNpmTasks('grunt-contrib-concat');
+  grunt.loadNpmTasks('grunt-contrib-jshint');
 };
 
