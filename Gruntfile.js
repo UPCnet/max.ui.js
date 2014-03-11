@@ -96,12 +96,12 @@ module.exports = function(grunt) {
               'libs/json2.js',
               'libs/sockjs-0.3.4.js',
               'libs/stomp-2.3.1.js',
-              'max.templates.js',
-              'max.literals.js',
-              'max.utils.js',
-              'max.client.js',
-              'max.ui.js',
-              'max.loader.js'
+              'src/max.templates.js',
+              'src/max.literals.js',
+              'src/max.utils.js',
+              'src/max.client.js',
+              'src/max.ui.js',
+              'src/max.loader.js'
           ],
           dest: 'dist/maxui.js',
       },
