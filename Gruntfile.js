@@ -25,7 +25,7 @@ module.exports = function(grunt) {
     },
 
     watch: {
-      // Keep an eye on those stylesheets.
+      // This task is for detecting changes on *.less files, and execute less compiler
       styles: {
         // The path 'less/**/*.less' will expand to match every less file in
         // the less directory.
@@ -33,6 +33,7 @@ module.exports = function(grunt) {
         // The tasks to run
         tasks: [ 'less' ]
       },
+      // This task is for detecting changes in compiled .css files, and signal livereload on the browser
       livereload: {
         options: { livereload: true },
         files: ['css/*.css']
@@ -40,6 +41,7 @@ module.exports = function(grunt) {
 
     },
 
+    // Minify less-compiled css
     cssmin: {
       minify: {
         expand: true,
@@ -50,19 +52,47 @@ module.exports = function(grunt) {
       }
     },
 
+    // Download Fontello fonts based on local configuration
+    // A session ID is stored in .fontello-session to be able to
+    // download fonts afer a session save on the web
     fontello: {
-    dist: {
-      options: {
-          config  : 'font/config.json',
-          zip     : 'tmp',
-          fonts   : 'font',
-          styles  : 'font',
-          force   : true,
-          sass    : true
+      dist: {
+        options: {
+            config  : 'font/config.json',
+            zip     : 'tmp',
+            fonts   : 'font',
+            styles  : 'font',
+            force   : true,
+            sass    : true
+        }
       }
-    }
-  }
+    },
 
+    concat: {
+      options: {
+          separator: '\n\n;\n\n',
+          stripBanners: true,
+      },
+      dist: {
+          src: [
+              'libs/hogan-2.0.0.js',
+              'libs/jquery.easydate-0.2.4.js',
+              'libs/jquery.iecors.js',
+              'libs/jquery.mousewheel-3.1.9.js',
+              'libs/sockjs-0.3.min.js',
+              'libs/json2.js',
+              'libs/sockjs-0.3.4.js',
+              'libs/stomp-2.3.1.js',
+              'max.templates.js',
+              'max.literals.js',
+              'max.utils.js',
+              'max.client.js',
+              'max.ui.js',
+              'max.loader.js'
+          ],
+          dest: 'dist/built.js',
+      },
+    },
 
   });
 
@@ -71,5 +101,6 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-contrib-cssmin');
   grunt.loadNpmTasks('grunt-fontello');
+  grunt.loadNpmTasks('grunt-contrib-concat');
 };
 

@@ -1,51 +1,66 @@
-
 /*
-* Defines a global namespace var to hold maxui stuff, and a function onReady that
-* will be called as a result of the maxui code being completely loaded.
-* Custom settings and instantiation of maxui MUST be done in the onReady function body
-* Other calculations that needs maxui to be loaded MAY be done also in the onReady function body
+* Invokes maxui when page is ready
+* This file is for testing auto loading of maxui, using the dist release
+
+* It's possible to override certain settings from url in development mode
+*   - username:   authorize as a different user, must hack oauth in max service to be usefull
+*   - preset:     select a preset to configure the widget
 */
 
-if (!window._MAXUI) {window._MAXUI = {}; }
-window._MAXUI.onReady = function() {
-    // This is called when the code has loaded.
+function getURLParameter(name) {
+    return decodeURI(
+        (RegExp(name + '=' + '(.+?)(&|$)').exec(location.search)||[,null])[1]
+    );
+}
 
-    literals_ca = {'new_activity_text': 'Escriu alguna cosa ...',
-                   'new_activity_post': "Envia l'activitat",
-                   'toggle_comments': "Comentaris",
-                   'new_comment_post': "Envia el comentari",
-                   'load_more': "Carrega'n més"
-                 }
+jQuery().ready(function() {
 
+    var settings = {}
 
-    var settings = {
-           'literals': literals_ca,
-           'username' : '',
-           'oAuthToken' : '',
-           'oAuthGrantType' : 'password',
-           'maxServerURL' : 'http://max.beta.upcnet.es',
-           'maxServerURLAlias' : '',
-           'avatarURLpattern' : '',
-           'contextFilter': [],
-           'activitySource': 'activities'
-           }
+    // Get parameters from URL Configuration
+    var username = getURLParameter('user')
+    var preset = getURLParameter('preset')
+    var transports = getURLParameter('transports')
+    preset = preset=="null" ? 'timeline' : preset
 
 
-    $('#container').maxUI(settings)
-};
+    // Setup global var to store settings
+    window._MAXUI = window._MAXUI || {}
 
-/*
-* Loads the maxui code asynchronously
-* The generated script tag will be inserted after the first existing script tag
-* found in the document.
-* Modify `mui_location` according to yout settings
-*/
 
-(function(d){
-var mui_location = 'http://localhost/maxui/build/max.ui-1.0.js'
-var mui = d.createElement('script'); mui.type = 'text/javascript'; mui.async = true;
-mui.src = mui_location
-var s = d.getElementsByTagName('script')[0]; s.parentNode.insertBefore(mui, s);
+    // Get Widget basic configuration parameters
+    $.get('/maxui-dev/presets/base.json', 'json')
+      .always( function(data)
+      {
+         $.extend(settings, data)
 
-}(document));
+        // When done, extend settings with parameters from selected preset
+        $.get('/maxui-dev/presets/' + preset + '.json', function(data)
+          { $.extend(settings, data)
 
+            // Overwrite username if supplied
+            if (username!="null") settings['username'] = username
+
+            // After all, setup callback to autoload the wudget ready with the calculated params
+            window._MAXUI.onReady = function() {
+                intervalID = setInterval(function(event) {
+                    if ($().maxUI) {
+                        clearInterval(intervalID)
+                        $('#container').maxUI(settings)
+                    }
+                }, 30)
+            }
+          })
+
+      });
+
+
+      (function(d){
+          var mui_location = '/maxui-dev/dist/built.js'
+          var mui = d.createElement('script'); mui.type = 'text/javascript'; mui.async = true;
+          mui.src = mui_location;
+          var s = d.getElementsByTagName('script')[0]; s.parentNode.insertBefore(mui, s);
+      }(document))
+
+
+})

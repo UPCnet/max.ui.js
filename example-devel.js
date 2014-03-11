@@ -6,12 +6,7 @@
 * It's possible to override certain settings from url in development mode
 *   - username:   authorize as a different user, must hack oauth in max service to be usefull
 *   - preset:     select a preset to configure the widget
-*   - transports: limit the socket.io transports. must be one of
-          0: "websocket"
-          1: "flashsocket"
-          2: "htmlfile"
-          3: "xhr-polling"
-          4: "jsonp-polling"
+
 */
 
 function getURLParameter(name) {
@@ -31,20 +26,17 @@ jQuery().ready(function() {
     preset = preset=="null" ? 'timeline' : preset
 
     // Get Widget basic configuration parameters
-    $.get('presets/base.json', 'json')
+    $.get('/maxui-dev/presets/base.json', 'json')
       .always( function(data)
       {
          $.extend(settings, data)
 
         // When done, extend settings with parameters from selected preset
-        $.get('presets/' + preset + '.json', function(data)
+        $.get('/maxui-dev/presets/' + preset + '.json', function(data)
           { $.extend(settings, data)
 
             // Overwrite username if supplied
             if (username!="null") settings['username'] = username
-
-            // Overwrite transports if supplied
-            if (transports!="null") settings['transports'] = [transports]
 
 
             // After all, fire up the widget
