@@ -1,0 +1,61 @@
+<div class="maxui-activity" id="{{id}}" userid="{{actor.id}}" username="{{actor.username}}">
+    <div class="maxui-activity-content">
+        <div class="maxui-topright">
+            {{^showLikesCount}}<span class="maxui-publisheddate">{{date}}</span>{{/showLikesCount}}
+            {{#showLikesCount}}<span class="maxui-likescount"><strong>{{likes}}</strong><i class="maxui-icon-thumbs-up"></i></span>{{/showLikesCount}}
+        </div>
+        <div class="maxui-actor">
+              <a href="#"><span class="maxui-avatar maxui-big"><img src="{{avatarURL}}"></span>
+                  <span class="maxui-displayname">{{actor.displayName}}</span></a>
+          <span class="maxui-username">{{actor.username}}&nbsp;</span>
+        </div>
+        <div class="maxui-activity-message">
+            <p class="maxui-body">{{&text}}</p>
+        </div>
+    </div>
+    <div class="maxui-footer">
+        {{#publishedIn}}
+        <div class="maxui-origin maxui-icon-">
+               {{literals.context_published_in}}
+               <a href="{{publishedIn.url}}">{{publishedIn.displayName}}</a>
+               {{#via}}
+                   {{literals.generator_via}}
+                   <span class="maxui-via">
+                   {{via}}
+                   </span>
+               {{/via}}
+        </div>
+        {{/publishedIn}}
+        <div class="maxui-actions">
+            <a href="" class="maxui-action maxui-commentaction maxui-icon- {{#replies}}maxui-has-comments{{/replies}}"><strong>{{replies.length}}</strong> {{literals.toggle_comments}}</a>
+            <a href="" class="maxui-action maxui-favorites {{#favorited}}maxui-favorited{{/favorited}} maxui-icon-">{{literals.favorite}}</a>
+            <a href="" class="maxui-action maxui-likes {{#liked}}maxui-liked{{/liked}} maxui-icon-">{{literals.like}}</a>
+            {{#canDeleteActivity}}
+            <a href="" class="maxui-action maxui-delete maxui-icon-">{{literals.delete_activity_icon}}</a>
+            <div class="maxui-popover left">
+                <div class="maxui-arrow"></div>
+                    <h3 class="maxui-popover-title">{{literals.delete_activity_confirmation}}</h3>
+                    <div class="maxui-popover-content">
+                      <input type="button" class="maxui-button-delete" value="{{literals.delete_activity_delete}}">
+                      <input type="button" class="maxui-button-cancel" value="{{literals.delete_activity_cancel}}">
+                    </div>
+            </div>
+            {{/canDeleteActivity}}
+
+        </div>
+    </div>
+
+    <div class="maxui-comments" style="display: none">
+        <div class="maxui-commentsbox">
+            {{#replies}}
+                {{> comment}}
+            {{/replies}}
+        </div>
+        <div class="maxui-newcommentbox">
+                <textarea class="maxui-empty maxui-text-input" id="maxui-commentBox" data-literal="{{literals.new_comment_text}}">{{literals.new_comment_text}}</textarea>
+                <input disabled="disabled" type="button" class="maxui-button maxui-disabled" value="{{literals.new_comment_post}}"/>
+        </div>
+    </div>
+
+    <div class="maxui-clear"></div>
+</div>

@@ -39,7 +39,13 @@ module.exports = function(grunt) {
       livereload: {
         options: { livereload: true },
         files: ['css/*.css']
-      }
+      },
+      templates: {
+        // Genereate concatenated templates file on changing templats
+        files: [ 'src/templates/*.mustache'],
+        // The tasks to run
+        tasks: [ 'concat:templates' ]
+      },
 
     },
 
@@ -82,11 +88,35 @@ module.exports = function(grunt) {
     },
 
     concat: {
-      options: {
-          separator: '\n\n;\n\n',
-          stripBanners: true,
+      templates: {
+        options: {
+            separator: '\n\n',
+            process: function(src, filepath) {
+              // Strip .mustache extension
+              var variable_name = filepath.substr(14, filepath.length - 23);
+              return "    " + variable_name + ": Hogan.compile('\\\n" + src.replace(/\n/g, '\\\n        ') + "    '),";
+            },
+            banner: '/*jshint multistr: true */\n' +
+                    'var max = max || {};\n\n' +
+                    '/**\n' +
+                    '* @fileoverview Provides hogan compiled templates\n' +
+                    '*               ready to render.\n' +
+                    '*/\n\n' +
+                    'max.templates = function() {\n\n' +
+                    '    var templates = {\n\n',
+
+            footer: '    }\n\n' +
+                    '    return templates\n' +
+                    '}',
+        },
+        src: ['src/templates/*.mustache'],
+        dest: 'src/max.templates.js'
       },
       dist: {
+          options: {
+              separator: '\n\n;\n\n',
+              stripBanners: true,
+          },
           src: [
               'libs/hogan-2.0.0.js',
               'libs/jquery.easydate-0.2.4.js',
@@ -199,8 +229,9 @@ dalek: {
   grunt.loadNpmTasks('grunt-dalek');
 
 
-  grunt.registerTask('dist', ['concat:dist', 'uglify:dist', 'cssmin:dist', 'replace:dist', 'copy:dist'])
-  grunt.registerTask('build', ['copy:build'])
+  grunt.registerTask('dist', ['concat:dist', 'uglify:dist', 'cssmin:dist', 'replace:dist', 'copy:dist']);
+  grunt.registerTask('build', ['copy:build']);
+  grunt.registerTask('templates', ['concat:templates']);
 
 };
 
