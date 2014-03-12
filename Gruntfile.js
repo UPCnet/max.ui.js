@@ -13,7 +13,7 @@ module.exports = function(grunt) {
           // Set the option to compress the resulting css.
           yuicompress: false,
           sourceMap: true,
-          sourceMapFilename: 'css/maxui.css.map',
+          sourceMapFilename: 'src/css/maxui.css.map',
           sourceMapRootpath: "../",
           sourceMapURL: 'http://localhost:8081/maxui-dev/css/maxui.css.map'
         },
@@ -21,7 +21,7 @@ module.exports = function(grunt) {
           // Create a file called "public/css/site.css" from "less/site.less".
           // Note: If the directory public/css does not exist, it will be
           // created by the task.
-          "css/maxui.css": "less/maxui.less"
+          "css/maxui.css": "src/less/maxui.less"
         }
       }
     },
@@ -31,14 +31,14 @@ module.exports = function(grunt) {
       styles: {
         // The path 'less/**/*.less' will expand to match every less file in
         // the less directory.
-        files: [ 'less/*.less' , 'font/maxicons.less', 'less/classes/*.less'],
+        files: [ 'src/less/*.less' , 'src/font/maxicons.less', 'src/less/classes/*.less'],
         // The tasks to run
         tasks: [ 'less' ]
       },
       // This task is for detecting changes in compiled .css files, and signal livereload on the browser
       livereload: {
         options: { livereload: true },
-        files: ['css/*.css']
+        files: ['src/css/*.css']
       },
       templates: {
         // Genereate concatenated templates file on changing templats
@@ -53,7 +53,7 @@ module.exports = function(grunt) {
     cssmin: {
       dist: {
         expand: true,
-        cwd: 'css/',
+        cwd: 'src/css/',
         src: ['maxui.css'],
         dest: 'dist/',
         ext: '.min.css'
@@ -77,7 +77,7 @@ module.exports = function(grunt) {
     fontello: {
       dist: {
         options: {
-            config  : 'font/config.json',
+            config  : 'src/font/config.json',
             zip     : 'tmp',
             fonts   : 'font',
             styles  : 'font',
@@ -190,10 +190,10 @@ module.exports = function(grunt) {
     copy: {
       dist: {
         files: [
-            {src: 'font/maxicons.eot', dest: 'dist/font/maxicons.eot'},
-            {src: 'font/maxicons.svg', dest: 'dist/font/maxicons.svg'},
-            {src: 'font/maxicons.ttf', dest: 'dist/font/maxicons.ttf'},
-            {src: 'font/maxicons.woff', dest: 'dist/font/maxicons.woff'},
+            {src: 'src/font/maxicons.eot', dest: 'dist/font/maxicons.eot'},
+            {src: 'src/font/maxicons.svg', dest: 'dist/font/maxicons.svg'},
+            {src: 'src/font/maxicons.ttf', dest: 'dist/font/maxicons.ttf'},
+            {src: 'src/font/maxicons.woff', dest: 'dist/font/maxicons.woff'},
         ]
       },
       build: {
