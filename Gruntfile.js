@@ -109,12 +109,12 @@ module.exports = function(grunt) {
 
     // Syntax checker
     jshint: {
-      all: ['max.*.js',]
+      all: ['max*.js',]
     },
 
     jsbeautifier : {
         default: {
-            src : ["src/max.ui.js"],
+            src : ["src/max.*.js"],
             options: {
             js: {
               braceStyle: "collapse",

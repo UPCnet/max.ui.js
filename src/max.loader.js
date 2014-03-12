@@ -7,9 +7,9 @@
 // of async loading of the maxui main file.
 // In the example.js file lives the code that the api consumer has to insert in the host application
 //
-window.setTimeout(function () {
-    if(window._MAXUI.onReady && !window._MAXUI.hasRun){
+window.setTimeout(function() {
+    if (window._MAXUI.onReady && !window._MAXUI.hasRun) {
         window._MAXUI.hasRun = true;
         _MAXUI.onReady();
     }
-  },0)
+}, 0);

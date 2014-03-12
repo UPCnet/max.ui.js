@@ -1,17 +1,12 @@
 /*jshint multistr: true */
-
 var max = max || {};
-
 /**
  * @fileoverview Provides hogan compiled templates
  *               ready to render.
  */
-
-
 max.templates = function() {
-
-// construct and compile templates
-var MSTCH_MAXUI_MAIN_UI = '\
+    // construct and compile templates
+    var MSTCH_MAXUI_MAIN_UI = '\
 <div id="maxui-container">\
 {{#username}}\
  <div id="maxui-mainpanel">\
@@ -106,8 +101,7 @@ var MSTCH_MAXUI_MAIN_UI = '\
 {{/username}}\
 </div>\
 ';
-
-var MSTCH_MAXUI_POSTBOX = '\
+    var MSTCH_MAXUI_POSTBOX = '\
       <a href="#" class="maxui-avatar maxui-big">\
           <img src="{{avatar}}">\
       </a>\
@@ -117,8 +111,7 @@ var MSTCH_MAXUI_POSTBOX = '\
            <input disabled="disabled" type="button" class="maxui-button maxui-disabled" value="{{buttonLiteral}}">\
       </div>\
 ';
-
-var MSTCH_MAXUI_ACTIVITY = '\
+    var MSTCH_MAXUI_ACTIVITY = '\
 <div class="maxui-activity" id="{{id}}" userid="{{actor.id}}" username="{{actor.username}}">\
     <div class="maxui-activity-content">\
         <div class="maxui-topright">\
@@ -181,8 +174,7 @@ var MSTCH_MAXUI_ACTIVITY = '\
     <div class="maxui-clear"></div>\
 </div>\
 ';
-
-var MSTCH_MAXUI_CONVERSATION = '\
+    var MSTCH_MAXUI_CONVERSATION = '\
 <div class="maxui-conversation" id="{{id}}" data-displayname="{{displayName}}">\
     <div class="maxui-activity-content">\
         <div class="maxui-topright">\
@@ -202,8 +194,7 @@ var MSTCH_MAXUI_CONVERSATION = '\
     <div class="maxui-clear"></div>\
 </div>\
 ';
-
-var MSTCH_MAXUI_MESSAGE = '\
+    var MSTCH_MAXUI_MESSAGE = '\
 <div class="maxui-message {{origin}}" id="{{id}}">\
     <div class="maxui-activity-content">\
         <span class="maxui-avatar maxui-little"><img src="{{avatarURL}}"></span>\
@@ -215,8 +206,7 @@ var MSTCH_MAXUI_MESSAGE = '\
     <div class="maxui-clear"></div>\
 </div>\
 ';
-
-var MSTCH_MAXUI_COMMENT = '\
+    var MSTCH_MAXUI_COMMENT = '\
 <div class="maxui-comment" id="{{id}}" userid="{{actor.id}}" displayname="{{actor.username}}">\
     <div class="maxui-activity-content">\
        <span class="maxui-publisheddate">{{date}}</span>\
@@ -243,29 +233,24 @@ var MSTCH_MAXUI_COMMENT = '\
     </div>\
 </div>\
 ';
-
-var MSTCH_MAXUI_PREDICTIVE_ITEM = '\
+    var MSTCH_MAXUI_PREDICTIVE_ITEM = '\
 <li class="{{cssclass}}">\
 {{username}}\
 </li>\
 ';
-
-
-var MSTCH_MAXUI_FILTERS = '\
+    var MSTCH_MAXUI_FILTERS = '\
 {{#filters}}\
     {{#visible}}\
     <div class="maxui-filter maxui-{{type}}" type="{{type}}" value="{{value}}"><span>{{prepend}}{{value}}<a class="maxui-close" href=""><i class="maxui-icon-cancel-circled" alt="tanca"/></a></span></div>\
     {{/visible}}\
 {{/filters}}\
 ';
-
-var MSTCH_MAXUI_PARTICIPANTS = '\
+    var MSTCH_MAXUI_PARTICIPANTS = '\
 {{#persons}}\
 <div class="maxui-filter maxui-participant" type="participant" username="{{username}}"><span>{{prepend}}{{username}}<a class="maxui-close" href=""><i class="maxui-icon-cancel-circled" alt="tanca"/></a></span></div>\
 {{/persons}}\
 ';
-
-var MSTCH_MAXUI_CONVERSATION_SETTINGS = '\
+    var MSTCH_MAXUI_CONVERSATION_SETTINGS = '\
 <div id="maxui-{{panelID}}" {{#canManage}}class="maxui-owner"{{/canManage}}>\
   <span class="maxui-avatar maxui-big"><img src="{{conversationAvatarURL}}"></span>\
   <div id="maxui-conversation-displayname-edit">\
@@ -303,19 +288,17 @@ var MSTCH_MAXUI_CONVERSATION_SETTINGS = '\
   {{/canManage}}\
 </div>\
 ';
-var templates = {
-                mainUI: Hogan.compile(MSTCH_MAXUI_MAIN_UI),
-               postBox: Hogan.compile(MSTCH_MAXUI_POSTBOX),
-              activity: Hogan.compile(MSTCH_MAXUI_ACTIVITY),
-               comment: Hogan.compile(MSTCH_MAXUI_COMMENT),
-               filters: Hogan.compile(MSTCH_MAXUI_FILTERS),
-          participants: Hogan.compile(MSTCH_MAXUI_PARTICIPANTS),
-          conversation: Hogan.compile(MSTCH_MAXUI_CONVERSATION),
-  conversationSettings: Hogan.compile(MSTCH_MAXUI_CONVERSATION_SETTINGS),
-               message: Hogan.compile(MSTCH_MAXUI_MESSAGE),
-            predictive: Hogan.compile(MSTCH_MAXUI_PREDICTIVE_ITEM)
-
-  }
-
-  return templates
+    var templates = {
+        mainUI: Hogan.compile(MSTCH_MAXUI_MAIN_UI),
+        postBox: Hogan.compile(MSTCH_MAXUI_POSTBOX),
+        activity: Hogan.compile(MSTCH_MAXUI_ACTIVITY),
+        comment: Hogan.compile(MSTCH_MAXUI_COMMENT),
+        filters: Hogan.compile(MSTCH_MAXUI_FILTERS),
+        participants: Hogan.compile(MSTCH_MAXUI_PARTICIPANTS),
+        conversation: Hogan.compile(MSTCH_MAXUI_CONVERSATION),
+        conversationSettings: Hogan.compile(MSTCH_MAXUI_CONVERSATION_SETTINGS),
+        message: Hogan.compile(MSTCH_MAXUI_MESSAGE),
+        predictive: Hogan.compile(MSTCH_MAXUI_PREDICTIVE_ITEM)
+    }
+    return templates
 }
