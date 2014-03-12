@@ -128,22 +128,33 @@ module.exports = function(grunt) {
         }
       },
 
-      copy: {
-        dist: {
-          files: [
-              {src: 'font/maxicons.eot', dest: 'dist/font/maxicons.eot'},
-              {src: 'font/maxicons.svg', dest: 'dist/font/maxicons.svg'},
-              {src: 'font/maxicons.ttf', dest: 'dist/font/maxicons.ttf'},
-              {src: 'font/maxicons.woff', dest: 'dist/font/maxicons.woff'},
-          ]
-        },
-        build: {
-          files: [
-              {expand:true, cwd: 'dist/', src: 'font', dest: 'builds/<%= uglify.pkg.version %>/'},
-              {expand:true, cwd: 'dist/', src: 'maxui*', dest: 'builds/<%= uglify.pkg.version %>/'}
-          ]
-        },
-      }
+    // Copy files plugin
+
+    copy: {
+      dist: {
+        files: [
+            {src: 'font/maxicons.eot', dest: 'dist/font/maxicons.eot'},
+            {src: 'font/maxicons.svg', dest: 'dist/font/maxicons.svg'},
+            {src: 'font/maxicons.ttf', dest: 'dist/font/maxicons.ttf'},
+            {src: 'font/maxicons.woff', dest: 'dist/font/maxicons.woff'},
+        ]
+      },
+      build: {
+        files: [
+            {expand:true, cwd: 'dist/', src: 'font', dest: 'builds/<%= uglify.pkg.version %>/'},
+            {expand:true, cwd: 'dist/', src: 'maxui*', dest: 'builds/<%= uglify.pkg.version %>/'}
+        ]
+      },
+    },
+
+dalek: {
+    options: {
+    },
+    test: {
+      src: ['test/test.js']
+    },
+  }
+
 
   });
 
@@ -157,6 +168,7 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-jshint');
   grunt.loadNpmTasks('grunt-contrib-uglify');
   grunt.loadNpmTasks('grunt-contrib-copy');
+  grunt.loadNpmTasks('grunt-dalek');
 
 
   grunt.registerTask('dist', ['concat:dist', 'uglify:dist', 'cssmin:dist', 'replace:dist', 'copy:dist'])

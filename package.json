@@ -12,9 +12,6 @@
     "type": "git",
     "url": "git://github.com/UPCnet/max.ui.js.git"
   },
-  "dependencies": {
-    "jquery": "1.11.0"
-  },
   "keywords": [
     "max"
   ]
