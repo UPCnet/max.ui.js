@@ -112,6 +112,33 @@ module.exports = function(grunt) {
       all: ['max.*.js',]
     },
 
+    jsbeautifier : {
+        default: {
+            src : ["src/max.ui.js"],
+            options: {
+            js: {
+              braceStyle: "collapse",
+              breakChainedMethods: false,
+              e4x: false,
+              evalCode: false,
+              indentChar: " ",
+              indentLevel: 0,
+              indentSize: 4,
+              indentWithTabs: false,
+              jslintHappy: false,
+              keepArrayIndentation: true,
+              keepFunctionIndentation: true,
+              maxPreserveNewlines: 2,
+              preserveNewlines: false,
+              spaceBeforeConditional: true,
+              spaceInParen: false,
+              unescapeStrings: false,
+              wrapLineLength: 0
+          }
+            }
+        }
+    },
+
     // JS Compressor
     uglify: {
         pkg: grunt.file.readJSON('package.json'),
@@ -166,6 +193,7 @@ dalek: {
   grunt.loadNpmTasks('grunt-fontello');
   grunt.loadNpmTasks('grunt-contrib-concat');
   grunt.loadNpmTasks('grunt-contrib-jshint');
+  grunt.loadNpmTasks('grunt-jsbeautifier');
   grunt.loadNpmTasks('grunt-contrib-uglify');
   grunt.loadNpmTasks('grunt-contrib-copy');
   grunt.loadNpmTasks('grunt-dalek');
