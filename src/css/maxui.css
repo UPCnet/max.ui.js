@@ -1341,6 +1341,18 @@
 #maxui-container #maxui-mainpanel #maxui-conversation-settings-panel .maxui-participants > ul .maxui-participant .maxui-username {
   margin-left: 40px;
 }
+#maxui-container #maxui-mainpanel #maxui-conversation-settings-panel #maxui-conversation-leave {
+  display: block;
+}
+#maxui-container #maxui-mainpanel #maxui-conversation-settings-panel #maxui-conversation-leave.maxui-owner {
+  display: none;
+}
+#maxui-container #maxui-mainpanel #maxui-conversation-settings-panel #maxui-conversation-transfer {
+  display: none;
+}
+#maxui-container #maxui-mainpanel #maxui-conversation-settings-panel #maxui-conversation-transfer.maxui-owner {
+  display: block;
+}
 #maxui-container #maxui-mainpanel #maxui-conversation-settings-panel #maxui-conversation-transfer p {
   margin-top: 0px;
   padding: 5px;

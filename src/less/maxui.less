@@ -413,7 +413,13 @@
                     }
                 }
             }
+            #maxui-conversation-leave {
+                display:block;
+                &.maxui-owner {display:none;}
+            }
             #maxui-conversation-transfer {
+                display:none;
+                &.maxui-owner {display:block;}
                 p {
                     margin-top: 0px;
                     padding:5px;
