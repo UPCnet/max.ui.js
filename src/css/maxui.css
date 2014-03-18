@@ -537,6 +537,10 @@
   color: #6f6f6f;
 }
 #maxui-container .maxui-text-input {
+  -moz-border-radius: 3px;
+  -webkit-border-radius: 3px;
+  border-radius: 3px;
+  border: 1px #b3b3b3 solid;
   outline: none;
   -webkit-transition: 0.3s ease-in-out;
   -moz-transition: 0.3s ease-in-out;
@@ -568,7 +572,6 @@
   color: #6f6f6f;
   height: 48px;
   min-height: 48px;
-  border: 1px #b3b3b3 solid;
   position: relative;
   padding: 0 3px;
   font-family: Arial, Helvetica, sans-serif;
@@ -576,9 +579,6 @@
   line-height: 18px;
   overflow: auto;
   resize: vertical ;
-  -moz-border-radius: 3px;
-  -webkit-border-radius: 3px;
-  border-radius: 3px;
 }
 #maxui-container textarea.maxui-text-input:focus {
   color: #6f6f6f;
@@ -1289,7 +1289,12 @@
   margin-left: 60px;
 }
 #maxui-container #maxui-mainpanel #maxui-conversation-settings-panel .maxui-participants {
+  position: relative;
   padding-top: 5px;
+}
+#maxui-container #maxui-mainpanel #maxui-conversation-settings-panel .maxui-participants #maxui-conversation-predictive {
+  bottom: -23px;
+  margin-left: 2px;
 }
 #maxui-container #maxui-mainpanel #maxui-conversation-settings-panel .maxui-participants h4 {
   color: #111;

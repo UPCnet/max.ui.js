@@ -147,6 +147,12 @@ max.templates = function() {
               </li>\
               {{/participants}}\
             </ul>\
+            {{#canManage}}\
+            <div id="maxui-new-participant">\
+                <input type="text" class="maxui-text-input"/>\
+                <div id="maxui-conversation-predictive" class="maxui-predictive" style="display:none;"><ul></ul></div>\
+            </div>\
+            {{/canManage}}\
           </div>\
           {{^canManage}}\
           <div id="maxui-conversation-leave">\

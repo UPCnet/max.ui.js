@@ -7,6 +7,7 @@
         // Keep a reference of the context object
         var maxui = this;
         maxui.templates = max.templates();
+        maxui.views = max.views();
         maxui.utils = max.utils();
         var defaults = {
             'maxRequestsAPI': 'jquery',
@@ -33,6 +34,7 @@
                 height: 20
             }
         };
+
         // Object representing an overlay wrapper
         function MaxOverlay() {
             this.title = 'Overlay Title';
@@ -224,6 +226,26 @@
                         overlay.$el().find(conversation.getSelector('')).toggleClass('maxui-owner', false);
                     });
                 });
+
+                // Create MaxInput with predictable functionality
+
+                conversation.predictive = new maxui.views.MaxPredictive({
+                    minchars: 3,
+                    source: function(event, query, callback) { console.log(event.type);maxui.maxClient.getUsersList(query, callback);},
+                    list: "#maxui-new-participant #maxui-conversation-predictive"
+                });
+                conversation.newparticipant = new maxui.views.MaxInput(
+                    {
+                        input: "#maxui-new-participant .maxui-text-input",
+                        delegate: overlay.el,
+                        placeholder: 'Un de nou',
+                        bindings: {
+                            'keyup': function(event) {conversation.predictive.show(event);},
+                            'maxui-input-submit': function(event) {conversation.hide(event);},
+                            'maxui-input-cancel': function(event) {conversation.hide(event);},
+                        }
+                });
+
             },
             load: function(configurator) {
                 var conversation = this;
@@ -393,7 +415,6 @@
         });
         maxui.scrollbar.setHeight = function(height) {
             var wrapper_top = $('#maxui-conversations .maxui-wrapper').offset().top - maxui.offset().top - 1;
-            console.log(wrapper_top);
             maxui.scrollbar.$bar.css({
                 'height': height,
                 'top': wrapper_top
