@@ -15,13 +15,13 @@ module.exports = function(grunt) {
           sourceMap: true,
           sourceMapFilename: 'src/css/maxui.css.map',
           sourceMapRootpath: "../",
-          sourceMapURL: 'http://localhost:8081/maxui-dev/css/maxui.css.map'
+          sourceMapURL: 'http://localhost:8081/maxui-dev/src/css/maxui.css.map'
         },
         files: {
           // Create a file called "public/css/site.css" from "less/site.less".
           // Note: If the directory public/css does not exist, it will be
           // created by the task.
-          "css/maxui.css": "src/less/maxui.less"
+          "src/css/maxui.css": "src/less/maxui.less"
         }
       }
     },
@@ -90,11 +90,11 @@ module.exports = function(grunt) {
     concat: {
       templates: {
         options: {
-            separator: '\n\n',
+            separator: ",\n\n",
             process: function(src, filepath) {
               // Strip .mustache extension
               var variable_name = filepath.substr(14, filepath.length - 23);
-              return "    " + variable_name + ": Hogan.compile('\\\n" + src.replace(/\n/g, '\\\n        ') + "    '),";
+              return "    " + variable_name + ": Hogan.compile('\\\n" + src.replace(/\n/g, '\\\n        ') + "    ')";
             },
             banner: '/*jshint multistr: true */\n' +
                     'var max = max || {};\n\n' +
@@ -105,9 +105,9 @@ module.exports = function(grunt) {
                     'max.templates = function() {\n\n' +
                     '    var templates = {\n\n',
 
-            footer: '    }\n\n' +
-                    '    return templates\n' +
-                    '}',
+            footer: '\n\n    };\n\n' +
+                    '    return templates;\n' +
+                    '};',
         },
         src: ['src/templates/*.mustache'],
         dest: 'src/max.templates.js'
