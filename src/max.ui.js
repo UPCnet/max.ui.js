@@ -232,6 +232,22 @@
                 conversation.predictive = new maxui.views.MaxPredictive({
                     minchars: 3,
                     source: function(event, query, callback) { maxui.maxClient.getUsersList(query, callback);},
+                    action: function($selected) {
+                        var username = $selected.attr('data-username');
+                        var displayName = $selected.text();
+                        var params = {
+                            username: username,
+                            displayName: displayName,
+                            literals: maxui.literals,
+                            avatarURL: maxui.settings.avatarURLpattern.format(username)
+                        };
+                        var newuser = maxui.templates.participant.render(params);
+                        var $participants = jq(conversation.getSelector('.maxui-participants > ul'));
+                        $participants.append(newuser);
+                        $participants.find('.maxui-participant:last .maxui-conversation-add-user').focus();
+                        jq(conversation.getSelector('#maxui-new-participant .maxui-text-input')).trigger('maxui-input-clear');
+
+                    },
                     list: "#maxui-new-participant #maxui-conversation-predictive"
                 });
                 conversation.newparticipant = new maxui.views.MaxInput(
@@ -241,7 +257,7 @@
                         placeholder: 'Un de nou',
                         bindings: {
                             'maxui-input-keypress': function(event) {conversation.predictive.show(event);},
-                            'maxui-input-submit': function(event) {conversation.predictive.hide(event);},
+                            'maxui-input-submit': function(event) {conversation.predictive.select(event);},
                             'maxui-input-cancel': function(event) {conversation.predictive.hide(event);},
                             'maxui-input-up': function(event) {conversation.predictive.moveup(event);},
                             'maxui-input-down': function(event) {conversation.predictive.movedown(event);},

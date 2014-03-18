@@ -1,0 +1,10 @@
+  <li class="maxui-participant {{#owner}}maxui-owner{{/owner}}" data-username="{{username}}">
+      <span class="maxui-avatar maxui-little"><img src="{{avatarURL}}"></span>
+      <span class="maxui-displayname">{{displayName}}
+          {{#owner}}<label>{{literals.conversations_info_owner}}</label>{{/owner}}
+          <button class="maxui-button maxui-button-red maxui-conversation-transfer-to">Transfer</button>
+          <button class="maxui-button maxui-button-green maxui-conversation-add-user">Add</button>
+          <button class="maxui-button maxui-button-red maxui-conversation-dont-add-user">Cancel</button>
+      </span>
+      <span class="maxui-username">{{username}}</span>
+  </li>

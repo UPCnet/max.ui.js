@@ -285,6 +285,19 @@ max.templates = function() {
         </div>\
             '),
 
+    participant: Hogan.compile('\
+  <li class="maxui-participant {{#owner}}maxui-owner{{/owner}}" data-username="{{username}}">\
+              <span class="maxui-avatar maxui-little"><img src="{{avatarURL}}"></span>\
+              <span class="maxui-displayname">{{displayName}}\
+                  {{#owner}}<label>{{literals.conversations_info_owner}}</label>{{/owner}}\
+                  <button class="maxui-button maxui-button-red maxui-conversation-transfer-to">Transfer</button>\
+                  <button class="maxui-button maxui-button-green maxui-conversation-add-user">Add</button>\
+                  <button class="maxui-button maxui-button-red maxui-conversation-dont-add-user">Cancel</button>\
+              </span>\
+              <span class="maxui-username">{{username}}</span>\
+          </li>\
+            '),
+
     participants: Hogan.compile('\
 {{#persons}}\
         <div class="maxui-filter maxui-participant" type="participant" username="{{username}}"><span>{{prepend}}{{username}}<a class="maxui-close" href=""><i class="maxui-icon-cancel-circled" alt="tanca"/></a></span></div>\
@@ -303,8 +316,8 @@ max.templates = function() {
             '),
 
     predictive: Hogan.compile('\
-<li class="{{cssclass}}">\
-        {{username}}\
+<li data-username="{{username}}" class="{{cssclass}}">\
+        {{displayName}}\
         </li>\
             ')
 

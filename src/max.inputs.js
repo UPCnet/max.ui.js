@@ -18,10 +18,19 @@ max.views = function() {
     function MaxPredictive(options) {
         this.minchars = options.minchars;
         this.source = options.source;
+        this.action = options.action;
         this.requests = {};
         this.$el = jq(options.list);
         this.$list = this.$el.find('ul');
+
     }
+
+    MaxPredictive.prototype.select = function(event) {
+        var maxpredictive = this;
+        var $selected = maxpredictive.$list.find('.maxui-prediction.selected');
+        this.action.apply(maxpredictive, [$selected]);
+        maxpredictive.hide();
+    };
 
     MaxPredictive.prototype.moveup = function(event) {
         var maxpredictive = this;
@@ -80,6 +89,7 @@ max.views = function() {
                 var avatar_url = maxui.settings.avatarURLpattern.format(prediction.username);
                 var params = {
                     username: prediction.username,
+                    displayName: prediction.displayName,
                     avatarURL: avatar_url,
                     cssclass: 'maxui-prediction' + (i === 0 && ' selected' || '')
                 };
@@ -170,6 +180,10 @@ max.views = function() {
             maxinput.execExtraBinding(this, event);
         });
 
+        // Clear input on receiving trigger
+        maxinput.bind('maxui-input-clear', function(event) {
+            maxinput.$input.val(maxinput.placeholder);
+        });
         // Put placeholder back when focusing out and nothing written
         maxinput.bind('keyup', function(event) {
             event.preventDefault();

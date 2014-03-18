@@ -473,6 +473,17 @@
   color: #fff;
   background: #c72f29;
 }
+#maxui-container .maxui-button.maxui-button-green {
+  border-color: #4cae4c;
+  color: #fff;
+  background: #5cb85c;
+}
+#maxui-container .maxui-button.maxui-button-green:hover,
+#maxui-container .maxui-button.maxui-button-green:focus {
+  border-color: #4cae4c;
+  color: #fff;
+  background: #449d44;
+}
 #maxui-container .maxui-button.maxui-button-wide {
   border-color: #bd362f;
   color: #fff;
@@ -1246,8 +1257,11 @@
   line-height: 24px;
   display: block;
 }
-#maxui-container #maxui-mainpanel #maxui-conversation-settings-panel .maxui-displayname .maxui-button.maxui-conversation-transfer-to {
+#maxui-container #maxui-mainpanel #maxui-conversation-settings-panel .maxui-displayname .maxui-button {
   float: right;
+  margin-left: 3px;
+}
+#maxui-container #maxui-mainpanel #maxui-conversation-settings-panel .maxui-displayname .maxui-button.maxui-conversation-transfer-to {
   display: none;
 }
 #maxui-container #maxui-mainpanel #maxui-conversation-settings-panel #maxui-conversation-displayname-edit {
