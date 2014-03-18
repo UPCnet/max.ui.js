@@ -211,7 +211,7 @@ MaxClient.prototype.getConversation = function(chash, callback) {
 };
 MaxClient.prototype.modifyConversation = function(chash, displayName, callback) {
     var query = {
-        "displayName": displayName,
+        "displayName": displayName
     };
     route = this.ROUTES.conversation.format(chash);
     this.PUT(route, query, callback);
@@ -220,7 +220,7 @@ MaxClient.prototype.transferConversationOwnership = function(chash, username, ca
     var query = {
         "actor": {
             "username": username
-        },
+        }
     };
     route = this.ROUTES.conversation_owner.format(chash);
     this.PUT(route, query, callback);

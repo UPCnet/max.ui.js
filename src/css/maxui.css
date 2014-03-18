@@ -1,8 +1,8 @@
 @import "../css/hacks.css";
 @font-face {
   font-family: 'maxicons';
-  src: url('../font/maxicons.eot?35994131');
-  src: url('../font/maxicons.eot?35994131#iefix') format('embedded-opentype'), url('../font/maxicons.woff?35994131') format('woff'), url('../font/maxicons.ttf?35994131') format('truetype'), url('../font/maxicons.svg?35994131#maxicons') format('svg');
+  src: url('../font/maxicons.eot?55984048');
+  src: url('../font/maxicons.eot?55984048#iefix') format('embedded-opentype'), url('../font/maxicons.woff?55984048') format('woff'), url('../font/maxicons.ttf?55984048') format('truetype'), url('../font/maxicons.svg?55984048#maxicons') format('svg');
   font-weight: normal;
   font-style: normal;
 }
@@ -12,7 +12,7 @@
 @media screen and (-webkit-min-device-pixel-ratio:0) {
   @font-face {
     font-family: 'maxicons';
-    src: url('../font/maxicons.svg?35994131#maxicons') format('svg');
+    src: url('../font/maxicons.svg?55984048#maxicons') format('svg');
   }
 }
 */
@@ -41,19 +41,19 @@
   /* Uncomment for 3D effect */
   /* text-shadow: 1px 1px 1px rgba(127, 127, 127, 0.3); */
 }
-.maxui-icon-mail-alt:before {
-  content: '\e812';
+.maxui-icon-star:before {
+  content: '\e800';
 }
-/* '' */
+/* '' */
 .maxui-icon-angle-circled-down:before {
   content: '\e80a';
 }
 /* '' */
-.maxui-icon-star-empty:before {
-  content: '\e801';
-}
-/* '' */
 .maxui-icon-ok-circled:before {
+  content: '\e812';
+}
+/* '' */
+.maxui-icon-cancel:before {
   content: '\e80f';
 }
 /* '' */
@@ -77,10 +77,10 @@
   content: '\e805';
 }
 /* '' */
-.maxui-icon-star:before {
-  content: '\e800';
+.maxui-icon-star-empty:before {
+  content: '\e801';
 }
-/* '' */
+/* '' */
 .maxui-icon-trash:before {
   content: '\e806';
 }
@@ -880,6 +880,7 @@
   border-radius: 4px;
 }
 #maxui-container #maxui-activities .maxui-activity {
+  position: relative;
   border-top: 1px #ffffff solid;
   border-bottom: 1px solid #cccccc;
   width: 100%;
@@ -1364,4 +1365,4 @@
   -webkit-border-radius: 5px;
   border-radius: 5px;
 }
-/*# sourceMappingURL=http://localhost:8081/maxui-dev/css/maxui.css.map */
+/*# sourceMappingURL=http://localhost:8081/maxui-dev/src/css/maxui.css.map */

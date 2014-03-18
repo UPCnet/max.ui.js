@@ -300,7 +300,9 @@ max.templates = function() {
 <li class="{{cssclass}}">\
         {{username}}\
         </li>\
-            '),    }
+            ')
 
-    return templates
-}
+    };
+
+    return templates;
+};
