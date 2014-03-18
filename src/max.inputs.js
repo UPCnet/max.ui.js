@@ -23,6 +23,34 @@ max.views = function() {
         this.$list = this.$el.find('ul');
     }
 
+    MaxPredictive.prototype.moveup = function(event) {
+        var maxpredictive = this;
+        var $selected = maxpredictive.$list.find('.maxui-prediction.selected');
+        var num_predictions = maxpredictive.$list.find('.maxui-prediction').length;
+        var is_predicting = maxpredictive.$el.is(":visible").length > 0;
+        var $prev = $selected.prev();
+        $selected.removeClass('selected');
+        if ($prev.length > 0) {
+            $prev.addClass('selected');
+        } else {
+            $selected.siblings(':last').addClass('selected');
+        }
+    };
+
+    MaxPredictive.prototype.movedown = function(event) {
+        var maxpredictive = this;
+        var $selected = maxpredictive.$list.find('.maxui-prediction.selected');
+        var num_predictions = maxpredictive.$list.find('.maxui-prediction').length;
+        var is_predicting = maxpredictive.$el.is(":visible").length > 0;
+        var $next = $selected.next();
+        $selected.removeClass('selected');
+        if ($next.length > 0) {
+            $next.addClass('selected');
+        } else {
+            $selected.siblings(':first').addClass('selected');
+        }
+    };
+
     MaxPredictive.prototype.show = function(event) {
         var maxpredictive = this;
         var $input = jq(event.target);
@@ -39,6 +67,7 @@ max.views = function() {
         } else {
             maxpredictive.hide();
         }
+    };
 
     MaxPredictive.prototype.render = function(text) {
         var maxpredictive = this;
@@ -65,12 +94,8 @@ max.views = function() {
         maxpredictive.$el.show();
     };
 
-
-
-
-
-    };
     MaxPredictive.prototype.hide = function(event) {
+
         var maxpredictive = this;
         maxpredictive.$el.hide();
     };
@@ -135,15 +160,11 @@ max.views = function() {
             maxinput.execExtraBinding(this, event);
         });
 
-        // Execute bindings on ENTER key release
-        maxinput.bind('maxui-input-submit', function(event) {
-            event.preventDefault();
-            event.stopPropagation();
-            maxinput.execExtraBinding(this, event);
-        });
+        // Execute custom bindings on the events triggered by some
+        // keypresses in the "keyup" binding.
 
-        // Execute bindings on ESC key release
-        maxinput.bind('maxui-input-cancel', function(event) {
+        var binded_key_events = 'maxui-input-submit maxui-input-cancel maxui-input-up maxui-input-down maxui-input-keypress';
+        maxinput.bind(binded_key_events, function(event) {
             event.preventDefault();
             event.stopPropagation();
             maxinput.execExtraBinding(this, event);
@@ -155,7 +176,10 @@ max.views = function() {
             event.stopPropagation();
             var normalized = maxinput.getInputValue();
             if (event.which == 13 && !event.shiftKey) maxinput.$input.trigger('maxui-input-submit', [event]);
-            if (event.which == 27) maxinput.$input.trigger('maxui-input-submit', [event]);
+            else if (event.which == 27) maxinput.$input.trigger('maxui-input-cancel', [event]);
+            else if (event.which == 38) maxinput.$input.trigger('maxui-input-up', [event]);
+            else if (event.which == 40) maxinput.$input.trigger('maxui-input-down', [event]);
+            else maxinput.$input.trigger('maxui-input-keypress', [event]);
             maxinput.execExtraBinding(this, event);
         });
 

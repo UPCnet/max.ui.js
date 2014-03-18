@@ -231,7 +231,7 @@
 
                 conversation.predictive = new maxui.views.MaxPredictive({
                     minchars: 3,
-                    source: function(event, query, callback) { console.log(event.type);maxui.maxClient.getUsersList(query, callback);},
+                    source: function(event, query, callback) { maxui.maxClient.getUsersList(query, callback);},
                     list: "#maxui-new-participant #maxui-conversation-predictive"
                 });
                 conversation.newparticipant = new maxui.views.MaxInput(
@@ -240,9 +240,12 @@
                         delegate: overlay.el,
                         placeholder: 'Un de nou',
                         bindings: {
-                            'keyup': function(event) {conversation.predictive.show(event);},
-                            'maxui-input-submit': function(event) {conversation.hide(event);},
-                            'maxui-input-cancel': function(event) {conversation.hide(event);},
+                            'maxui-input-keypress': function(event) {conversation.predictive.show(event);},
+                            'maxui-input-submit': function(event) {conversation.predictive.hide(event);},
+                            'maxui-input-cancel': function(event) {conversation.predictive.hide(event);},
+                            'maxui-input-up': function(event) {conversation.predictive.moveup(event);},
+                            'maxui-input-down': function(event) {conversation.predictive.movedown(event);},
+
                         }
                 });
 
@@ -593,7 +596,7 @@
         });
         // Close predictive window if clicked outside
         jq(document).on('click', function(event) {
-            var $predictive = jq('#maxui-conversation-predictive');
+            var $predictive = jq('.maxui-predictive');
             $predictive.hide();
         });
         //Assign user mention suggestion to input by click

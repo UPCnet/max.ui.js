@@ -1289,11 +1289,13 @@
   margin-left: 60px;
 }
 #maxui-container #maxui-mainpanel #maxui-conversation-settings-panel .maxui-participants {
-  position: relative;
   padding-top: 5px;
 }
-#maxui-container #maxui-mainpanel #maxui-conversation-settings-panel .maxui-participants #maxui-conversation-predictive {
-  bottom: -23px;
+#maxui-container #maxui-mainpanel #maxui-conversation-settings-panel .maxui-participants #maxui-new-participant {
+  position: relative;
+}
+#maxui-container #maxui-mainpanel #maxui-conversation-settings-panel .maxui-participants #maxui-new-participant #maxui-conversation-predictive {
+  top: -32px;
   margin-left: 2px;
 }
 #maxui-container #maxui-mainpanel #maxui-conversation-settings-panel .maxui-participants h4 {
