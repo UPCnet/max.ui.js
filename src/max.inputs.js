@@ -103,7 +103,7 @@ max.views = function() {
         var $input = jq(event.target);
         var text = maxui.utils.normalizeWhiteSpace($input.val(), false);
         if (text.length >= this.minchars) {
-            var matching_request = self.matchingRequest(text)
+            var matching_request = self.matchingRequest(text);
             if (self.requests.hasOwnProperty(text)) {
                 self.render(text, text);
             } else if (matching_request) {

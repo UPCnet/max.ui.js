@@ -208,22 +208,27 @@
                     conversation.displayNameSlot.hide();
                 });
                 // Displays per-user transfer buttons when Owner clicks on transfer ownership button
-                overlay.$el().on('click', conversation.getSelector('#maxui-conversation-transfer .maxui-button'), function(event) {
-                    jq(conversation.getSelector('.maxui-participant .maxui-conversation-transfer-to')).show();
-                    jq(conversation.getSelector('#maxui-conversation-transfer p')).show();
+                overlay.$el().on('click', conversation.getOwnerSelector('.maxui-icon-crown-plus'), function(event) {
+                    var $crown = jq(event.currentTarget);
+                    var $participant = $crown.closest('.maxui-participant');
+                    $participant.find('.maxui-conversation-transfer-to').show();
                 });
                 // Transfers ownership to selected user and toggles ownership labels and classes accordingly
                 overlay.$el().on('click', conversation.getSelector('.maxui-participant .maxui-conversation-transfer-to'), function(event) {
-                    var $participant = jq(event.currentTarget).closest('.maxui-participant');
-                    var new_owner = $participant.attr('data-username');
-                    maxui.maxClient.transferConversationOwnership(conversation.data.id, new_owner, function(event) {
-                        jq(conversation.getSelector('.maxui-participant .maxui-conversation-transfer-to')).hide();
-                        jq(conversation.getSelector('#maxui-conversation-transfer p')).hide();
-                        var $label = jq(conversation.getSelector('.maxui-participant .maxui-displayname label'));
-                        var $new_owner = jq(conversation.getSelector('.maxui-participant[data-username="' + new_owner + '"]'));
-                        $new_owner.find('.maxui-displayname').append($label[0].outerHTML);
-                        $label.remove();
+                    var $new_owner = jq(event.currentTarget).closest('.maxui-participant');
+                    var new_owner_username = $new_owner.attr('data-username');
+                    var $current_owner = jq(conversation.getSelector('.maxui-participant.maxui-owner'));
+                    var $current_crown = $current_owner.find('.maxui-icon-crown');
+                    var $new_crown = $new_owner.find('.maxui-icon-crown-plus');
+                    maxui.maxClient.transferConversationOwnership(conversation.data.id, new_owner_username, function(event) {
+                        $new_owner.find('.maxui-conversation-transfer-to').hide();
+                        $current_crown.removeClass('maxui-icon-crown').addClass('maxui-icon-crown-plus');
+                        $new_crown.removeClass('maxui-icon-crown-plus').addClass('maxui-icon-crown');
+                        $current_owner.removeClass('maxui-owner')
+                        $new_owner.addClass('maxui-owner')
+
                         overlay.$el().find(conversation.getSelector('')).toggleClass('maxui-owner', false);
+                        overlay.$el().find(conversation.getSelector('#maxui-new-participant')).remove()
                     });
                 });
 

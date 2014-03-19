@@ -307,6 +307,22 @@
         }
 
         #maxui-conversation-settings-panel {
+            &.maxui-owner {
+                .maxui-icon-crown-plus {
+                    display:block;
+                }
+                #maxui-conversation-leave {
+                    display:none;
+                }
+                #maxui-conversation-delete {
+                    display:block;
+                }
+            }
+
+            .maxui-icon-crown-plus{
+                display: none;
+            }
+
             .maxui-displayname {
                 margin-left:60px;
                 color: #111;
@@ -323,6 +339,7 @@
                 }
 
             }
+
             #maxui-conversation-displayname-edit {
                 position:relative;
                 display: none;
@@ -381,8 +398,36 @@
                     padding: 0px;
                     list-style:none;
                     .maxui-participant {
-                        &.maxui-owner .maxui-conversation-transfer-to {
-                            display:none !important;
+                        .maxui-icon-crown, .maxui-icon-crown-plus{
+                            float:right;
+                            padding-top: 9px;
+                            font-size: 16px;
+                            color:#ddd;
+                            -o-transition:.5s;
+                            -ms-transition:.5s;
+                            -moz-transition:.5s;
+                            -webkit-transition:.5s;
+                            /* ...and now for the proper property */
+                            transition:.5s;
+                            &:hover {
+                                color:@favoriteColor;
+                                cursor: pointer;
+                            }
+                        }
+                        &.maxui-owner {
+                            .maxui-icon-crown {
+                                color:#111;
+                                &:hover {
+                                    color:inherit;
+                                    cursor:inherit;
+                                }
+                            }
+                            .maxui-icon-crown-plus {
+                                display:block;
+                            }
+                            .maxui-conversation-transfer-to {
+                                display:none !important;
+                            }
                         }
                         .maxui-avatar {
                             margin-top:3px;
@@ -396,20 +441,6 @@
                             padding-top: 3px;
                         }
 
-                        label {
-                            float:right;
-                            display: inline-block;
-                            padding: 2px 4px;
-                            font-size: 11.844px;
-                            font-weight: bold;
-                            line-height: 14px;
-                            color: #ffffff;
-                            text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
-                            white-space: nowrap;
-                            vertical-align: baseline;
-                            background-color: #3a87ad;
-                            .mm-borderRadius(3px);
-                        }
                         .maxui-username {
                             margin-left: 40px;
                         }
@@ -439,11 +470,9 @@
             }
             #maxui-conversation-leave {
                 display:block;
-                &.maxui-owner {display:none;}
             }
-            #maxui-conversation-transfer {
+            #maxui-conversation-delete {
                 display:none;
-                &.maxui-owner {display:block;}
                 p {
                     margin-top: 0px;
                     padding:5px;

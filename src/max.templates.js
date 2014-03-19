@@ -140,7 +140,7 @@ max.templates = function() {
               <li class="maxui-participant {{#owner}}maxui-owner{{/owner}}" data-username="{{username}}">\
                   <span class="maxui-avatar maxui-little"><img src="{{avatarURL}}"></span>\
                   <span class="maxui-displayname">{{displayName}}\
-                      {{#owner}}<label>{{literals.conversations_info_owner}}</label>{{/owner}}\
+                      <i class="maxui-icon-crown{{^owner}}-plus{{/owner}}" {{^owner}}title="Click to make {{displayName}} the owner of this conversation"{{/owner}}></i>\
                       <button class="maxui-button maxui-button-red maxui-conversation-transfer-to">Transfer</button>\
                   </span>\
                   <span class="maxui-username">{{username}}</span>\
@@ -154,18 +154,14 @@ max.templates = function() {
                 <div id="maxui-conversation-predictive" class="maxui-predictive" style="display:none;"><ul></ul></div>\
             </div>\
             {{/canManage}}\
-          </div>\
-          {{^canManage}}\
-          <div id="maxui-conversation-leave">\
+            </div>\
+            <div id="maxui-conversation-leave">\
               <input type="button" class="maxui-button maxui-button-red maxui-button-wide" value="{{literals.conversations_info_leave}}">\
           </div>\
-          {{/canManage}}\
-          {{#canManage}}\
-          <div id="maxui-conversation-transfer">\
-              <input type="button" class="maxui-button maxui-button-red maxui-button-wide" value="{{literals.conversations_info_transfer}}">\
-              <p>{{literals.conversations_info_transfer_help}}</p>\
+          <div id="maxui-conversation-delete">\
+              <input type="button" class="maxui-button maxui-button-red maxui-button-wide" value="{{literals.conversations_info_delete}}">\
+              <p>{{literals.conversations_info_delete_help}}</p>\
           </div>\
-          {{/canManage}}\
         </div>\
             '),
 
