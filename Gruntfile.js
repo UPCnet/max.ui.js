@@ -79,8 +79,8 @@ module.exports = function(grunt) {
         options: {
             config  : 'src/font/config.json',
             zip     : 'tmp',
-            fonts   : 'font',
-            styles  : 'font',
+            fonts   : 'src/font',
+            styles  : 'src/font',
             force   : true,
             sass    : true
         }
