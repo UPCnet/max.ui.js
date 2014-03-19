@@ -268,7 +268,7 @@
                         placeholder: maxui.settings.literals.conversations_info_add,
                         bindings: {
                             'maxui-input-keypress': function(event) {conversation.predictive.show(event);},
-                            'maxui-input-submit': function(event) {conversation.predictive.select(event);},
+                            'maxui-input-submit': function(event) {conversation.predictive.choose(event);},
                             'maxui-input-cancel': function(event) {conversation.predictive.hide(event);},
                             'maxui-input-up': function(event) {conversation.predictive.moveup(event);},
                             'maxui-input-down': function(event) {conversation.predictive.movedown(event);},

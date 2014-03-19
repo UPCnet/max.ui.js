@@ -16,74 +16,86 @@ max.views = function() {
     */
 
     function MaxPredictive(options) {
-        this.minchars = options.minchars;
-        this.source = options.source;
-        this.action = options.action;
-        this.filter = options.filter;
-        this.requests = {};
-        this.$el = jq(options.list);
-        this.$list = this.$el.find('ul');
+        self = this;
+        self.minchars = options.minchars;
+        self.source = options.source;
+        self.action = options.action;
+        self.filter = options.filter;
+        self.requests = {};
+        self.$el = jq(options.list);
+        self.$list = self.$el.find('ul');
+        self.$el.on('click', '.maxui-prediction', function(event) {
+            var $clicked = jq(event.currentTarget);
+            self.select($clicked);
+            self.choose(event);
+        });
 
     }
 
-    MaxPredictive.prototype.select = function(event) {
-        var maxpredictive = this;
-        var $selected = maxpredictive.$list.find('.maxui-prediction.selected');
-        this.action.apply(maxpredictive, [$selected]);
-        maxpredictive.hide();
+    MaxPredictive.prototype.select = function($element) {
+        var self = this;
+        var $selected = self.$list.find('.maxui-prediction.selected');
+        $selected.removeClass('selected');
+        $element.addClass('selected');
+    };
+
+    MaxPredictive.prototype.choose = function(event) {
+        var self = this;
+        var $selected = self.$list.find('.maxui-prediction.selected');
+        this.action.apply(self, [$selected]);
+        self.hide();
     };
 
     MaxPredictive.prototype.moveup = function(event) {
-        var maxpredictive = this;
-        var $selected = maxpredictive.$list.find('.maxui-prediction.selected');
-        var num_predictions = maxpredictive.$list.find('.maxui-prediction').length;
-        var is_predicting = maxpredictive.$el.is(":visible").length > 0;
+        var self = this;
+        var $selected = self.$list.find('.maxui-prediction.selected');
+        var num_predictions = self.$list.find('.maxui-prediction').length;
+        var is_predicting = self.$el.is(":visible").length > 0;
         var $prev = $selected.prev();
-        $selected.removeClass('selected');
         if ($prev.length > 0) {
-            $prev.addClass('selected');
+            self.select($prev);
         } else {
-            $selected.siblings(':last').addClass('selected');
+            self.select($selected.siblings(':last'));
         }
     };
 
     MaxPredictive.prototype.movedown = function(event) {
-        var maxpredictive = this;
-        var $selected = maxpredictive.$list.find('.maxui-prediction.selected');
-        var num_predictions = maxpredictive.$list.find('.maxui-prediction').length;
-        var is_predicting = maxpredictive.$el.is(":visible").length > 0;
+        var self = this;
+        var $selected = self.$list.find('.maxui-prediction.selected');
+        var num_predictions = self.$list.find('.maxui-prediction').length;
+        var is_predicting = self.$el.is(":visible").length > 0;
         var $next = $selected.next();
         $selected.removeClass('selected');
         if ($next.length > 0) {
-            $next.addClass('selected');
+            self.select($next);
         } else {
-            $selected.siblings(':first').addClass('selected');
+            self.select($selected.siblings(':first'));
         }
     };
 
     MaxPredictive.prototype.show = function(event) {
-        var maxpredictive = this;
+        var self = this;
         var $input = jq(event.target);
         var text = maxui.utils.normalizeWhiteSpace($input.val(), false);
         if (text.length >= this.minchars) {
-            if (maxpredictive.requests.hasOwnProperty(text)) {
-                maxpredictive.render(text);
+            if (self.requests.hasOwnProperty(text)) {
+                self.render(text);
             } else {
                 this.source.apply(this, [event, text, function(data) {
-                    maxpredictive.requests[text] = this;
-                    maxpredictive.render(text);
+                    self.requests[text] = this;
+                    self.render(text);
                 }]);
             }
         } else {
-            maxpredictive.hide();
+            self.hide();
         }
     };
 
     MaxPredictive.prototype.render = function(text) {
-        var maxpredictive = this;
+        var self = this;
         var predictions = '';
-        var items = maxpredictive.requests[text];
-        var filter = maxpredictive.filter();
+        var items = self.requests[text];
+        var filter = self.filter();
         // Iterate through all the conversations
         for (i = 0; i < items.length; i++) {
             var prediction = items[i];
@@ -103,14 +115,14 @@ max.views = function() {
         if (predictions === '') {
             predictions = '<li>' + maxui.settings.literals.no_match_found + '</li>';
         }
-        maxpredictive.$list.html(predictions);
-        maxpredictive.$el.show();
+        self.$list.html(predictions);
+        self.$el.show();
     };
 
     MaxPredictive.prototype.hide = function(event) {
 
-        var maxpredictive = this;
-        maxpredictive.$el.hide();
+        var self = this;
+        self.$el.hide();
     };
 
 
