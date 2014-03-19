@@ -224,8 +224,8 @@
                         $new_owner.find('.maxui-conversation-transfer-to').hide();
                         $current_crown.removeClass('maxui-icon-crown').addClass('maxui-icon-crown-plus');
                         $new_crown.removeClass('maxui-icon-crown-plus').addClass('maxui-icon-crown');
-                        $current_owner.removeClass('maxui-owner')
-                        $new_owner.addClass('maxui-owner')
+                        $current_owner.removeClass('maxui-owner');
+                        $new_owner.addClass('maxui-owner');
 
                         overlay.$el().find(conversation.getSelector('')).toggleClass('maxui-owner', false);
                         overlay.$el().find(conversation.getSelector('#maxui-new-participant')).remove()
@@ -291,6 +291,7 @@
                             $participant.find('.maxui-conversation-add-user').remove();
                             $participant.find('.maxui-conversation-dont-add-user').remove();
                                 $participant.animate({opacity:1}, 200);
+                                $participant.find('.maxui-icon-crown-plus').show()
                             });
 
                     });
@@ -1715,6 +1716,7 @@
                 var avatar_url = maxui.settings.avatarURLpattern.format(prediction.username);
                 var params = {
                     username: prediction.username,
+                    displayName: prediction.displayName,
                     avatarURL: avatar_url,
                     cssclass: 'maxui-prediction' + (i === 0 && ' selected' || '')
                 };

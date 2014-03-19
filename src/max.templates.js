@@ -286,7 +286,7 @@ max.templates = function() {
   <li class="maxui-participant {{#owner}}maxui-owner{{/owner}}" data-username="{{username}}" style="{{style}}">\
               <span class="maxui-avatar maxui-little"><img src="{{avatarURL}}"></span>\
               <span class="maxui-displayname">{{displayName}}\
-                  {{#owner}}<label>{{literals.conversations_info_owner}}</label>{{/owner}}\
+                  <i class="maxui-icon-crown{{^owner}}-plus{{/owner}}" {{^owner}}title="Click to make {{displayName}} the owner of this conversation"{{/owner}} style="display:none;"></i>\
                   <button class="maxui-button maxui-button-red maxui-conversation-transfer-to">Transfer</button>\
                   <button class="maxui-button maxui-button-green maxui-conversation-add-user">Add</button>\
                   <button class="maxui-button maxui-button-red maxui-conversation-dont-add-user">Cancel</button>\
