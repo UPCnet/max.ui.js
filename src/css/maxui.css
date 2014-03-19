@@ -1,8 +1,8 @@
 @import "../css/hacks.css";
 @font-face {
   font-family: 'maxicons';
-  src: url('../font/maxicons.eot?55984048');
-  src: url('../font/maxicons.eot?55984048#iefix') format('embedded-opentype'), url('../font/maxicons.woff?55984048') format('woff'), url('../font/maxicons.ttf?55984048') format('truetype'), url('../font/maxicons.svg?55984048#maxicons') format('svg');
+  src: url('../font/maxicons.eot?79203272');
+  src: url('../font/maxicons.eot?79203272#iefix') format('embedded-opentype'), url('../font/maxicons.woff?79203272') format('woff'), url('../font/maxicons.ttf?79203272') format('truetype'), url('../font/maxicons.svg?79203272#maxicons') format('svg');
   font-weight: normal;
   font-style: normal;
 }
@@ -12,7 +12,7 @@
 @media screen and (-webkit-min-device-pixel-ratio:0) {
   @font-face {
     font-family: 'maxicons';
-    src: url('../font/maxicons.svg?55984048#maxicons') format('svg');
+    src: url('../font/maxicons.svg?79203272#maxicons') format('svg');
   }
 }
 */
@@ -41,14 +41,18 @@
   /* Uncomment for 3D effect */
   /* text-shadow: 1px 1px 1px rgba(127, 127, 127, 0.3); */
 }
-.maxui-icon-star:before {
-  content: '\e800';
+.maxui-icon-crown:before {
+  content: '\e813';
 }
-/* '' */
-.maxui-icon-angle-circled-down:before {
-  content: '\e80a';
+/* '' */
+.maxui-icon-user-add:before {
+  content: '\e814';
 }
-/* '' */
+/* '' */
+.maxui-icon-star-empty:before {
+  content: '\e801';
+}
+/* '' */
 .maxui-icon-ok-circled:before {
   content: '\e812';
 }
@@ -77,10 +81,10 @@
   content: '\e805';
 }
 /* '' */
-.maxui-icon-star-empty:before {
-  content: '\e801';
+.maxui-icon-star:before {
+  content: '\e800';
 }
-/* '' */
+/* '' */
 .maxui-icon-trash:before {
   content: '\e806';
 }
@@ -113,6 +117,10 @@
   content: '\e809';
 }
 /* '' */
+.maxui-icon-angle-circled-down:before {
+  content: '\e80a';
+}
+/* '' */
 .maxui-icon-chat-empty:before {
   content: '\e804';
 }
@@ -557,6 +565,10 @@
   -moz-transition: 0.3s ease-in-out;
   transition: 0.3s ease-in-out;
 }
+#maxui-container .maxui-text-input.maxui-empty {
+  color: #888;
+  font-style: italic;
+}
 #maxui-container .maxui-text-input:focus {
   outline: none;
 }
@@ -777,11 +789,25 @@
   padding: 1px;
 }
 #maxui-container .maxui-predictive ul .maxui-prediction {
-  padding: 0px 4px 2px 0px;
+  position: relative;
+  height: 18px;
+  padding: 2px 0px;
   cursor: pointer;
 }
 #maxui-container .maxui-predictive ul .maxui-prediction.selected {
   background-color: #f2f2f2;
+}
+#maxui-container .maxui-predictive ul .maxui-prediction img {
+  height: 18px;
+  margin-right: 5px;
+  -moz-border-radius: 11px;
+  -webkit-border-radius: 11px;
+  border-radius: 11px;
+}
+#maxui-container .maxui-predictive ul .maxui-prediction span {
+  position: absolute;
+  top: 3px;
+  left: 25px;
 }
 #maxui-container #maxui-conversations {
   position: relative;
@@ -1305,13 +1331,6 @@
 #maxui-container #maxui-mainpanel #maxui-conversation-settings-panel .maxui-participants {
   padding-top: 5px;
 }
-#maxui-container #maxui-mainpanel #maxui-conversation-settings-panel .maxui-participants #maxui-new-participant {
-  position: relative;
-}
-#maxui-container #maxui-mainpanel #maxui-conversation-settings-panel .maxui-participants #maxui-new-participant #maxui-conversation-predictive {
-  top: -32px;
-  margin-left: 2px;
-}
 #maxui-container #maxui-mainpanel #maxui-conversation-settings-panel .maxui-participants h4 {
   color: #111;
   font-weight: normal;
@@ -1325,6 +1344,7 @@
 }
 #maxui-container #maxui-mainpanel #maxui-conversation-settings-panel .maxui-participants > ul {
   margin: 0px;
+  margin-bottom: 5px;
   padding: 0px;
   list-style: none;
 }
@@ -1362,6 +1382,26 @@
 }
 #maxui-container #maxui-mainpanel #maxui-conversation-settings-panel .maxui-participants > ul .maxui-participant .maxui-username {
   margin-left: 40px;
+}
+#maxui-container #maxui-mainpanel #maxui-conversation-settings-panel .maxui-participants #maxui-new-participant {
+  position: relative;
+  width: 100%;
+  display: table;
+}
+#maxui-container #maxui-mainpanel #maxui-conversation-settings-panel .maxui-participants #maxui-new-participant .maxui-icon-user-add {
+  color: #111;
+  font-size: 120%;
+  display: table-cell;
+  width: 30px;
+}
+#maxui-container #maxui-mainpanel #maxui-conversation-settings-panel .maxui-participants #maxui-new-participant input {
+  font-size: 14px;
+  width: 100%;
+  display: table-cell;
+}
+#maxui-container #maxui-mainpanel #maxui-conversation-settings-panel .maxui-participants #maxui-new-participant #maxui-conversation-predictive {
+  top: -28px;
+  margin-left: 0px;
 }
 #maxui-container #maxui-mainpanel #maxui-conversation-settings-panel #maxui-conversation-leave {
   display: block;

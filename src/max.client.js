@@ -44,6 +44,7 @@ function MaxClient() {
         conversations: '/conversations',
         conversation: '/conversations/{0}',
         conversation_owner: '/conversations/{0}/owner',
+        user_conversation: '/people/{0}/conversations/{1}',
         messages: '/conversations/{0}/messages',
         context: '/contexts/{0}'
     };
@@ -215,6 +216,11 @@ MaxClient.prototype.modifyConversation = function(chash, displayName, callback) 
     };
     route = this.ROUTES.conversation.format(chash);
     this.PUT(route, query, callback);
+};
+MaxClient.prototype.addUserToConversation = function(chash, username, callback) {
+    var query = {};
+    var route = this.ROUTES.user_conversation.format(username, chash);
+    this.POST(route, query, callback);
 };
 MaxClient.prototype.transferConversationOwnership = function(chash, username, callback) {
     var query = {

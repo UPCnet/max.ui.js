@@ -15,12 +15,23 @@
             padding:1px;
 
             .maxui-prediction {
-                padding:0px 4px 2px 0px;
+                position:relative;
+                height: 18px;
+                padding: 2px 0px;
                 cursor:pointer;
                 &.selected {
                     background-color: @selectedBackgroundColor;
                 }
-
+                img {
+                    height:18px;
+                    margin-right: 5px;
+                    .mm-borderRadius(11px);
+                }
+                span {
+                    position:absolute;
+                    top:3px;
+                    left:25px;
+                }
             }
         }
     }

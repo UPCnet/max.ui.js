@@ -19,6 +19,7 @@ max.views = function() {
         this.minchars = options.minchars;
         this.source = options.source;
         this.action = options.action;
+        this.filter = options.filter;
         this.requests = {};
         this.$el = jq(options.list);
         this.$list = this.$el.find('ul');
@@ -82,10 +83,12 @@ max.views = function() {
         var maxpredictive = this;
         var predictions = '';
         var items = maxpredictive.requests[text];
+        var filter = maxpredictive.filter();
         // Iterate through all the conversations
         for (i = 0; i < items.length; i++) {
             var prediction = items[i];
-            if (prediction.username != maxui.username) {
+            // Only add predictions of users that are not already in the conversation
+            if (filter.indexOf(prediction.username) == -1) {
                 var avatar_url = maxui.settings.avatarURLpattern.format(prediction.username);
                 var params = {
                     username: prediction.username,
@@ -158,7 +161,6 @@ max.views = function() {
             var normalized = maxinput.getInputValue();
             if (normalized == maxinput.placeholder) jq(this).val('');
             maxinput.execExtraBinding(this, event);
-
         });
 
         // Put placeholder back when focusing out and nothing written
@@ -166,7 +168,10 @@ max.views = function() {
             event.preventDefault();
             event.stopPropagation();
             var normalized = maxinput.getInputValue();
-            if (normalized === '') jq(this).val(maxinput.placeholder);
+            if (normalized === '') {
+                jq(this).val(maxinput.placeholder);
+                maxinput.$input.toggleClass('maxui-empty', true);
+            }
             maxinput.execExtraBinding(this, event);
         });
 
@@ -180,21 +185,27 @@ max.views = function() {
             maxinput.execExtraBinding(this, event);
         });
 
-        // Clear input on receiving trigger
         maxinput.bind('maxui-input-clear', function(event) {
             maxinput.$input.val(maxinput.placeholder);
+
         });
+
         // Put placeholder back when focusing out and nothing written
+        maxinput.bind('keydown', function(event) {
+            if (event.which == 38) maxinput.$input.trigger('maxui-input-up', [event]);
+            else if (event.which == 40) maxinput.$input.trigger('maxui-input-down', [event]);
+            maxinput.$input.toggleClass('maxui-empty', false);
+        });
+        // Trigger events on ENTER, ESC
         maxinput.bind('keyup', function(event) {
             event.preventDefault();
             event.stopPropagation();
             var normalized = maxinput.getInputValue();
             if (event.which == 13 && !event.shiftKey) maxinput.$input.trigger('maxui-input-submit', [event]);
             else if (event.which == 27) maxinput.$input.trigger('maxui-input-cancel', [event]);
-            else if (event.which == 38) maxinput.$input.trigger('maxui-input-up', [event]);
-            else if (event.which == 40) maxinput.$input.trigger('maxui-input-down', [event]);
-            else maxinput.$input.trigger('maxui-input-keypress', [event]);
+            else if (event.which != 38 && event.which != 40) maxinput.$input.trigger('maxui-input-keypress', [event]);
             maxinput.execExtraBinding(this, event);
+
         });
 
     };

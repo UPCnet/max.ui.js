@@ -364,13 +364,6 @@
             }
             .maxui-participants {
                 padding-top: 5px;
-                #maxui-new-participant {
-                    position:relative;
-                    #maxui-conversation-predictive {
-                        top:-32px;
-                        margin-left:2px
-                    }
-                }
                 h4 {
                     color: #111;
                     font-weight: normal;
@@ -384,6 +377,7 @@
                 }
                 &>ul {
                     margin:0px;
+                    margin-bottom:5px;
                     padding: 0px;
                     list-style:none;
                     .maxui-participant {
@@ -420,6 +414,26 @@
                             margin-left: 40px;
                         }
 
+                    }
+                }
+                #maxui-new-participant {
+                    position:relative;
+                    width: 100%;
+                    display: table;
+                    .maxui-icon-user-add {
+                        color: #111;
+                        font-size: 120%;
+                        display: table-cell;
+                        width:30px;
+                    }
+                    input {
+                        font-size: 14px;
+                        width: 100%;
+                        display: table-cell;
+                    }
+                    #maxui-conversation-predictive {
+                        top:-28px;
+                        margin-left:0px;
                     }
                 }
             }

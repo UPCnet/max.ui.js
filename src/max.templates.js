@@ -149,7 +149,8 @@ max.templates = function() {
             </ul>\
             {{#canManage}}\
             <div id="maxui-new-participant">\
-                <input type="text" class="maxui-text-input"/>\
+                <i class="maxui-icon-user-add"/>\
+                <input type="text" class="maxui-text-input maxui-empty"/>\
                 <div id="maxui-conversation-predictive" class="maxui-predictive" style="display:none;"><ul></ul></div>\
             </div>\
             {{/canManage}}\
@@ -210,7 +211,7 @@ max.templates = function() {
             <div id="maxui-add-people-box" style="display:none;">\
                 <div>\
                   <label class="maxui-label">{{literals.participants}}: <span class="maxui-count">(1/20)</span></label>\
-                  <input tabindex="20" type="text" data-literal="{{literals.search_people}}" value="{{literals.search_people}}" class="maxui-text-input" id="add-user-input">\
+                  <input tabindex="20" type="text" data-literal="{{literals.conversations_info_add}}" value="{{literals.conversations_info_add}}" class="maxui-text-input" id="add-user-input">\
                 </div>\
                 <div id="maxui-new-participants" style="display:none;"></div>\
                 <div id="maxui-new-displayName" style="display:none;">\
@@ -286,7 +287,7 @@ max.templates = function() {
             '),
 
     participant: Hogan.compile('\
-  <li class="maxui-participant {{#owner}}maxui-owner{{/owner}}" data-username="{{username}}">\
+  <li class="maxui-participant {{#owner}}maxui-owner{{/owner}}" data-username="{{username}}" style="{{style}}">\
               <span class="maxui-avatar maxui-little"><img src="{{avatarURL}}"></span>\
               <span class="maxui-displayname">{{displayName}}\
                   {{#owner}}<label>{{literals.conversations_info_owner}}</label>{{/owner}}\
@@ -316,8 +317,8 @@ max.templates = function() {
             '),
 
     predictive: Hogan.compile('\
-<li data-username="{{username}}" class="{{cssclass}}">\
-        {{displayName}}\
+<li data-username="{{username}}" data-displayname="{{displayName}}" class="{{cssclass}}">\
+        <img src="{{avatarURL}}"/><span>{{displayName}}</span>\
         </li>\
             ')
 

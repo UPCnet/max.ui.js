@@ -203,7 +203,7 @@
                 overlay.$el().on('click', conversation.getOwnerSelector('#maxui-conversation-displayname-edit i.maxui-icon-ok-circled'), function(event) {
                     conversation.displayNameSlot.save();
                 });
-                // Hides displayName wediting box hen user clicks the cancel button
+                // Hides displayName editing box hen user clicks the cancel button
                 overlay.$el().on('click', conversation.getOwnerSelector('#maxui-conversation-displayname-edit i.maxui-icon-cancel-circled'), function(event) {
                     conversation.displayNameSlot.hide();
                 });
@@ -231,30 +231,41 @@
 
                 conversation.predictive = new maxui.views.MaxPredictive({
                     minchars: 3,
+                    filter: function(event) {
+                        return jq.map(conversation.data.participants, function(element, index) {return element.username;});
+                    },
                     source: function(event, query, callback) { maxui.maxClient.getUsersList(query, callback);},
                     action: function($selected) {
+                        // Action executed after a prediction item is selected, to add the user add confirmation buttons
                         var username = $selected.attr('data-username');
-                        var displayName = $selected.text();
+                        var displayName = $selected.attr('data-username');
                         var params = {
+                            style: "opacity:0; height:0px;",
                             username: username,
                             displayName: displayName,
-                            literals: maxui.literals,
+                            literals: maxui.settings.literals,
                             avatarURL: maxui.settings.avatarURLpattern.format(username)
                         };
                         var newuser = maxui.templates.participant.render(params);
                         var $participants = jq(conversation.getSelector('.maxui-participants > ul'));
                         $participants.append(newuser);
-                        $participants.find('.maxui-participant:last .maxui-conversation-add-user').focus();
+                        var $participant = jq(conversation.getSelector('.maxui-participant:last'));
+                        $participant.animate({height:36}, 100, function(event) {
+                            $participant.animate({opacity:1}, 200);
+                        });
+
+                        $participant.find('.maxui-conversation-add-user').focus();
                         jq(conversation.getSelector('#maxui-new-participant .maxui-text-input')).trigger('maxui-input-clear');
 
                     },
                     list: "#maxui-new-participant #maxui-conversation-predictive"
                 });
+
                 conversation.newparticipant = new maxui.views.MaxInput(
                     {
                         input: "#maxui-new-participant .maxui-text-input",
                         delegate: overlay.el,
-                        placeholder: 'Un de nou',
+                        placeholder: maxui.settings.literals.conversations_info_add,
                         bindings: {
                             'maxui-input-keypress': function(event) {conversation.predictive.show(event);},
                             'maxui-input-submit': function(event) {conversation.predictive.select(event);},
@@ -263,6 +274,30 @@
                             'maxui-input-down': function(event) {conversation.predictive.movedown(event);},
 
                         }
+                });
+
+                // Adds a new user to the conversation
+                overlay.$el().on('click', conversation.getOwnerSelector('.maxui-participant .maxui-conversation-add-user'), function(event) {
+                    var $participant = $(event.target).closest('.maxui-participant');
+                    var new_username = $participant.attr('data-username');
+                    maxui.maxClient.addUserToConversation(conversation.data.id, new_username, function(event) {
+
+                        $participant.animate({opacity:0}, 200, function(event) {
+                            $participant.find('.maxui-conversation-add-user').remove();
+                            $participant.find('.maxui-conversation-dont-add-user').remove();
+                                $participant.animate({opacity:1}, 200);
+                            });
+
+                    });
+                });
+
+                overlay.$el().on('click', conversation.getOwnerSelector('.maxui-participant .maxui-conversation-dont-add-user'), function(event) {
+                    var $participant = $(event.target).closest('.maxui-participant');
+                    $participant.animate({opacity:0}, 200, function(event) {
+                        $participant.animate({height:0}, 200, function(event) {
+                            $participant.remove();
+                        });
+                    });
                 });
 
             },
