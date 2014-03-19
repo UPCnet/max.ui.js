@@ -164,9 +164,9 @@ MaxClient.prototype.GET = function(route, query, callback) {
             type: 'GET',
             async: true,
             dataType: 'json'
-        }).done(function(result) {
+        }).done(function(result, status, xhr) {
             if (triggers.done) jQuery(window).trigger(triggers.done);
-            callback.call(result);
+            callback.apply(xhr, [result]);
         }).fail(function(xhr) {
             jQuery(window).trigger('maxclienterror', xhr);
             if (triggers.fail) jQuery(window).trigger(triggers.fail);

@@ -303,8 +303,8 @@
             },
             load: function(configurator) {
                 var conversation = this;
-                maxui.maxClient.getConversation(maxui.settings.currentConversation.hash, function() {
-                    conversation.data = this;
+                maxui.maxClient.getConversation(maxui.settings.currentConversation.hash, function(data) {
+                    conversation.data = data;
                     var participants = [];
                     for (pt = 0; pt < conversation.data.participants.length; pt++) {
                         var participant = conversation.data.participants[pt];
@@ -340,14 +340,14 @@
         // Make settings available to utils package
         maxui.utils.setSettings(maxui.settings);
         // Get user data and start ui rendering when completed
-        this.maxClient.getUserData(maxui.settings.username, function() {
+        this.maxClient.getUserData(maxui.settings.username, function(data) {
             //Determine if user can write in writeContexts
             var userSubscriptions = {};
-            if (this.subscribedTo) {
-                if (this.subscribedTo) {
-                    if (this.subscribedTo.length > 0) {
-                        for (sc = 0; sc < this.subscribedTo.length; sc++) {
-                            var subscription = this.subscribedTo[sc];
+            if (data.subscribedTo) {
+                if (data.subscribedTo) {
+                    if (data.subscribedTo.length > 0) {
+                        for (sc = 0; sc < data.subscribedTo.length; sc++) {
+                            var subscription = data.subscribedTo[sc];
                             userSubscriptions[subscription.hash] = {};
                             userSubscriptions[subscription.hash].permissions = {};
                             for (pm = 0; pm < subscription.permissions.length; pm++) {
@@ -363,7 +363,7 @@
             if (!maxui.settings.disableConversations) {
                 // Collect conversation ids
                 maxui.conversations = [];
-                var talking_items = this.talkingIn || [];
+                var talking_items = data.talkingIn || [];
                 for (co = 0; co < talking_items.length; co++) {
                     maxui.conversations.push(talking_items[co].id);
                 }
@@ -1689,8 +1689,8 @@
         var maxui = this;
         var func_params = [];
         func_params.push(query);
-        func_params.push(function() {
-            maxui.formatPredictions(this, predictive_selector);
+        func_params.push(function(items) {
+            maxui.formatPredictions(items, predictive_selector);
         });
         var userListRetriever = this.maxClient.getUsersList;
         userListRetriever.apply(this.maxClient, func_params);
@@ -1749,12 +1749,12 @@
         func_params.push(maxui.settings.username);
         if (arguments.length > 0) {
             var callback = arguments[0];
-            func_params.push(function() {
-                maxui.formatConversations(this, callback);
+            func_params.push(function(data) {
+                maxui.formatConversations(data, callback);
             });
         } else {
-            func_params.push(function() {
-                maxui.formatConversations(this);
+            func_params.push(function(data) {
+                maxui.formatConversations(data);
             });
         }
         var conversationsRetriever = this.maxClient.getConversationsForUser;
@@ -1809,12 +1809,12 @@
         func_params.push(conversation_hash);
         if (arguments.length > 1) {
             var callback = arguments[1];
-            func_params.push(function() {
-                maxui.formatMessages(this, callback);
+            func_params.push(function(data) {
+                maxui.formatMessages(data, callback);
             });
         } else {
-            func_params.push(function() {
-                maxui.formatMessages(this);
+            func_params.push(function(data) {
+                maxui.formatMessages(data);
             });
         }
         var messagesRetriever = this.maxClient.getMessagesForConversation;
@@ -2061,14 +2061,13 @@
         }
         if (arguments.length > 1) {
             var callback = arguments[1];
-            func_params.push(function(event) {
-                var items = this;
+            func_params.push(function(items) {
+
                 // Determine write permission, granted by default if we don't find a restriction
                 maxui.settings.canwrite = true;
                 // If we don't have a context, we're in timeline, so we can write
                 if (maxui.settings.activitySource == 'activities') {
-                    maxui.maxClient.getContext(maxui.settings.readContextHash, function(event) {
-                        var context = this;
+                    maxui.maxClient.getContext(maxui.settings.readContextHash, function(context) {
                         // Add read context if user is not subscribed to it{
                         var subscriptions = maxui.settings.subscriptions;
                         if (!subscriptions[context.hash]) {
@@ -2118,8 +2117,8 @@
         var maxui = this;
         var func_params = [];
         func_params.push(activity_id);
-        func_params.push(function() {
-            maxui.formatComment(this, activity_id);
+        func_params.push(function(data) {
+            maxui.formatComment(data, activity_id);
         });
         this.maxClient.getCommentsForActivity.apply(this.maxClient, func_params);
     };

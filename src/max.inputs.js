@@ -73,17 +73,45 @@ max.views = function() {
         }
     };
 
+    MaxPredictive.prototype.matchingRequest = function(text) {
+        var self = this;
+        var previous_request;
+        var pre_previous_request;
+        var previous_usernames;
+        var previous_text = text.substr(0, text.length - 1);
+
+        jq.each(self.requests, function(key, value) {
+            if (previous_text == key) {
+                previous_request = value;
+            }
+        });
+
+        if (previous_request && !previous_request.remaining) {
+            // We have a previous request (-1) and the server told us that there's no remaining items
+            // so we return the key of the stored request to use
+            return previous_request.text;
+        }
+    };
+    // Fetch new predictions from source if needed, and render them
+    // Also, predictions are stored in self.requests, so we try to repeat request only when needed
+    // Algorith:
+    //   1 - if the request is repeated, use the stored request
+    //   2 - if we have a request that is shorter than 10, filter and use it, as there isn't more data in server to show
+    //   3 - if we don't have any matching data for the current request, fetch it
     MaxPredictive.prototype.show = function(event) {
         var self = this;
         var $input = jq(event.target);
         var text = maxui.utils.normalizeWhiteSpace($input.val(), false);
         if (text.length >= this.minchars) {
+            var matching_request = self.matchingRequest(text)
             if (self.requests.hasOwnProperty(text)) {
-                self.render(text);
+                self.render(text, text);
+            } else if (matching_request) {
+                self.render(text, matching_request);
             } else {
                 this.source.apply(this, [event, text, function(data) {
-                    self.requests[text] = this;
-                    self.render(text);
+                    self.requests[text] = {text: text, data:data, remaining: this.getResponseHeader('X-Has-Remaining-Items')};
+                    self.render(text, text);
                 }]);
             }
         } else {
@@ -91,25 +119,32 @@ max.views = function() {
         }
     };
 
-    MaxPredictive.prototype.render = function(text) {
+    MaxPredictive.prototype.render = function(query, request) {
         var self = this;
         var predictions = '';
-        var items = self.requests[text];
+        var items = self.requests[request].data;
         var filter = self.filter();
-        // Iterate through all the conversations
+        // Iterate through all the users returned by the query
+        var selected_index = false;
         for (i = 0; i < items.length; i++) {
             var prediction = items[i];
             // Only add predictions of users that are not already in the conversation
-            if (filter.indexOf(prediction.username) == -1) {
+            // and that match the text query search, 'cause we could be reading a used request
+            var query_matches_username = prediction.username.search(new RegExp(query, "i")) >= 0;
+            var query_matches_displayname = prediction.displayName.search(new RegExp(query, "i")) >= 0;
+            var prediction_matches_query = query_matches_displayname || query_matches_username;
+
+            if (filter.indexOf(prediction.username) == -1 && prediction_matches_query) {
                 var avatar_url = maxui.settings.avatarURLpattern.format(prediction.username);
                 var params = {
                     username: prediction.username,
                     displayName: prediction.displayName,
                     avatarURL: avatar_url,
-                    cssclass: 'maxui-prediction' + (i === 0 && ' selected' || '')
+                    cssclass: 'maxui-prediction' + (!selected_index && ' selected' || '')
                 };
-                // Render the conversations template and append it at the end of the rendered covnersations
+                // Render the conversations template and append it at the end of the rendered conversations
                 predictions = predictions + maxui.templates.predictive.render(params);
+                selected_index = true;
             }
         }
         if (predictions === '') {
