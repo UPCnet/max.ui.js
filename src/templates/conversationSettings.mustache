@@ -42,6 +42,10 @@
   </div>
   <div id="maxui-conversation-delete">
       <input type="button" class="maxui-button maxui-button-red maxui-button-wide" value="{{literals.conversations_info_delete}}">
-      <p>{{literals.conversations_info_delete_help}}</p>
+      <div class="maxui-help">
+          <p><b>{{literals.conversations_info_delete_warning}}</b> {{literals.conversations_info_delete_help}}</p>
+          <button class="maxui-button maxui-button-red maxui-confirmation-cancel">Cancel</button>
+          <button class="maxui-button maxui-button-green maxui-confirmation-ok">Delete</button>
+      </div>
   </div>
 </div>

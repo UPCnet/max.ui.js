@@ -229,6 +229,11 @@ MaxClient.prototype.kickUserFromConversation = function(chash, username, callbac
     this.DELETE(route, query, callback);
 };
 
+MaxClient.prototype.deleteConversation = function(chash, callback) {
+    var query = {};
+    var route = this.ROUTES.conversation.format(chash);
+    this.DELETE(route, query, callback);
+};
 MaxClient.prototype.leaveConversation = function(chash, username, callback) {
     var query = {};
     var route = this.ROUTES.user_conversation.format(username, chash);

@@ -341,6 +341,23 @@
                     });
                 });
 
+                // User clicks delete conversation button
+                overlay.$el().on('click', conversation.getSelector('#maxui-conversation-delete .maxui-button'), function(event) {
+                    jq(conversation.getSelector('#maxui-conversation-delete .maxui-help')).show();
+                });
+
+                // User confirms deleting a conversation
+                overlay.$el().on('click', conversation.getSelector('#maxui-conversation-delete .maxui-help .maxui-confirmation-ok'), function(event) {
+                    maxui.maxClient.deleteConversation(conversation.data.id, function(event) {
+                        overlay.hide();
+                        $('#maxui-back-conversations a').trigger('click');
+                    });
+                });
+
+                // User cancels deleting a conversation
+                overlay.$el().on('click', conversation.getSelector('#maxui-conversation-delete .maxui-help .maxui-confirmation-cancel'), function(event) {
+                    jq(conversation.getSelector('#maxui-conversation-delete .maxui-help')).hide();
+                });
             },
             load: function(configurator) {
                 var conversation = this;
@@ -698,12 +715,11 @@
             var $selected = jq(this);
             var $area = jq('#maxui-add-people-box .maxui-text-input');
             var $predictive = jq('#maxui-conversation-predictive');
-            var text = $area.val();
-            var matchMention = new RegExp('^\\s*([\\w\\.]+)\\s*');
-            var match = text.match(matchMention);
-            var replacement = text.replace(matchMention, $selected.text());
+            var username = $selected.attr('data-username');
+            var displayname = $selected.attr('data-displayname');
             maxui.addPerson({
-                'username': replacement
+                'username': username,
+                'displayName': displayname
             });
             $predictive.hide();
             $area.val('').focus();
@@ -970,12 +986,11 @@
             } else if (key == 27) {
                 $predictive.hide();
             } else if ((key == 13 || key == 9) && is_predicting) {
-                console.log('intro');
-                var matchMention2 = new RegExp('^\\s*([\\w\\.]+\\s*)');
-                var replacement = text.replace(matchMention2, $selected.text());
-                console.log(replacement);
+                var username = $selected.attr('data-username');
+                var displayname = $selected.attr('data-displayname');
                 maxui.addPerson({
-                    'username': replacement
+                    'username': username,
+                    'displayName': displayname
                 });
                 $predictive.hide();
                 $area.val('').focus();

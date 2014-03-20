@@ -168,7 +168,11 @@ max.templates = function() {
           </div>\
           <div id="maxui-conversation-delete">\
               <input type="button" class="maxui-button maxui-button-red maxui-button-wide" value="{{literals.conversations_info_delete}}">\
-              <p>{{literals.conversations_info_delete_help}}</p>\
+              <div class="maxui-help">\
+                  <p><b>{{literals.conversations_info_delete_warning}}</b> {{literals.conversations_info_delete_help}}</p>\
+                  <button class="maxui-button maxui-button-red maxui-confirmation-cancel">Cancel</button>\
+                  <button class="maxui-button maxui-button-green maxui-confirmation-ok">Delete</button>\
+              </div>\
           </div>\
         </div>\
             '),
@@ -315,7 +319,7 @@ max.templates = function() {
 
     participants: Hogan.compile('\
 {{#persons}}\
-        <div class="maxui-filter maxui-participant" type="participant" username="{{username}}"><span>{{prepend}}{{username}}<a class="maxui-close" href=""><i class="maxui-icon-cancel-circled" alt="tanca"/></a></span></div>\
+        <div class="maxui-filter maxui-participant" type="participant" username="{{username}}"><span>{{prepend}}{{displayName}}<a class="maxui-close" href=""><i class="maxui-icon-cancel-circled" alt="tanca"/></a></span></div>\
         {{/persons}}\
             '),
 

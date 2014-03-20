@@ -538,14 +538,14 @@
   box-shadow: none;
   -webkit-box-shadow: none;
 }
-#maxui-container #maxui-conversation-leave .maxui-button,
-#maxui-container #maxui-conversation-delete .maxui-button {
+#maxui-container #maxui-conversation-leave > .maxui-button,
+#maxui-container #maxui-conversation-delete > .maxui-button {
   font-size: 16px;
 }
-#maxui-container #maxui-conversation-leave .maxui-button:hover,
-#maxui-container #maxui-conversation-delete .maxui-button:hover,
-#maxui-container #maxui-conversation-leave .maxui-button:focus,
-#maxui-container #maxui-conversation-delete .maxui-button:focus {
+#maxui-container #maxui-conversation-leave > .maxui-button:hover,
+#maxui-container #maxui-conversation-delete > .maxui-button:hover,
+#maxui-container #maxui-conversation-leave > .maxui-button:focus,
+#maxui-container #maxui-conversation-delete > .maxui-button:focus {
   box-shadow: none;
   -webkit-box-shadow: none;
 }
@@ -1457,15 +1457,19 @@
 #maxui-container #maxui-mainpanel #maxui-conversation-settings-panel #maxui-conversation-delete {
   display: none;
 }
-#maxui-container #maxui-mainpanel #maxui-conversation-settings-panel #maxui-conversation-delete p {
-  margin-top: 0px;
-  padding: 5px;
+#maxui-container #maxui-mainpanel #maxui-conversation-settings-panel #maxui-conversation-delete .maxui-help {
   display: none;
+  text-align: right;
+  padding: 5px;
   color: #b94a48;
   background-color: #f2dede;
   border: 1px solid #eed3d7;
   -moz-border-radius: 5px;
   -webkit-border-radius: 5px;
   border-radius: 5px;
+}
+#maxui-container #maxui-mainpanel #maxui-conversation-settings-panel #maxui-conversation-delete .maxui-help p {
+  text-align: left;
+  margin: 0px;
 }
 /*# sourceMappingURL=http://localhost:8081/maxui-dev/src/css/maxui.css.map */
