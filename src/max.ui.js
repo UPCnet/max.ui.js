@@ -210,7 +210,7 @@
 
                 // Displays confirmation buttons when Owner clicks on kick user button
                 // Displays confirmation buttons when Owner clicks on transfer ownership button
-                overlay.$el().on('click', conversation.getOwnerSelector('.maxui-conversation-user-action'), function(event) {
+                overlay.$el().on('click', conversation.getOwnerSelector('.maxui-conversation-transfer-to, .maxui-conversation-kick-user'), function(event) {
                     var $action = jq(event.currentTarget);
                     var $participant = $action.closest('.maxui-participant');
                     $participant.find('.maxui-conversation-confirmation:visible').hide();
@@ -285,7 +285,7 @@
                             $participant.animate({opacity:1}, 200);
                         });
 
-                        $participant.find('.maxui-conversation-add-user').focus();
+                        $participant.find('.maxui-conversation-add-user').show().focus();
                         jq(conversation.getSelector('#maxui-new-participant .maxui-text-input')).trigger('maxui-input-clear');
 
                     },
@@ -307,28 +307,37 @@
                         }
                 });
 
-                // Adds a new user to the conversation
-                overlay.$el().on('click', conversation.getOwnerSelector('.maxui-participant .maxui-conversation-add-user'), function(event) {
+                // Confirmas adding a new user to the conversation
+                overlay.$el().on('click', conversation.getOwnerSelector('.maxui-participant .maxui-conversation-add-user .maxui-icon-ok-circled'), function(event) {
                     var $participant = $(event.target).closest('.maxui-participant');
                     var new_username = $participant.attr('data-username');
                     maxui.maxClient.addUserToConversation(conversation.data.id, new_username, function(event) {
 
                         $participant.animate({opacity:0}, 200, function(event) {
                             $participant.find('.maxui-conversation-add-user').remove();
-                            $participant.find('.maxui-conversation-dont-add-user').remove();
                                 $participant.animate({opacity:1}, 200);
-                                $participant.find('.maxui-icon-crown-plus').show()
+                                $participant.find('.maxui-conversation-user-action').show();
                             });
 
                     });
                 });
 
-                overlay.$el().on('click', conversation.getOwnerSelector('.maxui-participant .maxui-conversation-dont-add-user'), function(event) {
-                    var $participant = $(event.target).closest('.maxui-participant');
+                // Cancels adding a new user to the conversation
+                overlay.$el().on('click', conversation.getOwnerSelector('.maxui-participant .maxui-conversation-add-user .maxui-icon-cancel-circled'), function(event) {
+                    var $participant = $(event.currentTarget).closest('.maxui-participant');
                     $participant.animate({opacity:0}, 200, function(event) {
                         $participant.animate({height:0}, 200, function(event) {
                             $participant.remove();
                         });
+                    });
+                });
+
+                // User Leaves conversation
+                overlay.$el().on('click', conversation.getSelector('#maxui-conversation-leave .maxui-button'), function(event) {
+                    var leaving_username = maxui.settings.username;
+                    maxui.maxClient.kickUserFromConversation(conversation.data.id, leaving_username, function(event) {
+                        overlay.hide();
+                        $('#maxui-back-conversations a').trigger('click');
                     });
                 });
 

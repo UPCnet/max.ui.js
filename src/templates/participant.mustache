@@ -1,10 +1,20 @@
   <li class="maxui-participant {{#owner}}maxui-owner{{/owner}}" data-username="{{username}}" style="{{style}}">
       <span class="maxui-avatar maxui-little"><img src="{{avatarURL}}"></span>
       <span class="maxui-displayname">{{displayName}}
-          <i class="maxui-icon-crown{{^owner}}-plus{{/owner}}" {{^owner}}title="Click to make {{displayName}} the owner of this conversation"{{/owner}} style="display:none;"></i>
-          <button class="maxui-button maxui-button-red maxui-conversation-transfer-to">Transfer</button>
-          <button class="maxui-button maxui-button-green maxui-conversation-add-user">Add</button>
-          <button class="maxui-button maxui-button-red maxui-conversation-dont-add-user">Cancel</button>
+          <i class="maxui-conversation-user-action maxui-icon-trash" {{^owner}}title="Click to kick {{displayName}} out of this conversation"{{/owner}} style="display:none;"></i>
+          <i class="maxui-conversation-user-action maxui-icon-crown{{^owner}}-plus{{/owner}}" {{^owner}}title="Click to make {{displayName}} the owner of this conversation"{{/owner}} style="display:none;"></i>
+          <div class="maxui-conversation-transfer-to maxui-conversation-confirmation">
+              <i class="maxui-icon-cancel-circled"></i>
+              <i class="maxui-icon-ok-circled"></i>
+          </div>
+          <div class="maxui-conversation-kick-user maxui-conversation-confirmation">
+              <i class="maxui-icon-cancel-circled"></i>
+              <i class="maxui-icon-ok-circled"></i>
+          </div>
+          <div class="maxui-conversation-add-user maxui-conversation-confirmation">
+              <i class="maxui-icon-cancel-circled"></i>
+              <i class="maxui-icon-ok-circled"></i>
+          </div>
       </span>
       <span class="maxui-username">{{username}}</span>
   </li>
