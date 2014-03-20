@@ -1276,7 +1276,16 @@
 #maxui-container #maxui-mainpanel #maxui-overlay-wrapper #maxui-overlay-panel #maxui-overlay-content {
   padding: 5px;
 }
-#maxui-container #maxui-mainpanel #maxui-conversation-settings-panel.maxui-owner .maxui-icon-crown-plus {
+#maxui-container #maxui-mainpanel #maxui-conversation-settings-panel i.maxui-icon-ok-circled {
+  color: green;
+  top: 2px;
+}
+#maxui-container #maxui-mainpanel #maxui-conversation-settings-panel i.maxui-icon-cancel-circled {
+  color: #da4f49;
+  top: 18px;
+}
+#maxui-container #maxui-mainpanel #maxui-conversation-settings-panel.maxui-owner .maxui-icon-crown-plus,
+#maxui-container #maxui-mainpanel #maxui-conversation-settings-panel.maxui-owner .maxui-icon-trash {
   display: block;
 }
 #maxui-container #maxui-mainpanel #maxui-conversation-settings-panel.maxui-owner #maxui-conversation-leave {
@@ -1285,7 +1294,8 @@
 #maxui-container #maxui-mainpanel #maxui-conversation-settings-panel.maxui-owner #maxui-conversation-delete {
   display: block;
 }
-#maxui-container #maxui-mainpanel #maxui-conversation-settings-panel .maxui-icon-crown-plus {
+#maxui-container #maxui-mainpanel #maxui-conversation-settings-panel .maxui-icon-crown-plus,
+#maxui-container #maxui-mainpanel #maxui-conversation-settings-panel .maxui-icon-trash {
   display: none;
 }
 #maxui-container #maxui-mainpanel #maxui-conversation-settings-panel .maxui-displayname {
@@ -1300,8 +1310,16 @@
   float: right;
   margin-left: 3px;
 }
-#maxui-container #maxui-mainpanel #maxui-conversation-settings-panel .maxui-displayname .maxui-button.maxui-conversation-transfer-to {
+#maxui-container #maxui-mainpanel #maxui-conversation-settings-panel .maxui-displayname .maxui-conversation-confirmation {
   display: none;
+  width: 50px;
+  float: right;
+  margin: 6px 0 0 0;
+}
+#maxui-container #maxui-mainpanel #maxui-conversation-settings-panel .maxui-displayname .maxui-conversation-confirmation i:before {
+  width: 10px;
+  font-size: 20px;
+  cursor: pointer;
 }
 #maxui-container #maxui-mainpanel #maxui-conversation-settings-panel #maxui-conversation-displayname-edit {
   position: relative;
@@ -1327,14 +1345,6 @@
   font-size: 15px;
   right: -3px;
   cursor: pointer;
-}
-#maxui-container #maxui-mainpanel #maxui-conversation-settings-panel #maxui-conversation-displayname-edit i.maxui-icon-ok-circled {
-  color: green;
-  top: 2px;
-}
-#maxui-container #maxui-mainpanel #maxui-conversation-settings-panel #maxui-conversation-displayname-edit i.maxui-icon-cancel-circled {
-  color: red;
-  top: 18px;
 }
 #maxui-container #maxui-mainpanel #maxui-conversation-settings-panel .maxui-published {
   padding-top: 2px;
@@ -1366,7 +1376,8 @@
   height: 36px;
 }
 #maxui-container #maxui-mainpanel #maxui-conversation-settings-panel .maxui-participants > ul .maxui-participant .maxui-icon-crown,
-#maxui-container #maxui-mainpanel #maxui-conversation-settings-panel .maxui-participants > ul .maxui-participant .maxui-icon-crown-plus {
+#maxui-container #maxui-mainpanel #maxui-conversation-settings-panel .maxui-participants > ul .maxui-participant .maxui-icon-crown-plus,
+#maxui-container #maxui-mainpanel #maxui-conversation-settings-panel .maxui-participants > ul .maxui-participant .maxui-icon-trash {
   float: right;
   padding-top: 9px;
   font-size: 16px;
@@ -1379,9 +1390,19 @@
   transition: .5s;
 }
 #maxui-container #maxui-mainpanel #maxui-conversation-settings-panel .maxui-participants > ul .maxui-participant .maxui-icon-crown:hover,
-#maxui-container #maxui-mainpanel #maxui-conversation-settings-panel .maxui-participants > ul .maxui-participant .maxui-icon-crown-plus:hover {
-  color: #ff9b00;
+#maxui-container #maxui-mainpanel #maxui-conversation-settings-panel .maxui-participants > ul .maxui-participant .maxui-icon-crown-plus:hover,
+#maxui-container #maxui-mainpanel #maxui-conversation-settings-panel .maxui-participants > ul .maxui-participant .maxui-icon-trash:hover {
   cursor: pointer;
+}
+#maxui-container #maxui-mainpanel #maxui-conversation-settings-panel .maxui-participants > ul .maxui-participant .maxui-icon-crown:hover,
+#maxui-container #maxui-mainpanel #maxui-conversation-settings-panel .maxui-participants > ul .maxui-participant .maxui-icon-crown-plus:hover,
+#maxui-container #maxui-mainpanel #maxui-conversation-settings-panel .maxui-participants > ul .maxui-participant .maxui-icon-crown.active,
+#maxui-container #maxui-mainpanel #maxui-conversation-settings-panel .maxui-participants > ul .maxui-participant .maxui-icon-crown-plus.active {
+  color: #ff9b00;
+}
+#maxui-container #maxui-mainpanel #maxui-conversation-settings-panel .maxui-participants > ul .maxui-participant .maxui-icon-trash:hover,
+#maxui-container #maxui-mainpanel #maxui-conversation-settings-panel .maxui-participants > ul .maxui-participant .maxui-icon-trash.active {
+  color: #111;
 }
 #maxui-container #maxui-mainpanel #maxui-conversation-settings-panel .maxui-participants > ul .maxui-participant.maxui-owner .maxui-icon-crown {
   color: #111;
@@ -1393,8 +1414,8 @@
 #maxui-container #maxui-mainpanel #maxui-conversation-settings-panel .maxui-participants > ul .maxui-participant.maxui-owner .maxui-icon-crown-plus {
   display: block;
 }
-#maxui-container #maxui-mainpanel #maxui-conversation-settings-panel .maxui-participants > ul .maxui-participant.maxui-owner .maxui-conversation-transfer-to {
-  display: none !important;
+#maxui-container #maxui-mainpanel #maxui-conversation-settings-panel .maxui-participants > ul .maxui-participant.maxui-owner .maxui-icon-trash {
+  display: none;
 }
 #maxui-container #maxui-mainpanel #maxui-conversation-settings-panel .maxui-participants > ul .maxui-participant .maxui-avatar {
   margin-top: 3px;

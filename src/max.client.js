@@ -222,6 +222,13 @@ MaxClient.prototype.addUserToConversation = function(chash, username, callback) 
     var route = this.ROUTES.user_conversation.format(username, chash);
     this.POST(route, query, callback);
 };
+
+MaxClient.prototype.kickUserFromConversation = function(chash, username, callback) {
+    var query = {};
+    var route = this.ROUTES.user_conversation.format(username, chash);
+    this.DELETE(route, query, callback);
+};
+
 MaxClient.prototype.transferConversationOwnership = function(chash, username, callback) {
     var query = {
         "actor": {

@@ -303,8 +303,19 @@
         }
 
         #maxui-conversation-settings-panel {
+
+
+            i.maxui-icon-ok-circled {
+                color: green;
+                top:2px;
+            }
+            i.maxui-icon-cancel-circled {
+                color: #da4f49;
+                top:18px;
+            }
+
             &.maxui-owner {
-                .maxui-icon-crown-plus {
+                .maxui-icon-crown-plus, .maxui-icon-trash {
                     display:block;
                 }
                 #maxui-conversation-leave {
@@ -315,7 +326,7 @@
                 }
             }
 
-            .maxui-icon-crown-plus{
+            .maxui-icon-crown-plus, .maxui-icon-trash{
                 display: none;
             }
 
@@ -330,8 +341,18 @@
                     float:right;
                     margin-left: 3px;
                 }
-                .maxui-button.maxui-conversation-transfer-to {
+                .maxui-conversation-confirmation {
                     display: none;
+                    width:50px;
+                    float:right;
+                    margin:6px 0 0 0;
+                    i {
+                        &:before {
+                            width:10px;
+                            font-size: 20px;
+                            cursor: pointer;
+                        }
+                    }
                 }
 
             }
@@ -361,14 +382,7 @@
                     right:-3px;
                     cursor: pointer;
                 }
-                i.maxui-icon-ok-circled {
-                    color: green;
-                    top:2px;
-                }
-                i.maxui-icon-cancel-circled {
-                    color: red;
-                    top:18px;
-                }
+
             }
            .maxui-published {
                 padding-top:2px;
@@ -394,7 +408,7 @@
                     padding: 0px;
                     list-style:none;
                     .maxui-participant {
-                        .maxui-icon-crown, .maxui-icon-crown-plus{
+                        .maxui-icon-crown, .maxui-icon-crown-plus, .maxui-icon-trash{
                             float:right;
                             padding-top: 9px;
                             font-size: 16px;
@@ -406,10 +420,13 @@
                             /* ...and now for the proper property */
                             transition:.5s;
                             &:hover {
-                                color:@favoriteColor;
                                 cursor: pointer;
                             }
                         }
+
+                        .maxui-icon-crown, .maxui-icon-crown-plus { &:hover, &.active { color:@favoriteColor;} }
+                        .maxui-icon-trash { &:hover, &.active{ color:#111;} }
+
                         &.maxui-owner {
                             .maxui-icon-crown {
                                 color:#111;
@@ -418,12 +435,13 @@
                                     cursor:inherit;
                                 }
                             }
-                            .maxui-icon-crown-plus {
+                            .maxui-icon-crown-plus{
                                 display:block;
                             }
-                            .maxui-conversation-transfer-to {
-                                display:none !important;
+                            .maxui-icon-trash{
+                                display:none;
                             }
+
                         }
                         .maxui-avatar {
                             margin-top:3px;

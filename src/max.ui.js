@@ -207,14 +207,21 @@
                 overlay.$el().on('click', conversation.getOwnerSelector('#maxui-conversation-displayname-edit i.maxui-icon-cancel-circled'), function(event) {
                     conversation.displayNameSlot.hide();
                 });
-                // Displays per-user transfer buttons when Owner clicks on transfer ownership button
-                overlay.$el().on('click', conversation.getOwnerSelector('.maxui-icon-crown-plus'), function(event) {
-                    var $crown = jq(event.currentTarget);
-                    var $participant = $crown.closest('.maxui-participant');
-                    $participant.find('.maxui-conversation-transfer-to').show();
+
+                // Displays confirmation buttons when Owner clicks on kick user button
+                // Displays confirmation buttons when Owner clicks on transfer ownership button
+                overlay.$el().on('click', conversation.getOwnerSelector('.maxui-conversation-user-action'), function(event) {
+                    var $action = jq(event.currentTarget);
+                    var $participant = $action.closest('.maxui-participant');
+                    $participant.find('.maxui-conversation-confirmation:visible').hide();
+                    $participant.find('.maxui-conversation-user-action.active').removeClass('active');
+                    $action.addClass('active');
+                    if ($action.hasClass('maxui-icon-crown-plus')) $participant.find('.maxui-conversation-transfer-to').show();
+                    else if ($action.hasClass('maxui-icon-trash')) $participant.find('.maxui-conversation-kick-user').show();
                 });
-                // Transfers ownership to selected user and toggles ownership labels and classes accordingly
-                overlay.$el().on('click', conversation.getSelector('.maxui-participant .maxui-conversation-transfer-to'), function(event) {
+
+                // Transfers ownership to selected user and toggles ownership crown and classes accordingly
+                overlay.$el().on('click', conversation.getSelector('.maxui-participant .maxui-conversation-transfer-to .maxui-icon-ok-circled'), function(event) {
                     var $new_owner = jq(event.currentTarget).closest('.maxui-participant');
                     var new_owner_username = $new_owner.attr('data-username');
                     var $current_owner = jq(conversation.getSelector('.maxui-participant.maxui-owner'));
@@ -228,8 +235,27 @@
                         $new_owner.addClass('maxui-owner');
 
                         overlay.$el().find(conversation.getSelector('')).toggleClass('maxui-owner', false);
-                        overlay.$el().find(conversation.getSelector('#maxui-new-participant')).remove()
+                        overlay.$el().find(conversation.getSelector('#maxui-new-participant')).remove();
+                        $new_crown.removeClass('active');
                     });
+                });
+
+                // Kicks user and toggles trashbin and classes accordingly
+                overlay.$el().on('click', conversation.getSelector('.maxui-participant .maxui-conversation-kick-user .maxui-icon-ok-circled'), function(event) {
+                    var $kicked_user = jq(event.currentTarget).closest('.maxui-participant');
+                    var kicked_username = $kicked_user.attr('data-username');
+                    maxui.maxClient.kickUserFromConversation(conversation.data.id, kicked_username, function(event) {
+                        $kicked_user.remove();
+                    });
+                });
+
+                // Cancels ownership transfer
+                // Cancels user kicking
+                overlay.$el().on('click', conversation.getSelector('.maxui-participant .maxui-conversation-confirmation .maxui-icon-cancel-circled'), function(event) {
+                    var $new_owner = jq(event.currentTarget).closest('.maxui-participant');
+                    $new_owner.find('.maxui-conversation-confirmation:visible').hide();
+                    var $new_owner_action_icon = $new_owner.find('.maxui-conversation-user-action.active');
+                    $new_owner_action_icon.removeClass('active');
                 });
 
                 // Create MaxInput with predictable functionality
