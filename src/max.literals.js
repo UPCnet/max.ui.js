@@ -5,6 +5,8 @@ var max = max || {};
 max.literals = function(language) {
     var maxui = {};
     maxui.en = {
+        'cancel': 'Cancel',
+        'delete': 'Delete',
         'months': ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
         'new_activity_text': 'Write something...',
         'activity': 'activity',
@@ -19,7 +21,7 @@ max.literals = function(language) {
         'conversations_info_leave': 'Leave conversation',
         'conversations_info_delete': 'Delete conversation',
         'conversations_info_delete_warning': 'Warning!',
-        'conversations_info_delete_help': 'If you delete the conversation, the participants will not be able to see the messages anymore. To avoid this, canel and transfer the ownership to someone else. After this you will be able to leave the conversation.',
+        'conversations_info_delete_help': 'If you delete the conversation, the participants will not be able to see the messages anymore. To avoid this, cancel and transfer the ownership to someone else.',
         'participants': 'Talk to',
         'conversation_name': 'Conversation name',
         'message': 'Message',
@@ -56,6 +58,8 @@ max.literals = function(language) {
         'valued_favorited_activity': "Most valued favorites"
     };
     maxui.es = {
+        'cancel': 'Cancelar',
+        'delete': 'Eliminar',
         'months': ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'],
         'new_activity_text': 'Escribe algo...',
         'activity': 'actividad',
@@ -70,7 +74,7 @@ max.literals = function(language) {
         'conversations_info_leave': 'Abandonar conversación',
         'conversations_info_delete': 'Borrar conversación',
         'conversations_info_delete_warning': 'Atención!',
-        'conversations_info_delete_help': '',
+        'conversations_info_delete_help': 'Si eliminas la la conversación, los participantes dejaran de poder ver los mensajes. Para evitar esto cancela y luego traspasa la conversación a otra persona.',
         'participants': 'Conversar con',
         'conversation_name': 'Nombre de la conversación',
         'message': 'Mensaje',
@@ -107,6 +111,8 @@ max.literals = function(language) {
         'valued_favorited_activity': "Favoritas más valoradas"
     };
     maxui.ca = {
+        'cancel': 'Cancelar',
+        'delete': 'Elimina',
         'months': ['gener', 'febrer', 'març', 'abril', 'maig', 'juny', 'juliol', 'agost', 'setembre', 'octubre', 'novembre', 'desembre'],
         'new_activity_text': 'Escriu alguna cosa...',
         'activity': 'activitat',
@@ -121,7 +127,11 @@ max.literals = function(language) {
         'conversations_info_leave': 'Marxar de la conversa',
         'conversations_info_delete': 'Esborrar conversa',
         'conversations_info_delete_warning': 'Alerta!',
-        'conversations_info_delete_help': '',
+        'conversations_info_delete_help': 'Si elimines la conversa, la resta de participants deixaran de poder veure els missatges. Per evitar-ho, cancela i traspassa la conversa a algú altre.',
+        'conversations_info_kick_message_1': 'Click to kick',
+        'conversations_info_kick_message_2': 'out of this conversation',
+        'conversations_info_transfer_message_1': 'Click to make',
+        'conversations_info_transfer_message_2': 'the owner of this conversation',
         'participants': 'Conversa amb',
         'conversation_name': 'Nom de la conversa',
         'message': 'Missatge',

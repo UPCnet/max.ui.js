@@ -14,8 +14,8 @@
       <li class="maxui-participant {{#owner}}maxui-owner{{/owner}}" data-username="{{username}}">
           <span class="maxui-avatar maxui-little"><img src="{{avatarURL}}"></span>
           <span class="maxui-displayname">{{displayName}}
-              <i class="maxui-conversation-user-action maxui-icon-trash" {{^owner}}title="Click to kick {{displayName}} out of this conversation"{{/owner}}></i>
-              <i class="maxui-conversation-user-action maxui-icon-crown{{^owner}}-plus{{/owner}}" {{^owner}}title="Click to make {{displayName}} the owner of this conversation"{{/owner}}></i>
+              <i class="maxui-conversation-user-action maxui-icon-trash" {{^owner}}title="{{literals.conversations_info_kick_message_1}} {{displayName}} {{literals.conversations_info_kick_message_2}}"{{/owner}}></i>
+              <i class="maxui-conversation-user-action maxui-icon-crown{{^owner}}-plus{{/owner}}" {{^owner}}title="{{literals.conversations_info_transfer_message_1}} {{displayName}} {{literals.conversations_info_transfer_message_1}}"{{/owner}}></i>
               <div class="maxui-conversation-transfer-to maxui-conversation-confirmation">
                   <i class="maxui-icon-cancel-circled"></i>
                   <i class="maxui-icon-ok-circled"></i>
@@ -44,8 +44,8 @@
       <input type="button" class="maxui-button maxui-button-red maxui-button-wide" value="{{literals.conversations_info_delete}}">
       <div class="maxui-help">
           <p><b>{{literals.conversations_info_delete_warning}}</b> {{literals.conversations_info_delete_help}}</p>
-          <button class="maxui-button maxui-button-red maxui-confirmation-cancel">Cancel</button>
-          <button class="maxui-button maxui-button-green maxui-confirmation-ok">Delete</button>
+          <button class="maxui-button maxui-button-red maxui-confirmation-cancel">{{literals.cancel}}</button>
+          <button class="maxui-button maxui-button-green maxui-confirmation-ok">{{literals.delete}}</button>
       </div>
   </div>
 </div>
