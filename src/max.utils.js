@@ -114,9 +114,19 @@ max.utils = function() {
                     ms += (match[9] == '+' ? -1 : 1) * (match[10] * 3600 * 1000 + match[11] * 60 * 1000); // oh om
                 if (match[2] >= 0 && match[2] <= 99) // 1-99 AD
                     ms -= 59958144000000;
+
+                var a_day = 1000 * 60 * 60 * 24;  // ms * seconds * minutes * hours
+                var three_days = a_day * 3;
+                var a_year = a_day * 365;
+
                 thisdate.setTime(ms);
-                if ((today.getTime() - ms) < 259200000) {
+
+                // Dates in the last three days get a humanized date
+                if ((today.getTime() - ms) < three_days) {
                     formatted = jQuery.easydate.format_date(thisdate, lang);
+
+                // Dates between 3 days and a year, get a 'X of MMMMM', localized
+                // into its language
                 } else {
                     if (lang == 'en') {
                         formatted = '{0} {1}'.format(match[4], settings.literals.months[match[3] - 1]);
@@ -129,9 +139,9 @@ max.utils = function() {
                         }
                         formatted = '{0} {2}{1}'.format(match[4], settings.literals.months[match[3] - 1], prefix);
                     }
-                    // append year if post is + year old
-                    if ((today.getTime() - ms) > 31536000000) {
-                        formatted += ' ' + match[2];
+                    // Finally, show dd/mm/yyy if post is more than one year old
+                    if ((today.getTime() - ms) > a_year) {
+                        formatted = '{0}/{1}/{2}'.format(match[4] ,match[3],match[2]);
                     }
                 }
                 return formatted;
