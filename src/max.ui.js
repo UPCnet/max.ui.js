@@ -514,7 +514,7 @@
             if (maxui.scrollbar.enabled()) {
                 var movable_height = maxui.scrollbar.$target.height() - maxui.scrollbar.maxtop - maxui.scrollbar.handle.height;
                 var actual_margin = parseInt(maxui.scrollbar.$target.css('margin-top'));
-                var new_margin = actual_margin + (deltaY * -1 * 30);
+                var new_margin = actual_margin + (deltaY * -1 * 5);
                 if (new_margin > 0) new_margin = 0;
                 if (new_margin < (movable_height * -1)) new_margin = movable_height * -1;
                 maxui.scrollbar.$target.css({
@@ -585,7 +585,7 @@
             maxui.scrollbar.dragging = false;
         });
         //Assign click to conversations info
-        jq('#maxui-conversation-info.maxui-button').click(function(event) {
+        jq('#maxui-conversation-info').click(function(event) {
             event.preventDefault();
             event.stopPropagation();
             maxui.overlay.show(maxui.conversationSettings);
@@ -1499,7 +1499,8 @@
                     'border-color': 'transparent'
                 });
             });
-            $common_header.find('h3').text(maxui.settings.currentConversation.displayName);
+            $common_header.find('maxui-back-conversations h3').text(maxui.settings.currentConversation.displayName);
+            $common_header.removeClass('maxui-showing-conversations').addClass('maxui-showing-messages');
             $conversations_list.animate({
                 'margin-left': sectionsWidth * (-1)
             }, 400);
@@ -1507,14 +1508,9 @@
                 'left': 0,
                 'margin-left': 0
             }, 400, function(event) {
-                $conversations_wrapper.height(height - 31 - 45);
-                $common_header.animate({
-                    'height': 45
-                }, 100, function(event) {
-                    maxui.scrollbar.setHeight(height - 31 - 45);
-                    maxui.scrollbar.setTarget('#maxui-conversations #maxui-messages');
-                    maxui.scrollbar.setContentPosition(100);
-                });
+                maxui.scrollbar.setHeight(height - 45);
+                maxui.scrollbar.setTarget('#maxui-conversations #maxui-messages');
+                maxui.scrollbar.setContentPosition(100);
             });
             $messages.width(sectionsWidth);
             maxui.settings.conversationsSection = 'messages';
@@ -1522,24 +1518,23 @@
             $postbox.val(literal).attr('data-literal', literal);
         }
         if (sectionToEnable == 'conversations' && sectionToEnable != maxui.settings.conversationsSection) {
-            $common_header.animate({
-                'height': 0
-            }, 100, function(event) {
-                $addpeople.css({
-                    'border-color': '#ccc'
-                });
-                maxui.scrollbar.setHeight(height - 31);
-                maxui.scrollbar.setTarget('#maxui-conversations #maxui-conversations-list');
-                maxui.scrollbar.setContentPosition(0);
-                $addpeople.animate({
-                    'height': 19,
-                    'padding-top': 6,
-                    'padding-bottom': 6
-                }, 400, function(event) {
-                    $addpeople.removeAttr('style');
-                });
+
+            $addpeople.css({
+                'border-color': '#ccc'
             });
-            $conversations_wrapper.height(height - 31);
+            $common_header.removeClass('maxui-showing-messages').addClass('maxui-showing-conversations');
+
+            maxui.scrollbar.setHeight(height - 45);
+            maxui.scrollbar.setTarget('#maxui-conversations #maxui-conversations-list');
+            maxui.scrollbar.setContentPosition(0);
+            $addpeople.animate({
+                'height': 19,
+                'padding-top': 6,
+                'padding-bottom': 6
+            }, 400, function(event) {
+                $addpeople.removeAttr('style');
+            });
+
             widgetWidth = $conversations_list.width() + 11; // +2 To include border;
             $conversations_list.animate({
                 'margin-left': 0
@@ -1562,7 +1557,7 @@
         var $timeline = jq('#maxui-timeline');
         var $timeline_wrapper = jq('#maxui-timeline .maxui-wrapper');
         var $conversations = jq('#maxui-conversations');
-        var $common_header = $conversations.find('#maxui-common-header');
+        var $common_header = jq('#maxui-common-header');
         var $back_conversations = $conversations.find('#maxui-back-conversations');
         var $conversations_user_input = $conversations.find('input#add-user-input');
         var $conversations_list = jq('#maxui-conversations #maxui-conversations-list');
@@ -1578,19 +1573,15 @@
         var sectionsWidth = widgetWidth - maxui.scrollbar.width - (sectionPadding * 2) - (widgetBorder * 2);
         var height = 320;
         if (sectionToEnable == 'conversations' && maxui.settings.currentConversationSection == 'conversations') {
-            //$conversations.width($conversations.width())
-            //$conversations_list.width($conversations.width())
-            height = 320;
+
             $conversations.show();
+            $common_header.removeClass('maxui-showing-messages').addClass('maxui-showing-conversations');
             $addpeople.show();
-            $common_header.animate({
-                'height': 0
-            }, 400);
             $conversations_user_input.focus();
             $conversations.animate({
-                'height': height - 31
+                'height': height
             }, 400, function(event) {
-                $conversations_wrapper.height(height - 31);
+                $conversations_wrapper.height(height);
             });
             $conversations_list.width(sectionsWidth);
             $timeline.animate({
@@ -1602,7 +1593,7 @@
             $postbutton.val(maxui.settings.literals.new_message_post);
             $conversationsbutton.hide();
             if (!maxui.settings.disableTimeline) $timelinebutton.show();
-            maxui.scrollbar.setHeight(height - 31);
+            maxui.scrollbar.setHeight(height - 45);
             maxui.scrollbar.setTarget('#maxui-conversations #maxui-conversations-list');
         }
         if (sectionToEnable == 'timeline') {

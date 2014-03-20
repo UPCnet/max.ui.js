@@ -31,7 +31,7 @@ module.exports = function(grunt) {
       styles: {
         // The path 'less/**/*.less' will expand to match every less file in
         // the less directory.
-        files: [ 'src/less/*.less' , 'src/font/maxicons.less', 'src/less/classes/*.less'],
+        files: [ 'src/less/*.less' , 'src/font/*.less', 'src/less/classes/*.less'],
         // The tasks to run
         tasks: [ 'less' ]
       },

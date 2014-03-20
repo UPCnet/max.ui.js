@@ -31,13 +31,17 @@
 
 	/* customization for different togglebar locations*/
 
-	#maxui-show-conversations {
+	#maxui-show-conversations, #maxui-conversations-header {
 		&.maxui-togglebar {
 	    	border-bottom: 1px @borderColor solid;
 		    &:after { content: '\e809';}
 		    &:hover:after { content: '\e809';}
 		}
 	 }
+
+	#maxui-conversations-header {
+		height:30px;
+	}
 
 	#maxui-show-timeline {
 		&.maxui-togglebar {
@@ -61,10 +65,15 @@
 		        font-size: 18px;
 		        font-weight: bold;
 		    }
-		    input#maxui-conversation-info {
+		    i#maxui-conversation-info {
 				float:right;
-				margin-top:-36px;
-				margin-right: 5px;
+				margin-top:-32px;
+				margin-right: 7px;
+				font-size: 18px;
+				&:hover {
+					.animate-spin;
+					cursor:pointer;
+				}
 		    }
 		}
 	}

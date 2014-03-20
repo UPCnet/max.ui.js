@@ -191,11 +191,14 @@ max.templates = function() {
          <div id="maxui-mainpanel">\
         \
            <div id="maxui-conversations" style="height:0px; {{showConversations}}">\
-               <div id="maxui-common-header" style="height:0px;">\
+               <div id="maxui-common-header">\
+                  <div id="maxui-conversations-header" class="maxui-togglebar">\
+                      <h3 class="maxui-title">Chats</h3></a>\
+                  </div>\
                   <div id="maxui-back-conversations" class="maxui-togglebar">\
                       <a class="maxui-icon-" href="#"> {{literals.conversations_list}}\
                       <h3 class="maxui-title">displayName</h3></a>\
-                      <input type="button" class="maxui-button" id="maxui-conversation-info" value="{{literals.conversations_info}}">\
+                      <i id="maxui-conversation-info" class="maxui-icon-cog"/>\
                   </div>\
                </div>\
                <div class="maxui-wrapper">\

@@ -10,7 +10,17 @@
 
         #maxui-common-header {
             overflow: hidden;
-
+            background-color: @togglebarBackgroundColor;
+            &.maxui-showing-conversations {
+                #maxui-back-conversations {
+                    display:none;
+                }
+            }
+            &.maxui-showing-messages {
+                #maxui-conversations-header {
+                    display:none;
+                }
+            }
         }
         .maxui-wrapper{
             #maxui-conversations-list {
