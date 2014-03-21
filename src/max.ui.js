@@ -24,15 +24,10 @@
             'transports': undefined,
             'domain': undefined,
             'maximumConversations': 20,
-            'contextTagsFilter': []
+            'contextTagsFilter': [],
+            'scrollbarWidth': 10
         };
-        maxui.scrollbar = {
-            dragging: false,
-            width: 10,
-            handle: {
-                height: 20
-            }
-        };
+
         maxui.overlay = new max.views.MaxOverlay();
         // extend defaults with user-defined settings
         maxui.settings = jq.extend(defaults, options);
@@ -176,7 +171,7 @@
             var showTL = maxui.settings.UISection == 'timeline';
             var toggleTL = maxui.settings.disableTimeline === false && !showTL;
             var toggleCT = maxui.settings.disableConversations === false && !showCT;
-            var containerWidth = maxui.width() - maxui.scrollbar.width;
+            var containerWidth = maxui.width() - maxui.settings.scrollbarWidth;
             var params = {
                 username: maxui.settings.username,
                 literals: maxui.settings.literals,
@@ -216,84 +211,15 @@
     };
     jq.fn.bindEvents = function() {
         maxui = this;
-        maxui.scrollbar.$dragger = jq('.maxui-dragger');
-        maxui.scrollbar.$bar = jq('#maxui-scrollbar');
-        jq('#maxui-conversations').on('mousewheel', function(event, delta, deltaX, deltaY) {
-            event.preventDefault();
-            event.stopPropagation();
-            if (maxui.scrollbar.enabled()) {
-                var movable_height = maxui.scrollbar.$target.height() - maxui.scrollbar.maxtop - maxui.scrollbar.handle.height;
-                var actual_margin = parseInt(maxui.scrollbar.$target.css('margin-top'));
-                var new_margin = actual_margin + (deltaY * -1 * 5);
-                if (new_margin > 0) new_margin = 0;
-                if (new_margin < (movable_height * -1)) new_margin = movable_height * -1;
-                maxui.scrollbar.$target.css({
-                    'margin-top': new_margin
-                });
-                new_margin = new_margin * -1;
-                var relative_pos = (new_margin * 100) / movable_height;
-                maxui.scrollbar.setDraggerPosition(relative_pos);
-            }
+
+        // Create Scrollbar for conversations section
+        maxui.scrollbar = new max.views.MaxScrollbar({
+            width: maxui.settings.scrollbarWidth,
+            handle: {height: 20},
+            scrollbar: '#maxui-conversations #maxui-scrollbar',
+            target: '#maxui-conversations'
         });
-        maxui.scrollbar.setHeight = function(height) {
-            var wrapper_top = $('#maxui-conversations .maxui-wrapper').offset().top - maxui.offset().top - 1;
-            maxui.scrollbar.$bar.css({
-                'height': height,
-                'top': wrapper_top
-            });
-            maxui.scrollbar.maxtop = height - maxui.scrollbar.handle.height - 2;
-        };
-        maxui.scrollbar.setTarget = function(selector) {
-            maxui.scrollbar.$target = jq(selector);
-        };
-        maxui.scrollbar.setDraggerPosition = function(relative_pos) {
-            margintop = (maxui.scrollbar.maxtop * relative_pos) / 100;
-            maxui.scrollbar.$dragger.css({
-                'margin-top': margintop
-            });
-        };
-        maxui.scrollbar.setContentPosition = function(relative_pos) {
-            if (maxui.scrollbar.enabled()) {
-                var movable_height = maxui.scrollbar.$target.height() - maxui.scrollbar.maxtop - maxui.scrollbar.handle.height;
-                var margintop = (movable_height * relative_pos) / 100;
-                maxui.scrollbar.$target.css({
-                    'margin-top': margintop * -1
-                });
-                maxui.scrollbar.setDraggerPosition(relative_pos);
-            } else {
-                maxui.scrollbar.$target.css({
-                    'margin-top': ''
-                });
-                maxui.scrollbar.setDraggerPosition(0);
-            }
-        };
-        maxui.scrollbar.enabled = function() {
-            return maxui.scrollbar.$target.height() > maxui.scrollbar.maxtop;
-        };
-        jq(document).on('mousemove', function(event) {
-            if (maxui.scrollbar.dragging) {
-                event.stopPropagation();
-                event.preventDefault();
-                // drag only if target content is taller than scrollbar
-                if (maxui.scrollbar.enabled()) {
-                    // Calculate dragger position, constrained to actual limits
-                    var margintop = event.clientY - maxui.scrollbar.$bar.offset().top;
-                    if (margintop < 0) margintop = 0;
-                    if (margintop >= maxui.scrollbar.maxtop) margintop = maxui.scrollbar.maxtop;
-                    // Calculate dragger position relative to 100 and move content
-                    var relative_position = (margintop * 100) / maxui.scrollbar.maxtop;
-                    maxui.scrollbar.setContentPosition(relative_position);
-                }
-            }
-        });
-        jq(document.body).on('mousedown', '.maxui-dragger', function(event) {
-            event.stopPropagation();
-            event.preventDefault();
-            maxui.scrollbar.dragging = true;
-        });
-        jq(document).on('mouseup', function(event) {
-            maxui.scrollbar.dragging = false;
-        });
+
         //Assign click to conversations info
         jq('#maxui-conversation-info').click(function(event) {
             event.preventDefault();
