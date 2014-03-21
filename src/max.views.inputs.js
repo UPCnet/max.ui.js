@@ -1,13 +1,12 @@
 /*jshint multistr: true */
-var max = max || {};
-
 /**
 * @fileoverview
 */
+var max = max || {};
 
 (function(jq) {
 
-max.views = function() {
+var views = function() {
 
 
     /** MaxPredictive.
@@ -263,5 +262,7 @@ max.views = function() {
     };
 
 };
+max.views = max.views || {};
+jq.extend(max.views, views());
 
 })(jQuery);
