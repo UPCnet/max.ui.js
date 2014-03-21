@@ -210,7 +210,7 @@
 
                 // Displays confirmation buttons when Owner clicks on kick user button
                 // Displays confirmation buttons when Owner clicks on transfer ownership button
-                overlay.$el().on('click', conversation.getOwnerSelector('.maxui-conversation-transfer-to, .maxui-conversation-kick-user'), function(event) {
+                overlay.$el().on('click', conversation.getOwnerSelector('.maxui-conversation-user-action'), function(event) {
                     var $action = jq(event.currentTarget);
                     var $participant = $action.closest('.maxui-participant');
                     $participant.find('.maxui-conversation-confirmation:visible').hide();
