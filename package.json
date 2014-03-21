@@ -13,7 +13,9 @@
     "url": "git://github.com/UPCnet/max.ui.js.git"
   },
   "devDependencies": {
+    "lodash": "",
     "dalekjs": "",
+    "underscore.string": "",
     "grunt-contrib-concat": "",
     "grunt-contrib-copy": "",
     "grunt-contrib-cssmin": "",
@@ -23,6 +25,7 @@
     "grunt-contrib-watch": "",
     "grunt-dalek": "",
     "grunt-jsbeautifier": "",
+    "js-beautify": "latest",
     "grunt-text-replace": ""
     },
   "keywords": [
