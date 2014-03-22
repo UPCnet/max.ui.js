@@ -15,7 +15,7 @@ var views = function() {
     */
 
     function MaxPredictive(options) {
-        self = this;
+        var self = this;
         self.minchars = options.minchars;
         self.source = options.source;
         self.action = options.action;
@@ -167,15 +167,16 @@ var views = function() {
     */
 
     function MaxInput(options) {
-        this.input = options.input;
-        this.$input = jq(this.input);
-        this.placeholder = options.placeholder;
-        this.$delegate = jq(options.delegate);
-        this.setBindings();
-        this.bindings = options.bindings;
+        var self = this;
+        self.input = options.input;
+        self.$input = jq(self.input);
+        self.placeholder = options.placeholder;
+        self.$delegate = jq(options.delegate);
+        self.setBindings();
+        self.bindings = options.bindings;
 
         // Initialize input value with placeholder
-        this.$input.val(this.placeholder);
+        self.$input.val(self.placeholder);
     }
 
     MaxInput.prototype.bind = function(eventName, callback) {

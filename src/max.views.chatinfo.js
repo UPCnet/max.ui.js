@@ -129,8 +129,6 @@ var views = function() {
         });
 
         // Create MaxInput with predictable functionality
-        var chatinfo = self;
-
         self.predictive = new max.views.MaxPredictive({
             minchars: 3,
             filter: function(event) {
@@ -177,9 +175,6 @@ var views = function() {
 
                 }
         });
-
-        // We have to redefine self here, because previous usage of MaxInput and MaxPredictive overwrites it. (SUCKS ...)
-        self = chatinfo;
 
         // Confirmas adding a new user to the conversation
         overlay.$el().on('click', self.getOwnerSelector('.maxui-participant .maxui-conversation-add-user .maxui-icon-ok-circled'), function(event) {
