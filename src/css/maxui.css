@@ -1,8 +1,8 @@
 @import "../css/hacks.css";
 @font-face {
   font-family: 'maxicons';
-  src: url('../font/maxicons.eot?74730197');
-  src: url('../font/maxicons.eot?74730197#iefix') format('embedded-opentype'), url('../font/maxicons.woff?74730197') format('woff'), url('../font/maxicons.ttf?74730197') format('truetype'), url('../font/maxicons.svg?74730197#maxicons') format('svg');
+  src: url('../font/maxicons.eot?12542915');
+  src: url('../font/maxicons.eot?12542915#iefix') format('embedded-opentype'), url('../font/maxicons.woff?12542915') format('woff'), url('../font/maxicons.ttf?12542915') format('truetype'), url('../font/maxicons.svg?12542915#maxicons') format('svg');
   font-weight: normal;
   font-style: normal;
 }
@@ -12,7 +12,7 @@
 @media screen and (-webkit-min-device-pixel-ratio:0) {
   @font-face {
     font-family: 'maxicons';
-    src: url('../font/maxicons.svg?74730197#maxicons') format('svg');
+    src: url('../font/maxicons.svg?12542915#maxicons') format('svg');
   }
 }
 */
@@ -41,27 +41,19 @@
   /* Uncomment for 3D effect */
   /* text-shadow: 1px 1px 1px rgba(127, 127, 127, 0.3); */
 }
-.maxui-icon-crown:before {
+.maxui-icon-mail-alt:before {
+  content: '\e812';
+}
+/* '' */
+.maxui-icon-check:before {
   content: '\e813';
 }
 /* '' */
-.maxui-icon-cog:before {
-  content: '\e816';
-}
-/* '' */
-.maxui-icon-star:before {
-  content: '\e800';
-}
-/* '' */
 .maxui-icon-star-empty:before {
   content: '\e801';
 }
 /* '' */
 .maxui-icon-ok-circled:before {
-  content: '\e812';
-}
-/* '' */
-.maxui-icon-cancel:before {
   content: '\e80f';
 }
 /* '' */
@@ -85,14 +77,14 @@
   content: '\e805';
 }
 /* '' */
-.maxui-icon-crown-plus:before {
-  content: '\e815';
+.maxui-icon-chat-empty:before {
+  content: '\e804';
 }
-/* '' */
-.maxui-icon-trash:before {
-  content: '\e806';
+/* '' */
+.maxui-icon-star:before {
+  content: '\e800';
 }
-/* '' */
+/* '' */
 .maxui-icon-down-dir:before {
   content: '\e80d';
 }
@@ -125,22 +117,18 @@
   content: '\e80a';
 }
 /* '' */
-.maxui-icon-user-add:before {
-  content: '\e814';
+.maxui-icon-trash:before {
+  content: '\e806';
 }
-/* '' */
-.maxui-icon-chat-empty:before {
-  content: '\e804';
-}
-/* '' */
+/* '' */
 /*
    Animation example, for spinners
 */
 .animate-spin {
-  -moz-animation: spin 5s infinite linear;
-  -o-animation: spin 5s infinite linear;
-  -webkit-animation: spin 5s infinite linear;
-  animation: spin 5s infinite linear;
+  -moz-animation: spin 2s infinite linear;
+  -o-animation: spin 2s infinite linear;
+  -webkit-animation: spin 2s infinite linear;
+  animation: spin 2s infinite linear;
   display: inline-block;
 }
 @-moz-keyframes spin {
@@ -494,10 +482,10 @@
   font-size: 18px;
 }
 #maxui-container #maxui-back-conversations.maxui-togglebar i#maxui-conversation-info:hover {
-  -moz-animation: spin 5s infinite linear;
-  -o-animation: spin 5s infinite linear;
-  -webkit-animation: spin 5s infinite linear;
-  animation: spin 5s infinite linear;
+  -moz-animation: spin 2s infinite linear;
+  -o-animation: spin 2s infinite linear;
+  -webkit-animation: spin 2s infinite linear;
+  animation: spin 2s infinite linear;
   display: inline-block;
   cursor: pointer;
 }
@@ -1017,6 +1005,17 @@
   border-radius: 3px;
   padding: 2px 10px;
   min-height: 25px;
+}
+#maxui-container #maxui-conversations .maxui-wrapper #maxui-messages #maxui-message-list .maxui-message .maxui-activity-content .maxui-balloon .maxui-icon-check {
+  display: none;
+  color: #00b300;
+}
+#maxui-container #maxui-conversations .maxui-wrapper #maxui-messages #maxui-message-list .maxui-message .maxui-activity-content .maxui-balloon .maxui-icon-check:before {
+  margin-left: 0px;
+  margin-right: 0px;
+}
+#maxui-container #maxui-conversations .maxui-wrapper #maxui-messages #maxui-message-list .maxui-message .maxui-activity-content .maxui-balloon .maxui-icon-check.maxui-ack {
+  display: inline-block;
 }
 #maxui-container #maxui-conversations .maxui-wrapper #maxui-messages #maxui-message-list .maxui-message .maxui-activity-content .maxui-balloon:after {
   content: "";

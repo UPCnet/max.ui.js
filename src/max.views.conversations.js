@@ -146,6 +146,7 @@ var views = function() {
         self.maxui.maxClient.getMessagesForConversation(self.mainview.active, {limit:10}, function(messages) {
             self.remaining = this.getResponseHeader('X-Has-Remaining-Items');
             _.each(messages, function(message, index, list) {
+                message.ack = true;
                 self.append(message);
             });
             self.render();
@@ -158,6 +159,7 @@ var views = function() {
         self.maxui.maxClient.getMessagesForConversation(self.mainview.active, {limit:10, before:older_loaded.messageID}, function(messages) {
             self.remaining = this.getResponseHeader('X-Has-Remaining-Items');
             _.each(messages, function(message, index, list) {
+                message.ack = true;
                 self.prepend(message, index);
             });
             self.render();
@@ -174,7 +176,8 @@ var views = function() {
                 'username': message.actor.username,
                 'displayName': message.actor.displayName,
                 'published': message.published,
-                'messageID': message.id
+                'messageID': message.id,
+                'ack': message.ack
             };
         }
 
@@ -191,7 +194,8 @@ var views = function() {
                 'username': message.actor.username,
                 'displayName': message.actor.displayName,
                 'published': message.published,
-                'messageID': message.id
+                'messageID': message.id,
+                'ack': message.ack
             };
         }
 
@@ -214,7 +218,8 @@ var views = function() {
                 date: self.maxui.utils.formatDate(message.published, maxui.language),
                 origin: origin,
                 literals: self.maxui.settings.literals,
-                avatarURL: avatar_url
+                avatarURL: avatar_url,
+                ack: message.ack
             };
             // Render the conversations template and append it at the end of the rendered covnersations
             messages = messages + self.maxui.templates.message.render(params);
@@ -436,6 +441,7 @@ var views = function() {
             var message = this;
             jq('#maxui-newactivity textarea').val('');
             jq('#maxui-newactivity .maxui-button').attr('disabled', 'disabled');
+            message.ack = false;
             self.messagesview.append(message);
             self.messagesview.render();
             self.scrollbar.setContentPosition(100);
@@ -503,6 +509,15 @@ var views = function() {
             }
         } else {
             console.log('Message {} succesfully delivered'.format(data.message));
+            var interval = setInterval(function(event) {
+                var $message = jq('#' + message.messageID + ' .maxui-icon-check');
+                if ($message) {
+                    $message.addClass('maxui-ack');
+                    clearInterval(interval);
+                }
+            }, 50);
+
+
         }
     };
 

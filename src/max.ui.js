@@ -6,6 +6,7 @@
     jq.fn.maxUI = function(options) {
         // Keep a reference of the context object
         var maxui = this;
+        maxui.stompActive = false;
         maxui.templates = max.templates();
         maxui.utils = max.utils();
         var defaults = {
@@ -101,9 +102,10 @@
         };
         maxui.maxClient.configure(maxclient_config);
 
+
         // Stomp.js boilerplate
         // Start socket listener
-        ws = new SockJS(maxui.settings.maxTalkURL);
+        var ws = new SockJS(maxui.settings.maxTalkURL);
         maxui.stomp = Stomp.over(ws);
 
         // View representing the conversations section
@@ -133,12 +135,22 @@
             }
             maxui.settings.subscriptions = userSubscriptions;
 
+            function startupStomp(user, token, onconnect, onerror, vhost) {
+                maxui.stomp = Stomp.over(ws);
+                maxui.stomp.heartbeat.outgoing = 0;
+                maxui.stomp.heartbeat.incoming = 0;
+                maxui.stomp.connect(user, token, onconnect, onerror, vhost);
+            }
+
             if (!maxui.settings.disableConversations) {
                 // Initialize conversation view with conversations data from user
+                // Do it inside a setinterval loop, for handling socket connection issues
+
                 maxui.conversations.load(data.talkingIn);
                 // Define stomp callbacks and connect
                 var on_connect = function(x) {
                     maxui.conversations.connect();
+                    maxui.stompActive = true;
                 };
                 var on_error = function(error) {
                     console.log(error.body);
@@ -146,16 +158,23 @@
                 if (maxui.settings.enableAlerts) maxui.stomp.debug = function(a) {
                     console.log(a);
                 };
-                maxui.stomp.heartbeat.outgoing = 0;
-                maxui.stomp.heartbeat.incoming = 0;
 
                 var stomp_user_with_domain = "";
                 if (maxui.settings.domain) {
                     stomp_user_with_domain += maxui.settings.domain + ':';
                 }
-
                 stomp_user_with_domain += maxui.settings.username;
-                maxui.stomp.connect(stomp_user_with_domain, maxui.settings.oAuthToken, on_connect, on_error, '/');
+                startupStomp(stomp_user_with_domain, maxui.settings.oAuthToken, on_connect, on_error, '/');
+                interval = setInterval(function(event) {
+                    if (!maxui.stompActive) {
+                        console.log('connection timeout, retrying');
+                        ws.close();
+                        ws = new SockJS(maxui.settings.maxTalkURL);
+                        startupStomp(stomp_user_with_domain, maxui.settings.oAuthToken, on_connect, on_error, '/');
+                    } else {
+                        clearInterval(interval);
+                    }
+                }, 2000);
             }
 
 

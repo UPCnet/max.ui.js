@@ -294,6 +294,7 @@ max.templates = function() {
                 <div class="maxui-balloon">\
                     <p class="maxui-body">{{&text}}</p>\
                     <span class="maxui-publisheddate">{{date}}</span>\
+                    <i class="maxui-icon-check{{#ack}} maxui-ack{{/ack}}"></i>\
                 </div>\
             </div>\
             <div class="maxui-clear"></div>\
