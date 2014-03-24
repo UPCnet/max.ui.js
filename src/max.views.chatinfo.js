@@ -231,7 +231,7 @@ var views = function() {
 
     MaxChatInfo.prototype.load = function(configurator) {
         var self = this;
-        maxui.maxClient.getConversation(maxui.settings.currentConversation.hash, function(data) {
+        maxui.maxClient.getConversation(maxui.conversations.active, function(data) {
             self.data = data;
             var participants = [];
             for (pt = 0; pt < self.data.participants.length; pt++) {
