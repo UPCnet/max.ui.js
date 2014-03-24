@@ -83,13 +83,18 @@ var views = function() {
             var conversation = self.mainview.conversations[i];
             var partner = conversation.participants[0];
             var avatar_url = self.maxui.settings.conversationAvatarURLpattern.format(conversation.id);
+            var displayName = '';
             if (conversation.participants.length <= 2) {
-                if (conversation.participants[0].username == self.maxui.settings.username) {
+                if (conversation.participants.length == 1) {
+                    partner = conversation.participants[0];
+                    displayName += '[Archive] ';
+                }
+                else if (conversation.participants[0].username == self.maxui.settings.username) {
                     partner = conversation.participants[1];
                 }
                 avatar_url = self.maxui.settings.avatarURLpattern.format(partner.username);
             }
-            var displayName = conversation.displayName;
+            displayName += conversation.displayName;
             var conv_params = {
                 id: conversation.id,
                 displayName: displayName,
@@ -215,17 +220,25 @@ var views = function() {
         // And a conversations exchanges subscriptions updated with the new one
         self.stomp.subscribe('/exchange/new/{0}'.format(self.maxui.settings.username), function(d) {
             data = JSON.parse(d.body);
-            if (self.maxui.settings.UISection == 'conversations' && self.maxui.settings.conversationsSection == 'conversations') self.maxui.printConversations(function() {
-                self.maxui.toggleSection('conversations');
-                $('.maxui-message-count:first').css({
-                    'background-color': 'red'
+            if (self.maxui.settings.UISection == 'conversations' && self.maxui.settings.conversationsSection == 'conversations') {
+                self.insertConversation(data);
+                self.maxui.printConversations(function() {
+                    self.maxui.toggleSection('conversations');
+                    $('.maxui-message-count:first').css({
+                        'background-color': 'red'
+                    });
                 });
-            });
+            }
             // subscribe to the new conversation exchange
             self.stomp.subscribe('/exchange/{0}'.format(data.conversation), function(d) {
                 self.insertMessage(d);
             });
         });
+    };
+
+    MaxConversations.prototype.insertMessage = function(d) {
+        var self = this;
+        debugger
     };
 
     MaxConversations.prototype.insertMessage = function(d) {
