@@ -207,6 +207,9 @@ max.templates = function() {
                    </div>\
         \
                    <div id="maxui-messages" style="{{messagesStyle}}">\
+                       <div id="maxui-more-messages">\
+                           <input type="button" class="maxui-button maxui-button-grey" value="{{literals.chats_load_older}}">\
+                       </div>\
                        <div id="maxui-message-list">\
                        </div>\
                    </div>\

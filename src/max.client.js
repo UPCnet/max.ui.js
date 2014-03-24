@@ -340,9 +340,9 @@ MaxClient.prototype.getConversationsForUser = function(username, callback) {
     this.GET(route, query, callback);
 };
 
-MaxClient.prototype.getMessagesForConversation = function(hash, callback) {
+MaxClient.prototype.getMessagesForConversation = function(hash, params, callback) {
     var route = this.ROUTES.messages.format(hash);
-    query = {};
+    query = params;
     this.GET(route, query, callback);
 };
 

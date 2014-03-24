@@ -136,12 +136,15 @@ var views = function() {
         self.messages = {};
         self.mainview = maxconversations;
         self.maxui = self.mainview.maxui;
+        self.remaining = true;
     }
 
-    MaxConversationMessages.prototype.load = function(conversation_hash) {
+    // Loads the last 10 messages of a conversation
+    MaxConversationMessages.prototype.load = function() {
         var self = this;
-        self.messages[conversation_hash] = [];
-        self.maxui.maxClient.getMessagesForConversation(conversation_hash, function(messages) {
+        self.messages[self.mainview.active] = [];
+        self.maxui.maxClient.getMessagesForConversation(self.mainview.active, {limit:10}, function(messages) {
+            self.remaining = this.getResponseHeader('X-Has-Remaining-Items');
             _.each(messages, function(message, index, list) {
                 self.append(message);
             });
@@ -149,6 +152,17 @@ var views = function() {
         });
     };
 
+    MaxConversationMessages.prototype.loadOlder = function() {
+        var self = this;
+        var older_loaded = _.first(self.messages[self.mainview.active]);
+        self.maxui.maxClient.getMessagesForConversation(self.mainview.active, {limit:10, before:older_loaded.messageID}, function(messages) {
+            self.remaining = this.getResponseHeader('X-Has-Remaining-Items');
+            _.each(messages, function(message, index, list) {
+                self.prepend(message, index);
+            });
+            self.render();
+        });
+    };
 
     MaxConversationMessages.prototype.append = function(message) {
         var self = this;
@@ -167,6 +181,22 @@ var views = function() {
         self.messages[self.mainview.active].push(message);
     };
 
+    MaxConversationMessages.prototype.prepend = function(message, index) {
+        var self = this;
+
+        // Convert activity from max to mimic rabbit response
+        if (!_.has(message, 'messageID')) {
+            message = {
+                'message': message.object.content,
+                'username': message.actor.username,
+                'displayName': message.actor.displayName,
+                'published': message.published,
+                'messageID': message.id
+            };
+        }
+
+        self.messages[self.mainview.active].splice(index, 0, message);
+    };
     MaxConversationMessages.prototype.render = function() {
         var self = this;
         // String to store the generated html pieces of each conversation item
@@ -190,6 +220,11 @@ var views = function() {
             messages = messages + self.maxui.templates.message.render(params);
         }
         jq('#maxui-messages #maxui-message-list').html(messages);
+
+        $moremessages = jq('#maxui-messages #maxui-more-messages');
+        if (self.remaining == "1") $moremessages.show();
+        else $moremessages.hide();
+
     };
 
     MaxConversationMessages.prototype.show = function(conversation_hash) {
@@ -199,7 +234,7 @@ var views = function() {
 
         // Load conversation messages from max if never loaded
         if (!_.has(self.messages, conversation_hash)) {
-            self.load(conversation_hash);
+            self.load();
             self.toggle();
         // Otherwise, just show them
         } else {
@@ -365,6 +400,7 @@ var views = function() {
         //Assign going back to conversations list
         jq('#maxui-back-conversations').on('click', function(event) {
             event.preventDefault();
+            event.stopPropagation();
             window.status = '';
             self.listview.show();
         });
@@ -372,9 +408,19 @@ var views = function() {
         //Assign activation of messages section by delegating the clicl of a conversation arrow to the conversations container
         jq('#maxui-conversations').on('click', '.maxui-conversation', function(event) {
             event.preventDefault();
+            event.stopPropagation();
             window.status = '';
             var conversation_hash = jq(event.target).closest('.maxui-conversation').attr('id');
             self.messagesview.show(conversation_hash);
+        });
+
+        /// Load older activities
+        jq('#maxui-conversations').on('click', '#maxui-more-messages .maxui-button', function(event) {
+            event.preventDefault();
+            event.stopPropagation();
+            window.status = '';
+            self.messagesview.loadOlder();
+
         });
     };
 
@@ -393,7 +439,7 @@ var views = function() {
             self.messagesview.append(message);
             self.messagesview.render();
             self.scrollbar.setContentPosition(100);
-            self.messagesview.show(conversation_hash);
+            self.messagesview.show(self.active);
         });
 
     };

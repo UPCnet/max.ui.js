@@ -16,6 +16,18 @@
 
 #maxui-container {
 
+    .maxui-button.maxui-button-grey {
+        border-color: #ddd;
+        color: #565656;
+        background: #f2f2f2;
+            &:hover,
+            &:focus {
+                border-color: #ddd;
+                color: #565656;
+                background: darken(#f2f2f2, 5%);
+            }
+    }
+
     .maxui-button.maxui-button-red {
         border-color: #bd362f;
         color: #fff;
@@ -72,6 +84,12 @@
     }
 
     /* customization for different button locations*/
+    #maxui-more-messages {
+        .maxui-button {
+            width: 100%;
+            display: block;
+        }
+    }
 
     #maxui-more-activities {
         .maxui-button{

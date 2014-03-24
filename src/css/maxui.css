@@ -573,6 +573,17 @@
 #maxui-container {
   /* customization for different button locations*/
 }
+#maxui-container .maxui-button.maxui-button-grey {
+  border-color: #ddd;
+  color: #565656;
+  background: #f2f2f2;
+}
+#maxui-container .maxui-button.maxui-button-grey:hover,
+#maxui-container .maxui-button.maxui-button-grey:focus {
+  border-color: #ddd;
+  color: #565656;
+  background: #e5e5e5;
+}
 #maxui-container .maxui-button.maxui-button-red {
   border-color: #bd362f;
   color: #fff;
@@ -624,6 +635,10 @@
   box-shadow: none;
   -webkit-box-shadow: none;
   cursor: default;
+}
+#maxui-container #maxui-more-messages .maxui-button {
+  width: 100%;
+  display: block;
 }
 #maxui-container #maxui-more-activities .maxui-button {
   border-color: #cccccc;
@@ -977,6 +992,12 @@
 }
 #maxui-container #maxui-conversations .maxui-wrapper #maxui-messages {
   position: absolute;
+}
+#maxui-container #maxui-conversations .maxui-wrapper #maxui-messages #maxui-more-messages {
+  width: 100%;
+  box-sizing: border-box;
+  padding-left: 10px;
+  padding-right: 10px;
 }
 #maxui-container #maxui-conversations .maxui-wrapper #maxui-messages #maxui-message-list .maxui-message {
   position: relative;
