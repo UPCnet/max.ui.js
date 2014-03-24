@@ -210,7 +210,7 @@
                 maxui.bindEvents();
                 maxui.toggleSection('conversations');
             }
-            else if (maxui.settings.UISection == 'timeline') maxui.printActivities({}, function() {
+            else if (maxui.settings.UISection == 'timeline') maxui.printActivities({}, function(event) {
                 maxui.bindEvents();
             });
         });
@@ -367,7 +367,7 @@
         jq('#maxui-show-timeline').on('click', function(event) {
             event.preventDefault();
             window.status = '';
-            maxui.printActivities({}, function() {
+            maxui.printActivities({}, function(event) {
                 maxui.toggleSection('timeline');
             });
         });
@@ -915,7 +915,7 @@
         } else {
             filters = maxui.getFilters();
         }
-        maxui.printActivities();
+        maxui.printActivities({});
         //Enable or disable filter toogle if there are visible filters defined (or not)
         jq('#maxui-search').toggleClass('folded', !filters.visible);
     };
@@ -1452,7 +1452,6 @@
         if (arguments.length > 1) {
             var callback = arguments[1];
             func_params.push(function(items) {
-
                 // Determine write permission, granted by default if we don't find a restriction
                 maxui.settings.canwrite = true;
                 // If we don't have a context, we're in timeline, so we can write
@@ -1491,8 +1490,8 @@
                 }
             });
         } else {
-            func_params.push(function() {
-                maxui.formatActivities(this, insert_at);
+            func_params.push(function(items) {
+                maxui.formatActivities(items, insert_at);
             });
         }
         // if passed as param, assume an object with search filtering params
