@@ -174,17 +174,17 @@ MaxClient.prototype.GET = function(route, query, callback) {
     }
     return true;
 };
-MaxClient.prototype.getUserTimeline = function(username, callback) {
-    var route = this.ROUTES.timeline.format(username);
-    var query = {};
-    if (arguments.length > 2) query = arguments[2];
-    this.GET(route, query, callback);
-};
+
+/*
+ * People related endpoints
+ */
+
 MaxClient.prototype.getUserData = function(username, callback) {
     var route = this.ROUTES.user.format(username);
     var query = {};
     this.GET(route, query, callback);
 };
+
 MaxClient.prototype.getUsersList = function(userquery, callback) {
     var route = this.ROUTES.users;
     var query = {
@@ -192,11 +192,28 @@ MaxClient.prototype.getUsersList = function(userquery, callback) {
     };
     this.GET(route, query, callback);
 };
+
+/*
+ * Context related endpoints
+ */
+
 MaxClient.prototype.getContext = function(chash, callback) {
     var route = this.ROUTES.context.format(chash);
     var query = {};
     this.GET(route, query, callback);
 };
+
+/*
+ * Activity related endpoints
+ */
+
+MaxClient.prototype.getUserTimeline = function(username, callback) {
+    var route = this.ROUTES.timeline.format(username);
+    var query = {};
+    if (arguments.length > 2) query = arguments[2];
+    this.GET(route, query, callback);
+};
+
 MaxClient.prototype.getActivities = function(options, callback) {
     var route = this.ROUTES.activities.format(options.context);
     var query = {};
@@ -205,65 +222,13 @@ MaxClient.prototype.getActivities = function(options, callback) {
         if (options.tags.length > 0) query.context_tags = options.tags;
     this.GET(route, query, callback);
 };
-MaxClient.prototype.getConversation = function(chash, callback) {
-    var route = this.ROUTES.conversation.format(chash);
-    var query = {};
-    this.GET(route, query, callback);
-};
-MaxClient.prototype.modifyConversation = function(chash, displayName, callback) {
-    var query = {
-        "displayName": displayName
-    };
-    route = this.ROUTES.conversation.format(chash);
-    this.PUT(route, query, callback);
-};
-MaxClient.prototype.addUserToConversation = function(chash, username, callback) {
-    var query = {};
-    var route = this.ROUTES.user_conversation.format(username, chash);
-    this.POST(route, query, callback);
-};
 
-MaxClient.prototype.kickUserFromConversation = function(chash, username, callback) {
-    var query = {};
-    var route = this.ROUTES.user_conversation.format(username, chash);
-    this.DELETE(route, query, callback);
-};
-
-MaxClient.prototype.deleteConversation = function(chash, callback) {
-    var query = {};
-    var route = this.ROUTES.conversation.format(chash);
-    this.DELETE(route, query, callback);
-};
-MaxClient.prototype.leaveConversation = function(chash, username, callback) {
-    var query = {};
-    var route = this.ROUTES.user_conversation.format(username, chash);
-    this.DELETE(route, query, callback);
-};
-
-MaxClient.prototype.transferConversationOwnership = function(chash, username, callback) {
-    var query = {
-        "actor": {
-            "username": username
-        }
-    };
-    route = this.ROUTES.conversation_owner.format(chash);
-    this.PUT(route, query, callback);
-};
-MaxClient.prototype.getConversationsForUser = function(username, callback) {
-    var route = this.ROUTES.conversations;
-    query = {};
-    this.GET(route, query, callback);
-};
-MaxClient.prototype.getMessagesForConversation = function(hash, callback) {
-    var route = this.ROUTES.messages.format(hash);
-    query = {};
-    this.GET(route, query, callback);
-};
 MaxClient.prototype.getCommentsForActivity = function(activityid, callback) {
     route = this.ROUTES.comments.format(activityid);
     var query = {};
     this.GET(route, query, callback);
 };
+
 MaxClient.prototype.addComment = function(comment, activity, callback) {
     var query = {
         "actor": {},
@@ -277,6 +242,7 @@ MaxClient.prototype.addComment = function(comment, activity, callback) {
     route = this.ROUTES.comments.format(activity);
     this.POST(route, query, callback);
 };
+
 MaxClient.prototype.addActivity = function(text, contexts, callback) {
     query = {
         "object": {
@@ -305,14 +271,81 @@ MaxClient.prototype.addActivity = function(text, contexts, callback) {
     };
     this.POST(route, query, callback, trigger);
 };
+
 MaxClient.prototype.removeActivity = function(activity_id, callback) {
     route = this.ROUTES.activity.format(activity_id);
     this.DELETE(route, {}, callback);
 };
+
 MaxClient.prototype.removeActivityComment = function(activity_id, comment_id, callback) {
     route = this.ROUTES.comment.format(activity_id, comment_id);
     this.DELETE(route, {}, callback);
 };
+
+/*
+ * Conversation related endpoints
+ */
+
+MaxClient.prototype.getConversation = function(chash, callback) {
+    var route = this.ROUTES.conversation.format(chash);
+    var query = {};
+    this.GET(route, query, callback);
+};
+
+MaxClient.prototype.modifyConversation = function(chash, displayName, callback) {
+    var query = {
+        "displayName": displayName
+    };
+    route = this.ROUTES.conversation.format(chash);
+    this.PUT(route, query, callback);
+};
+
+MaxClient.prototype.addUserToConversation = function(chash, username, callback) {
+    var query = {};
+    var route = this.ROUTES.user_conversation.format(username, chash);
+    this.POST(route, query, callback);
+};
+
+MaxClient.prototype.kickUserFromConversation = function(chash, username, callback) {
+    var query = {};
+    var route = this.ROUTES.user_conversation.format(username, chash);
+    this.DELETE(route, query, callback);
+};
+
+MaxClient.prototype.deleteConversation = function(chash, callback) {
+    var query = {};
+    var route = this.ROUTES.conversation.format(chash);
+    this.DELETE(route, query, callback);
+};
+
+MaxClient.prototype.leaveConversation = function(chash, username, callback) {
+    var query = {};
+    var route = this.ROUTES.user_conversation.format(username, chash);
+    this.DELETE(route, query, callback);
+};
+
+MaxClient.prototype.transferConversationOwnership = function(chash, username, callback) {
+    var query = {
+        "actor": {
+            "username": username
+        }
+    };
+    route = this.ROUTES.conversation_owner.format(chash);
+    this.PUT(route, query, callback);
+};
+
+MaxClient.prototype.getConversationsForUser = function(username, callback) {
+    var route = this.ROUTES.conversations;
+    query = {};
+    this.GET(route, query, callback);
+};
+
+MaxClient.prototype.getMessagesForConversation = function(hash, callback) {
+    var route = this.ROUTES.messages.format(hash);
+    query = {};
+    this.GET(route, query, callback);
+};
+
 MaxClient.prototype.addMessageAndConversation = function(params, callback) {
     query = {
         "object": {
@@ -342,6 +375,11 @@ MaxClient.prototype.addMessage = function(text, chash, callback) {
     route = this.ROUTES.messages.format(chash);
     this.POST(route, query, callback);
 };
+
+/*
+ * Social-interactions related endpoints
+ */
+
 MaxClient.prototype.follow = function(username, callback) {
     query = {
         "object": {
