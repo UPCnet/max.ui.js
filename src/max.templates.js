@@ -203,7 +203,7 @@ max.templates = function() {
                </div>\
                <div class="maxui-wrapper">\
                    <div id="maxui-conversations-list" class="maxui-activities">\
-                       <span id="maxui-info">{{literals.no_conversations}}<span>\
+                       <span id="maxui-info">{{literals.no_chats}}<span>\
                    </div>\
         \
                    <div id="maxui-messages" style="{{messagesStyle}}">\

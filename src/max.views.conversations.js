@@ -15,6 +15,7 @@ var views = function() {
 
     function MaxConversationsList(maxconversations, options) {
         var self = this;
+        self.conversations = [];
         self.mainview = maxconversations;
         self.maxui = self.mainview.maxui;
     }
@@ -60,6 +61,10 @@ var views = function() {
     MaxConversationsList.prototype.render = function() {
         var self = this;
 
+        // String to store the generated html pieces of each conversation item
+        // by default showing a "no conversations" message
+
+        var html = '<span id="maxui-info">' + self.maxui.settings.literals.no_chats + '<span>';
         // Render the postbox UI if user has permission
         var showCT = self.maxui.settings.UISection == 'conversations';
         var toggleCT = self.maxui.settings.disableConversations === false && !showCT;
@@ -76,11 +81,13 @@ var views = function() {
         var $postbox = jq('#maxui-newactivity');
         $postbox.html(postbox);
 
-        // String to store the generated html pieces of each conversation item
-        var html = '';
+
+        // Reset the html container if we have conversations
+        if (self.conversations.length > 0) html = '';
+
         // Iterate through all the conversations
-        for (i = 0; i < self.mainview.conversations.length; i++) {
-            var conversation = self.mainview.conversations[i];
+        for (i = 0; i < self.conversations.length; i++) {
+            var conversation = self.conversations[i];
             var partner = conversation.participants[0];
             var avatar_url = self.maxui.settings.conversationAvatarURLpattern.format(conversation.id);
             var displayName = '';
@@ -107,9 +114,7 @@ var views = function() {
             // Render the conversations template and append it at the end of the rendered covnersations
             html += self.maxui.templates.conversation.render(conv_params);
         }
-        if (self.mainview.conversations.length > 0) {
-            jq('#maxui-conversations-list').html(html);
-        }
+    jq('#maxui-conversations-list').html(html);
     };
 
 
@@ -169,7 +174,6 @@ var views = function() {
     function MaxConversations(maxui, options) {
         var self = this;
         self.maxui = maxui;
-        self.conversations = [];
         self.stomp = options.stomp;
         self.listview = new MaxConversationsList(self, {});
         self.messagesview = new MaxConversationMessages(self, {});
@@ -192,13 +196,14 @@ var views = function() {
         var self = this;
         // If argument provided, take conversations from there
         if (arguments.length > 0) {
-            self.conversations = arguments[0];
+            self.listview.conversations = arguments[0];
 
         // Otherwise, load current user conversations directly
         } else {
             parameters = [
                 self.maxui.settings.username,
                 function(data) {
+                    self.listview.conversations = data;
                     self.listview.render();
                 }
             ];
@@ -212,8 +217,8 @@ var views = function() {
 
         // subscribe to all exchanges indentified by conversation_id, A message will be inserted as
         // a result of mesages coming in from each exchange
-        for (co = 0; co < self.conversations.length; co++) {
-            conversation_id = self.conversations[co].id;
+        for (co = 0; co < self.listview.conversations.length; co++) {
+            conversation_id = self.listview.conversations[co].id;
             self.stomp.subscribe('/exchange/{0}'.format(conversation_id), self.insertMessage);
         }
         // subscribe to exchange "new" notifications. Conversations sections will be rerendered
@@ -236,7 +241,7 @@ var views = function() {
         });
     };
 
-    MaxConversations.prototype.insertMessage = function(d) {
+    MaxConversations.prototype.insertConversation = function(data) {
         var self = this;
         debugger
     };

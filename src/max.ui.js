@@ -142,7 +142,6 @@
             if (!maxui.settings.disableConversations) {
                 // Initialize conversation view with conversations data from user
                 maxui.conversations.load(data.talkingIn);
-
                 // Define stomp callbacks and connect
                 var on_connect = function(x) {
                     maxui.conversations.connect();
