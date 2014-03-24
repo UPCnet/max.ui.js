@@ -1,0 +1,6 @@
+{
+    "activitySource": "timeline",
+     "UISection": "conversations",
+     "disableConversations":false,
+     "disableTimeline": false
+}

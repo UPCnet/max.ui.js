@@ -1,6 +1,7 @@
 presets/base.json
 presets/timeline.json
 presets/context.json
+presets/conversations.json
 .DS_Store
 tmp
 .fontello-session
