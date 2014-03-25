@@ -42,6 +42,7 @@ var views = function() {
                 maxui.maxClient.modifyConversation(self.data.id, $displayNameInput.val(), function(event) {
                     self.displayNameSlot.hide();
                     $displayName.text(this.displayName);
+                    maxui.conversations.messagesview.setTitle(this.displayName);
                 });
             }
         };
@@ -57,6 +58,12 @@ var views = function() {
         self = this;
         // Clear previous overla usage bindings
         overlay.$el().unbind();
+
+        // Gets fresh conversation data on overlay close
+        overlay.$el().on('maxui-overlay-close', function(event) {
+            maxui.conversations.listview.loadConversation(maxui.conversations.active);
+        });
+
         // Open displayName editing box when user clicks on displayName
         overlay.$el().on('click', self.getOwnerSelector('> .maxui-displayname'), function(event) {
             self.displayNameSlot.show();
@@ -206,6 +213,7 @@ var views = function() {
             var leaving_username = maxui.settings.username;
             maxui.maxClient.kickUserFromConversation(self.data.id, leaving_username, function(event) {
                 overlay.hide();
+                maxui.conversations.listview.delete(self.data.id);
                 $('#maxui-back-conversations a').trigger('click');
             });
         });
@@ -219,6 +227,7 @@ var views = function() {
         overlay.$el().on('click', self.getSelector('#maxui-conversation-delete .maxui-help .maxui-confirmation-ok'), function(event) {
             maxui.maxClient.deleteConversation(self.data.id, function(event) {
                 overlay.hide();
+                maxui.conversations.listview.delete(self.data.id);
                 $('#maxui-back-conversations a').trigger('click');
             });
         });

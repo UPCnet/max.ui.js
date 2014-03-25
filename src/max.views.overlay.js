@@ -20,6 +20,11 @@ var views = function() {
         this.content = '';
         this.el = '#maxui-overlay-panel';
         this.overlay_show_class = '.maxui-overlay';
+        jq(this.el + ' .maxui-close').click(function(event) {
+            event.preventDefault();
+            event.stopPropagation();
+            maxui.overlay.hide();
+        });
     }
     MaxOverlay.prototype.$el = function() {
         return jq(this.el);
@@ -46,6 +51,7 @@ var views = function() {
         }, 200);
     };
     MaxOverlay.prototype.hide = function() {
+        this.$el().trigger('maxui-overlay-close', []);
         overlay = this;
         this.$el().animate({
             opacity: 0

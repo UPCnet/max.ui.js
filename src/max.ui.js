@@ -33,7 +33,6 @@
         };
 
 
-        maxui.overlay = new max.views.MaxOverlay();
         // extend defaults with user-defined settings
         maxui.settings = jq.extend(defaults, options);
         // save the undotted username for stomp messages
@@ -159,10 +158,6 @@
             }
 
             if (!maxui.settings.disableConversations) {
-                // Initialize conversation view with conversations data from user
-                // Do it inside a setinterval loop, for handling socket connection issues
-                var user_conversations = data.talkingIn || [];
-                maxui.conversations.load(user_conversations);
 
                 var stomp_user_with_domain = "";
                 if (maxui.settings.domain) {
@@ -172,6 +167,7 @@
                 stomp_user_with_domain += maxui.settings.username;
                 startupStomp(stomp_user_with_domain, maxui.settings.oAuthToken, '/');
 
+                // Retry connection if initial failed
                 interval = setInterval(function(event) {
                     if (!maxui.stompActive) {
                         console.log('connection timeout, retrying');
@@ -203,6 +199,9 @@
             var mainui = maxui.templates.mainUI.render(params);
             maxui.html(mainui);
 
+
+            maxui.overlay = new max.views.MaxOverlay();
+
             // Define widths
             // XXX TODO :Read from renderer styles, not hardcoded values
             maxui.settings.widgetWidth = maxui.width();
@@ -211,11 +210,12 @@
             // First-rendering of conversations list, even if it's not displayed on start
             if (!maxui.settings.disableConversations) {
                 maxui.conversations.render();
+                maxui.conversations.listview.load();
             }
 
             if (maxui.settings.UISection == 'conversations') {
                 maxui.bindEvents();
-                maxui.toggleSection('conversations');
+                maxui.conversations.listview.show();
             }
             else if (maxui.settings.UISection == 'timeline') maxui.printActivities({}, function(event) {
                 maxui.bindEvents();
@@ -228,13 +228,6 @@
     jq.fn.bindEvents = function() {
         maxui = this;
 
-        //Assign click to conversations info
-        //Assign click to conversations info close
-        jq('#maxui-overlay-panel .maxui-close').click(function(event) {
-            event.preventDefault();
-            event.stopPropagation();
-            maxui.overlay.hide();
-        });
         //Assign click to loadmore
         jq('#maxui-more-activities .maxui-button').click(function(event) {
             event.preventDefault();

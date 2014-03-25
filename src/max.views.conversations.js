@@ -20,6 +20,19 @@ var views = function() {
         self.maxui = self.mainview.maxui;
     }
 
+    MaxConversationsList.prototype.load = function(callback) {
+        var self = this;
+        parameters = [
+            self.maxui.settings.username,
+            function(data) {
+                self.conversations = data;
+                self.render();
+            }
+        ];
+        self.maxui.maxClient.getConversationsForUser.apply(self.maxui.maxClient, parameters);
+
+    };
+
     MaxConversationsList.prototype.loadConversation = function(conversation_hash) {
         var self = this;
         var callback;
@@ -29,21 +42,72 @@ var views = function() {
         }
 
         self.maxui.maxClient.getConversationSubscription(conversation_hash, self.maxui.settings.username,function(data) {
-            self.conversations.push(data);
-            self.conversations = _.sortBy(self.conversations, 'published');
+            if (_.findWhere(self.conversations, {'id': data.id})) {
+                self.conversations = _.map(self.conversations, function(conversation) {
+                    if (conversation.id == data.id) {
+                        return data;
+                    } else {
+                        return conversation;
+                    }
+                });
+            } else {
+                self.conversations.push(data);
+            }
+            self.sort();
             self.render();
             callback();
         });
     };
 
+    MaxConversationsList.prototype.updateLastMessage = function(conversation_id, message) {
+        var self = this;
+        self.conversations = _.map(self.conversations, function(conversation) {
+            if (conversation.id == conversation_id) {
+                conversation.lastMessage = message;
+                conversation.messages += 1;
+            }
+            return conversation;
+        }, self);
+        self.sort();
+    };
+
+
+
+
+    MaxConversationsList.prototype.sort = function() {
+        var self = this;
+        self.conversations = _.sortBy(self.conversations, function(conversation) {return conversation.lastMessage.published;});
+        self.conversations.reverse();
+    };
+
+    MaxConversationsList.prototype.delete = function(conversation_id) {
+        var self = this;
+        self.conversations = _.filter(self.conversations, function(conversation){ return conversation.id != conversation_id;});
+        self.sort();
+        self.render();
+    };
+
     MaxConversationsList.prototype.insert = function(conversation) {
         var self = this;
         self.conversations.push(conversation);
-        self.conversations = _.sortBy(self.conversations, 'published');
+        self.sort();
         self.render();
     };
 
     MaxConversationsList.prototype.show = function() {
+        var self = this;
+         // Load conversations from max if never loaded
+        if (self.conversations.length === 0) {
+            self.load();
+            self.toggle();
+        // Otherwise, just show them
+        } else {
+            self.render();
+            self.toggle();
+        }
+    };
+
+    MaxConversationsList.prototype.toggle = function() {
         var self = this;
         self.mainview.loadWrappers();
         var literal = '';
@@ -113,6 +177,7 @@ var views = function() {
             var partner = conversation.participants[0];
             var avatar_url = self.maxui.settings.conversationAvatarURLpattern.format(conversation.id);
             var displayName = '';
+
             if (conversation.participants.length <= 2) {
                 if (conversation.participants.length == 1) {
                     partner = conversation.participants[0];
@@ -165,6 +230,21 @@ var views = function() {
             });
             self.render();
         });
+    };
+
+    MaxConversationMessages.prototype.ack = function(message_id) {
+        var self = this;
+        self.messages[self.mainview.active] = _.map(self.messages[self.mainview.active], function(message) {
+            if (message_id == message.messageID) {
+                message.ack = true;
+            }
+            return message;
+        });
+    };
+
+    MaxConversationMessages.prototype.setTitle = function(title) {
+        var self = this;
+        self.mainview.$common_header.find('#maxui-back-conversations h3').text(title);
     };
 
     MaxConversationMessages.prototype.loadOlder = function() {
@@ -278,8 +358,7 @@ var views = function() {
                     'border-color': 'transparent'
                 });
             });
-
-            self.mainview.$common_header.find('#maxui-back-conversations h3').text(self.mainview.getActive().displayName);
+            self.setTitle(self.mainview.getActive().displayName);
             self.mainview.$common_header.removeClass('maxui-showing-conversations').addClass('maxui-showing-messages');
             self.mainview.$conversations_list.animate({
                 'margin-left': self.maxui.settings.sectionsWidth * (-1)
@@ -349,26 +428,6 @@ var views = function() {
         self.$newparticipants = $('#maxui-new-participants');
     };
 
-    MaxConversations.prototype.load = function() {
-        var self = this;
-        // If argument provided, take conversations from there
-        if (arguments.length > 0) {
-            self.listview.conversations = arguments[0];
-
-        // Otherwise, load current user conversations directly
-        } else {
-            parameters = [
-                self.maxui.settings.username,
-                function(data) {
-                    self.listview.conversations = data;
-                    self.listview.render();
-                }
-            ];
-            this.maxClient.getConversationsForUser.apply(self.maxui.maxClient, parameters);
-        }
-
-    };
-
     MaxConversations.prototype.connect = function(stomp) {
         var self = this;
         self.stomp = stomp;
@@ -405,10 +464,9 @@ var views = function() {
         });
     };
 
-    MaxConversations.prototype.render = function(text) {
+    MaxConversations.prototype.render = function() {
         var self = this;
         self.loadScrollbar();
-        self.listview.render();
         self.bindEvents();
     };
 
@@ -465,6 +523,16 @@ var views = function() {
             self.messagesview.render();
             self.scrollbar.setContentPosition(100);
             self.messagesview.show(self.active);
+
+            self.listview.updateLastMessage(self.active, {'content': message.object.content, 'published': message.published});
+            self.conversations = _.map(self.conversations, function(conversation) {
+                    if (conversation.id == data.id) {
+                        return data;
+                    } else {
+                        return conversation;
+                    }
+                });
+
         });
 
     };
@@ -498,11 +566,13 @@ var views = function() {
                     'content': message.object.content,
                     'published': message.published
                 },
-                'participants': options.participants
+                'participants': options.participants,
+                'tags': message.contexts[0].tags,
             };
-
             self.active = chash;
             self.listview.insert(conversation);
+            self.messagesview.remaining = 0;
+            message.ack = true;
             self.messagesview.append(message);
             self.messagesview.render();
             self.messagesview.show(chash);
@@ -543,6 +613,7 @@ var views = function() {
                 var $message = jq('#' + message.messageID + ' .maxui-icon-check');
                 if ($message) {
                     $message.addClass('maxui-ack');
+                    self.messagesview.ack(message.messageID)
                     clearInterval(interval);
                 }
             }, 50);
