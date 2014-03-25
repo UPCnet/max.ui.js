@@ -264,7 +264,7 @@ var views = function() {
                     panelID: self.panelID,
                     published: maxui.utils.formatDate(self.data.published, maxui.language),
                     canManage: maxui.settings.username == self.data.owner,
-                    canAdd: _.contains(subscription.permissions, 'invite')
+                    canAdd: _.contains(subscription.permissions, 'subscribe')
                 };
                 self.content = maxui.templates.conversationSettings.render(params);
                 configurator(self);
