@@ -20,13 +20,20 @@ var views = function() {
         self.maxui = self.mainview.maxui;
     }
 
-    MaxConversationsList.prototype.insertConversation = function(conversation_hash) {
+    MaxConversationsList.prototype.loadConversation = function(conversation_hash) {
         var self = this;
         self.maxui.maxClient.getConversation(conversation_hash, function(data) {
             self.conversations.push(data);
             self.conversations = _.sortBy(self.conversations, 'published');
             self.render();
         });
+    };
+
+    MaxConversationsList.prototype.insert = function(conversation) {
+        var self = this;
+        self.conversations.push(conversation);
+        self.conversations = _.sortBy(self.conversations, 'published');
+        self.render();
     };
 
     MaxConversationsList.prototype.show = function() {
@@ -180,7 +187,7 @@ var views = function() {
                 'ack': message.ack
             };
         }
-
+        self.messages[self.mainview.active] = self.messages[self.mainview.active] || [];
         self.messages[self.mainview.active].push(message);
     };
 
@@ -199,6 +206,7 @@ var views = function() {
             };
         }
 
+        self.messages[self.mainview.active] = self.messages[self.mainview.active] || [];
         self.messages[self.mainview.active].splice(index, 0, message);
     };
     MaxConversationMessages.prototype.render = function() {
@@ -264,7 +272,7 @@ var views = function() {
                 });
             });
 
-            self.mainview.$common_header.find('#maxui-back-conversations h3').text(self.mainview.active.displayName);
+            self.mainview.$common_header.find('#maxui-back-conversations h3').text(self.mainview.getActive().displayName);
             self.mainview.$common_header.removeClass('maxui-showing-conversations').addClass('maxui-showing-messages');
             self.mainview.$conversations_list.animate({
                 'margin-left': self.maxui.settings.sectionsWidth * (-1)
@@ -372,8 +380,9 @@ var views = function() {
         // And a conversations exchanges subscriptions updated with the new one
         self.stomp.subscribe('/exchange/new/{0}'.format(self.maxui.settings.username), function(d) {
             data = JSON.parse(d.body);
+            self.listview.loadConversation(data.conversation);
             if (self.maxui.settings.UISection == 'conversations' && self.maxui.settings.conversationsSection == 'conversations') {
-                self.listview.insertConversation(data.conversation);
+
 /*                self.maxui.printConversations(function() {
                     self.maxui.toggleSection('conversations');
                     $('.maxui-message-count:first').css({
@@ -472,10 +481,21 @@ var views = function() {
             } else {
                 maxui.settings.currentConversation.displayName = options.participants[0].displayName;
             }
+            conversation = {
+                'id': message.contexts[0].id,
+                'displayName': message.contexts[0].displayName,
+                'lastMessage': {
+                    'content': message.object.content,
+                    'published': message.published
+                },
+                'participants': options.participants
+            };
 
+            self.active = chash;
+            self.listview.insert(conversation);
             self.messagesview.append(message);
             self.messagesview.render();
-            self.messagesview.show();
+            self.messagesview.show(chash);
             self.stomp.subscribe('/exchange/{0}'.format(chash), function(d) {
                 self.ReceiveMessage(d);
             });

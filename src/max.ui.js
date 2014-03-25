@@ -145,8 +145,8 @@
             if (!maxui.settings.disableConversations) {
                 // Initialize conversation view with conversations data from user
                 // Do it inside a setinterval loop, for handling socket connection issues
-
-                maxui.conversations.load(data.talkingIn);
+                var user_conversations = data.talkingIn || [];
+                maxui.conversations.load(user_conversations);
                 // Define stomp callbacks and connect
                 var on_connect = function(x) {
                     maxui.conversations.connect();
