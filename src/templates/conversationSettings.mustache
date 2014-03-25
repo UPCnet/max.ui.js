@@ -29,13 +29,13 @@
       </li>
       {{/participants}}
     </ul>
-    {{#canManage}}
+    {{#canAdd}}
     <div id="maxui-new-participant">
         <i class="maxui-icon-user-add"/>
         <input type="text" class="maxui-text-input maxui-empty"/>
         <div id="maxui-conversation-predictive" class="maxui-predictive" style="display:none;"><ul></ul></div>
     </div>
-    {{/canManage}}
+    {{/canAdd}}
     </div>
     <div id="maxui-conversation-leave">
       <input type="button" class="maxui-button maxui-button-red maxui-button-wide" value="{{literals.conversations_info_leave}}">

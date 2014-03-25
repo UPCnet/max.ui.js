@@ -132,7 +132,7 @@ var views = function() {
         self.predictive = new max.views.MaxPredictive({
             minchars: 3,
             filter: function(event) {
-                return jq.map(chatinfo.data.participants, function(element, index) {return element.username;});
+                return jq.map(self.data.participants, function(element, index) {return element.username;});
             },
             source: function(event, query, callback) { maxui.maxClient.getUsersList(query, callback);},
             action: function($selected) {
@@ -147,15 +147,15 @@ var views = function() {
                     avatarURL: maxui.settings.avatarURLpattern.format(username)
                 };
                 var newuser = maxui.templates.participant.render(params);
-                var $participants = jq(chatinfo.getSelector('.maxui-participants > ul'));
+                var $participants = jq(self.getSelector('.maxui-participants > ul'));
                 $participants.append(newuser);
-                var $participant = jq(chatinfo.getSelector('.maxui-participant:last'));
+                var $participant = jq(self.getSelector('.maxui-participant:last'));
                 $participant.animate({height:36}, 100, function(event) {
                     $participant.animate({opacity:1}, 200);
                 });
 
                 $participant.find('.maxui-conversation-add-user').show().focus();
-                jq(chatinfo.getSelector('#maxui-new-participant .maxui-text-input')).trigger('maxui-input-clear');
+                jq(self.getSelector('#maxui-new-participant .maxui-text-input')).trigger('maxui-input-clear');
 
             },
             list: "#maxui-new-participant #maxui-conversation-predictive"
@@ -232,36 +232,43 @@ var views = function() {
     MaxChatInfo.prototype.load = function(configurator) {
         var self = this;
         maxui.maxClient.getConversation(maxui.conversations.active, function(data) {
-            self.data = data;
-            var participants = [];
-            for (pt = 0; pt < self.data.participants.length; pt++) {
-                var participant = self.data.participants[pt];
-                participant.avatarURL = maxui.settings.avatarURLpattern.format(participant.username);
-                participant.owner = participant.username == self.data.owner;
-                participants.push(participant);
-            }
-            var avatar_url = maxui.settings.conversationAvatarURLpattern.format(self.data.id);
-            if (self.data.participants.length <= 2) {
-                var partner = self.data.participants[0];
-                // Check if the partner choosed is the same as the logged user
-                // We can't be sure that the partner is the first or the second in the array
-                if (self.data.participants[0].username == maxui.settings.username) {
-                    partner = self.data.participants[1];
+            maxui.maxClient.getConversationSubscription(maxui.conversations.active, maxui.settings.username, function(subscription) {
+                self.data = data;
+                var participants = [];
+                for (pt = 0; pt < self.data.participants.length; pt++) {
+                    var participant = self.data.participants[pt];
+                    participant.avatarURL = maxui.settings.avatarURLpattern.format(participant.username);
+                    participant.owner = participant.username == self.data.owner;
+                    participants.push(participant);
+                }
+                var avatar_url = maxui.settings.conversationAvatarURLpattern.format(self.data.id);
+                var displayName = self.data.displayName;
+                if (self.data.participants.length <= 2) {
+                    var partner = self.data.participants[0];
+                    // Check if the partner choosed is the same as the logged user
+                    // We can't be sure that the partner is the first or the second in the array
+                    if (self.data.participants.length == 1) {
+                        displayName = '[Archive] ' + partner.displayName;
+                    } else if (self.data.participants[0].username == maxui.settings.username && self.data.participants.length > 1) {
+                        partner = self.data.participants[1];
+
+                    }
                     // User the user partner's avatar as conversation avatar
                     avatar_url = maxui.settings.avatarURLpattern.format(partner.username);
                 }
-            }
-            var params = {
-                displayName: self.data.displayName,
-                conversationAvatarURL: avatar_url,
-                participants: participants,
-                literals: maxui.settings.literals,
-                panelID: self.panelID,
-                published: maxui.utils.formatDate(self.data.published, maxui.language),
-                canManage: maxui.settings.username == self.data.owner
-            };
-            self.content = maxui.templates.conversationSettings.render(params);
-            configurator(self);
+                var params = {
+                    displayName: displayName,
+                    conversationAvatarURL: avatar_url,
+                    participants: participants,
+                    literals: maxui.settings.literals,
+                    panelID: self.panelID,
+                    published: maxui.utils.formatDate(self.data.published, maxui.language),
+                    canManage: maxui.settings.username == self.data.owner,
+                    canAdd: _.contains(subscription.permissions, 'invite')
+                };
+                self.content = maxui.templates.conversationSettings.render(params);
+                configurator(self);
+            });
         });
     };
 

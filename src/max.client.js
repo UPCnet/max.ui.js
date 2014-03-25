@@ -286,6 +286,13 @@ MaxClient.prototype.removeActivityComment = function(activity_id, comment_id, ca
  * Conversation related endpoints
  */
 
+MaxClient.prototype.getConversationSubscription = function(chash, username, callback) {
+    var route = this.ROUTES.user_conversation.format(username, chash);
+    var query = {};
+    this.GET(route, query, callback);
+};
+
+
 MaxClient.prototype.getConversation = function(chash, callback) {
     var route = this.ROUTES.conversation.format(chash);
     var query = {};

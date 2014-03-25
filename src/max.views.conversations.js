@@ -22,10 +22,17 @@ var views = function() {
 
     MaxConversationsList.prototype.loadConversation = function(conversation_hash) {
         var self = this;
-        self.maxui.maxClient.getConversation(conversation_hash, function(data) {
+        var callback;
+
+        if (arguments.length > 1) {
+            callback = arguments[1];
+        }
+
+        self.maxui.maxClient.getConversationSubscription(conversation_hash, self.maxui.settings.username,function(data) {
             self.conversations.push(data);
             self.conversations = _.sortBy(self.conversations, 'published');
             self.render();
+            callback();
         });
     };
 
@@ -227,7 +234,7 @@ var views = function() {
                 origin: origin,
                 literals: self.maxui.settings.literals,
                 avatarURL: avatar_url,
-                ack: message.ack
+                ack: message.ack ? origin == 'maxui-user-me' : false
             };
             // Render the conversations template and append it at the end of the rendered covnersations
             messages = messages + self.maxui.templates.message.render(params);
@@ -304,7 +311,6 @@ var views = function() {
         self.el = '#maxui-conversations';
         self.$el = jq(self.el);
         self.maxui = maxui;
-        self.stomp = maxui.stomp;
         self.height = 320;
 
         self.listview = new MaxConversationsList(self, {});
@@ -363,8 +369,9 @@ var views = function() {
 
     };
 
-    MaxConversations.prototype.connect = function() {
+    MaxConversations.prototype.connect = function(stomp) {
         var self = this;
+        self.stomp = stomp;
 
         receive_helper = function(d) {
             self.ReceiveMessage(d);
@@ -380,8 +387,11 @@ var views = function() {
         // And a conversations exchanges subscriptions updated with the new one
         self.stomp.subscribe('/exchange/new/{0}'.format(self.maxui.settings.username), function(d) {
             data = JSON.parse(d.body);
-            self.listview.loadConversation(data.conversation);
             if (self.maxui.settings.UISection == 'conversations' && self.maxui.settings.conversationsSection == 'conversations') {
+                self.active = data.conversation;
+                self.listview.loadConversation(data.conversation, function(event) {
+                    self.messagesview.show(chash);
+                });
 
 /*                self.maxui.printConversations(function() {
                     self.maxui.toggleSection('conversations');

@@ -541,6 +541,9 @@
   -webkit-border-top-left-radius: 0px;
   border-top-left-radius: 0px;
 }
+#maxui-container .maxui-message.maxui-user-notme .maxui-balloon.maxui-ack {
+  display: none;
+}
 #maxui-container .maxui-message.maxui-user-notme .maxui-balloon:after {
   left: 44px;
   border-top: 3px solid #edf3ff;
