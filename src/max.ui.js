@@ -214,7 +214,7 @@
             if (maxui.settings.UISection == 'conversations') {
                 maxui.bindEvents();
                 maxui.conversations.listview.load(function(event) {
-                    maxui.conversations.listview.show();
+                    maxui.toggleSection('conversations');
                 });
             }
             else if (maxui.settings.UISection == 'timeline') maxui.printActivities({}, function(event) {

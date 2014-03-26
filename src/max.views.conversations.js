@@ -113,7 +113,7 @@ var views = function() {
         self.mainview.loadWrappers();
         var literal = '';
 
-        if (!self.mainview.$conversations.is(':visible')) {
+        if (!self.mainview.visible()) {
             self.mainview.$addpeople.css({
                 'border-color': '#ccc'
             });
@@ -400,6 +400,13 @@ var views = function() {
         self.active = '';
 
     }
+
+    MaxConversations.prototype.visible = function() {
+        var self = this;
+        return self.$conversations.is(':visible') && self.$conversations.height > 0;
+    };
+
+
 
     MaxConversations.prototype.loadScrollbar = function() {
         var self = this;
