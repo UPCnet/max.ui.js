@@ -977,29 +977,34 @@
   position: relative;
 }
 #maxui-container #maxui-conversations .maxui-wrapper #maxui-conversations-list .maxui-conversation .maxui-activity-content .maxui-topright .maxui-enterconversation {
-  float: right;
-  padding-top: 6px;
+  padding-top: 10px;
 }
-#maxui-container #maxui-conversations .maxui-wrapper #maxui-conversations-list .maxui-conversation .maxui-activity-content .maxui-topright .maxui-enterconversation:before {
+#maxui-container #maxui-conversations .maxui-wrapper #maxui-conversations-list .maxui-conversation .maxui-activity-content .maxui-topright .maxui-enterconversation a {
+  float: right;
+  padding-top: 2px;
+}
+#maxui-container #maxui-conversations .maxui-wrapper #maxui-conversations-list .maxui-conversation .maxui-activity-content .maxui-topright .maxui-enterconversation a:before {
   font-size: 150%;
   content: '\e80b';
   color: #6f6f6f;
 }
-#maxui-container #maxui-conversations .maxui-wrapper #maxui-conversations-list .maxui-conversation .maxui-activity-content .maxui-topright .maxui-enterconversation:hover:before {
+#maxui-container #maxui-conversations .maxui-wrapper #maxui-conversations-list .maxui-conversation .maxui-activity-content .maxui-topright .maxui-enterconversation a:hover:before {
   color: #565656;
 }
-#maxui-container #maxui-conversations .maxui-wrapper #maxui-conversations-list .maxui-conversation .maxui-activity-content .maxui-actor .maxui-message-count {
-  -moz-border-radius: 3px;
-  -webkit-border-radius: 3px;
-  border-radius: 3px;
+#maxui-container #maxui-conversations .maxui-wrapper #maxui-conversations-list .maxui-conversation .maxui-activity-content .maxui-topright .maxui-enterconversation .maxui-unread-messages {
+  -moz-border-radius: 10px;
+  -webkit-border-radius: 10px;
+  border-radius: 10px;
+  float: right;
+  width: 20px;
+  height: 20px;
   background-color: #007bc0;
   color: white;
-  font-size: 10px;
-  padding: 0px 1px;
-  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-size: 11px;
+  line-height: 20px;
   display: inline-block;
-  min-width: 17px;
   text-align: center;
+  text-rendering: optimizeLegibility;
 }
 #maxui-container #maxui-conversations .maxui-wrapper #maxui-messages {
   position: absolute;

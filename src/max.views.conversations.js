@@ -20,18 +20,21 @@ var views = function() {
         self.maxui = self.mainview.maxui;
     }
 
-    MaxConversationsList.prototype.load = function(callback) {
+    MaxConversationsList.prototype.load = function(conversations) {
         var self = this;
-        parameters = [
+        if (_.isArray(conversations)) {
+            self.conversations = conversations;
+            self.render();
+        } else if (_.isFunction(conversations)) {
+            self.maxui.maxClient.getConversationsForUser.apply(self.maxui.maxClient, [
             self.maxui.settings.username,
-            function(data) {
-                self.conversations = data;
-                self.render();
-                callback();
-            }
-        ];
-        self.maxui.maxClient.getConversationsForUser.apply(self.maxui.maxClient, parameters);
-
+                function(data) {
+                    self.conversations = data;
+                    self.render();
+                    conversations();
+                }
+            ]);
+        }
     };
 
     MaxConversationsList.prototype.loadConversation = function(conversation_hash) {
@@ -52,6 +55,7 @@ var views = function() {
                     }
                 });
             } else {
+                data.messages = 1;
                 self.conversations.push(data);
             }
             self.sort();
@@ -62,18 +66,30 @@ var views = function() {
 
     MaxConversationsList.prototype.updateLastMessage = function(conversation_id, message) {
         var self = this;
+        var increment = 0;
+        if (arguments.length > 2)
+            increment = 1;
+
         self.conversations = _.map(self.conversations, function(conversation) {
             if (conversation.id == conversation_id) {
                 conversation.lastMessage = message;
-                conversation.messages += 1;
+                conversation.messages += increment;
             }
             return conversation;
         }, self);
         self.sort();
     };
 
+    MaxConversationsList.prototype.resetUnread = function(conversation_id) {
+        var self = this;
 
-
+        self.conversations = _.map(self.conversations, function(conversation) {
+            if (conversation.id == conversation_id) {
+                conversation.messages = 0;
+            }
+            return conversation;
+        }, self);
+    };
 
     MaxConversationsList.prototype.sort = function() {
         var self = this;
@@ -197,7 +213,8 @@ var views = function() {
                 messages: conversation.messages,
                 literals: self.maxui.settings.literals,
                 date: self.maxui.utils.formatDate(conversation.lastMessage.published, self.maxui.language),
-                avatarURL: avatar_url
+                avatarURL: avatar_url,
+                hasUnread: conversation.messages > 0
             };
             // Render the conversations template and append it at the end of the rendered covnersations
             html += self.maxui.templates.conversation.render(conv_params);
@@ -264,19 +281,26 @@ var views = function() {
     MaxConversationMessages.prototype.append = function(message) {
         var self = this;
 
+        update_params = [];
         // Convert activity from max to mimic rabbit response
         if (!_.has(message, 'messageID')) {
             message = {
                 'message': message.object.content,
+                'conversation': message.contexts[0].id,
                 'username': message.actor.username,
                 'displayName': message.actor.displayName,
                 'published': message.published,
                 'messageID': message.id,
                 'ack': message.ack
             };
+            // If it's a message from max, update last message on listview
+            self.mainview.listview.updateLastMessage(message.conversation, {'content': message.message, 'published': message.published});
+        } else {
+            // Is a message from rabbit, update last message on listview and increment unread counter
+            self.mainview.listview.updateLastMessage(message.conversation, {'content': message.message, 'published': message.published}, true);
         }
-        self.messages[self.mainview.active] = self.messages[self.mainview.active] || [];
-        self.messages[self.mainview.active].push(message);
+        self.messages[message.conversation] = self.messages[message.conversation] || [];
+        self.messages[message.conversation].push(message);
     };
 
     MaxConversationMessages.prototype.prepend = function(message, index) {
@@ -332,6 +356,7 @@ var views = function() {
         var self = this;
 
         self.mainview.active = conversation_hash;
+        self.mainview.listview.resetUnread(conversation_hash);
 
         // Load conversation messages from max if never loaded
         if (!_.has(self.messages, conversation_hash)) {
@@ -457,7 +482,7 @@ var views = function() {
             if (self.maxui.settings.UISection == 'conversations' && self.maxui.settings.conversationsSection == 'conversations') {
                 self.active = data.conversation;
                 self.listview.loadConversation(data.conversation, function(event) {
-                    self.messagesview.show(chash);
+                    //self.messagesview.show(chash);
                 });
 
 /*                self.maxui.printConversations(function() {
@@ -468,7 +493,7 @@ var views = function() {
                 });*/
             }
             // subscribe to the new conversation exchange
-            self.stomp.subscribe('/exchange/{0}'.format(data.conversation),  receive_helper());
+            self.stomp.subscribe('/exchange/{0}'.format(data.conversation),  receive_helper);
         });
     };
 
@@ -546,15 +571,12 @@ var views = function() {
     };
 
     /**
-     *    Sends a post when user clicks `post activity` button with
-     *    the current contents of the `maxui-newactivity` textarea
+     *    Creates a new conversation and subscribes to it
      **/
     MaxConversations.prototype.create = function(options) {
         var self = this;
 
-        //var func_params = [];
         options.participants.push(maxui.settings.username);
-        //func_params.push(options);
 
         maxui.maxClient.addMessageAndConversation(options, function(event) {
             var message = this;
@@ -600,6 +622,7 @@ var views = function() {
         var self = this;
         message = JSON.parse(data.body);
 
+
         // Insert message only if the message is from another user.
         if (message.username != self.maxui.settings.username) {
             console.log('New message from user {0} on {1}'.format(message.username, message.conversation));
@@ -621,7 +644,7 @@ var views = function() {
                 var $message = jq('#' + message.messageID + ' .maxui-icon-check');
                 if ($message) {
                     $message.addClass('maxui-ack');
-                    self.messagesview.ack(message.messageID)
+                    self.messagesview.ack(message.messageID);
                     clearInterval(interval);
                 }
             }, 50);

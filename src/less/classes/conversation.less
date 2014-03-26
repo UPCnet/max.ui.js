@@ -36,30 +36,32 @@
                         }
                         .maxui-topright {
                             .maxui-enterconversation {
-                                float:right;
-                                padding-top:6px;
-                                &:before {
-                                    font-size: 150%; content: '\e80b'; color:@textColor;
+                                padding-top:10px;
+                                a {
+                                    float:right;
+                                    padding-top: 2px;
+                                    &:before {
+                                        font-size: 150%; content: '\e80b'; color:@textColor;
+                                    }
+                                    &:hover:before {
+                                        color:@textColorDK;
+                                    }
                                 }
-                                &:hover:before {
-                                    color:@textColorDK;
+                                .maxui-unread-messages {
+                                    .mm-borderRadius(10px);
+                                    float:right;
+                                    width: 20px;
+                                    height: 20px;
+                                    background-color: @linkColor;
+                                    color:white;
+                                    font-size: 11px;
+                                    line-height: 20px;
+                                    display:inline-block;
+                                    text-align: center;
+                                    text-rendering: optimizeLegibility;
+
                                 }
                             }
-                        }
-                        .maxui-actor {
-                            .maxui-message-count {
-                                .mm-borderRadius(3px);
-                                background-color: @linkColor;
-                                color:white;
-                                font-size: 10px;
-                                padding:0px 1px;
-                                font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-                                display:inline-block;
-                                min-width: 17px;
-                                text-align: center;
-
-                            }
-
                         }
                     }
 

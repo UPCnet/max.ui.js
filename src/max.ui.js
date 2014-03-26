@@ -210,17 +210,17 @@
             // First-rendering of conversations list, even if it's not displayed on start
             if (!maxui.settings.disableConversations) {
                 maxui.conversations.render();
+                maxui.conversations.listview.load(data.talkingIn);
             }
             if (maxui.settings.UISection == 'conversations') {
                 maxui.bindEvents();
-                maxui.conversations.listview.load(function(event) {
-                    maxui.toggleSection('conversations');
+                maxui.toggleSection('conversations');
+            }
+            else if (maxui.settings.UISection == 'timeline') {
+                maxui.printActivities({}, function(event) {
+                    maxui.bindEvents();
                 });
             }
-            else if (maxui.settings.UISection == 'timeline') maxui.printActivities({}, function(event) {
-                maxui.conversations.listview.load();
-                maxui.bindEvents();
-            });
         });
         // allow jq chaining
         return maxui;

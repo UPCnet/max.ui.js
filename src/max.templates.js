@@ -106,13 +106,16 @@ max.templates = function() {
 <div class="maxui-conversation" id="{{id}}" data-displayname="{{displayName}}">\
             <div class="maxui-activity-content">\
                 <div class="maxui-topright">\
-                    <span class="maxui-publisheddate">{{date}}</span>\
-                    <a class="maxui-enterconversation maxui-icon-" href="#"></a>\
+        \
+                    <div class="maxui-publisheddate">{{date}}</div>\
+                    <div class="maxui-enterconversation">\
+                        <a class="maxui-enterconversation maxui-icon-" href="#"></a>\
+                        {{#hasUnread}}<span class="maxui-unread-messages">{{messages}}</span>{{/hasUnread}}\
+                    </div>\
                 </div>\
                 <div class="maxui-actor">\
                       <a href="#"><span class="maxui-avatar maxui-big"><img src="{{avatarURL}}"></span>\
                       <span class="maxui-displayname">{{displayName}}</span></a>\
-                      <span class="maxui-message-count">{{messages}}</span>\
                 </div>\
                 <div>\
                     <p class="maxui-body">{{&text}}</p>\
