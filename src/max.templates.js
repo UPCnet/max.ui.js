@@ -222,7 +222,9 @@ max.templates = function() {
                    </div>\
            </div>\
         \
-        <div id="maxui-show-conversations" class="maxui-togglebar maxui-icon-" style="{{showConversationsToggle}}"><a href="#">{{literals.conversations}}</a></div>\
+            <div id="maxui-show-conversations" class="maxui-togglebar maxui-icon-" style="{{showConversationsToggle}}">\
+                <span class="maxui-unread-conversations maxui-hidden"></span> <a href="#">{{literals.conversations}}</a>\
+            </div>\
         \
             <div id="maxui-conversation-predictive" class="maxui-predictive" style="display:none;"><ul></ul></div>\
             <div id="maxui-add-people-box" style="display:none;">\

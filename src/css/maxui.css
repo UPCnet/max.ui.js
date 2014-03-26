@@ -467,6 +467,24 @@
 #maxui-container #maxui-conversations-header.maxui-togglebar:hover:after {
   content: '\e809';
 }
+#maxui-container #maxui-show-conversations .maxui-unread-conversations {
+  -moz-border-radius: 8px;
+  -webkit-border-radius: 8px;
+  border-radius: 8px;
+  width: 15px;
+  height: 15px;
+  background-color: #007bc0;
+  color: white;
+  font-size: 10px;
+  line-height: 15px;
+  display: inline-block;
+  text-align: center;
+  text-rendering: optimizeLegibility;
+  margin-right: 5px;
+}
+#maxui-container #maxui-show-conversations .maxui-unread-conversations.maxui-hidden {
+  display: none;
+}
 #maxui-container #maxui-conversations-header {
   height: 30px;
 }

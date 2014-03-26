@@ -89,6 +89,7 @@ var views = function() {
             }
             return conversation;
         }, self);
+        self.mainview.updateUnreadConversations();
     };
 
     MaxConversationsList.prototype.sort = function() {
@@ -618,6 +619,20 @@ var views = function() {
 
     };
 
+    MaxConversations.prototype.updateUnreadConversations = function(data) {
+        var self = this;
+        var $showconversations = $('#maxui-show-conversations .maxui-unread-conversations');
+        var conversations_with_unread_messages = _.filter(self.listview.conversations, function(conversation) {
+            if (conversation.messages > 0) return conversation;
+        });
+        if (conversations_with_unread_messages.length > 0) {
+            $showconversations.text(conversations_with_unread_messages.length);
+            $showconversations.removeClass('maxui-hidden');
+        } else {
+            $showconversations.addClass('maxui-hidden');
+        }
+    };
+
     MaxConversations.prototype.ReceiveMessage = function(data) {
         var self = this;
         message = JSON.parse(data.body);
@@ -637,6 +652,9 @@ var views = function() {
                 $('.maxui-message-count:first').css({
                     'background-color': 'red'
                 });
+            } else if (self.maxui.settings.UISection == 'timeline') {
+                self.updateUnreadConversations();
+                self.listview.render();
             }
         } else {
             console.log('Message {} succesfully delivered'.format(data.message));
