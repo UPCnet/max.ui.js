@@ -27,6 +27,7 @@ var views = function() {
             function(data) {
                 self.conversations = data;
                 self.render();
+                callback();
             }
         ];
         self.maxui.maxClient.getConversationsForUser.apply(self.maxui.maxClient, parameters);
@@ -112,7 +113,7 @@ var views = function() {
         self.mainview.loadWrappers();
         var literal = '';
 
-        if (self.maxui.settings.conversationsSection != 'conversations') {
+        if (!self.mainview.$conversations.is(':visible')) {
             self.mainview.$addpeople.css({
                 'border-color': '#ccc'
             });
