@@ -6,7 +6,7 @@
     jq.fn.maxUI = function(options) {
         // Keep a reference of the context object
         var maxui = this;
-        maxui.stompActive = false;
+        maxui.version = '3.7.0';
         maxui.templates = max.templates();
         maxui.utils = max.utils();
         var defaults = {
@@ -22,8 +22,6 @@
             'conversationsSection': 'conversations',
             'currentConversationSection': 'conversations',
             'activitySortOrder': 'activities',
-            'transports': undefined,
-            'domain': undefined,
             'maximumConversations': 20,
             'contextTagsFilter': [],
             'scrollbarWidth': 10,
@@ -35,28 +33,10 @@
 
         // extend defaults with user-defined settings
         maxui.settings = jq.extend(defaults, options);
-        // save the undotted username for stomp messages
-        maxui.settings.stomp_username = maxui.settings.username.replace('.', '_');
         // Check timeline/activities consistency
         if (maxui.settings.UISection == 'timeline' && maxui.settings.activitySource == 'timeline' && maxui.settings.readContext) {
             maxui.settings.readContext = undefined;
             maxui.settings.writeContexts = [];
-        }
-        // Extract domain out of maxserver url, if present
-        // Matches several cases, but always assumes the domain is the last
-        // part of the path. SO, urls with subpaths, always will be seen as a
-        // domain urls, examples:
-        //
-        // http://max.upcnet.es  --> NO DOMAIN
-        // http://max.upcnet.es/  --> NO DOMAIN
-        // http://max.upcnet.es/demo  --> domain "demo"
-        // http://max.upcnet.es/demo/  --> domain "demo"
-        // http://max.upcnet.es/subpath/demo/  --> domain "demo"
-        // http://max.upcnet.es/subpath/demo  --> domain "demo"
-        server_regex = regex = /(?:^https?:\/\/)*(.*?)(?:\/([^\/]*)+)?\/?$/g;
-        groups = regex.exec(maxui.settings.maxServerURL);
-        if (groups[2]) {
-            maxui.settings.domain = groups[2];
         }
         // Get language from options or set default.
         // Set literals in the choosen language and extend from user options
@@ -101,13 +81,22 @@
         };
         maxui.maxClient.configure(maxclient_config);
 
-
-        // Stomp.js boilerplate
-        // Start socket listener
-        var ws = new SockJS(maxui.settings.maxTalkURL);
+        // Create a instance of a max messaging client
+        // This needs to be before MaxConversations instance creation
+        maxui.messaging = new max.MaxMessaging(maxui);
 
         // View representing the conversations section
         maxui.conversations = new max.views.MaxConversations(maxui, {});
+
+        // Bind conversastion message receiving
+        if (!maxui.settings.disableConversations) {
+            maxui.messaging.bind(
+                {action: 'add', object: 'message'},
+                function(message) {
+                    maxui.conversations.ReceiveMessage(message);
+                }
+            );
+        }
 
         // Make settings available to utils package
         maxui.utils.setSettings(maxui.settings);
@@ -133,53 +122,7 @@
             }
             maxui.settings.subscriptions = userSubscriptions;
 
-            function startupStomp(user, token, vhost) {
-                maxui.stomp = Stomp.over(ws);
-                maxui.stomp.heartbeat.outgoing = 0;
-                maxui.stomp.heartbeat.incoming = 0;
-
-                if (maxui.settings.enableAlerts) maxui.stomp.debug = function(a) {
-                    console.log(a);
-                };
-
-                maxui.stomp.connect(
-                    user,
-                    token,
-                    // Define stomp stomp ON CONNECT callback
-                    function(x) {
-                        maxui.conversations.connect(maxui.stomp);
-                        maxui.stompActive = true;
-                    },
-                    // Define stomp stomp ON ERROR callback
-                    function(error) {
-                        console.log(error.body);
-                    },
-                    vhost);
-            }
-
-            if (!maxui.settings.disableConversations) {
-
-                var stomp_user_with_domain = "";
-                if (maxui.settings.domain) {
-                    stomp_user_with_domain += maxui.settings.domain + ':';
-                }
-
-                stomp_user_with_domain += maxui.settings.username;
-                startupStomp(stomp_user_with_domain, maxui.settings.oAuthToken, '/');
-
-                // Retry connection if initial failed
-                interval = setInterval(function(event) {
-                    if (!maxui.stompActive) {
-                        console.log('connection timeout, retrying');
-                        ws.close();
-                        ws = new SockJS(maxui.settings.maxTalkURL);
-                        startupStomp(stomp_user_with_domain, maxui.settings.oAuthToken, '/');
-                    } else {
-                        clearInterval(interval);
-                    }
-                }, 2000);
-            }
-
+            maxui.messaging.start();
 
             // render main interface
             var showCT = maxui.settings.UISection == 'conversations';

@@ -281,26 +281,29 @@ var views = function() {
 
     MaxConversationMessages.prototype.append = function(message) {
         var self = this;
-
         update_params = [];
         // Convert activity from max to mimic rabbit response
-        if (!_.has(message, 'messageID')) {
+        if (!_.has(message, 'data')) {
             message = {
-                'message': message.object.content,
-                'conversation': message.contexts[0].id,
-                'username': message.actor.username,
-                'displayName': message.actor.displayName,
+                'action': 'add',
+                'object': 'message',
+                'user': message.actor.username,
                 'published': message.published,
-                'messageID': message.id,
+                'data': {
+                    'conversation': message.contexts[0].id,
+                    'displayName': message.actor.displayName,
+                    'uuid': message.id,
+                    'text': message.object.content
+                },
                 'ack': message.ack
             };
             // If it's a message from max, update last message on listview
-            self.mainview.listview.updateLastMessage(message.conversation, {'content': message.message, 'published': message.published});
+            self.mainview.listview.updateLastMessage(message.data.conversation, {'content': message.message, 'published': message.published});
         } else {
             // Is a message from rabbit, update last message on listview and increment unread counter
-            self.mainview.listview.updateLastMessage(message.conversation, {'content': message.message, 'published': message.published}, true);
+            self.mainview.listview.updateLastMessage(message.data.conversation, {'content': message.data.text, 'published': message.published}, true);
         }
-        self.messages[message.conversation] = self.messages[message.conversation] || [];
+        self.messages[message.conversation] = self.messages[message.data.conversation] || [];
         self.messages[message.conversation].push(message);
     };
 
@@ -308,13 +311,18 @@ var views = function() {
         var self = this;
 
         // Convert activity from max to mimic rabbit response
-        if (!_.has(message, 'messageID')) {
+        if (!_.has(message, 'data')) {
             message = {
-                'message': message.object.content,
-                'username': message.actor.username,
-                'displayName': message.actor.displayName,
+                'action': 'add',
+                'object': 'message',
+                'user': message.actor.username,
                 'published': message.published,
-                'messageID': message.id,
+                'data': {
+                    'conversation': message.contexts[0].id,
+                    'displayName': message.actor.displayName,
+                    'uuid': message.id,
+                    'text': message.object.content
+                },
                 'ack': message.ack
             };
         }
@@ -322,6 +330,7 @@ var views = function() {
         self.messages[self.mainview.active] = self.messages[self.mainview.active] || [];
         self.messages[self.mainview.active].splice(index, 0, message);
     };
+
     MaxConversationMessages.prototype.render = function() {
         var self = this;
         // String to store the generated html pieces of each conversation item
@@ -329,13 +338,13 @@ var views = function() {
         // Iterate through all the conversations
         for (i = 0; i < self.messages[self.mainview.active].length; i++) {
             var message = self.messages[self.mainview.active][i];
-            var avatar_url = self.maxui.settings.avatarURLpattern.format(message.username);
+            var avatar_url = self.maxui.settings.avatarURLpattern.format(message.user);
             // Store in origin, who is the sender of the message, the authenticated user or anyone else
             var origin = 'maxui-user-notme';
-            if (message.username == self.maxui.settings.username) origin = 'maxui-user-me';
+            if (message.user == self.maxui.settings.username) origin = 'maxui-user-me';
             var params = {
-                id: message.messageID,
-                text: self.maxui.utils.formatText(message.message),
+                id: message.data.uuid,
+                text: self.maxui.utils.formatText(message.data.text),
                 date: self.maxui.utils.formatDate(message.published, maxui.language),
                 origin: origin,
                 literals: self.maxui.settings.literals,
@@ -462,41 +471,45 @@ var views = function() {
         self.$newparticipants = $('#maxui-new-participants');
     };
 
-    MaxConversations.prototype.connect = function(stomp) {
-        var self = this;
-        self.stomp = stomp;
+//     MaxConversations.prototype.connect = function(stomp) {
+//         var self = this;
+//         self.stomp = stomp;
 
-        receive_helper = function(d) {
-            self.ReceiveMessage(d);
-        };
+//         self.stomp.subscribe('/exchange/{}.subscribe'.format(self.maxui.settings.username), function(stomp_message) {
+//             data = JSON.parse(d.body);
+//         }
 
-        // subscribe to all exchanges indentified by conversation_id, A message will be inserted as
-        // a result of mesages coming in from each exchange
-        for (co = 0; co < self.listview.conversations.length; co++) {
-            conversation_id = self.listview.conversations[co].id;
-            self.stomp.subscribe('/exchange/{0}'.format(conversation_id), receive_helper);
-        }
-        // subscribe to exchange "new" notifications. Conversations sections will be rerendered
-        // And a conversations exchanges subscriptions updated with the new one
-        self.stomp.subscribe('/exchange/new/{0}'.format(self.maxui.settings.username), function(d) {
-            data = JSON.parse(d.body);
-            if (self.maxui.settings.UISection == 'conversations' && self.maxui.settings.conversationsSection == 'conversations') {
-                self.active = data.conversation;
-                self.listview.loadConversation(data.conversation, function(event) {
-                    //self.messagesview.show(chash);
-                });
+//         receive_helper = function(d) {
+//             self.ReceiveMessage(d);
+//         };
 
-/*                self.maxui.printConversations(function() {
-                    self.maxui.toggleSection('conversations');
-                    $('.maxui-message-count:first').css({
-                        'background-color': 'red'
-                    });
-                });*/
-            }
-            // subscribe to the new conversation exchange
-            self.stomp.subscribe('/exchange/{0}'.format(data.conversation),  receive_helper);
-        });
-    };
+//         // subscribe to all exchanges indentified by conversation_id, A message will be inserted as
+//         // a result of mesages coming in from each exchange
+//         for (co = 0; co < self.listview.conversations.length; co++) {
+//             conversation_id = self.listview.conversations[co].id;
+//             self.stomp.subscribe('/exchange/{0}'.format(conversation_id), receive_helper);
+//         }
+//         // subscribe to exchange "new" notifications. Conversations sections will be rerendered
+//         // And a conversations exchanges subscriptions updated with the new one
+//         self.stomp.subscribe('/exchange/new/{0}'.format(self.maxui.settings.username), function(d) {
+//             data = JSON.parse(d.body);
+//             if (self.maxui.settings.UISection == 'conversations' && self.maxui.settings.conversationsSection == 'conversations') {
+//                 self.active = data.conversation;
+//                 self.listview.loadConversation(data.conversation, function(event) {
+//                     //self.messagesview.show(chash);
+//                 });
+
+// /*                self.maxui.printConversations(function() {
+//                     self.maxui.toggleSection('conversations');
+//                     $('.maxui-message-count:first').css({
+//                         'background-color': 'red'
+//                     });
+//                 });*/
+//             }
+//             // subscribe to the new conversation exchange
+//             self.stomp.subscribe('/exchange/{0}'.format(data.conversation),  receive_helper);
+//         });
+//     };
 
     MaxConversations.prototype.render = function() {
         var self = this;
@@ -548,27 +561,35 @@ var views = function() {
     MaxConversations.prototype.send = function(text) {
         var self = this;
 
-        maxui.maxClient.addMessage(text, self.active, function(event) {
-            var message = this;
-            jq('#maxui-newactivity textarea').val('');
-            jq('#maxui-newactivity .maxui-button').attr('disabled', 'disabled');
-            message.ack = false;
-            self.messagesview.append(message);
-            self.messagesview.render();
-            self.scrollbar.setContentPosition(100);
-            self.messagesview.show(self.active);
+        var message_uuid = uuid.v1();
+        message = {
+            data: {
+                "displayName": "Carles Bruguera",
+                "conversation": self.active,
+                "uuid": uuid.v1(),
+                "text": text
+            },
+            action: 'add',
+            object: 'message'
+        };
+        var sent = self.maxui.messaging.send(message, self.active);
 
-            self.listview.updateLastMessage(self.active, {'content': message.object.content, 'published': message.published});
-            self.conversations = _.map(self.conversations, function(conversation) {
-                    if (conversation.id == data.id) {
-                        return data;
-                    } else {
-                        return conversation;
-                    }
-                });
+        jq('#maxui-newactivity textarea').val('');
+        jq('#maxui-newactivity .maxui-button').attr('disabled', 'disabled');
+        sent.ack = false;
+        self.messagesview.append(sent);
+        self.messagesview.render();
+        self.scrollbar.setContentPosition(100);
+        self.messagesview.show(self.active);
 
-        });
-
+        self.listview.updateLastMessage(self.active, {'content': sent.data.text, 'published': sent.published});
+        // self.conversations = _.map(self.conversations, function(conversation) {
+        //         if (conversation.id == data.id) {
+        //             return data;
+        //         } else {
+        //             return conversation;
+        //         }
+        //     });
     };
 
     /**
@@ -633,14 +654,11 @@ var views = function() {
         }
     };
 
-    MaxConversations.prototype.ReceiveMessage = function(data) {
+    MaxConversations.prototype.ReceiveMessage = function(message) {
         var self = this;
-        message = JSON.parse(data.body);
-
-
         // Insert message only if the message is from another user.
-        if (message.username != self.maxui.settings.username) {
-            console.log('New message from user {0} on {1}'.format(message.username, message.conversation));
+        if (message.user != self.maxui.settings.username) {
+            console.log('New message from user {0} on {1}'.format(message.user, message.conversation));
             self.messagesview.append(message);
 
             if (self.maxui.settings.UISection == 'conversations' && self.maxui.settings.conversationsSection == 'messages') {
@@ -659,13 +677,13 @@ var views = function() {
         } else {
             console.log('Message {} succesfully delivered'.format(data.message));
             var interval = setInterval(function(event) {
-                var $message = jq('#' + message.messageID + ' .maxui-icon-check');
+                var $message = jq('#' + message.data.uuid + ' .maxui-icon-check');
                 if ($message) {
                     $message.addClass('maxui-ack');
-                    self.messagesview.ack(message.messageID);
+                    self.messagesview.ack(message.data.uuid);
                     clearInterval(interval);
                 }
-            }, 50);
+            }, 10);
 
 
         }

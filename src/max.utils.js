@@ -91,6 +91,18 @@ max.utils = function() {
             var date = new Date();
             return date / 1;
         },
+        /**  Returns current Date & Time in rfc339 format
+         **/
+        now: function() {
+            now = new Date();
+            return now;
+        },
+        /**  Formats a date in rfc3339 format
+         **/
+        rfc3339: function(date) {
+            function pad(n){return n<10 ? '0'+n : n;}
+            return date.getUTCFullYear()+'-' + pad(date.getUTCMonth()+1)+'-' + pad(date.getUTCDate())+'T' + pad(date.getUTCHours())+':' + pad(date.getUTCMinutes())+':' + pad(date.getUTCSeconds())+'Z';
+        },
         /**  Returns an human readable date from a timestamp in rfc3339 format (cross-browser)
          *    @param {String} timestamp    A date represented as a string in rfc3339 format '2012-02-09T13:06:43Z'
          **/
