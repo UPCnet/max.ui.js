@@ -19,6 +19,12 @@
       "src": "fontawesome"
     },
     {
+      "uid": "8b80d36d4ef43889db10bc1f0dc9a862",
+      "css": "user",
+      "code": 59410,
+      "src": "fontawesome"
+    },
+    {
       "uid": "0f4cae16f34ae243a6144c18a003f2d8",
       "css": "cancel-circled",
       "code": 59408,
@@ -106,6 +112,12 @@
       "uid": "c35e0796f6f806945a44b1655ce7bbe7",
       "css": "angle-circled-down",
       "code": 59402,
+      "src": "fontawesome"
+    },
+    {
+      "uid": "627abcdb627cb1789e009c08e2678ef9",
+      "css": "twitter",
+      "code": 59407,
       "src": "fontawesome"
     }
   ]
