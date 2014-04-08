@@ -96,6 +96,12 @@
                     maxui.conversations.ReceiveMessage(message);
                 }
             );
+            maxui.messaging.bind(
+                {action: 'add', object: 'conversation'},
+                function(message) {
+                    maxui.conversations.ReceiveConversation(message);
+                }
+            );
         }
 
         // Make settings available to utils package

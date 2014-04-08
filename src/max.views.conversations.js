@@ -44,7 +44,6 @@ var views = function() {
         if (arguments.length > 1) {
             callback = arguments[1];
         }
-
         self.maxui.maxClient.getConversationSubscription(conversation_hash, self.maxui.settings.username,function(data) {
             if (_.findWhere(self.conversations, {'id': data.id})) {
                 self.conversations = _.map(self.conversations, function(conversation) {
@@ -290,21 +289,21 @@ var views = function() {
                 'user': message.actor.username,
                 'published': message.published,
                 'data': {
-                    'conversation': message.contexts[0].id,
                     'displayName': message.actor.displayName,
                     'uuid': message.id,
                     'text': message.object.content
                 },
+                'destination': message.contexts[0].id,
                 'ack': message.ack
             };
             // If it's a message from max, update last message on listview
-            self.mainview.listview.updateLastMessage(message.data.conversation, {'content': message.message, 'published': message.published});
+            self.mainview.listview.updateLastMessage(message.destination, {'content': message.data.text, 'published': message.published});
         } else {
             // Is a message from rabbit, update last message on listview and increment unread counter
-            self.mainview.listview.updateLastMessage(message.data.conversation, {'content': message.data.text, 'published': message.published}, true);
+            self.mainview.listview.updateLastMessage(message.destination, {'content': message.data.text, 'published': message.published}, true);
         }
-        self.messages[message.conversation] = self.messages[message.data.conversation] || [];
-        self.messages[message.conversation].push(message);
+        self.messages[message.destination] = self.messages[message.destination] || [];
+        self.messages[message.destination].push(message);
     };
 
     MaxConversationMessages.prototype.prepend = function(message, index) {
@@ -471,46 +470,6 @@ var views = function() {
         self.$newparticipants = $('#maxui-new-participants');
     };
 
-//     MaxConversations.prototype.connect = function(stomp) {
-//         var self = this;
-//         self.stomp = stomp;
-
-//         self.stomp.subscribe('/exchange/{}.subscribe'.format(self.maxui.settings.username), function(stomp_message) {
-//             data = JSON.parse(d.body);
-//         }
-
-//         receive_helper = function(d) {
-//             self.ReceiveMessage(d);
-//         };
-
-//         // subscribe to all exchanges indentified by conversation_id, A message will be inserted as
-//         // a result of mesages coming in from each exchange
-//         for (co = 0; co < self.listview.conversations.length; co++) {
-//             conversation_id = self.listview.conversations[co].id;
-//             self.stomp.subscribe('/exchange/{0}'.format(conversation_id), receive_helper);
-//         }
-//         // subscribe to exchange "new" notifications. Conversations sections will be rerendered
-//         // And a conversations exchanges subscriptions updated with the new one
-//         self.stomp.subscribe('/exchange/new/{0}'.format(self.maxui.settings.username), function(d) {
-//             data = JSON.parse(d.body);
-//             if (self.maxui.settings.UISection == 'conversations' && self.maxui.settings.conversationsSection == 'conversations') {
-//                 self.active = data.conversation;
-//                 self.listview.loadConversation(data.conversation, function(event) {
-//                     //self.messagesview.show(chash);
-//                 });
-
-// /*                self.maxui.printConversations(function() {
-//                     self.maxui.toggleSection('conversations');
-//                     $('.maxui-message-count:first').css({
-//                         'background-color': 'red'
-//                     });
-//                 });*/
-//             }
-//             // subscribe to the new conversation exchange
-//             self.stomp.subscribe('/exchange/{0}'.format(data.conversation),  receive_helper);
-//         });
-//     };
-
     MaxConversations.prototype.render = function() {
         var self = this;
         self.loadScrollbar();
@@ -565,7 +524,6 @@ var views = function() {
         message = {
             data: {
                 "displayName": "Carles Bruguera",
-                "conversation": self.active,
                 "uuid": uuid.v1(),
                 "text": text
             },
@@ -583,17 +541,11 @@ var views = function() {
         self.messagesview.show(self.active);
 
         self.listview.updateLastMessage(self.active, {'content': sent.data.text, 'published': sent.published});
-        // self.conversations = _.map(self.conversations, function(conversation) {
-        //         if (conversation.id == data.id) {
-        //             return data;
-        //         } else {
-        //             return conversation;
-        //         }
-        //     });
+
     };
 
     /**
-     *    Creates a new conversation and subscribes to it
+     *    Creates a new conversation and shows it
      **/
     MaxConversations.prototype.create = function(options) {
         var self = this;
@@ -603,16 +555,9 @@ var views = function() {
         maxui.maxClient.addMessageAndConversation(options, function(event) {
             var message = this;
             var chash = message.contexts[0].id;
-            maxui.settings.currentConversation = {
-                hash: chash
-            };
-            if (options.displayName) {
-                maxui.settings.currentConversation.displayName = options.displayName;
-            } else {
-                maxui.settings.currentConversation.displayName = options.participants[0].displayName;
-            }
-            conversation = {
-                'id': message.contexts[0].id,
+
+                conversation = {
+                'id': chash,
                 'displayName': message.contexts[0].displayName,
                 'lastMessage': {
                     'content': message.object.content,
@@ -628,10 +573,6 @@ var views = function() {
             self.messagesview.append(message);
             self.messagesview.render();
             self.messagesview.show(chash);
-            self.stomp.subscribe('/exchange/{0}'.format(chash), function(d) {
-                self.ReceiveMessage(d);
-            });
-
             self.loadWrappers();
             self.$newparticipants[0].people = [];
             self.maxui.reloadPersons();
@@ -658,7 +599,7 @@ var views = function() {
         var self = this;
         // Insert message only if the message is from another user.
         if (message.user != self.maxui.settings.username) {
-            console.log('New message from user {0} on {1}'.format(message.user, message.conversation));
+            console.log('New message from user {0} on {1}'.format(message.user, message.destination));
             self.messagesview.append(message);
 
             if (self.maxui.settings.UISection == 'conversations' && self.maxui.settings.conversationsSection == 'messages') {
@@ -675,7 +616,7 @@ var views = function() {
                 self.listview.render();
             }
         } else {
-            console.log('Message {} succesfully delivered'.format(data.message));
+            console.log('Message {0} succesfully delivered'.format(message.data.uuid));
             var interval = setInterval(function(event) {
                 var $message = jq('#' + message.data.uuid + ' .maxui-icon-check');
                 if ($message) {
@@ -684,8 +625,22 @@ var views = function() {
                     clearInterval(interval);
                 }
             }, 10);
+        }
+    };
 
+    MaxConversations.prototype.ReceiveConversation = function(message) {
+        var self = this;
+        // Insert conversation only if the message is from another user.
+        if (message.user != self.maxui.settings.username) {
 
+            if (self.maxui.settings.UISection == 'conversations' && self.maxui.settings.conversationsSection == 'conversations') {
+                self.active = message.destination;
+                self.listview.loadConversation(message.destination, function(event) {
+                    //self.messagesview.show(chash);
+                });
+            }
+
+        } else {
         }
     };
 

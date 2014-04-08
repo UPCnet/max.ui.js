@@ -145,7 +145,7 @@ var max = max || {};
         self.bindings.push({'key': self.pack(params), 'callback': callback});
     };
 
-    MaxMessaging.prototype.on_message = function(message) {
+    MaxMessaging.prototype.on_message = function(message, destination) {
         var self = this;
         var matched_bindings = _.filter(self.bindings, function(binding) {
             // compare the stored binding key with a normalized key from message
@@ -158,7 +158,9 @@ var max = max || {};
             console.error('No defined binding found for this message');
         } else {
             _.each(matched_bindings, function(binding, index, list) {
-                binding.callback(self.unpack(message));
+                var unpacked = self.unpack(message);
+                unpacked.destination = destination;
+                binding.callback(unpacked);
             });
         }
     };
@@ -179,8 +181,9 @@ var max = max || {};
             // Define stomp stomp ON CONNECT callback
             function(x) {
                 self.stomp.subscribe('/exchange/{0}.subscribe'.format(self.maxui.settings.username), function(stomp_message) {
-                   data = JSON.parse(stomp_message.body);
-                   self.on_message(data);
+                   var data = JSON.parse(stomp_message.body);
+                   var routing_key = /([^/])+$/.exec(stomp_message.headers.destination)[0];
+                   self.on_message(data, routing_key);
                 });
                 self.active = true;
             },

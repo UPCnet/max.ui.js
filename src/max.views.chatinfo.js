@@ -59,9 +59,11 @@ var views = function() {
         // Clear previous overla usage bindings
         overlay.$el().unbind();
 
-        // Gets fresh conversation data on overlay close
+        // Gets fresh conversation data on overlay close, checking first if the conversation is still
+        // on the list, otherwise, it means that the overlay was closed by a deletion, and so we don't reload anything
         overlay.$el().on('maxui-overlay-close', function(event) {
-            maxui.conversations.listview.loadConversation(maxui.conversations.active);
+            var still_exists = _.where(maxui.conversations.listview.conversations, {id: maxui.conversations.active});
+            if (!_.isEmpty(still_exists)) maxui.conversations.listview.loadConversation(maxui.conversations.active);
         });
 
         // Open displayName editing box when user clicks on displayName
@@ -212,8 +214,8 @@ var views = function() {
         overlay.$el().on('click', self.getSelector('#maxui-conversation-leave .maxui-button'), function(event) {
             var leaving_username = maxui.settings.username;
             maxui.maxClient.kickUserFromConversation(self.data.id, leaving_username, function(event) {
-                overlay.hide();
                 maxui.conversations.listview.delete(self.data.id);
+                overlay.hide();
                 $('#maxui-back-conversations a').trigger('click');
             });
         });
@@ -226,8 +228,8 @@ var views = function() {
         // User confirms deleting a conversation
         overlay.$el().on('click', self.getSelector('#maxui-conversation-delete .maxui-help .maxui-confirmation-ok'), function(event) {
             maxui.maxClient.deleteConversation(self.data.id, function(event) {
-                overlay.hide();
                 maxui.conversations.listview.delete(self.data.id);
+                overlay.hide();
                 $('#maxui-back-conversations a').trigger('click');
             });
         });
