@@ -145,7 +145,7 @@ var max = max || {};
         self.bindings.push({'key': self.pack(params), 'callback': callback});
     };
 
-    MaxMessaging.prototype.on_message = function(message, destination) {
+    MaxMessaging.prototype.on_message = function(message, routing_key) {
         var self = this;
         var matched_bindings = _.filter(self.bindings, function(binding) {
             // compare the stored binding key with a normalized key from message
@@ -159,6 +159,8 @@ var max = max || {};
         } else {
             _.each(matched_bindings, function(binding, index, list) {
                 var unpacked = self.unpack(message);
+                // format routing key to extract first part before dot (.)
+                destination = routing_key.replace(/(\w+)\.(.*)/g, "$1");
                 unpacked.destination = destination;
                 binding.callback(unpacked);
             });

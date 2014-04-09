@@ -530,11 +530,12 @@ var views = function() {
             action: 'add',
             object: 'message'
         };
-        var sent = self.maxui.messaging.send(message, self.active);
+        var sent = self.maxui.messaging.send(message, '{0}.messages'.format(self.active));
 
         jq('#maxui-newactivity textarea').val('');
         jq('#maxui-newactivity .maxui-button').attr('disabled', 'disabled');
         sent.ack = false;
+        sent.destination = self.active;
         self.messagesview.append(sent);
         self.messagesview.render();
         self.scrollbar.setContentPosition(100);
