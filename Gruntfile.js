@@ -206,7 +206,7 @@ module.exports = function(grunt) {
       },
       build: {
         files: [
-            {expand:true, cwd: 'dist/', src: 'font', dest: 'builds/<%= uglify.pkg.version %>/'},
+            {expand:true, cwd: 'dist/font', src: '*', dest: 'builds/<%= uglify.pkg.version %>/font/'},
             {expand:true, cwd: 'dist/', src: 'maxui*', dest: 'builds/<%= uglify.pkg.version %>/'}
         ]
       },
