@@ -4170,1494 +4170,3493 @@ if (typeof define === 'function' && define.amd) {
 
 ;
 
+//     Underscore.js 1.6.0
+//     http://underscorejs.org
+//     (c) 2009-2014 Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
+//     Underscore may be freely distributed under the MIT license.
+
+(function() {
+
+  // Baseline setup
+  // --------------
+
+  // Establish the root object, `window` in the browser, or `exports` on the server.
+  var root = this;
+
+  // Save the previous value of the `_` variable.
+  var previousUnderscore = root._;
+
+  // Establish the object that gets returned to break out of a loop iteration.
+  var breaker = {};
+
+  // Save bytes in the minified (but not gzipped) version:
+  var ArrayProto = Array.prototype, ObjProto = Object.prototype, FuncProto = Function.prototype;
+
+  // Create quick reference variables for speed access to core prototypes.
+  var
+    push             = ArrayProto.push,
+    slice            = ArrayProto.slice,
+    concat           = ArrayProto.concat,
+    toString         = ObjProto.toString,
+    hasOwnProperty   = ObjProto.hasOwnProperty;
+
+  // All **ECMAScript 5** native function implementations that we hope to use
+  // are declared here.
+  var
+    nativeForEach      = ArrayProto.forEach,
+    nativeMap          = ArrayProto.map,
+    nativeReduce       = ArrayProto.reduce,
+    nativeReduceRight  = ArrayProto.reduceRight,
+    nativeFilter       = ArrayProto.filter,
+    nativeEvery        = ArrayProto.every,
+    nativeSome         = ArrayProto.some,
+    nativeIndexOf      = ArrayProto.indexOf,
+    nativeLastIndexOf  = ArrayProto.lastIndexOf,
+    nativeIsArray      = Array.isArray,
+    nativeKeys         = Object.keys,
+    nativeBind         = FuncProto.bind;
+
+  // Create a safe reference to the Underscore object for use below.
+  var _ = function(obj) {
+    if (obj instanceof _) return obj;
+    if (!(this instanceof _)) return new _(obj);
+    this._wrapped = obj;
+  };
+
+  // Export the Underscore object for **Node.js**, with
+  // backwards-compatibility for the old `require()` API. If we're in
+  // the browser, add `_` as a global object via a string identifier,
+  // for Closure Compiler "advanced" mode.
+  if (typeof exports !== 'undefined') {
+    if (typeof module !== 'undefined' && module.exports) {
+      exports = module.exports = _;
+    }
+    exports._ = _;
+  } else {
+    root._ = _;
+  }
+
+  // Current version.
+  _.VERSION = '1.6.0';
+
+  // Collection Functions
+  // --------------------
+
+  // The cornerstone, an `each` implementation, aka `forEach`.
+  // Handles objects with the built-in `forEach`, arrays, and raw objects.
+  // Delegates to **ECMAScript 5**'s native `forEach` if available.
+  var each = _.each = _.forEach = function(obj, iterator, context) {
+    if (obj == null) return obj;
+    if (nativeForEach && obj.forEach === nativeForEach) {
+      obj.forEach(iterator, context);
+    } else if (obj.length === +obj.length) {
+      for (var i = 0, length = obj.length; i < length; i++) {
+        if (iterator.call(context, obj[i], i, obj) === breaker) return;
+      }
+    } else {
+      var keys = _.keys(obj);
+      for (var i = 0, length = keys.length; i < length; i++) {
+        if (iterator.call(context, obj[keys[i]], keys[i], obj) === breaker) return;
+      }
+    }
+    return obj;
+  };
+
+  // Return the results of applying the iterator to each element.
+  // Delegates to **ECMAScript 5**'s native `map` if available.
+  _.map = _.collect = function(obj, iterator, context) {
+    var results = [];
+    if (obj == null) return results;
+    if (nativeMap && obj.map === nativeMap) return obj.map(iterator, context);
+    each(obj, function(value, index, list) {
+      results.push(iterator.call(context, value, index, list));
+    });
+    return results;
+  };
+
+  var reduceError = 'Reduce of empty array with no initial value';
+
+  // **Reduce** builds up a single result from a list of values, aka `inject`,
+  // or `foldl`. Delegates to **ECMAScript 5**'s native `reduce` if available.
+  _.reduce = _.foldl = _.inject = function(obj, iterator, memo, context) {
+    var initial = arguments.length > 2;
+    if (obj == null) obj = [];
+    if (nativeReduce && obj.reduce === nativeReduce) {
+      if (context) iterator = _.bind(iterator, context);
+      return initial ? obj.reduce(iterator, memo) : obj.reduce(iterator);
+    }
+    each(obj, function(value, index, list) {
+      if (!initial) {
+        memo = value;
+        initial = true;
+      } else {
+        memo = iterator.call(context, memo, value, index, list);
+      }
+    });
+    if (!initial) throw new TypeError(reduceError);
+    return memo;
+  };
+
+  // The right-associative version of reduce, also known as `foldr`.
+  // Delegates to **ECMAScript 5**'s native `reduceRight` if available.
+  _.reduceRight = _.foldr = function(obj, iterator, memo, context) {
+    var initial = arguments.length > 2;
+    if (obj == null) obj = [];
+    if (nativeReduceRight && obj.reduceRight === nativeReduceRight) {
+      if (context) iterator = _.bind(iterator, context);
+      return initial ? obj.reduceRight(iterator, memo) : obj.reduceRight(iterator);
+    }
+    var length = obj.length;
+    if (length !== +length) {
+      var keys = _.keys(obj);
+      length = keys.length;
+    }
+    each(obj, function(value, index, list) {
+      index = keys ? keys[--length] : --length;
+      if (!initial) {
+        memo = obj[index];
+        initial = true;
+      } else {
+        memo = iterator.call(context, memo, obj[index], index, list);
+      }
+    });
+    if (!initial) throw new TypeError(reduceError);
+    return memo;
+  };
+
+  // Return the first value which passes a truth test. Aliased as `detect`.
+  _.find = _.detect = function(obj, predicate, context) {
+    var result;
+    any(obj, function(value, index, list) {
+      if (predicate.call(context, value, index, list)) {
+        result = value;
+        return true;
+      }
+    });
+    return result;
+  };
+
+  // Return all the elements that pass a truth test.
+  // Delegates to **ECMAScript 5**'s native `filter` if available.
+  // Aliased as `select`.
+  _.filter = _.select = function(obj, predicate, context) {
+    var results = [];
+    if (obj == null) return results;
+    if (nativeFilter && obj.filter === nativeFilter) return obj.filter(predicate, context);
+    each(obj, function(value, index, list) {
+      if (predicate.call(context, value, index, list)) results.push(value);
+    });
+    return results;
+  };
+
+  // Return all the elements for which a truth test fails.
+  _.reject = function(obj, predicate, context) {
+    return _.filter(obj, function(value, index, list) {
+      return !predicate.call(context, value, index, list);
+    }, context);
+  };
+
+  // Determine whether all of the elements match a truth test.
+  // Delegates to **ECMAScript 5**'s native `every` if available.
+  // Aliased as `all`.
+  _.every = _.all = function(obj, predicate, context) {
+    predicate || (predicate = _.identity);
+    var result = true;
+    if (obj == null) return result;
+    if (nativeEvery && obj.every === nativeEvery) return obj.every(predicate, context);
+    each(obj, function(value, index, list) {
+      if (!(result = result && predicate.call(context, value, index, list))) return breaker;
+    });
+    return !!result;
+  };
+
+  // Determine if at least one element in the object matches a truth test.
+  // Delegates to **ECMAScript 5**'s native `some` if available.
+  // Aliased as `any`.
+  var any = _.some = _.any = function(obj, predicate, context) {
+    predicate || (predicate = _.identity);
+    var result = false;
+    if (obj == null) return result;
+    if (nativeSome && obj.some === nativeSome) return obj.some(predicate, context);
+    each(obj, function(value, index, list) {
+      if (result || (result = predicate.call(context, value, index, list))) return breaker;
+    });
+    return !!result;
+  };
+
+  // Determine if the array or object contains a given value (using `===`).
+  // Aliased as `include`.
+  _.contains = _.include = function(obj, target) {
+    if (obj == null) return false;
+    if (nativeIndexOf && obj.indexOf === nativeIndexOf) return obj.indexOf(target) != -1;
+    return any(obj, function(value) {
+      return value === target;
+    });
+  };
+
+  // Invoke a method (with arguments) on every item in a collection.
+  _.invoke = function(obj, method) {
+    var args = slice.call(arguments, 2);
+    var isFunc = _.isFunction(method);
+    return _.map(obj, function(value) {
+      return (isFunc ? method : value[method]).apply(value, args);
+    });
+  };
+
+  // Convenience version of a common use case of `map`: fetching a property.
+  _.pluck = function(obj, key) {
+    return _.map(obj, _.property(key));
+  };
+
+  // Convenience version of a common use case of `filter`: selecting only objects
+  // containing specific `key:value` pairs.
+  _.where = function(obj, attrs) {
+    return _.filter(obj, _.matches(attrs));
+  };
+
+  // Convenience version of a common use case of `find`: getting the first object
+  // containing specific `key:value` pairs.
+  _.findWhere = function(obj, attrs) {
+    return _.find(obj, _.matches(attrs));
+  };
+
+  // Return the maximum element or (element-based computation).
+  // Can't optimize arrays of integers longer than 65,535 elements.
+  // See [WebKit Bug 80797](https://bugs.webkit.org/show_bug.cgi?id=80797)
+  _.max = function(obj, iterator, context) {
+    if (!iterator && _.isArray(obj) && obj[0] === +obj[0] && obj.length < 65535) {
+      return Math.max.apply(Math, obj);
+    }
+    var result = -Infinity, lastComputed = -Infinity;
+    each(obj, function(value, index, list) {
+      var computed = iterator ? iterator.call(context, value, index, list) : value;
+      if (computed > lastComputed) {
+        result = value;
+        lastComputed = computed;
+      }
+    });
+    return result;
+  };
+
+  // Return the minimum element (or element-based computation).
+  _.min = function(obj, iterator, context) {
+    if (!iterator && _.isArray(obj) && obj[0] === +obj[0] && obj.length < 65535) {
+      return Math.min.apply(Math, obj);
+    }
+    var result = Infinity, lastComputed = Infinity;
+    each(obj, function(value, index, list) {
+      var computed = iterator ? iterator.call(context, value, index, list) : value;
+      if (computed < lastComputed) {
+        result = value;
+        lastComputed = computed;
+      }
+    });
+    return result;
+  };
+
+  // Shuffle an array, using the modern version of the
+  // [Fisher-Yates shuffle](http://en.wikipedia.org/wiki/Fisherâ€“Yates_shuffle).
+  _.shuffle = function(obj) {
+    var rand;
+    var index = 0;
+    var shuffled = [];
+    each(obj, function(value) {
+      rand = _.random(index++);
+      shuffled[index - 1] = shuffled[rand];
+      shuffled[rand] = value;
+    });
+    return shuffled;
+  };
+
+  // Sample **n** random values from a collection.
+  // If **n** is not specified, returns a single random element.
+  // The internal `guard` argument allows it to work with `map`.
+  _.sample = function(obj, n, guard) {
+    if (n == null || guard) {
+      if (obj.length !== +obj.length) obj = _.values(obj);
+      return obj[_.random(obj.length - 1)];
+    }
+    return _.shuffle(obj).slice(0, Math.max(0, n));
+  };
+
+  // An internal function to generate lookup iterators.
+  var lookupIterator = function(value) {
+    if (value == null) return _.identity;
+    if (_.isFunction(value)) return value;
+    return _.property(value);
+  };
+
+  // Sort the object's values by a criterion produced by an iterator.
+  _.sortBy = function(obj, iterator, context) {
+    iterator = lookupIterator(iterator);
+    return _.pluck(_.map(obj, function(value, index, list) {
+      return {
+        value: value,
+        index: index,
+        criteria: iterator.call(context, value, index, list)
+      };
+    }).sort(function(left, right) {
+      var a = left.criteria;
+      var b = right.criteria;
+      if (a !== b) {
+        if (a > b || a === void 0) return 1;
+        if (a < b || b === void 0) return -1;
+      }
+      return left.index - right.index;
+    }), 'value');
+  };
+
+  // An internal function used for aggregate "group by" operations.
+  var group = function(behavior) {
+    return function(obj, iterator, context) {
+      var result = {};
+      iterator = lookupIterator(iterator);
+      each(obj, function(value, index) {
+        var key = iterator.call(context, value, index, obj);
+        behavior(result, key, value);
+      });
+      return result;
+    };
+  };
+
+  // Groups the object's values by a criterion. Pass either a string attribute
+  // to group by, or a function that returns the criterion.
+  _.groupBy = group(function(result, key, value) {
+    _.has(result, key) ? result[key].push(value) : result[key] = [value];
+  });
+
+  // Indexes the object's values by a criterion, similar to `groupBy`, but for
+  // when you know that your index values will be unique.
+  _.indexBy = group(function(result, key, value) {
+    result[key] = value;
+  });
+
+  // Counts instances of an object that group by a certain criterion. Pass
+  // either a string attribute to count by, or a function that returns the
+  // criterion.
+  _.countBy = group(function(result, key) {
+    _.has(result, key) ? result[key]++ : result[key] = 1;
+  });
+
+  // Use a comparator function to figure out the smallest index at which
+  // an object should be inserted so as to maintain order. Uses binary search.
+  _.sortedIndex = function(array, obj, iterator, context) {
+    iterator = lookupIterator(iterator);
+    var value = iterator.call(context, obj);
+    var low = 0, high = array.length;
+    while (low < high) {
+      var mid = (low + high) >>> 1;
+      iterator.call(context, array[mid]) < value ? low = mid + 1 : high = mid;
+    }
+    return low;
+  };
+
+  // Safely create a real, live array from anything iterable.
+  _.toArray = function(obj) {
+    if (!obj) return [];
+    if (_.isArray(obj)) return slice.call(obj);
+    if (obj.length === +obj.length) return _.map(obj, _.identity);
+    return _.values(obj);
+  };
+
+  // Return the number of elements in an object.
+  _.size = function(obj) {
+    if (obj == null) return 0;
+    return (obj.length === +obj.length) ? obj.length : _.keys(obj).length;
+  };
+
+  // Array Functions
+  // ---------------
+
+  // Get the first element of an array. Passing **n** will return the first N
+  // values in the array. Aliased as `head` and `take`. The **guard** check
+  // allows it to work with `_.map`.
+  _.first = _.head = _.take = function(array, n, guard) {
+    if (array == null) return void 0;
+    if ((n == null) || guard) return array[0];
+    if (n < 0) return [];
+    return slice.call(array, 0, n);
+  };
+
+  // Returns everything but the last entry of the array. Especially useful on
+  // the arguments object. Passing **n** will return all the values in
+  // the array, excluding the last N. The **guard** check allows it to work with
+  // `_.map`.
+  _.initial = function(array, n, guard) {
+    return slice.call(array, 0, array.length - ((n == null) || guard ? 1 : n));
+  };
+
+  // Get the last element of an array. Passing **n** will return the last N
+  // values in the array. The **guard** check allows it to work with `_.map`.
+  _.last = function(array, n, guard) {
+    if (array == null) return void 0;
+    if ((n == null) || guard) return array[array.length - 1];
+    return slice.call(array, Math.max(array.length - n, 0));
+  };
+
+  // Returns everything but the first entry of the array. Aliased as `tail` and `drop`.
+  // Especially useful on the arguments object. Passing an **n** will return
+  // the rest N values in the array. The **guard**
+  // check allows it to work with `_.map`.
+  _.rest = _.tail = _.drop = function(array, n, guard) {
+    return slice.call(array, (n == null) || guard ? 1 : n);
+  };
+
+  // Trim out all falsy values from an array.
+  _.compact = function(array) {
+    return _.filter(array, _.identity);
+  };
+
+  // Internal implementation of a recursive `flatten` function.
+  var flatten = function(input, shallow, output) {
+    if (shallow && _.every(input, _.isArray)) {
+      return concat.apply(output, input);
+    }
+    each(input, function(value) {
+      if (_.isArray(value) || _.isArguments(value)) {
+        shallow ? push.apply(output, value) : flatten(value, shallow, output);
+      } else {
+        output.push(value);
+      }
+    });
+    return output;
+  };
+
+  // Flatten out an array, either recursively (by default), or just one level.
+  _.flatten = function(array, shallow) {
+    return flatten(array, shallow, []);
+  };
+
+  // Return a version of the array that does not contain the specified value(s).
+  _.without = function(array) {
+    return _.difference(array, slice.call(arguments, 1));
+  };
+
+  // Split an array into two arrays: one whose elements all satisfy the given
+  // predicate, and one whose elements all do not satisfy the predicate.
+  _.partition = function(array, predicate, context) {
+    predicate = lookupIterator(predicate);
+    var pass = [], fail = [];
+    each(array, function(elem) {
+      (predicate.call(context, elem) ? pass : fail).push(elem);
+    });
+    return [pass, fail];
+  };
+
+  // Produce a duplicate-free version of the array. If the array has already
+  // been sorted, you have the option of using a faster algorithm.
+  // Aliased as `unique`.
+  _.uniq = _.unique = function(array, isSorted, iterator, context) {
+    if (_.isFunction(isSorted)) {
+      context = iterator;
+      iterator = isSorted;
+      isSorted = false;
+    }
+    var initial = iterator ? _.map(array, iterator, context) : array;
+    var results = [];
+    var seen = [];
+    each(initial, function(value, index) {
+      if (isSorted ? (!index || seen[seen.length - 1] !== value) : !_.contains(seen, value)) {
+        seen.push(value);
+        results.push(array[index]);
+      }
+    });
+    return results;
+  };
+
+  // Produce an array that contains the union: each distinct element from all of
+  // the passed-in arrays.
+  _.union = function() {
+    return _.uniq(_.flatten(arguments, true));
+  };
+
+  // Produce an array that contains every item shared between all the
+  // passed-in arrays.
+  _.intersection = function(array) {
+    var rest = slice.call(arguments, 1);
+    return _.filter(_.uniq(array), function(item) {
+      return _.every(rest, function(other) {
+        return _.contains(other, item);
+      });
+    });
+  };
+
+  // Take the difference between one array and a number of other arrays.
+  // Only the elements present in just the first array will remain.
+  _.difference = function(array) {
+    var rest = concat.apply(ArrayProto, slice.call(arguments, 1));
+    return _.filter(array, function(value){ return !_.contains(rest, value); });
+  };
+
+  // Zip together multiple lists into a single array -- elements that share
+  // an index go together.
+  _.zip = function() {
+    var length = _.max(_.pluck(arguments, 'length').concat(0));
+    var results = new Array(length);
+    for (var i = 0; i < length; i++) {
+      results[i] = _.pluck(arguments, '' + i);
+    }
+    return results;
+  };
+
+  // Converts lists into objects. Pass either a single array of `[key, value]`
+  // pairs, or two parallel arrays of the same length -- one of keys, and one of
+  // the corresponding values.
+  _.object = function(list, values) {
+    if (list == null) return {};
+    var result = {};
+    for (var i = 0, length = list.length; i < length; i++) {
+      if (values) {
+        result[list[i]] = values[i];
+      } else {
+        result[list[i][0]] = list[i][1];
+      }
+    }
+    return result;
+  };
+
+  // If the browser doesn't supply us with indexOf (I'm looking at you, **MSIE**),
+  // we need this function. Return the position of the first occurrence of an
+  // item in an array, or -1 if the item is not included in the array.
+  // Delegates to **ECMAScript 5**'s native `indexOf` if available.
+  // If the array is large and already in sort order, pass `true`
+  // for **isSorted** to use binary search.
+  _.indexOf = function(array, item, isSorted) {
+    if (array == null) return -1;
+    var i = 0, length = array.length;
+    if (isSorted) {
+      if (typeof isSorted == 'number') {
+        i = (isSorted < 0 ? Math.max(0, length + isSorted) : isSorted);
+      } else {
+        i = _.sortedIndex(array, item);
+        return array[i] === item ? i : -1;
+      }
+    }
+    if (nativeIndexOf && array.indexOf === nativeIndexOf) return array.indexOf(item, isSorted);
+    for (; i < length; i++) if (array[i] === item) return i;
+    return -1;
+  };
+
+  // Delegates to **ECMAScript 5**'s native `lastIndexOf` if available.
+  _.lastIndexOf = function(array, item, from) {
+    if (array == null) return -1;
+    var hasIndex = from != null;
+    if (nativeLastIndexOf && array.lastIndexOf === nativeLastIndexOf) {
+      return hasIndex ? array.lastIndexOf(item, from) : array.lastIndexOf(item);
+    }
+    var i = (hasIndex ? from : array.length);
+    while (i--) if (array[i] === item) return i;
+    return -1;
+  };
+
+  // Generate an integer Array containing an arithmetic progression. A port of
+  // the native Python `range()` function. See
+  // [the Python documentation](http://docs.python.org/library/functions.html#range).
+  _.range = function(start, stop, step) {
+    if (arguments.length <= 1) {
+      stop = start || 0;
+      start = 0;
+    }
+    step = arguments[2] || 1;
+
+    var length = Math.max(Math.ceil((stop - start) / step), 0);
+    var idx = 0;
+    var range = new Array(length);
+
+    while(idx < length) {
+      range[idx++] = start;
+      start += step;
+    }
+
+    return range;
+  };
+
+  // Function (ahem) Functions
+  // ------------------
+
+  // Reusable constructor function for prototype setting.
+  var ctor = function(){};
+
+  // Create a function bound to a given object (assigning `this`, and arguments,
+  // optionally). Delegates to **ECMAScript 5**'s native `Function.bind` if
+  // available.
+  _.bind = function(func, context) {
+    var args, bound;
+    if (nativeBind && func.bind === nativeBind) return nativeBind.apply(func, slice.call(arguments, 1));
+    if (!_.isFunction(func)) throw new TypeError;
+    args = slice.call(arguments, 2);
+    return bound = function() {
+      if (!(this instanceof bound)) return func.apply(context, args.concat(slice.call(arguments)));
+      ctor.prototype = func.prototype;
+      var self = new ctor;
+      ctor.prototype = null;
+      var result = func.apply(self, args.concat(slice.call(arguments)));
+      if (Object(result) === result) return result;
+      return self;
+    };
+  };
+
+  // Partially apply a function by creating a version that has had some of its
+  // arguments pre-filled, without changing its dynamic `this` context. _ acts
+  // as a placeholder, allowing any combination of arguments to be pre-filled.
+  _.partial = function(func) {
+    var boundArgs = slice.call(arguments, 1);
+    return function() {
+      var position = 0;
+      var args = boundArgs.slice();
+      for (var i = 0, length = args.length; i < length; i++) {
+        if (args[i] === _) args[i] = arguments[position++];
+      }
+      while (position < arguments.length) args.push(arguments[position++]);
+      return func.apply(this, args);
+    };
+  };
+
+  // Bind a number of an object's methods to that object. Remaining arguments
+  // are the method names to be bound. Useful for ensuring that all callbacks
+  // defined on an object belong to it.
+  _.bindAll = function(obj) {
+    var funcs = slice.call(arguments, 1);
+    if (funcs.length === 0) throw new Error('bindAll must be passed function names');
+    each(funcs, function(f) { obj[f] = _.bind(obj[f], obj); });
+    return obj;
+  };
+
+  // Memoize an expensive function by storing its results.
+  _.memoize = function(func, hasher) {
+    var memo = {};
+    hasher || (hasher = _.identity);
+    return function() {
+      var key = hasher.apply(this, arguments);
+      return _.has(memo, key) ? memo[key] : (memo[key] = func.apply(this, arguments));
+    };
+  };
+
+  // Delays a function for the given number of milliseconds, and then calls
+  // it with the arguments supplied.
+  _.delay = function(func, wait) {
+    var args = slice.call(arguments, 2);
+    return setTimeout(function(){ return func.apply(null, args); }, wait);
+  };
+
+  // Defers a function, scheduling it to run after the current call stack has
+  // cleared.
+  _.defer = function(func) {
+    return _.delay.apply(_, [func, 1].concat(slice.call(arguments, 1)));
+  };
+
+  // Returns a function, that, when invoked, will only be triggered at most once
+  // during a given window of time. Normally, the throttled function will run
+  // as much as it can, without ever going more than once per `wait` duration;
+  // but if you'd like to disable the execution on the leading edge, pass
+  // `{leading: false}`. To disable execution on the trailing edge, ditto.
+  _.throttle = function(func, wait, options) {
+    var context, args, result;
+    var timeout = null;
+    var previous = 0;
+    options || (options = {});
+    var later = function() {
+      previous = options.leading === false ? 0 : _.now();
+      timeout = null;
+      result = func.apply(context, args);
+      context = args = null;
+    };
+    return function() {
+      var now = _.now();
+      if (!previous && options.leading === false) previous = now;
+      var remaining = wait - (now - previous);
+      context = this;
+      args = arguments;
+      if (remaining <= 0) {
+        clearTimeout(timeout);
+        timeout = null;
+        previous = now;
+        result = func.apply(context, args);
+        context = args = null;
+      } else if (!timeout && options.trailing !== false) {
+        timeout = setTimeout(later, remaining);
+      }
+      return result;
+    };
+  };
+
+  // Returns a function, that, as long as it continues to be invoked, will not
+  // be triggered. The function will be called after it stops being called for
+  // N milliseconds. If `immediate` is passed, trigger the function on the
+  // leading edge, instead of the trailing.
+  _.debounce = function(func, wait, immediate) {
+    var timeout, args, context, timestamp, result;
+
+    var later = function() {
+      var last = _.now() - timestamp;
+      if (last < wait) {
+        timeout = setTimeout(later, wait - last);
+      } else {
+        timeout = null;
+        if (!immediate) {
+          result = func.apply(context, args);
+          context = args = null;
+        }
+      }
+    };
+
+    return function() {
+      context = this;
+      args = arguments;
+      timestamp = _.now();
+      var callNow = immediate && !timeout;
+      if (!timeout) {
+        timeout = setTimeout(later, wait);
+      }
+      if (callNow) {
+        result = func.apply(context, args);
+        context = args = null;
+      }
+
+      return result;
+    };
+  };
+
+  // Returns a function that will be executed at most one time, no matter how
+  // often you call it. Useful for lazy initialization.
+  _.once = function(func) {
+    var ran = false, memo;
+    return function() {
+      if (ran) return memo;
+      ran = true;
+      memo = func.apply(this, arguments);
+      func = null;
+      return memo;
+    };
+  };
+
+  // Returns the first function passed as an argument to the second,
+  // allowing you to adjust arguments, run code before and after, and
+  // conditionally execute the original function.
+  _.wrap = function(func, wrapper) {
+    return _.partial(wrapper, func);
+  };
+
+  // Returns a function that is the composition of a list of functions, each
+  // consuming the return value of the function that follows.
+  _.compose = function() {
+    var funcs = arguments;
+    return function() {
+      var args = arguments;
+      for (var i = funcs.length - 1; i >= 0; i--) {
+        args = [funcs[i].apply(this, args)];
+      }
+      return args[0];
+    };
+  };
+
+  // Returns a function that will only be executed after being called N times.
+  _.after = function(times, func) {
+    return function() {
+      if (--times < 1) {
+        return func.apply(this, arguments);
+      }
+    };
+  };
+
+  // Object Functions
+  // ----------------
+
+  // Retrieve the names of an object's properties.
+  // Delegates to **ECMAScript 5**'s native `Object.keys`
+  _.keys = function(obj) {
+    if (!_.isObject(obj)) return [];
+    if (nativeKeys) return nativeKeys(obj);
+    var keys = [];
+    for (var key in obj) if (_.has(obj, key)) keys.push(key);
+    return keys;
+  };
+
+  // Retrieve the values of an object's properties.
+  _.values = function(obj) {
+    var keys = _.keys(obj);
+    var length = keys.length;
+    var values = new Array(length);
+    for (var i = 0; i < length; i++) {
+      values[i] = obj[keys[i]];
+    }
+    return values;
+  };
+
+  // Convert an object into a list of `[key, value]` pairs.
+  _.pairs = function(obj) {
+    var keys = _.keys(obj);
+    var length = keys.length;
+    var pairs = new Array(length);
+    for (var i = 0; i < length; i++) {
+      pairs[i] = [keys[i], obj[keys[i]]];
+    }
+    return pairs;
+  };
+
+  // Invert the keys and values of an object. The values must be serializable.
+  _.invert = function(obj) {
+    var result = {};
+    var keys = _.keys(obj);
+    for (var i = 0, length = keys.length; i < length; i++) {
+      result[obj[keys[i]]] = keys[i];
+    }
+    return result;
+  };
+
+  // Return a sorted list of the function names available on the object.
+  // Aliased as `methods`
+  _.functions = _.methods = function(obj) {
+    var names = [];
+    for (var key in obj) {
+      if (_.isFunction(obj[key])) names.push(key);
+    }
+    return names.sort();
+  };
+
+  // Extend a given object with all the properties in passed-in object(s).
+  _.extend = function(obj) {
+    each(slice.call(arguments, 1), function(source) {
+      if (source) {
+        for (var prop in source) {
+          obj[prop] = source[prop];
+        }
+      }
+    });
+    return obj;
+  };
+
+  // Return a copy of the object only containing the whitelisted properties.
+  _.pick = function(obj) {
+    var copy = {};
+    var keys = concat.apply(ArrayProto, slice.call(arguments, 1));
+    each(keys, function(key) {
+      if (key in obj) copy[key] = obj[key];
+    });
+    return copy;
+  };
+
+   // Return a copy of the object without the blacklisted properties.
+  _.omit = function(obj) {
+    var copy = {};
+    var keys = concat.apply(ArrayProto, slice.call(arguments, 1));
+    for (var key in obj) {
+      if (!_.contains(keys, key)) copy[key] = obj[key];
+    }
+    return copy;
+  };
+
+  // Fill in a given object with default properties.
+  _.defaults = function(obj) {
+    each(slice.call(arguments, 1), function(source) {
+      if (source) {
+        for (var prop in source) {
+          if (obj[prop] === void 0) obj[prop] = source[prop];
+        }
+      }
+    });
+    return obj;
+  };
+
+  // Create a (shallow-cloned) duplicate of an object.
+  _.clone = function(obj) {
+    if (!_.isObject(obj)) return obj;
+    return _.isArray(obj) ? obj.slice() : _.extend({}, obj);
+  };
+
+  // Invokes interceptor with the obj, and then returns obj.
+  // The primary purpose of this method is to "tap into" a method chain, in
+  // order to perform operations on intermediate results within the chain.
+  _.tap = function(obj, interceptor) {
+    interceptor(obj);
+    return obj;
+  };
+
+  // Internal recursive comparison function for `isEqual`.
+  var eq = function(a, b, aStack, bStack) {
+    // Identical objects are equal. `0 === -0`, but they aren't identical.
+    // See the [Harmony `egal` proposal](http://wiki.ecmascript.org/doku.php?id=harmony:egal).
+    if (a === b) return a !== 0 || 1 / a == 1 / b;
+    // A strict comparison is necessary because `null == undefined`.
+    if (a == null || b == null) return a === b;
+    // Unwrap any wrapped objects.
+    if (a instanceof _) a = a._wrapped;
+    if (b instanceof _) b = b._wrapped;
+    // Compare `[[Class]]` names.
+    var className = toString.call(a);
+    if (className != toString.call(b)) return false;
+    switch (className) {
+      // Strings, numbers, dates, and booleans are compared by value.
+      case '[object String]':
+        // Primitives and their corresponding object wrappers are equivalent; thus, `"5"` is
+        // equivalent to `new String("5")`.
+        return a == String(b);
+      case '[object Number]':
+        // `NaN`s are equivalent, but non-reflexive. An `egal` comparison is performed for
+        // other numeric values.
+        return a != +a ? b != +b : (a == 0 ? 1 / a == 1 / b : a == +b);
+      case '[object Date]':
+      case '[object Boolean]':
+        // Coerce dates and booleans to numeric primitive values. Dates are compared by their
+        // millisecond representations. Note that invalid dates with millisecond representations
+        // of `NaN` are not equivalent.
+        return +a == +b;
+      // RegExps are compared by their source patterns and flags.
+      case '[object RegExp]':
+        return a.source == b.source &&
+               a.global == b.global &&
+               a.multiline == b.multiline &&
+               a.ignoreCase == b.ignoreCase;
+    }
+    if (typeof a != 'object' || typeof b != 'object') return false;
+    // Assume equality for cyclic structures. The algorithm for detecting cyclic
+    // structures is adapted from ES 5.1 section 15.12.3, abstract operation `JO`.
+    var length = aStack.length;
+    while (length--) {
+      // Linear search. Performance is inversely proportional to the number of
+      // unique nested structures.
+      if (aStack[length] == a) return bStack[length] == b;
+    }
+    // Objects with different constructors are not equivalent, but `Object`s
+    // from different frames are.
+    var aCtor = a.constructor, bCtor = b.constructor;
+    if (aCtor !== bCtor && !(_.isFunction(aCtor) && (aCtor instanceof aCtor) &&
+                             _.isFunction(bCtor) && (bCtor instanceof bCtor))
+                        && ('constructor' in a && 'constructor' in b)) {
+      return false;
+    }
+    // Add the first object to the stack of traversed objects.
+    aStack.push(a);
+    bStack.push(b);
+    var size = 0, result = true;
+    // Recursively compare objects and arrays.
+    if (className == '[object Array]') {
+      // Compare array lengths to determine if a deep comparison is necessary.
+      size = a.length;
+      result = size == b.length;
+      if (result) {
+        // Deep compare the contents, ignoring non-numeric properties.
+        while (size--) {
+          if (!(result = eq(a[size], b[size], aStack, bStack))) break;
+        }
+      }
+    } else {
+      // Deep compare objects.
+      for (var key in a) {
+        if (_.has(a, key)) {
+          // Count the expected number of properties.
+          size++;
+          // Deep compare each member.
+          if (!(result = _.has(b, key) && eq(a[key], b[key], aStack, bStack))) break;
+        }
+      }
+      // Ensure that both objects contain the same number of properties.
+      if (result) {
+        for (key in b) {
+          if (_.has(b, key) && !(size--)) break;
+        }
+        result = !size;
+      }
+    }
+    // Remove the first object from the stack of traversed objects.
+    aStack.pop();
+    bStack.pop();
+    return result;
+  };
+
+  // Perform a deep comparison to check if two objects are equal.
+  _.isEqual = function(a, b) {
+    return eq(a, b, [], []);
+  };
+
+  // Is a given array, string, or object empty?
+  // An "empty" object has no enumerable own-properties.
+  _.isEmpty = function(obj) {
+    if (obj == null) return true;
+    if (_.isArray(obj) || _.isString(obj)) return obj.length === 0;
+    for (var key in obj) if (_.has(obj, key)) return false;
+    return true;
+  };
+
+  // Is a given value a DOM element?
+  _.isElement = function(obj) {
+    return !!(obj && obj.nodeType === 1);
+  };
+
+  // Is a given value an array?
+  // Delegates to ECMA5's native Array.isArray
+  _.isArray = nativeIsArray || function(obj) {
+    return toString.call(obj) == '[object Array]';
+  };
+
+  // Is a given variable an object?
+  _.isObject = function(obj) {
+    return obj === Object(obj);
+  };
+
+  // Add some isType methods: isArguments, isFunction, isString, isNumber, isDate, isRegExp.
+  each(['Arguments', 'Function', 'String', 'Number', 'Date', 'RegExp'], function(name) {
+    _['is' + name] = function(obj) {
+      return toString.call(obj) == '[object ' + name + ']';
+    };
+  });
+
+  // Define a fallback version of the method in browsers (ahem, IE), where
+  // there isn't any inspectable "Arguments" type.
+  if (!_.isArguments(arguments)) {
+    _.isArguments = function(obj) {
+      return !!(obj && _.has(obj, 'callee'));
+    };
+  }
+
+  // Optimize `isFunction` if appropriate.
+  if (typeof (/./) !== 'function') {
+    _.isFunction = function(obj) {
+      return typeof obj === 'function';
+    };
+  }
+
+  // Is a given object a finite number?
+  _.isFinite = function(obj) {
+    return isFinite(obj) && !isNaN(parseFloat(obj));
+  };
+
+  // Is the given value `NaN`? (NaN is the only number which does not equal itself).
+  _.isNaN = function(obj) {
+    return _.isNumber(obj) && obj != +obj;
+  };
+
+  // Is a given value a boolean?
+  _.isBoolean = function(obj) {
+    return obj === true || obj === false || toString.call(obj) == '[object Boolean]';
+  };
+
+  // Is a given value equal to null?
+  _.isNull = function(obj) {
+    return obj === null;
+  };
+
+  // Is a given variable undefined?
+  _.isUndefined = function(obj) {
+    return obj === void 0;
+  };
+
+  // Shortcut function for checking if an object has a given property directly
+  // on itself (in other words, not on a prototype).
+  _.has = function(obj, key) {
+    return hasOwnProperty.call(obj, key);
+  };
+
+  // Utility Functions
+  // -----------------
+
+  // Run Underscore.js in *noConflict* mode, returning the `_` variable to its
+  // previous owner. Returns a reference to the Underscore object.
+  _.noConflict = function() {
+    root._ = previousUnderscore;
+    return this;
+  };
+
+  // Keep the identity function around for default iterators.
+  _.identity = function(value) {
+    return value;
+  };
+
+  _.constant = function(value) {
+    return function () {
+      return value;
+    };
+  };
+
+  _.property = function(key) {
+    return function(obj) {
+      return obj[key];
+    };
+  };
+
+  // Returns a predicate for checking whether an object has a given set of `key:value` pairs.
+  _.matches = function(attrs) {
+    return function(obj) {
+      if (obj === attrs) return true; //avoid comparing an object to itself.
+      for (var key in attrs) {
+        if (attrs[key] !== obj[key])
+          return false;
+      }
+      return true;
+    }
+  };
+
+  // Run a function **n** times.
+  _.times = function(n, iterator, context) {
+    var accum = Array(Math.max(0, n));
+    for (var i = 0; i < n; i++) accum[i] = iterator.call(context, i);
+    return accum;
+  };
+
+  // Return a random integer between min and max (inclusive).
+  _.random = function(min, max) {
+    if (max == null) {
+      max = min;
+      min = 0;
+    }
+    return min + Math.floor(Math.random() * (max - min + 1));
+  };
+
+  // A (possibly faster) way to get the current timestamp as an integer.
+  _.now = Date.now || function() { return new Date().getTime(); };
+
+  // List of HTML entities for escaping.
+  var entityMap = {
+    escape: {
+      '&': '&amp;',
+      '<': '&lt;',
+      '>': '&gt;',
+      '"': '&quot;',
+      "'": '&#x27;'
+    }
+  };
+  entityMap.unescape = _.invert(entityMap.escape);
+
+  // Regexes containing the keys and values listed immediately above.
+  var entityRegexes = {
+    escape:   new RegExp('[' + _.keys(entityMap.escape).join('') + ']', 'g'),
+    unescape: new RegExp('(' + _.keys(entityMap.unescape).join('|') + ')', 'g')
+  };
+
+  // Functions for escaping and unescaping strings to/from HTML interpolation.
+  _.each(['escape', 'unescape'], function(method) {
+    _[method] = function(string) {
+      if (string == null) return '';
+      return ('' + string).replace(entityRegexes[method], function(match) {
+        return entityMap[method][match];
+      });
+    };
+  });
+
+  // If the value of the named `property` is a function then invoke it with the
+  // `object` as context; otherwise, return it.
+  _.result = function(object, property) {
+    if (object == null) return void 0;
+    var value = object[property];
+    return _.isFunction(value) ? value.call(object) : value;
+  };
+
+  // Add your own custom functions to the Underscore object.
+  _.mixin = function(obj) {
+    each(_.functions(obj), function(name) {
+      var func = _[name] = obj[name];
+      _.prototype[name] = function() {
+        var args = [this._wrapped];
+        push.apply(args, arguments);
+        return result.call(this, func.apply(_, args));
+      };
+    });
+  };
+
+  // Generate a unique integer id (unique within the entire client session).
+  // Useful for temporary DOM ids.
+  var idCounter = 0;
+  _.uniqueId = function(prefix) {
+    var id = ++idCounter + '';
+    return prefix ? prefix + id : id;
+  };
+
+  // By default, Underscore uses ERB-style template delimiters, change the
+  // following template settings to use alternative delimiters.
+  _.templateSettings = {
+    evaluate    : /<%([\s\S]+?)%>/g,
+    interpolate : /<%=([\s\S]+?)%>/g,
+    escape      : /<%-([\s\S]+?)%>/g
+  };
+
+  // When customizing `templateSettings`, if you don't want to define an
+  // interpolation, evaluation or escaping regex, we need one that is
+  // guaranteed not to match.
+  var noMatch = /(.)^/;
+
+  // Certain characters need to be escaped so that they can be put into a
+  // string literal.
+  var escapes = {
+    "'":      "'",
+    '\\':     '\\',
+    '\r':     'r',
+    '\n':     'n',
+    '\t':     't',
+    '\u2028': 'u2028',
+    '\u2029': 'u2029'
+  };
+
+  var escaper = /\\|'|\r|\n|\t|\u2028|\u2029/g;
+
+  // JavaScript micro-templating, similar to John Resig's implementation.
+  // Underscore templating handles arbitrary delimiters, preserves whitespace,
+  // and correctly escapes quotes within interpolated code.
+  _.template = function(text, data, settings) {
+    var render;
+    settings = _.defaults({}, settings, _.templateSettings);
+
+    // Combine delimiters into one regular expression via alternation.
+    var matcher = new RegExp([
+      (settings.escape || noMatch).source,
+      (settings.interpolate || noMatch).source,
+      (settings.evaluate || noMatch).source
+    ].join('|') + '|$', 'g');
+
+    // Compile the template source, escaping string literals appropriately.
+    var index = 0;
+    var source = "__p+='";
+    text.replace(matcher, function(match, escape, interpolate, evaluate, offset) {
+      source += text.slice(index, offset)
+        .replace(escaper, function(match) { return '\\' + escapes[match]; });
+
+      if (escape) {
+        source += "'+\n((__t=(" + escape + "))==null?'':_.escape(__t))+\n'";
+      }
+      if (interpolate) {
+        source += "'+\n((__t=(" + interpolate + "))==null?'':__t)+\n'";
+      }
+      if (evaluate) {
+        source += "';\n" + evaluate + "\n__p+='";
+      }
+      index = offset + match.length;
+      return match;
+    });
+    source += "';\n";
+
+    // If a variable is not specified, place data values in local scope.
+    if (!settings.variable) source = 'with(obj||{}){\n' + source + '}\n';
+
+    source = "var __t,__p='',__j=Array.prototype.join," +
+      "print=function(){__p+=__j.call(arguments,'');};\n" +
+      source + "return __p;\n";
+
+    try {
+      render = new Function(settings.variable || 'obj', '_', source);
+    } catch (e) {
+      e.source = source;
+      throw e;
+    }
+
+    if (data) return render(data, _);
+    var template = function(data) {
+      return render.call(this, data, _);
+    };
+
+    // Provide the compiled function source as a convenience for precompilation.
+    template.source = 'function(' + (settings.variable || 'obj') + '){\n' + source + '}';
+
+    return template;
+  };
+
+  // Add a "chain" function, which will delegate to the wrapper.
+  _.chain = function(obj) {
+    return _(obj).chain();
+  };
+
+  // OOP
+  // ---------------
+  // If Underscore is called as a function, it returns a wrapped object that
+  // can be used OO-style. This wrapper holds altered versions of all the
+  // underscore functions. Wrapped objects may be chained.
+
+  // Helper function to continue chaining intermediate results.
+  var result = function(obj) {
+    return this._chain ? _(obj).chain() : obj;
+  };
+
+  // Add all of the Underscore functions to the wrapper object.
+  _.mixin(_);
+
+  // Add all mutator Array functions to the wrapper.
+  each(['pop', 'push', 'reverse', 'shift', 'sort', 'splice', 'unshift'], function(name) {
+    var method = ArrayProto[name];
+    _.prototype[name] = function() {
+      var obj = this._wrapped;
+      method.apply(obj, arguments);
+      if ((name == 'shift' || name == 'splice') && obj.length === 0) delete obj[0];
+      return result.call(this, obj);
+    };
+  });
+
+  // Add all accessor Array functions to the wrapper.
+  each(['concat', 'join', 'slice'], function(name) {
+    var method = ArrayProto[name];
+    _.prototype[name] = function() {
+      return result.call(this, method.apply(this._wrapped, arguments));
+    };
+  });
+
+  _.extend(_.prototype, {
+
+    // Start chaining a wrapped Underscore object.
+    chain: function() {
+      this._chain = true;
+      return this;
+    },
+
+    // Extracts the result from a wrapped and chained object.
+    value: function() {
+      return this._wrapped;
+    }
+
+  });
+
+  // AMD registration happens at the end for compatibility with AMD loaders
+  // that may not enforce next-turn semantics on modules. Even though general
+  // practice for AMD registration is to be anonymous, underscore registers
+  // as a named module because, like jQuery, it is a base library that is
+  // popular enough to be bundled in a third party lib, but not be part of
+  // an AMD load request. Those cases could generate an error when an
+  // anonymous define() is called outside of a loader request.
+  if (typeof define === 'function' && define.amd) {
+    define('underscore', [], function() {
+      return _;
+    });
+  }
+}).call(this);
+
+
+;
+
+//     uuid.js
+//
+//     Copyright (c) 2010-2012 Robert Kieffer
+//     MIT License - http://opensource.org/licenses/mit-license.php
+
+(function() {
+  var _global = this;
+
+  // Unique ID creation requires a high quality random # generator.  We feature
+  // detect to determine the best RNG source, normalizing to a function that
+  // returns 128-bits of randomness, since that's what's usually required
+  var _rng;
+
+  // Node.js crypto-based RNG - http://nodejs.org/docs/v0.6.2/api/crypto.html
+  //
+  // Moderately fast, high quality
+  if (typeof(_global.require) == 'function') {
+    try {
+      var _rb = _global.require('crypto').randomBytes;
+      _rng = _rb && function() {return _rb(16);};
+    } catch(e) {}
+  }
+
+  if (!_rng && _global.crypto && crypto.getRandomValues) {
+    // WHATWG crypto-based RNG - http://wiki.whatwg.org/wiki/Crypto
+    //
+    // Moderately fast, high quality
+    var _rnds8 = new Uint8Array(16);
+    _rng = function whatwgRNG() {
+      crypto.getRandomValues(_rnds8);
+      return _rnds8;
+    };
+  }
+
+  if (!_rng) {
+    // Math.random()-based (RNG)
+    //
+    // If all else fails, use Math.random().  It's fast, but is of unspecified
+    // quality.
+    var  _rnds = new Array(16);
+    _rng = function() {
+      for (var i = 0, r; i < 16; i++) {
+        if ((i & 0x03) === 0) r = Math.random() * 0x100000000;
+        _rnds[i] = r >>> ((i & 0x03) << 3) & 0xff;
+      }
+
+      return _rnds;
+    };
+  }
+
+  // Buffer class to use
+  var BufferClass = typeof(_global.Buffer) == 'function' ? _global.Buffer : Array;
+
+  // Maps for number <-> hex string conversion
+  var _byteToHex = [];
+  var _hexToByte = {};
+  for (var i = 0; i < 256; i++) {
+    _byteToHex[i] = (i + 0x100).toString(16).substr(1);
+    _hexToByte[_byteToHex[i]] = i;
+  }
+
+  // **`parse()` - Parse a UUID into it's component bytes**
+  function parse(s, buf, offset) {
+    var i = (buf && offset) || 0, ii = 0;
+
+    buf = buf || [];
+    s.toLowerCase().replace(/[0-9a-f]{2}/g, function(oct) {
+      if (ii < 16) { // Don't overflow!
+        buf[i + ii++] = _hexToByte[oct];
+      }
+    });
+
+    // Zero out remaining bytes if string was short
+    while (ii < 16) {
+      buf[i + ii++] = 0;
+    }
+
+    return buf;
+  }
+
+  // **`unparse()` - Convert UUID byte array (ala parse()) into a string**
+  function unparse(buf, offset) {
+    var i = offset || 0, bth = _byteToHex;
+    return  bth[buf[i++]] + bth[buf[i++]] +
+            bth[buf[i++]] + bth[buf[i++]] + '-' +
+            bth[buf[i++]] + bth[buf[i++]] + '-' +
+            bth[buf[i++]] + bth[buf[i++]] + '-' +
+            bth[buf[i++]] + bth[buf[i++]] + '-' +
+            bth[buf[i++]] + bth[buf[i++]] +
+            bth[buf[i++]] + bth[buf[i++]] +
+            bth[buf[i++]] + bth[buf[i++]];
+  }
+
+  // **`v1()` - Generate time-based UUID**
+  //
+  // Inspired by https://github.com/LiosK/UUID.js
+  // and http://docs.python.org/library/uuid.html
+
+  // random #'s we need to init node and clockseq
+  var _seedBytes = _rng();
+
+  // Per 4.5, create and 48-bit node id, (47 random bits + multicast bit = 1)
+  var _nodeId = [
+    _seedBytes[0] | 0x01,
+    _seedBytes[1], _seedBytes[2], _seedBytes[3], _seedBytes[4], _seedBytes[5]
+  ];
+
+  // Per 4.2.2, randomize (14 bit) clockseq
+  var _clockseq = (_seedBytes[6] << 8 | _seedBytes[7]) & 0x3fff;
+
+  // Previous uuid creation time
+  var _lastMSecs = 0, _lastNSecs = 0;
+
+  // See https://github.com/broofa/node-uuid for API details
+  function v1(options, buf, offset) {
+    var i = buf && offset || 0;
+    var b = buf || [];
+
+    options = options || {};
+
+    var clockseq = options.clockseq != null ? options.clockseq : _clockseq;
+
+    // UUID timestamps are 100 nano-second units since the Gregorian epoch,
+    // (1582-10-15 00:00).  JSNumbers aren't precise enough for this, so
+    // time is handled internally as 'msecs' (integer milliseconds) and 'nsecs'
+    // (100-nanoseconds offset from msecs) since unix epoch, 1970-01-01 00:00.
+    var msecs = options.msecs != null ? options.msecs : new Date().getTime();
+
+    // Per 4.2.1.2, use count of uuid's generated during the current clock
+    // cycle to simulate higher resolution clock
+    var nsecs = options.nsecs != null ? options.nsecs : _lastNSecs + 1;
+
+    // Time since last uuid creation (in msecs)
+    var dt = (msecs - _lastMSecs) + (nsecs - _lastNSecs)/10000;
+
+    // Per 4.2.1.2, Bump clockseq on clock regression
+    if (dt < 0 && options.clockseq == null) {
+      clockseq = clockseq + 1 & 0x3fff;
+    }
+
+    // Reset nsecs if clock regresses (new clockseq) or we've moved onto a new
+    // time interval
+    if ((dt < 0 || msecs > _lastMSecs) && options.nsecs == null) {
+      nsecs = 0;
+    }
+
+    // Per 4.2.1.2 Throw error if too many uuids are requested
+    if (nsecs >= 10000) {
+      throw new Error('uuid.v1(): Can\'t create more than 10M uuids/sec');
+    }
+
+    _lastMSecs = msecs;
+    _lastNSecs = nsecs;
+    _clockseq = clockseq;
+
+    // Per 4.1.4 - Convert from unix epoch to Gregorian epoch
+    msecs += 12219292800000;
+
+    // `time_low`
+    var tl = ((msecs & 0xfffffff) * 10000 + nsecs) % 0x100000000;
+    b[i++] = tl >>> 24 & 0xff;
+    b[i++] = tl >>> 16 & 0xff;
+    b[i++] = tl >>> 8 & 0xff;
+    b[i++] = tl & 0xff;
+
+    // `time_mid`
+    var tmh = (msecs / 0x100000000 * 10000) & 0xfffffff;
+    b[i++] = tmh >>> 8 & 0xff;
+    b[i++] = tmh & 0xff;
+
+    // `time_high_and_version`
+    b[i++] = tmh >>> 24 & 0xf | 0x10; // include version
+    b[i++] = tmh >>> 16 & 0xff;
+
+    // `clock_seq_hi_and_reserved` (Per 4.2.2 - include variant)
+    b[i++] = clockseq >>> 8 | 0x80;
+
+    // `clock_seq_low`
+    b[i++] = clockseq & 0xff;
+
+    // `node`
+    var node = options.node || _nodeId;
+    for (var n = 0; n < 6; n++) {
+      b[i + n] = node[n];
+    }
+
+    return buf ? buf : unparse(b);
+  }
+
+  // **`v4()` - Generate random UUID**
+
+  // See https://github.com/broofa/node-uuid for API details
+  function v4(options, buf, offset) {
+    // Deprecated - 'format' argument, as supported in v1.2
+    var i = buf && offset || 0;
+
+    if (typeof(options) == 'string') {
+      buf = options == 'binary' ? new BufferClass(16) : null;
+      options = null;
+    }
+    options = options || {};
+
+    var rnds = options.random || (options.rng || _rng)();
+
+    // Per 4.4, set bits for version and `clock_seq_hi_and_reserved`
+    rnds[6] = (rnds[6] & 0x0f) | 0x40;
+    rnds[8] = (rnds[8] & 0x3f) | 0x80;
+
+    // Copy bytes to buffer, if provided
+    if (buf) {
+      for (var ii = 0; ii < 16; ii++) {
+        buf[i + ii] = rnds[ii];
+      }
+    }
+
+    return buf || unparse(rnds);
+  }
+
+  // Export public API
+  var uuid = v4;
+  uuid.v1 = v1;
+  uuid.v4 = v4;
+  uuid.parse = parse;
+  uuid.unparse = unparse;
+  uuid.BufferClass = BufferClass;
+
+  if (typeof define === 'function' && define.amd) {
+    // Publish as AMD module
+    define(function() {return uuid;});
+  } else if (typeof(module) != 'undefined' && module.exports) {
+    // Publish as node.js module
+    module.exports = uuid;
+  } else {
+    // Publish as global (in browsers)
+    var _previousRoot = _global.uuid;
+
+    // **`noConflict()` - (browser only) to reset global 'uuid' var**
+    uuid.noConflict = function() {
+      _global.uuid = _previousRoot;
+      return uuid;
+    };
+
+    _global.uuid = uuid;
+  }
+}).call(this);
+
+
+;
+
+/**
+* @fileoverview
+*/
+var max = max || {};
+
+(function(jq) {
+
+var views = function() {
+
+
+    /** MaxPredictive.
+    * Provides a dropdown list with autocompletion results
+    * on top of a input, triggering events
+    */
+
+    function MaxPredictive(options) {
+        var self = this;
+        self.minchars = options.minchars;
+        self.source = options.source;
+        self.action = options.action;
+        self.filter = options.filter;
+        self.requests = {};
+        self.$el = jq(options.list);
+        self.$list = self.$el.find('ul');
+        self.$el.on('click', '.maxui-prediction', function(event) {
+            var $clicked = jq(event.currentTarget);
+            self.select($clicked);
+            self.choose(event);
+        });
+
+    }
+
+    MaxPredictive.prototype.select = function($element) {
+        var self = this;
+        var $selected = self.$list.find('.maxui-prediction.selected');
+        $selected.removeClass('selected');
+        $element.addClass('selected');
+    };
+
+    MaxPredictive.prototype.choose = function(event) {
+        var self = this;
+        var $selected = self.$list.find('.maxui-prediction.selected');
+        this.action.apply(self, [$selected]);
+        self.hide();
+    };
+
+    MaxPredictive.prototype.moveup = function(event) {
+        var self = this;
+        var $selected = self.$list.find('.maxui-prediction.selected');
+        var num_predictions = self.$list.find('.maxui-prediction').length;
+        var is_predicting = self.$el.is(":visible").length > 0;
+        var $prev = $selected.prev();
+        if ($prev.length > 0) {
+            self.select($prev);
+        } else {
+            self.select($selected.siblings(':last'));
+        }
+    };
+
+    MaxPredictive.prototype.movedown = function(event) {
+        var self = this;
+        var $selected = self.$list.find('.maxui-prediction.selected');
+        var num_predictions = self.$list.find('.maxui-prediction').length;
+        var is_predicting = self.$el.is(":visible").length > 0;
+        var $next = $selected.next();
+        $selected.removeClass('selected');
+        if ($next.length > 0) {
+            self.select($next);
+        } else {
+            self.select($selected.siblings(':first'));
+        }
+    };
+
+    MaxPredictive.prototype.matchingRequest = function(text) {
+        var self = this;
+        var previous_request;
+        var pre_previous_request;
+        var previous_usernames;
+        var previous_text = text.substr(0, text.length - 1);
+
+        jq.each(self.requests, function(key, value) {
+            if (previous_text == key) {
+                previous_request = value;
+            }
+        });
+
+        if (previous_request && !previous_request.remaining) {
+            // We have a previous request (-1) and the server told us that there's no remaining items
+            // so we return the key of the stored request to use
+            return previous_request.text;
+        }
+    };
+    // Fetch new predictions from source if needed, and render them
+    // Also, predictions are stored in self.requests, so we try to repeat request only when needed
+    // Algorith:
+    //   1 - if the request is repeated, use the stored request
+    //   2 - if we have a request that is shorter than 10, filter and use it, as there isn't more data in server to show
+    //   3 - if we don't have any matching data for the current request, fetch it
+    MaxPredictive.prototype.show = function(event) {
+        var self = this;
+        var $input = jq(event.target);
+        var text = maxui.utils.normalizeWhiteSpace($input.val(), false);
+        if (text.length >= this.minchars) {
+            var matching_request = self.matchingRequest(text);
+            if (self.requests.hasOwnProperty(text)) {
+                self.render(text, text);
+            } else if (matching_request) {
+                self.render(text, matching_request);
+            } else {
+                this.source.apply(this, [event, text, function(data) {
+                    self.requests[text] = {text: text, data:data, remaining: this.getResponseHeader('X-Has-Remaining-Items')};
+                    self.render(text, text);
+                }]);
+            }
+        } else {
+            self.hide();
+        }
+    };
+
+    MaxPredictive.prototype.render = function(query, request) {
+        var self = this;
+        var predictions = '';
+        var items = self.requests[request].data;
+        var filter = self.filter();
+        // Iterate through all the users returned by the query
+        var selected_index = false;
+        for (i = 0; i < items.length; i++) {
+            var prediction = items[i];
+            // Only add predictions of users that are not already in the conversation
+            // and that match the text query search, 'cause we could be reading a used request
+            var query_matches_username = prediction.username.search(new RegExp(query, "i")) >= 0;
+            var query_matches_displayname = prediction.displayName.search(new RegExp(query, "i")) >= 0;
+            var prediction_matches_query = query_matches_displayname || query_matches_username;
+
+            if (filter.indexOf(prediction.username) == -1 && prediction_matches_query) {
+                var avatar_url = maxui.settings.avatarURLpattern.format(prediction.username);
+                var params = {
+                    username: prediction.username,
+                    displayName: prediction.displayName,
+                    avatarURL: avatar_url,
+                    cssclass: 'maxui-prediction' + (!selected_index && ' selected' || '')
+                };
+                // Render the conversations template and append it at the end of the rendered conversations
+                predictions = predictions + maxui.templates.predictive.render(params);
+                selected_index = true;
+            }
+        }
+        if (predictions === '') {
+            predictions = '<li>' + maxui.settings.literals.no_match_found + '</li>';
+        }
+        self.$list.html(predictions);
+        self.$el.show();
+    };
+
+    MaxPredictive.prototype.hide = function(event) {
+
+        var self = this;
+        self.$el.hide();
+    };
+
+
+
+    /** MaxInput.
+    * Provides common features for a input that shows/hides a placeholder on focus
+    * and triggers events on ENTER and ESC
+    */
+
+    function MaxInput(options) {
+        var self = this;
+        self.input = options.input;
+        self.$input = jq(self.input);
+        self.placeholder = options.placeholder;
+        self.$delegate = jq(options.delegate);
+        self.setBindings();
+        self.bindings = options.bindings;
+
+        // Initialize input value with placeholder
+        self.$input.val(self.placeholder);
+    }
+
+    MaxInput.prototype.bind = function(eventName, callback) {
+        var maxinput = this;
+        maxinput.$delegate.on(eventName, maxinput.input, callback);
+
+    };
+
+    MaxInput.prototype.execExtraBinding= function(context, event) {
+        var maxinput = this;
+        if (this.bindings.hasOwnProperty(event.type)) {
+            this.bindings[event.type].apply(context, [event]);
+        }
+
+    };
+
+    MaxInput.prototype.getInputValue = function() {
+        var text = this.$input.val();
+        return maxui.utils.normalizeWhiteSpace(text, false);
+    };
+
+    MaxInput.prototype.setBindings = function() {
+        var maxinput = this;
+
+        // Erase placeholder when focusing on input and nothing written
+        maxinput.bind('focusin', function(event) {
+            event.preventDefault();
+            event.stopPropagation();
+            var normalized = maxinput.getInputValue();
+            if (normalized == maxinput.placeholder) jq(this).val('');
+            maxinput.execExtraBinding(this, event);
+        });
+
+        // Put placeholder back when focusing out and nothing written
+        maxinput.bind('focusout', function(event) {
+            event.preventDefault();
+            event.stopPropagation();
+            var normalized = maxinput.getInputValue();
+            if (normalized === '') {
+                jq(this).val(maxinput.placeholder);
+                maxinput.$input.toggleClass('maxui-empty', true);
+            }
+            maxinput.execExtraBinding(this, event);
+        });
+
+        // Execute custom bindings on the events triggered by some
+        // keypresses in the "keyup" binding.
+
+        var binded_key_events = 'maxui-input-submit maxui-input-cancel maxui-input-up maxui-input-down maxui-input-keypress';
+        maxinput.bind(binded_key_events, function(event) {
+            event.preventDefault();
+            event.stopPropagation();
+            maxinput.execExtraBinding(this, event);
+        });
+
+        maxinput.bind('maxui-input-clear', function(event) {
+            maxinput.$input.val(maxinput.placeholder);
+
+        });
+
+        // Put placeholder back when focusing out and nothing written
+        maxinput.bind('keydown', function(event) {
+            if (event.which == 38) maxinput.$input.trigger('maxui-input-up', [event]);
+            else if (event.which == 40) maxinput.$input.trigger('maxui-input-down', [event]);
+            maxinput.$input.toggleClass('maxui-empty', false);
+        });
+        // Trigger events on ENTER, ESC
+        maxinput.bind('keyup', function(event) {
+            event.preventDefault();
+            event.stopPropagation();
+            var normalized = maxinput.getInputValue();
+            if (event.which == 13 && !event.shiftKey) maxinput.$input.trigger('maxui-input-submit', [event]);
+            else if (event.which == 27) maxinput.$input.trigger('maxui-input-cancel', [event]);
+            else if (event.which != 38 && event.which != 40) maxinput.$input.trigger('maxui-input-keypress', [event]);
+            maxinput.execExtraBinding(this, event);
+
+        });
+
+    };
+
+    return {
+        MaxInput: MaxInput,
+        MaxPredictive: MaxPredictive
+    };
+
+};
+max.views = max.views || {};
+jq.extend(max.views, views());
+
+})(jQuery);
+
+
+;
+
+var max = max || {};
+
+(function(jq) {
+
+var views = function() {
+
+
+    /** MaxViewName
+    *
+    *
+    */
+
+    // Object representing an overlay wrapper
+    function MaxOverlay() {
+        this.title = 'Overlay Title';
+        this.content = '';
+        this.el = '#maxui-overlay-panel';
+        this.overlay_show_class = '.maxui-overlay';
+        jq(this.el + ' .maxui-close').click(function(event) {
+            event.preventDefault();
+            event.stopPropagation();
+            maxui.overlay.hide();
+        });
+    }
+    MaxOverlay.prototype.$el = function() {
+        return jq(this.el);
+    };
+    MaxOverlay.prototype.setTitle = function(title) {
+        this.$el().find('#maxui-overlay-title').text(title);
+    };
+    MaxOverlay.prototype.setContent = function(content) {
+        this.$el().find('#maxui-overlay-content').html(content);
+    };
+    MaxOverlay.prototype.configure = function(overlay) {
+        this.setTitle(overlay.title);
+        this.setContent(overlay.content);
+        overlay.bind(this);
+    };
+    MaxOverlay.prototype.show = function(overlay) {
+        maxoverlay = this;
+        overlay.load(function(data) {
+            maxoverlay.configure(data);
+        });
+        jq(this.overlay_show_class).show();
+        this.$el().animate({
+            opacity: 1
+        }, 200);
+    };
+    MaxOverlay.prototype.hide = function() {
+        this.$el().trigger('maxui-overlay-close', []);
+        overlay = this;
+        this.$el().animate({
+            opacity: 0
+        }, 200, function(event) {
+            jq(overlay.overlay_show_class).hide();
+        });
+    };
+
+    return {
+        MaxOverlay: MaxOverlay
+    };
+
+};
+max.views = max.views || {};
+jq.extend(max.views, views());
+
+})(jQuery);
+
+
+;
+
+var max = max || {};
+
+(function(jq) {
+
+var views = function() {
+
+
+    /** MaxChatInfo
+    *
+    *
+    */
+
+    function MaxChatInfo (maxui) {
+        var self = this;
+        self.title = maxui.settings.literals.conversations_info_title;
+        self.content = '<div>Hello world</div>';
+        self.panelID = 'conversation-settings-panel';
+        self.displayNameSlot = {
+            show: function() {
+                var $panel = jq(self.getOwnerSelector(''));
+                var $displayNameEdit = jq(self.getOwnerSelector('> #maxui-conversation-displayname-edit'));
+                var $displayName = jq(self.getOwnerSelector('> .maxui-displayname'));
+                var $displayNameInput = jq(self.getOwnerSelector('> #maxui-conversation-displayname-edit input.maxui-displayname'));
+                $displayNameInput.width($panel.width() - 82);
+                $displayName.hide();
+                $displayNameEdit.show().val($displayName.text()).focus();
+            },
+            hide: function() {
+                var $displayNameEdit = jq(self.getOwnerSelector('> #maxui-conversation-displayname-edit'));
+                var $displayName = jq(self.getOwnerSelector('> .maxui-displayname'));
+                var $displayNameInput = jq(self.getOwnerSelector('> #maxui-conversation-displayname-edit input.maxui-displayname'));
+                $displayName.show();
+                $displayNameEdit.hide().val('');
+            },
+            save: function() {
+                var $displayNameEdit = jq(self.getOwnerSelector('> #maxui-conversation-displayname-edit'));
+                var $displayName = jq(self.getOwnerSelector('> .maxui-displayname'));
+                var $displayNameInput = jq(self.getOwnerSelector('> #maxui-conversation-displayname-edit input.maxui-displayname'));
+                maxui.maxClient.modifyConversation(self.data.id, $displayNameInput.val(), function(event) {
+                    self.displayNameSlot.hide();
+                    $displayName.text(this.displayName);
+                    maxui.conversations.messagesview.setTitle(this.displayName);
+                });
+            }
+        };
+
+    }
+    MaxChatInfo.prototype.getOwnerSelector =  function(selector) {
+        return '#maxui-' + this.panelID + '.maxui-owner ' + selector;
+    };
+    MaxChatInfo.prototype.getSelector = function(selector) {
+        return '#maxui-' + this.panelID + ' ' + selector;
+    };
+    MaxChatInfo.prototype.bind = function(overlay) {
+        self = this;
+        // Clear previous overla usage bindings
+        overlay.$el().unbind();
+
+        // Gets fresh conversation data on overlay close, checking first if the conversation is still
+        // on the list, otherwise, it means that the overlay was closed by a deletion, and so we don't reload anything
+        overlay.$el().on('maxui-overlay-close', function(event) {
+            var still_exists = _.where(maxui.conversations.listview.conversations, {id: maxui.conversations.active});
+            if (!_.isEmpty(still_exists)) maxui.conversations.listview.loadConversation(maxui.conversations.active);
+        });
+
+        // Open displayName editing box when user clicks on displayName
+        overlay.$el().on('click', self.getOwnerSelector('> .maxui-displayname'), function(event) {
+            self.displayNameSlot.show();
+        });
+        // Saves or hides displayName editing box when user presses ENTER or ESC
+        overlay.$el().on('keyup', self.getOwnerSelector('> #maxui-conversation-displayname-edit input.maxui-displayname'), function(event) {
+            if (event.which == 27) {
+                self.displayNameSlot.hide();
+            } else if (event.which == 13) {
+                self.displayNameSlot.save();
+            }
+        });
+        // Saves displayName when user clicks the ok button
+        overlay.$el().on('click', self.getOwnerSelector('#maxui-conversation-displayname-edit i.maxui-icon-ok-circled'), function(event) {
+            self.displayNameSlot.save();
+        });
+        // Hides displayName editing box hen user clicks the cancel button
+        overlay.$el().on('click', self.getOwnerSelector('#maxui-conversation-displayname-edit i.maxui-icon-cancel-circled'), function(event) {
+            self.displayNameSlot.hide();
+        });
+
+        // Displays confirmation buttons when Owner clicks on kick user button
+        // Displays confirmation buttons when Owner clicks on transfer ownership button
+        overlay.$el().on('click', self.getOwnerSelector('.maxui-conversation-user-action'), function(event) {
+            var $action = jq(event.currentTarget);
+            var $participant = $action.closest('.maxui-participant');
+            $participant.find('.maxui-conversation-confirmation:visible').hide();
+            $participant.find('.maxui-conversation-user-action.active').removeClass('active');
+            $action.addClass('active');
+            if ($action.hasClass('maxui-icon-crown-plus')) $participant.find('.maxui-conversation-transfer-to').show();
+            else if ($action.hasClass('maxui-icon-trash')) $participant.find('.maxui-conversation-kick-user').show();
+        });
+
+        // Transfers ownership to selected user and toggles ownership crown and classes accordingly
+        overlay.$el().on('click', self.getSelector('.maxui-participant .maxui-conversation-transfer-to .maxui-icon-ok-circled'), function(event) {
+            var $new_owner = jq(event.currentTarget).closest('.maxui-participant');
+            var new_owner_username = $new_owner.attr('data-username');
+            var $current_owner = jq(self.getSelector('.maxui-participant.maxui-owner'));
+            var $current_crown = $current_owner.find('.maxui-icon-crown');
+            var $new_crown = $new_owner.find('.maxui-icon-crown-plus');
+            maxui.maxClient.transferConversationOwnership(self.data.id, new_owner_username, function(event) {
+                $new_owner.find('.maxui-conversation-transfer-to').hide();
+                $current_crown.removeClass('maxui-icon-crown').addClass('maxui-icon-crown-plus');
+                $new_crown.removeClass('maxui-icon-crown-plus').addClass('maxui-icon-crown');
+                $current_owner.removeClass('maxui-owner');
+                $new_owner.addClass('maxui-owner');
+
+                overlay.$el().find(self.getSelector('')).toggleClass('maxui-owner', false);
+                overlay.$el().find(self.getSelector('#maxui-new-participant')).remove();
+                $new_crown.removeClass('active');
+            });
+        });
+
+        // Kicks user and toggles trashbin and classes accordingly
+        overlay.$el().on('click', self.getSelector('.maxui-participant .maxui-conversation-kick-user .maxui-icon-ok-circled'), function(event) {
+            var $kicked_user = jq(event.currentTarget).closest('.maxui-participant');
+            var kicked_username = $kicked_user.attr('data-username');
+            maxui.maxClient.kickUserFromConversation(self.data.id, kicked_username, function(event) {
+                $kicked_user.remove();
+            });
+        });
+
+        // Cancels ownership transfer
+        // Cancels user kicking
+        overlay.$el().on('click', self.getSelector('.maxui-participant .maxui-conversation-confirmation .maxui-icon-cancel-circled'), function(event) {
+            var $new_owner = jq(event.currentTarget).closest('.maxui-participant');
+            $new_owner.find('.maxui-conversation-confirmation:visible').hide();
+            var $new_owner_action_icon = $new_owner.find('.maxui-conversation-user-action.active');
+            $new_owner_action_icon.removeClass('active');
+        });
+
+        // Create MaxInput with predictable functionality
+        self.predictive = new max.views.MaxPredictive({
+            minchars: 3,
+            filter: function(event) {
+                return jq.map(self.data.participants, function(element, index) {return element.username;});
+            },
+            source: function(event, query, callback) { maxui.maxClient.getUsersList(query, callback);},
+            action: function($selected) {
+                // Action executed after a prediction item is selected, to add the user add confirmation buttons
+                var username = $selected.attr('data-username');
+                var displayName = $selected.attr('data-username');
+                var params = {
+                    style: "opacity:0; height:0px;",
+                    username: username,
+                    displayName: displayName,
+                    literals: maxui.settings.literals,
+                    avatarURL: maxui.settings.avatarURLpattern.format(username)
+                };
+                var newuser = maxui.templates.participant.render(params);
+                var $participants = jq(self.getSelector('.maxui-participants > ul'));
+                $participants.append(newuser);
+                var $participant = jq(self.getSelector('.maxui-participant:last'));
+                $participant.animate({height:36}, 100, function(event) {
+                    $participant.animate({opacity:1}, 200);
+                });
+
+                $participant.find('.maxui-conversation-add-user').show().focus();
+                jq(self.getSelector('#maxui-new-participant .maxui-text-input')).trigger('maxui-input-clear');
+
+            },
+            list: "#maxui-new-participant #maxui-conversation-predictive"
+        });
+
+        self.newparticipant = new max.views.MaxInput(
+            {
+                input: "#maxui-new-participant .maxui-text-input",
+                delegate: overlay.el,
+                placeholder: maxui.settings.literals.conversations_info_add,
+                bindings: {
+                    'maxui-input-keypress': function(event) {self.predictive.show(event);},
+                    'maxui-input-submit': function(event) {self.predictive.choose(event);},
+                    'maxui-input-cancel': function(event) {self.predictive.hide(event);},
+                    'maxui-input-up': function(event) {self.predictive.moveup(event);},
+                    'maxui-input-down': function(event) {self.predictive.movedown(event);},
+
+                }
+        });
+
+        // Confirmas adding a new user to the conversation
+        overlay.$el().on('click', self.getOwnerSelector('.maxui-participant .maxui-conversation-add-user .maxui-icon-ok-circled'), function(event) {
+            var $participant = $(event.target).closest('.maxui-participant');
+            var new_username = $participant.attr('data-username');
+            maxui.maxClient.addUserToConversation(self.data.id, new_username, function(event) {
+
+                $participant.animate({opacity:0}, 200, function(event) {
+                    $participant.find('.maxui-conversation-add-user').remove();
+                        $participant.animate({opacity:1}, 200);
+                        $participant.find('.maxui-conversation-user-action').show();
+                    });
+
+            });
+        });
+
+        // Cancels adding a new user to the conversation
+        overlay.$el().on('click', self.getOwnerSelector('.maxui-participant .maxui-conversation-add-user .maxui-icon-cancel-circled'), function(event) {
+            var $participant = $(event.currentTarget).closest('.maxui-participant');
+            $participant.animate({opacity:0}, 200, function(event) {
+                $participant.animate({height:0}, 200, function(event) {
+                    $participant.remove();
+                });
+            });
+        });
+
+        // User Leaves conversation
+        overlay.$el().on('click', self.getSelector('#maxui-conversation-leave .maxui-button'), function(event) {
+            var leaving_username = maxui.settings.username;
+            maxui.maxClient.kickUserFromConversation(self.data.id, leaving_username, function(event) {
+                maxui.conversations.listview.delete(self.data.id);
+                overlay.hide();
+                $('#maxui-back-conversations a').trigger('click');
+            });
+        });
+
+        // User clicks delete conversation button
+        overlay.$el().on('click', self.getSelector('#maxui-conversation-delete .maxui-button'), function(event) {
+            jq(self.getSelector('#maxui-conversation-delete .maxui-help')).show();
+        });
+
+        // User confirms deleting a conversation
+        overlay.$el().on('click', self.getSelector('#maxui-conversation-delete .maxui-help .maxui-confirmation-ok'), function(event) {
+            maxui.maxClient.deleteConversation(self.data.id, function(event) {
+                maxui.conversations.listview.delete(self.data.id);
+                overlay.hide();
+                $('#maxui-back-conversations a').trigger('click');
+            });
+        });
+
+        // User cancels deleting a conversation
+        overlay.$el().on('click', self.getSelector('#maxui-conversation-delete .maxui-help .maxui-confirmation-cancel'), function(event) {
+            jq(self.getSelector('#maxui-conversation-delete .maxui-help')).hide();
+        });
+    };
+
+    MaxChatInfo.prototype.load = function(configurator) {
+        var self = this;
+        maxui.maxClient.getConversation(maxui.conversations.active, function(data) {
+            maxui.maxClient.getConversationSubscription(maxui.conversations.active, maxui.settings.username, function(subscription) {
+                self.data = data;
+                var participants = [];
+                for (pt = 0; pt < self.data.participants.length; pt++) {
+                    var participant = self.data.participants[pt];
+                    participant.avatarURL = maxui.settings.avatarURLpattern.format(participant.username);
+                    participant.owner = participant.username == self.data.owner;
+                    participants.push(participant);
+                }
+                var avatar_url = maxui.settings.conversationAvatarURLpattern.format(self.data.id);
+                var displayName = self.data.displayName;
+                if (self.data.participants.length <= 2) {
+                    var partner = self.data.participants[0];
+                    // Check if the partner choosed is the same as the logged user
+                    // We can't be sure that the partner is the first or the second in the array
+                    if (self.data.participants.length == 1) {
+                        displayName = '[Archive] ' + partner.displayName;
+                    } else if (self.data.participants[0].username == maxui.settings.username && self.data.participants.length > 1) {
+                        partner = self.data.participants[1];
+
+                    }
+                    // User the user partner's avatar as conversation avatar
+                    avatar_url = maxui.settings.avatarURLpattern.format(partner.username);
+                }
+                var params = {
+                    displayName: displayName,
+                    conversationAvatarURL: avatar_url,
+                    participants: participants,
+                    literals: maxui.settings.literals,
+                    panelID: self.panelID,
+                    published: maxui.utils.formatDate(self.data.published, maxui.language),
+                    canManage: maxui.settings.username == self.data.owner,
+                    canAdd: _.contains(subscription.permissions, 'subscribe')
+                };
+                self.content = maxui.templates.conversationSettings.render(params);
+                configurator(self);
+            });
+        });
+    };
+
+
+    return {
+        MaxChatInfo: MaxChatInfo
+    };
+
+};
+
+max.views = max.views || {};
+jq.extend(max.views, views());
+
+})(jQuery);
+
+
+;
+
+var max = max || {};
+
+(function(jq) {
+
+var views = function() {
+
+
+    /** MaxScrollbar
+    *
+    *
+    */
+
+    function MaxScrollbar(options) {
+        self = this;
+        self.width = options.width;
+        self.handle = options.handle;
+        self.dragging = false;
+        self.scrollbar_selector = options.scrollbar;
+        self.$bar = jq(self.scrollbar_selector);
+        self.$dragger = self.$bar.find('.maxui-dragger');
+        self.target_selector = options.target;
+        self.$target = jq(self.target_selector);
+        self.bind();
+    }
+
+    MaxScrollbar.prototype.bind = function() {
+        var self = this;
+
+        self.$target.on('mousewheel', function(event, delta, deltaX, deltaY) {
+            event.preventDefault();
+            event.stopPropagation();
+            if (self.enabled()) {
+                var movable_height = self.$target.height() - self.maxtop - self.handle.height;
+                var actual_margin = parseInt(self.$target.css('margin-top'));
+                var new_margin = actual_margin + (deltaY * -1 * 10);
+                if (new_margin > 0) new_margin = 0;
+                if (new_margin < (movable_height * -1)) new_margin = movable_height * -1;
+                self.$target.css({
+                    'margin-top': new_margin
+                });
+                new_margin = new_margin * -1;
+                var relative_pos = (new_margin * 100) / movable_height;
+                self.setDraggerPosition(relative_pos);
+            }
+        });
+
+        jq(document).on('mousemove', function(event) {
+            if (self.dragging) {
+                event.stopPropagation();
+                event.preventDefault();
+                // drag only if target content is taller than scrollbar
+                if (self.enabled()) {
+                    // Calculate dragger position, constrained to actual limits
+                    var margintop = event.clientY - self.$bar.offset().top;
+                    if (margintop < 0) margintop = 0;
+                    if (margintop >= self.maxtop) margintop = self.maxtop;
+                    // Calculate dragger position relative to 100 and move content
+                    var relative_position = (margintop * 100) / self.maxtop;
+                    self.setContentPosition(relative_position);
+                }
+            }
+        });
+        jq(document.body).on('mousedown', '.maxui-dragger', function(event) {
+            event.stopPropagation();
+            event.preventDefault();
+            self.dragging = true;
+        });
+
+        jq(document).on('mouseup', function(event) {
+            self.dragging = false;
+        });
+
+
+    };
+
+    MaxScrollbar.prototype.setHeight = function(height) {
+        var self = this;
+        var wrapper_top = $('#maxui-conversations .maxui-wrapper').offset().top - maxui.offset().top - 1;
+        self.$bar.css({
+            'height': height,
+            'top': wrapper_top
+        });
+        self.maxtop = height - self.handle.height - 2;
+    };
+    MaxScrollbar.prototype.setTarget = function(selector) {
+        var self = this;
+        self.$target = jq(selector);
+    };
+    MaxScrollbar.prototype.setDraggerPosition = function(relative_pos) {
+        var self = this;
+        margintop = (self.maxtop * relative_pos) / 100;
+        self.$dragger.css({
+            'margin-top': margintop
+        });
+    };
+    MaxScrollbar.prototype.setContentPosition = function(relative_pos) {
+        var self = this;
+        if (self.enabled()) {
+            var movable_height = self.$target.height() - self.maxtop - self.handle.height;
+            var margintop = (movable_height * relative_pos) / 100;
+            self.$target.css({
+                'margin-top': margintop * -1
+            });
+            self.setDraggerPosition(relative_pos);
+        } else {
+            self.$target.css({
+                'margin-top': ''
+            });
+            self.setDraggerPosition(0);
+        }
+    };
+    MaxScrollbar.prototype.enabled = function() {
+        var self = this;
+        return self.$target.height() > self.maxtop;
+    };
+
+    return {
+        MaxScrollbar: MaxScrollbar
+    };
+
+};
+
+max.views = max.views || {};
+jq.extend(max.views, views());
+
+})(jQuery);
+
+
+;
+
+var max = max || {};
+
+(function(jq) {
+
+var views = function() {
+
+
+    /** MaxConversationsList
+    *
+    *
+    */
+
+    function MaxConversationsList(maxconversations, options) {
+        var self = this;
+        self.conversations = [];
+        self.mainview = maxconversations;
+        self.maxui = self.mainview.maxui;
+    }
+
+    MaxConversationsList.prototype.load = function(conversations) {
+        var self = this;
+        if (_.isArray(conversations)) {
+            self.conversations = conversations;
+            self.render();
+        } else if (_.isFunction(conversations)) {
+            self.maxui.maxClient.getConversationsForUser.apply(self.maxui.maxClient, [
+            self.maxui.settings.username,
+                function(data) {
+                    self.conversations = data;
+                    self.render();
+                    conversations();
+                }
+            ]);
+        }
+    };
+
+    MaxConversationsList.prototype.loadConversation = function(conversation_hash) {
+        var self = this;
+        var callback;
+
+        if (arguments.length > 1) {
+            callback = arguments[1];
+        }
+        self.maxui.maxClient.getConversationSubscription(conversation_hash, self.maxui.settings.username,function(data) {
+            if (_.findWhere(self.conversations, {'id': data.id})) {
+                self.conversations = _.map(self.conversations, function(conversation) {
+                    if (conversation.id == data.id) {
+                        return data;
+                    } else {
+                        return conversation;
+                    }
+                });
+            } else {
+                data.messages = 1;
+                self.conversations.push(data);
+            }
+            self.sort();
+            self.render();
+            callback();
+        });
+    };
+
+    MaxConversationsList.prototype.updateLastMessage = function(conversation_id, message) {
+        var self = this;
+        var increment = 0;
+        if (arguments.length > 2)
+            increment = 1;
+
+        self.conversations = _.map(self.conversations, function(conversation) {
+            if (conversation.id == conversation_id) {
+                conversation.lastMessage = message;
+                conversation.messages += increment;
+            }
+            return conversation;
+        }, self);
+        self.sort();
+    };
+
+    MaxConversationsList.prototype.resetUnread = function(conversation_id) {
+        var self = this;
+
+        self.conversations = _.map(self.conversations, function(conversation) {
+            if (conversation.id == conversation_id) {
+                conversation.messages = 0;
+            }
+            return conversation;
+        }, self);
+        self.mainview.updateUnreadConversations();
+    };
+
+    MaxConversationsList.prototype.sort = function() {
+        var self = this;
+        self.conversations = _.sortBy(self.conversations, function(conversation) {return conversation.lastMessage.published;});
+        self.conversations.reverse();
+    };
+
+    MaxConversationsList.prototype.delete = function(conversation_id) {
+        var self = this;
+        self.conversations = _.filter(self.conversations, function(conversation){ return conversation.id != conversation_id;});
+        self.sort();
+        self.render();
+    };
+
+    MaxConversationsList.prototype.insert = function(conversation) {
+        var self = this;
+        self.conversations.push(conversation);
+        self.sort();
+        self.render();
+    };
+
+    MaxConversationsList.prototype.show = function() {
+        var self = this;
+         // Load conversations from max if never loaded
+        if (self.conversations.length === 0) {
+            self.load();
+            self.toggle();
+        // Otherwise, just show them
+        } else {
+            self.render();
+            self.toggle();
+        }
+    };
+
+    MaxConversationsList.prototype.toggle = function() {
+        var self = this;
+        self.mainview.loadWrappers();
+        var literal = '';
+
+        if (!self.mainview.visible()) {
+            self.mainview.$addpeople.css({
+                'border-color': '#ccc'
+            });
+            self.mainview.$common_header.removeClass('maxui-showing-messages').addClass('maxui-showing-conversations');
+
+            self.mainview.scrollbar.setHeight(self.mainview.height - 45);
+            self.mainview.scrollbar.setTarget('#maxui-conversations #maxui-conversations-list');
+            self.mainview.scrollbar.setContentPosition(0);
+            self.mainview.$addpeople.animate({
+                'height': 19,
+                'padding-top': 6,
+                'padding-bottom': 6
+            }, 400, function(event) {
+                self.mainview.$addpeople.removeAttr('style');
+            });
+
+            widgetWidth = self.mainview.$conversations_list.width() + 11; // +2 To include border;
+            self.mainview.$conversations_list.animate({
+                'margin-left': 0
+            }, 400);
+            self.mainview.$messages.animate({
+                'left': widgetWidth + 20
+            }, 400);
+            self.maxui.settings.conversationsSection = 'conversations';
+            literal = self.maxui.settings.literals.new_conversation_text;
+            self.mainview.$postbox.val(literal).attr('data-literal', literal);
+        }
+
+    };
+
+    // Renders the conversations list of the current user, defined in settings.username
+    MaxConversationsList.prototype.render = function() {
+        var self = this;
+
+        // String to store the generated html pieces of each conversation item
+        // by default showing a "no conversations" message
+        var html = '<span id="maxui-info">' + self.maxui.settings.literals.no_chats + '<span>';
+
+        // Render the postbox UI if user has permission
+        var showCT = self.maxui.settings.UISection == 'conversations';
+        var toggleCT = self.maxui.settings.disableConversations === false && !showCT;
+        var params = {
+            avatar: self.maxui.settings.avatarURLpattern.format(self.maxui.settings.username),
+            allowPosting: true,
+            buttonLiteral: self.maxui.settings.literals.new_message_post,
+            textLiteral: self.maxui.settings.literals.new_conversation_text,
+            literals: self.maxui.settings.literals,
+            showConversationsToggle: toggleCT ? 'display:block;' : 'display:none;'
+        };
+
+        var postbox = self.maxui.templates.postBox.render(params);
+        var $postbox = jq('#maxui-newactivity');
+        $postbox.html(postbox);
+
+
+        // Reset the html container if we have conversations
+        if (self.conversations.length > 0) html = '';
+
+        // Iterate through all the conversations
+        for (i = 0; i < self.conversations.length; i++) {
+            var conversation = self.conversations[i];
+            var partner = conversation.participants[0];
+            var avatar_url = self.maxui.settings.conversationAvatarURLpattern.format(conversation.id);
+            var displayName = '';
+
+            if (conversation.participants.length <= 2) {
+                if (conversation.participants.length == 1) {
+                    partner = conversation.participants[0];
+                    displayName += '[Archive] ';
+                }
+                else if (conversation.participants[0].username == self.maxui.settings.username) {
+                    partner = conversation.participants[1];
+                }
+                avatar_url = self.maxui.settings.avatarURLpattern.format(partner.username);
+            }
+            displayName += conversation.displayName;
+            var conv_params = {
+                id: conversation.id,
+                displayName: displayName,
+                text: self.maxui.utils.formatText(conversation.lastMessage.content),
+                messages: conversation.messages,
+                literals: self.maxui.settings.literals,
+                date: self.maxui.utils.formatDate(conversation.lastMessage.published, self.maxui.language),
+                avatarURL: avatar_url,
+                hasUnread: conversation.messages > 0
+            };
+            // Render the conversations template and append it at the end of the rendered covnersations
+            html += self.maxui.templates.conversation.render(conv_params);
+        }
+    jq('#maxui-conversations-list').html(html);
+    };
+
+
+    /** MaxConversationMessages
+    *
+    *
+    */
+
+    function MaxConversationMessages(maxconversations, options) {
+        var self = this;
+        self.messages = {};
+        self.mainview = maxconversations;
+        self.maxui = self.mainview.maxui;
+        self.remaining = true;
+    }
+
+    // Loads the last 10 messages of a conversation
+    MaxConversationMessages.prototype.load = function() {
+        var self = this;
+        self.messages[self.mainview.active] = [];
+        self.maxui.maxClient.getMessagesForConversation(self.mainview.active, {limit:10}, function(messages) {
+            self.remaining = this.getResponseHeader('X-Has-Remaining-Items');
+            _.each(messages, function(message, index, list) {
+                message.ack = true;
+                self.append(message);
+            });
+            self.render();
+        });
+    };
+
+    MaxConversationMessages.prototype.ack = function(message_id) {
+        var self = this;
+        self.messages[self.mainview.active] = _.map(self.messages[self.mainview.active], function(message) {
+            if (message_id == message.messageID) {
+                message.ack = true;
+            }
+            return message;
+        });
+    };
+
+    MaxConversationMessages.prototype.setTitle = function(title) {
+        var self = this;
+        self.mainview.$common_header.find('#maxui-back-conversations h3').text(title);
+    };
+
+    MaxConversationMessages.prototype.loadOlder = function() {
+        var self = this;
+        var older_loaded = _.first(self.messages[self.mainview.active]);
+        self.maxui.maxClient.getMessagesForConversation(self.mainview.active, {limit:10, before:older_loaded.messageID}, function(messages) {
+            self.remaining = this.getResponseHeader('X-Has-Remaining-Items');
+            _.each(messages, function(message, index, list) {
+                message.ack = true;
+                self.prepend(message, index);
+            });
+            self.render();
+        });
+    };
+
+    MaxConversationMessages.prototype.append = function(message) {
+        var self = this;
+        update_params = [];
+        // Convert activity from max to mimic rabbit response
+        if (!_.has(message, 'data')) {
+            message = {
+                'action': 'add',
+                'object': 'message',
+                'user': message.actor.username,
+                'published': message.published,
+                'data': {
+                    'displayName': message.actor.displayName,
+                    'uuid': message.id,
+                    'text': message.object.content
+                },
+                'destination': message.contexts[0].id,
+                'ack': message.ack
+            };
+            // If it's a message from max, update last message on listview
+            self.mainview.listview.updateLastMessage(message.destination, {'content': message.data.text, 'published': message.published});
+        } else {
+            // Is a message from rabbit, update last message on listview and increment unread counter
+            self.mainview.listview.updateLastMessage(message.destination, {'content': message.data.text, 'published': message.published}, true);
+        }
+        self.messages[message.destination] = self.messages[message.destination] || [];
+        self.messages[message.destination].push(message);
+    };
+
+    MaxConversationMessages.prototype.prepend = function(message, index) {
+        var self = this;
+
+        // Convert activity from max to mimic rabbit response
+        if (!_.has(message, 'data')) {
+            message = {
+                'action': 'add',
+                'object': 'message',
+                'user': message.actor.username,
+                'published': message.published,
+                'data': {
+                    'conversation': message.contexts[0].id,
+                    'displayName': message.actor.displayName,
+                    'uuid': message.id,
+                    'text': message.object.content
+                },
+                'ack': message.ack
+            };
+        }
+
+        self.messages[self.mainview.active] = self.messages[self.mainview.active] || [];
+        self.messages[self.mainview.active].splice(index, 0, message);
+    };
+
+    MaxConversationMessages.prototype.render = function() {
+        var self = this;
+        // String to store the generated html pieces of each conversation item
+        var messages = '';
+        // Iterate through all the conversations
+        for (i = 0; i < self.messages[self.mainview.active].length; i++) {
+            var message = self.messages[self.mainview.active][i];
+            var avatar_url = self.maxui.settings.avatarURLpattern.format(message.user);
+            // Store in origin, who is the sender of the message, the authenticated user or anyone else
+            var origin = 'maxui-user-notme';
+            if (message.user == self.maxui.settings.username) origin = 'maxui-user-me';
+            var params = {
+                id: message.data.uuid,
+                text: self.maxui.utils.formatText(message.data.text),
+                date: self.maxui.utils.formatDate(message.published, maxui.language),
+                origin: origin,
+                literals: self.maxui.settings.literals,
+                avatarURL: avatar_url,
+                ack: message.ack ? origin == 'maxui-user-me' : false
+            };
+            // Render the conversations template and append it at the end of the rendered covnersations
+            messages = messages + self.maxui.templates.message.render(params);
+        }
+        jq('#maxui-messages #maxui-message-list').html(messages);
+
+        $moremessages = jq('#maxui-messages #maxui-more-messages');
+        if (self.remaining == "1") $moremessages.show();
+        else $moremessages.hide();
+
+    };
+
+    MaxConversationMessages.prototype.show = function(conversation_hash) {
+        var self = this;
+
+        self.mainview.active = conversation_hash;
+        self.mainview.listview.resetUnread(conversation_hash);
+
+        // Load conversation messages from max if never loaded
+        if (!_.has(self.messages, conversation_hash)) {
+            self.load();
+            self.toggle();
+        // Otherwise, just show them
+        } else {
+            self.render();
+            self.toggle();
+        }
+    };
+
+    MaxConversationMessages.prototype.toggle = function() {
+        var self = this;
+        self.mainview.loadWrappers();
+        var literal = '';
+
+        if (self.maxui.settings.conversationsSection != 'messages') {
+            self.mainview.$addpeople.animate({
+                'height': 0,
+                'padding-top': 0,
+                'padding-bottom': 0
+            }, 400, function(event) {
+                self.mainview.$addpeople.css({
+                    'border-color': 'transparent'
+                });
+            });
+            self.setTitle(self.mainview.getActive().displayName);
+            self.mainview.$common_header.removeClass('maxui-showing-conversations').addClass('maxui-showing-messages');
+            self.mainview.$conversations_list.animate({
+                'margin-left': self.maxui.settings.sectionsWidth * (-1)
+            }, 400);
+            self.mainview.$messages.animate({
+                'left': 0,
+                'margin-left': 0
+            }, 400, function(event) {
+                self.mainview.scrollbar.setHeight(self.mainview.height - 45);
+                self.mainview.scrollbar.setTarget('#maxui-conversations #maxui-messages');
+                self.mainview.scrollbar.setContentPosition(100);
+            });
+            self.mainview.$messages.width(self.maxui.settings.sectionsWidth);
+            self.maxui.settings.conversationsSection = 'messages';
+            literal = self.maxui.settings.literals.new_activity_text;
+            self.mainview.$postbox.val(literal).attr('data-literal', literal);
+        }
+
+    };
+
+
+    /** MaxConversations
+    *
+    *
+    */
+
+    function MaxConversations(maxui, options) {
+        var self = this;
+        self.el = '#maxui-conversations';
+        self.$el = jq(self.el);
+        self.maxui = maxui;
+        self.height = 320;
+
+        self.listview = new MaxConversationsList(self, {});
+        self.messagesview = new MaxConversationMessages(self, {});
+        self.conversationSettings = new max.views.MaxChatInfo(self.maxui);
+
+        self.active = '';
+
+    }
+
+    MaxConversations.prototype.visible = function() {
+        var self = this;
+        return self.$conversations.is(':visible') && self.$conversations.height > 0;
+    };
+
+
+
+    MaxConversations.prototype.loadScrollbar = function() {
+        var self = this;
+        self.scrollbar = new max.views.MaxScrollbar({
+            width: self.maxui.settings.scrollbarWidth,
+            handle: {height: 20},
+            scrollbar: self.el + ' #maxui-scrollbar',
+            target: self.el
+        });
+    };
+
+    MaxConversations.prototype.getActive = function() {
+        var self = this;
+        return  _.findWhere(self.listview.conversations, {'id': self.active});
+    };
+
+    MaxConversations.prototype.loadWrappers = function() {
+        var self = this;
+        self.$conversations = jq('#maxui-conversations');
+        self.$conversations_list = jq('#maxui-conversations-list');
+        self.$conversations_wrapper = self.$conversations.find('.maxui-wrapper');
+        self.$messages = jq('#maxui-messages');
+        self.$message_list = jq('#maxui-message-list');
+        self.$postbox = jq('#maxui-newactivity-box textarea');
+        self.$common_header = self.$conversations.find('#maxui-common-header');
+        self.$addpeople = jq('#maxui-add-people-box');
+        self.$newparticipants = $('#maxui-new-participants');
+    };
+
+    MaxConversations.prototype.render = function() {
+        var self = this;
+        self.loadScrollbar();
+        self.bindEvents();
+    };
+
+    MaxConversations.prototype.bindEvents = function() {
+        var self = this;
+        // Show overlay with conversation info
+        jq('#maxui-conversation-info').click(function(event) {
+            event.preventDefault();
+            event.stopPropagation();
+            self.maxui.overlay.show(self.conversationSettings);
+        });
+
+        //Assign going back to conversations list
+        jq('#maxui-back-conversations').on('click', function(event) {
+            event.preventDefault();
+            event.stopPropagation();
+            window.status = '';
+            self.listview.show();
+        });
+
+        //Assign activation of messages section by delegating the clicl of a conversation arrow to the conversations container
+        jq('#maxui-conversations').on('click', '.maxui-conversation', function(event) {
+            event.preventDefault();
+            event.stopPropagation();
+            window.status = '';
+            var conversation_hash = jq(event.target).closest('.maxui-conversation').attr('id');
+            self.messagesview.show(conversation_hash);
+        });
+
+        /// Load older activities
+        jq('#maxui-conversations').on('click', '#maxui-more-messages .maxui-button', function(event) {
+            event.preventDefault();
+            event.stopPropagation();
+            window.status = '';
+            self.messagesview.loadOlder();
+
+        });
+    };
+
+
+    /**
+     *    Sends a post when user clicks `post activity` button with
+     *    the current contents of the `maxui-newactivity` textarea
+     **/
+    MaxConversations.prototype.send = function(text) {
+        var self = this;
+
+        var message_uuid = uuid.v1();
+        message = {
+            data: {
+                "displayName": "Carles Bruguera",
+                "uuid": uuid.v1(),
+                "text": text
+            },
+            action: 'add',
+            object: 'message'
+        };
+        var sent = self.maxui.messaging.send(message, self.active);
+
+        jq('#maxui-newactivity textarea').val('');
+        jq('#maxui-newactivity .maxui-button').attr('disabled', 'disabled');
+        sent.ack = false;
+        self.messagesview.append(sent);
+        self.messagesview.render();
+        self.scrollbar.setContentPosition(100);
+        self.messagesview.show(self.active);
+
+        self.listview.updateLastMessage(self.active, {'content': sent.data.text, 'published': sent.published});
+
+    };
+
+    /**
+     *    Creates a new conversation and shows it
+     **/
+    MaxConversations.prototype.create = function(options) {
+        var self = this;
+
+        options.participants.push(maxui.settings.username);
+
+        maxui.maxClient.addMessageAndConversation(options, function(event) {
+            var message = this;
+            var chash = message.contexts[0].id;
+
+                conversation = {
+                'id': chash,
+                'displayName': message.contexts[0].displayName,
+                'lastMessage': {
+                    'content': message.object.content,
+                    'published': message.published
+                },
+                'participants': options.participants,
+                'tags': message.contexts[0].tags,
+            };
+            self.active = chash;
+            self.listview.insert(conversation);
+            self.messagesview.remaining = 0;
+            message.ack = true;
+            self.messagesview.append(message);
+            self.messagesview.render();
+            self.messagesview.show(chash);
+            self.loadWrappers();
+            self.$newparticipants[0].people = [];
+            self.maxui.reloadPersons();
+
+        });
+
+    };
+
+    MaxConversations.prototype.updateUnreadConversations = function(data) {
+        var self = this;
+        var $showconversations = $('#maxui-show-conversations .maxui-unread-conversations');
+        var conversations_with_unread_messages = _.filter(self.listview.conversations, function(conversation) {
+            if (conversation.messages > 0) return conversation;
+        });
+        if (conversations_with_unread_messages.length > 0) {
+            $showconversations.text(conversations_with_unread_messages.length);
+            $showconversations.removeClass('maxui-hidden');
+        } else {
+            $showconversations.addClass('maxui-hidden');
+        }
+    };
+
+    MaxConversations.prototype.ReceiveMessage = function(message) {
+        var self = this;
+        // Insert message only if the message is from another user.
+        if (message.user != self.maxui.settings.username) {
+            console.log('New message from user {0} on {1}'.format(message.user, message.destination));
+            self.messagesview.append(message);
+
+            if (self.maxui.settings.UISection == 'conversations' && self.maxui.settings.conversationsSection == 'messages') {
+                self.messagesview.render();
+                self.scrollbar.setContentPosition(100);
+
+            } else if (self.maxui.settings.UISection == 'conversations' && self.maxui.settings.conversationsSection == 'conversations') {
+                self.listview.render();
+                $('.maxui-message-count:first').css({
+                    'background-color': 'red'
+                });
+            } else if (self.maxui.settings.UISection == 'timeline') {
+                self.updateUnreadConversations();
+                self.listview.render();
+            }
+        } else {
+            console.log('Message {0} succesfully delivered'.format(message.data.uuid));
+            var interval = setInterval(function(event) {
+                var $message = jq('#' + message.data.uuid + ' .maxui-icon-check');
+                if ($message) {
+                    $message.addClass('maxui-ack');
+                    self.messagesview.ack(message.data.uuid);
+                    clearInterval(interval);
+                }
+            }, 10);
+        }
+    };
+
+    MaxConversations.prototype.ReceiveConversation = function(message) {
+        var self = this;
+        // Insert conversation only if the message is from another user.
+        if (message.user != self.maxui.settings.username) {
+
+            if (self.maxui.settings.UISection == 'conversations' && self.maxui.settings.conversationsSection == 'conversations') {
+                self.active = message.destination;
+                self.listview.loadConversation(message.destination, function(event) {
+                    //self.messagesview.show(chash);
+                });
+            }
+
+        } else {
+        }
+    };
+
+    return {
+        MaxConversations: MaxConversations
+    };
+
+};
+
+max.views = max.views || {};
+jq.extend(max.views, views());
+
+})(jQuery);
+
+
+;
+
 var max = max || {};
 
 /**
- * @fileoverview Provides hogan compiled templates
- *               ready to render.
- */
-
+* @fileoverview Provides hogan compiled templates
+*               ready to render.
+*/
 
 max.templates = function() {
 
-// construct and compile templates
-var MSTCH_MAXUI_MAIN_UI = '\
-<div id="maxui-container">\
-{{#username}}\
- <div id="maxui-mainpanel">\
-\
-   <div id="maxui-conversations" style="height:0px; {{showConversations}}">\
-       <div id="maxui-common-header" style="height:0px;">\
-          <div id="maxui-back-conversations" class="maxui-togglebar">\
-              <a class="maxui-icon-" href="#"> {{literals.conversations_list}}\
-              <h3 class="maxui-title">displayName</h3></a>\
-              <input type="button" class="maxui-button" id="maxui-conversation-info" value="{{literals.conversations_info}}">\
-          </div>\
-       </div>\
-       <div class="maxui-wrapper">\
-           <div id="maxui-conversations-list" class="maxui-activities">\
-               <span id="maxui-info">{{literals.no_conversations}}<span>\
-           </div>\
-\
-           <div id="maxui-messages" style="{{messagesStyle}}">\
-               <div id="maxui-message-list">\
+    var templates = {
+
+    activity: Hogan.compile('\
+<div class="maxui-activity" id="{{id}}" userid="{{actor.id}}" username="{{actor.username}}">\
+            <div class="maxui-activity-content">\
+                <div class="maxui-topright">\
+                    {{^showLikesCount}}<span class="maxui-publisheddate">{{date}}</span>{{/showLikesCount}}\
+                    {{#showLikesCount}}<span class="maxui-likescount"><strong>{{likes}}</strong><i class="maxui-icon-thumbs-up"></i></span>{{/showLikesCount}}\
+                </div>\
+                <div class="maxui-actor">\
+                      <a href="#"><span class="maxui-avatar maxui-big"><img src="{{avatarURL}}"></span>\
+                          <span class="maxui-displayname">{{actor.displayName}}</span></a>\
+                  <span class="maxui-username">{{actor.username}}&nbsp;</span>\
+                </div>\
+                <div class="maxui-activity-message">\
+                    <p class="maxui-body">{{&text}}</p>\
+                </div>\
+            </div>\
+            <div class="maxui-footer">\
+                {{#publishedIn}}\
+                <div class="maxui-origin maxui-icon-">\
+                       {{literals.context_published_in}}\
+                       <a href="{{publishedIn.url}}">{{publishedIn.displayName}}</a>\
+                       {{#via}}\
+                           {{literals.generator_via}}\
+                           <span class="maxui-via">\
+                           {{via}}\
+                           </span>\
+                       {{/via}}\
+                </div>\
+                {{/publishedIn}}\
+                <div class="maxui-actions">\
+                    <a href="" class="maxui-action maxui-commentaction maxui-icon- {{#replies}}maxui-has-comments{{/replies}}"><strong>{{replies.length}}</strong> {{literals.toggle_comments}}</a>\
+                    <a href="" class="maxui-action maxui-favorites {{#favorited}}maxui-favorited{{/favorited}} maxui-icon-">{{literals.favorite}}</a>\
+                    <a href="" class="maxui-action maxui-likes {{#liked}}maxui-liked{{/liked}} maxui-icon-">{{literals.like}}</a>\
+                    {{#canDeleteActivity}}\
+                    <a href="" class="maxui-action maxui-delete maxui-icon-">{{literals.delete_activity_icon}}</a>\
+                    <div class="maxui-popover left">\
+                        <div class="maxui-arrow"></div>\
+                            <h3 class="maxui-popover-title">{{literals.delete_activity_confirmation}}</h3>\
+                            <div class="maxui-popover-content">\
+                              <input type="button" class="maxui-button-delete" value="{{literals.delete_activity_delete}}">\
+                              <input type="button" class="maxui-button-cancel" value="{{literals.delete_activity_cancel}}">\
+                            </div>\
+                    </div>\
+                    {{/canDeleteActivity}}\
+        \
+                </div>\
+            </div>\
+        \
+            <div class="maxui-comments" style="display: none">\
+                <div class="maxui-commentsbox">\
+                    {{#replies}}\
+                        {{> comment}}\
+                    {{/replies}}\
+                </div>\
+                <div class="maxui-newcommentbox">\
+                        <textarea class="maxui-empty maxui-text-input" id="maxui-commentBox" data-literal="{{literals.new_comment_text}}">{{literals.new_comment_text}}</textarea>\
+                        <input disabled="disabled" type="button" class="maxui-button maxui-disabled" value="{{literals.new_comment_post}}"/>\
+                </div>\
+            </div>\
+        \
+            <div class="maxui-clear"></div>\
+        </div>\
+            '),
+
+    comment: Hogan.compile('\
+<div class="maxui-comment" id="{{id}}" userid="{{actor.id}}" displayname="{{actor.username}}">\
+            <div class="maxui-activity-content">\
+               <span class="maxui-publisheddate">{{date}}</span>\
+               <div class="maxui-actor">\
+                   <a href="#">\
+                       <span class="maxui-avatar maxui-little"><img src="{{avatarURL}}"></span>\
+                       <span class="maxui-displayname">{{actor.displayName}}</span></a>\
+                     <span class="maxui-username">{{actor.username}}</span>\
                </div>\
-           </div>\
+               <div>\
+                   <p class="maxui-body">{{&text}}</p>\
+                   {{#canDeleteComment}}\
+                   <span class="maxui-delete-comment maxui-icon-"></span>\
+                   <div class="maxui-popover left">\
+                        <div class="maxui-arrow"></div>\
+                            <h3 class="maxui-popover-title">{{literals.delete_activity_confirmation}}</h3>\
+                            <div class="maxui-popover-content">\
+                              <input type="button" class="maxui-button-delete" value="{{literals.delete_activity_delete}}">\
+                              <input type="button" class="maxui-button-cancel" value="{{literals.delete_activity_cancel}}">\
+                            </div>\
+                   </div>\
+                   {{/canDeleteComment}}\
+               </div>\
+            </div>\
         </div>\
-           <div id="maxui-scrollbar">\
-                  <div class="maxui-dragger handle"/>\
-           </div>\
-   </div>\
-\
-<div id="maxui-show-conversations" class="maxui-togglebar maxui-icon-" style="{{showConversationsToggle}}"><a href="#">{{literals.conversations}}</a></div>\
-\
-    <div id="maxui-conversation-predictive" class="maxui-predictive" style="display:none;"><ul></ul></div>\
-    <div id="maxui-add-people-box" style="display:none;">\
-        <div>\
-          <label class="maxui-label">{{literals.participants}}: <span class="maxui-count">(1/20)</span></label>\
-          <input tabindex="20" type="text" data-literal="{{literals.search_people}}" value="{{literals.search_people}}" class="maxui-text-input" id="add-user-input">\
+            '),
+
+    conversation: Hogan.compile('\
+<div class="maxui-conversation" id="{{id}}" data-displayname="{{displayName}}">\
+            <div class="maxui-activity-content">\
+                <div class="maxui-topright">\
+        \
+                    <div class="maxui-publisheddate">{{date}}</div>\
+                    <div class="maxui-enterconversation">\
+                        <a class="maxui-enterconversation maxui-icon-" href="#"></a>\
+                        {{#hasUnread}}<span class="maxui-unread-messages">{{messages}}</span>{{/hasUnread}}\
+                    </div>\
+                </div>\
+                <div class="maxui-actor">\
+                      <a href="#"><span class="maxui-avatar maxui-big"><img src="{{avatarURL}}"></span>\
+                      <span class="maxui-displayname">{{displayName}}</span></a>\
+                </div>\
+                <div>\
+                    <p class="maxui-body">{{&text}}</p>\
+                </div>\
+            </div>\
+        \
+            <div class="maxui-clear"></div>\
         </div>\
-        <div id="maxui-new-participants" style="display:none;"></div>\
-        <div id="maxui-new-displayName" style="display:none;">\
-            <label class="maxui-label">{{literals.conversation_name}}: </label>\
-            <input tabindex="21" type="text" class="maxui-simple-text-input"/>\
-        </div>\
-    </div>\
-\
-   <div id="maxui-newactivity">\
-   </div>\
-\
-   <div id="maxui-search" class="folded">\
-       <a id="maxui-search-toggle" class="maxui-disabled maxui-icon-" href="#" alt="obre-tanca"></a>\
-       <a href="#" id="maxui-favorites-filter" title="{{literals.favorites_filter_hint}}"><i class="maxui-icon-star"/></a>\
-       <div id="maxui-search-box">\
-          <input id="maxui-search-text" type="search" data-literal="{{literals.search_text}}" class="maxui-empty maxui-text-input" value="{{literals.search_text}}" />\
-       </div>\
-       <div id="maxui-search-filters"></div>\
-   </div>\
-\
-   <div id="maxui-show-timeline" class="maxui-togglebar maxui-icon-" style="{{showTimelineToggle}}"><a href="#">{{literals.activity}}</a></div>\
-\
-      <div id="maxui-activity-sort">\
-        <a class="maxui-sort-action maxui-most-recent active" href="#">{{literals.recent_activity}}</a>\
-        /\
-        <a class="maxui-sort-action maxui-most-valued" href="#">{{literals.valued_activity}}</a>\
-      </div>\
-   <div id="maxui-timeline" style="{{showTimeline}}">\
-      <div class="maxui-wrapper">\
-          <div id="maxui-preload" class="maxui-activities" style="height:0px;overflow:hidden">\
-              <div class="maxui-wrapper">\
+            '),
+
+    conversationSettings: Hogan.compile('\
+<div id="maxui-{{panelID}}" {{#canManage}}class="maxui-owner"{{/canManage}}>\
+          <span class="maxui-avatar maxui-big"><img src="{{conversationAvatarURL}}"></span>\
+          <div id="maxui-conversation-displayname-edit">\
+              <input type="text" class="maxui-displayname" value="{{displayName}}"/>\
+              <i class="maxui-icon-cancel-circled"></i>\
+              <i class="maxui-icon-ok-circled"></i>\
+          </div>\
+          <span class="maxui-displayname">{{displayName}}</span>\
+          <span class="maxui-published">{{literals.conversations_info_created}} {{published}}</span>\
+          <div class="maxui-participants">\
+            <h4>{{literals.conversations_info_participants}}</h4>\
+            <ul>\
+              {{#participants}}\
+              <li class="maxui-participant {{#owner}}maxui-owner{{/owner}}" data-username="{{username}}">\
+                  <span class="maxui-avatar maxui-little"><img src="{{avatarURL}}"></span>\
+                  <span class="maxui-displayname">{{displayName}}\
+                      <i class="maxui-conversation-user-action maxui-icon-trash" {{^owner}}title="{{literals.conversations_info_kick_message_1}} {{displayName}} {{literals.conversations_info_kick_message_2}}"{{/owner}}></i>\
+                      <i class="maxui-conversation-user-action maxui-icon-crown{{^owner}}-plus{{/owner}}" {{^owner}}title="{{literals.conversations_info_transfer_message_1}} {{displayName}} {{literals.conversations_info_transfer_message_1}}"{{/owner}}></i>\
+                      <div class="maxui-conversation-transfer-to maxui-conversation-confirmation">\
+                          <i class="maxui-icon-cancel-circled"></i>\
+                          <i class="maxui-icon-ok-circled"></i>\
+                      </div>\
+                      <div class="maxui-conversation-kick-user maxui-conversation-confirmation">\
+                          <i class="maxui-icon-cancel-circled"></i>\
+                          <i class="maxui-icon-ok-circled"></i>\
+                      </div>\
+                  </span>\
+                  <span class="maxui-username">{{username}}</span>\
+              </li>\
+              {{/participants}}\
+            </ul>\
+            {{#canAdd}}\
+            <div id="maxui-new-participant">\
+                <i class="maxui-icon-user-add"/>\
+                <input type="text" class="maxui-text-input maxui-empty"/>\
+                <div id="maxui-conversation-predictive" class="maxui-predictive" style="display:none;"><ul></ul></div>\
+            </div>\
+            {{/canAdd}}\
+            </div>\
+            <div id="maxui-conversation-leave">\
+              <input type="button" class="maxui-button maxui-button-red maxui-button-wide" value="{{literals.conversations_info_leave}}">\
+          </div>\
+          <div id="maxui-conversation-delete">\
+              <input type="button" class="maxui-button maxui-button-red maxui-button-wide" value="{{literals.conversations_info_delete}}">\
+              <div class="maxui-help">\
+                  <p><b>{{literals.conversations_info_delete_warning}}</b> {{literals.conversations_info_delete_help}}</p>\
+                  <button class="maxui-button maxui-button-red maxui-confirmation-cancel">{{literals.cancel}}</button>\
+                  <button class="maxui-button maxui-button-green maxui-confirmation-ok">{{literals.delete}}</button>\
               </div>\
           </div>\
-          <div id="maxui-activities" class="maxui-activities">\
-          </div>\
-          <div id="maxui-more-activities">\
-              <input type="button" class="maxui-button" value="{{literals.load_more}}">\
-          </div>\
-      </div>\
-   </div>\
-   <div id="maxui-overlay-background" class="maxui-overlay">\
-   </div>\
-   <div id="maxui-overlay-wrapper" class="maxui-overlay">\
-       <div id="maxui-overlay-panel">\
-           <div id="maxui-overlay-header">\
-                <h3 id="maxui-overlay-title">I\'m a overlay</h3>\
-                <i class="maxui-close maxui-icon-cancel"/>\
-           </div>\
-           <div id="maxui-overlay-content">\
-           </div>\
-       </div>\
-   </div>\
-  </div>\
- </div>\
-{{/username}}\
-{{^username}}\
-  No s\'ha definit cap usuari\
-{{/username}}\
-</div>\
-';
+        </div>\
+            '),
 
-var MSTCH_MAXUI_POSTBOX = '\
-      <a href="#" class="maxui-avatar maxui-big">\
-          <img src="{{avatar}}">\
-      </a>\
-      <div id="maxui-newactivity-box">\
-           <textarea class="maxui-empty maxui-text-input" data-literal="{{textLiteral}}">{{textLiteral}}</textarea>\
-           <div class="maxui-error-box"></div>\
-           <input disabled="disabled" type="button" class="maxui-button maxui-disabled" value="{{buttonLiteral}}">\
-      </div>\
-';
-
-var MSTCH_MAXUI_ACTIVITY = '\
-<div class="maxui-activity" id="{{id}}" userid="{{actor.id}}" username="{{actor.username}}">\
-    <div class="maxui-activity-content">\
-        <div class="maxui-topright">\
-            {{^showLikesCount}}<span class="maxui-publisheddate">{{date}}</span>{{/showLikesCount}}\
-            {{#showLikesCount}}<span class="maxui-likescount"><strong>{{likes}}</strong><i class="maxui-icon-thumbs-up"></i></span>{{/showLikesCount}}\
-        </div>\
-        <div class="maxui-actor">\
-              <a href="#"><span class="maxui-avatar maxui-big"><img src="{{avatarURL}}"></span>\
-		          <span class="maxui-displayname">{{actor.displayName}}</span></a>\
-          <span class="maxui-username">{{actor.username}}&nbsp;</span>\
-        </div>\
-        <div class="maxui-activity-message">\
-            <p class="maxui-body">{{&text}}</p>\
-        </div>\
-    </div>\
-    <div class="maxui-footer">\
-        {{#publishedIn}}\
-        <div class="maxui-origin maxui-icon-">\
-               {{literals.context_published_in}}\
-               <a href="{{publishedIn.url}}">{{publishedIn.displayName}}</a>\
-               {{#via}}\
-                   {{literals.generator_via}}\
-                   <span class="maxui-via">\
-                   {{via}}\
-                   </span>\
-               {{/via}}\
-        </div>\
-        {{/publishedIn}}\
-        <div class="maxui-actions">\
-            <a href="" class="maxui-action maxui-commentaction maxui-icon- {{#replies}}maxui-has-comments{{/replies}}"><strong>{{replies.length}}</strong> {{literals.toggle_comments}}</a>\
-            <a href="" class="maxui-action maxui-favorites {{#favorited}}maxui-favorited{{/favorited}} maxui-icon-">{{literals.favorite}}</a>\
-            <a href="" class="maxui-action maxui-likes {{#liked}}maxui-liked{{/liked}} maxui-icon-">{{literals.like}}</a>\
-            {{#canDeleteActivity}}\
-            <a href="" class="maxui-action maxui-delete maxui-icon-">{{literals.delete_activity_icon}}</a>\
-            <div class="maxui-popover left">\
-                <div class="maxui-arrow"></div>\
-                    <h3 class="maxui-popover-title">{{literals.delete_activity_confirmation}}</h3>\
-                    <div class="maxui-popover-content">\
-                      <input type="button" class="maxui-button-delete" value="{{literals.delete_activity_delete}}">\
-                      <input type="button" class="maxui-button-cancel" value="{{literals.delete_activity_cancel}}">\
-                    </div>\
-            </div>\
-            {{/canDeleteActivity}}\
-            \
-        </div>\
-    </div>\
-\
-    <div class="maxui-comments" style="display: none">\
-        <div class="maxui-commentsbox">\
-            {{#replies}}\
-                {{> comment}}\
-            {{/replies}}\
-        </div>\
-        <div class="maxui-newcommentbox">\
-                <textarea class="maxui-empty maxui-text-input" id="maxui-commentBox" data-literal="{{literals.new_comment_text}}">{{literals.new_comment_text}}</textarea>\
-                <input disabled="disabled" type="button" class="maxui-button maxui-disabled" value="{{literals.new_comment_post}}"/>\
-        </div>\
-    </div>\
-\
-    <div class="maxui-clear"></div>\
-</div>\
-';
-
-var MSTCH_MAXUI_CONVERSATION = '\
-<div class="maxui-conversation" id="{{id}}" data-displayname="{{displayName}}">\
-    <div class="maxui-activity-content">\
-        <div class="maxui-topright">\
-            <span class="maxui-publisheddate">{{date}}</span>\
-            <a class="maxui-enterconversation maxui-icon-" href="#"></a>\
-        </div>\
-        <div class="maxui-actor">\
-              <a href="#"><span class="maxui-avatar maxui-big"><img src="{{avatarURL}}"></span>\
-              <span class="maxui-displayname">{{displayName}}</span></a>\
-              <span class="maxui-message-count">{{messages}}</span>\
-        </div>\
-        <div>\
-            <p class="maxui-body">{{&text}}</p>\
-        </div>\
-    </div>\
-\
-    <div class="maxui-clear"></div>\
-</div>\
-';
-
-var MSTCH_MAXUI_MESSAGE = '\
-<div class="maxui-message {{origin}}" id="{{id}}">\
-    <div class="maxui-activity-content">\
-        <span class="maxui-avatar maxui-little"><img src="{{avatarURL}}"></span>\
-        <div class="maxui-balloon">\
-            <p class="maxui-body">{{&text}}</p>\
-            <span class="maxui-publisheddate">{{date}}</span>\
-        </div>\
-    </div>\
-    <div class="maxui-clear"></div>\
-</div>\
-';
-
-var MSTCH_MAXUI_COMMENT = '\
-<div class="maxui-comment" id="{{id}}" userid="{{actor.id}}" displayname="{{actor.username}}">\
-    <div class="maxui-activity-content">\
-       <span class="maxui-publisheddate">{{date}}</span>\
-       <div class="maxui-actor">\
-      	   <a href="#">\
-		       <span class="maxui-avatar maxui-little"><img src="{{avatarURL}}"></span>\
-		       <span class="maxui-displayname">{{actor.displayName}}</span></a> \
-	         <span class="maxui-username">{{actor.username}}</span>\
-       </div>\
-       <div>\
-           <p class="maxui-body">{{&text}}</p>\
-           {{#canDeleteComment}}\
-           <span class="maxui-delete-comment maxui-icon-"></span>\
-           <div class="maxui-popover left">\
-                <div class="maxui-arrow"></div>\
-                    <h3 class="maxui-popover-title">{{literals.delete_activity_confirmation}}</h3>\
-                    <div class="maxui-popover-content">\
-                      <input type="button" class="maxui-button-delete" value="{{literals.delete_activity_delete}}">\
-                      <input type="button" class="maxui-button-cancel" value="{{literals.delete_activity_cancel}}">\
-                    </div>\
-           </div>\
-           {{/canDeleteComment}}\
-       </div>\
-    </div>\
-</div>\
-';
-
-var MSTCH_MAXUI_PREDICTIVE_ITEM = '\
-<li class="{{cssclass}}">\
-{{username}}\
-</li>\
-';
-
-
-var MSTCH_MAXUI_FILTERS = '\
+    filters: Hogan.compile('\
 {{#filters}}\
-    {{#visible}}\
-    <div class="maxui-filter maxui-{{type}}" type="{{type}}" value="{{value}}"><span>{{prepend}}{{value}}<a class="maxui-close" href=""><i class="maxui-icon-cancel-circled" alt="tanca"/></a></span></div>\
-    {{/visible}}\
-{{/filters}}\
-';
+            {{#visible}}\
+            <div class="maxui-filter maxui-{{type}}" type="{{type}}" value="{{value}}"><span>{{prepend}}{{value}}<a class="maxui-close" href=""><i class="maxui-icon-cancel-circled" alt="tanca"/></a></span></div>\
+            {{/visible}}\
+        {{/filters}}\
+            '),
 
-var MSTCH_MAXUI_PARTICIPANTS = '\
+    mainUI: Hogan.compile('\
+<div id="maxui-container">\
+        {{#username}}\
+         <div id="maxui-mainpanel">\
+        \
+           <div id="maxui-conversations" style="height:0px; {{showConversations}}">\
+               <div id="maxui-common-header">\
+                  <div id="maxui-conversations-header" class="maxui-togglebar">\
+                      <h3 class="maxui-title">Chats</h3></a>\
+                  </div>\
+                  <div id="maxui-back-conversations" class="maxui-togglebar">\
+                      <a class="maxui-icon-" href="#"> {{literals.conversations_list}}\
+                      <h3 class="maxui-title">displayName</h3></a>\
+                      <i id="maxui-conversation-info" class="maxui-icon-cog"/>\
+                  </div>\
+               </div>\
+               <div class="maxui-wrapper">\
+                   <div id="maxui-conversations-list" class="maxui-activities">\
+                       <span id="maxui-info">{{literals.no_chats}}<span>\
+                   </div>\
+        \
+                   <div id="maxui-messages" style="{{messagesStyle}}">\
+                       <div id="maxui-more-messages">\
+                           <input type="button" class="maxui-button maxui-button-grey" value="{{literals.chats_load_older}}">\
+                       </div>\
+                       <div id="maxui-message-list">\
+                       </div>\
+                   </div>\
+                </div>\
+                   <div id="maxui-scrollbar">\
+                          <div class="maxui-dragger handle"/>\
+                   </div>\
+           </div>\
+        \
+            <div id="maxui-show-conversations" class="maxui-togglebar maxui-icon-" style="{{showConversationsToggle}}">\
+                <span class="maxui-unread-conversations maxui-hidden"></span> <a href="#">{{literals.conversations}}</a>\
+            </div>\
+        \
+            <div id="maxui-conversation-predictive" class="maxui-predictive" style="display:none;"><ul></ul></div>\
+            <div id="maxui-add-people-box" style="display:none;">\
+                <div>\
+                  <label class="maxui-label">{{literals.participants}}: <span class="maxui-count">(1/20)</span></label>\
+                  <input tabindex="20" type="text" data-literal="{{literals.conversations_info_add}}" value="{{literals.conversations_info_add}}" class="maxui-text-input" id="add-user-input">\
+                </div>\
+                <div id="maxui-new-participants" style="display:none;"></div>\
+                <div id="maxui-new-displayName" style="display:none;">\
+                    <label class="maxui-label">{{literals.conversation_name}}: </label>\
+                    <input tabindex="21" type="text" class="maxui-simple-text-input"/>\
+                </div>\
+            </div>\
+        \
+           <div id="maxui-newactivity">\
+           </div>\
+        \
+           <div id="maxui-search" class="folded">\
+               <a id="maxui-search-toggle" class="maxui-disabled maxui-icon-" href="#" alt="obre-tanca"></a>\
+               <a href="#" id="maxui-favorites-filter" title="{{literals.favorites_filter_hint}}"><i class="maxui-icon-star"/></a>\
+               <div id="maxui-search-box">\
+                  <input id="maxui-search-text" type="search" data-literal="{{literals.search_text}}" class="maxui-empty maxui-text-input" value="{{literals.search_text}}" />\
+               </div>\
+               <div id="maxui-search-filters"></div>\
+           </div>\
+        \
+           <div id="maxui-show-timeline" class="maxui-togglebar maxui-icon-" style="{{showTimelineToggle}}"><a href="#">{{literals.activity}}</a></div>\
+        \
+              <div id="maxui-activity-sort">\
+                <a class="maxui-sort-action maxui-most-recent active" href="#">{{literals.recent_activity}}</a>\
+                /\
+                <a class="maxui-sort-action maxui-most-valued" href="#">{{literals.valued_activity}}</a>\
+              </div>\
+           <div id="maxui-timeline" style="{{showTimeline}}">\
+              <div class="maxui-wrapper">\
+                  <div id="maxui-preload" class="maxui-activities" style="height:0px;overflow:hidden">\
+                      <div class="maxui-wrapper">\
+                      </div>\
+                  </div>\
+                  <div id="maxui-activities" class="maxui-activities">\
+                  </div>\
+                  <div id="maxui-more-activities">\
+                      <input type="button" class="maxui-button" value="{{literals.load_more}}">\
+                  </div>\
+              </div>\
+           </div>\
+           <div id="maxui-overlay-background" class="maxui-overlay">\
+           </div>\
+           <div id="maxui-overlay-wrapper" class="maxui-overlay">\
+               <div id="maxui-overlay-panel">\
+                   <div id="maxui-overlay-header">\
+                        <h3 id="maxui-overlay-title">I\'m a overlay</h3>\
+                        <i class="maxui-close maxui-icon-cancel"/>\
+                   </div>\
+                   <div id="maxui-overlay-content">\
+                   </div>\
+               </div>\
+           </div>\
+          </div>\
+         </div>\
+        {{/username}}\
+        {{^username}}\
+          No s\'ha definit cap usuari\
+        {{/username}}\
+        </div>\
+            '),
+
+    message: Hogan.compile('\
+<div class="maxui-message {{origin}}" id="{{id}}">\
+            <div class="maxui-activity-content">\
+                <span class="maxui-avatar maxui-little"><img src="{{avatarURL}}"></span>\
+                <div class="maxui-balloon">\
+                    <p class="maxui-body">{{&text}}</p>\
+                    <span class="maxui-publisheddate">{{date}}</span>\
+                    <i class="maxui-icon-check{{#ack}} maxui-ack{{/ack}}"></i>\
+                </div>\
+            </div>\
+            <div class="maxui-clear"></div>\
+        </div>\
+            '),
+
+    participant: Hogan.compile('\
+  <li class="maxui-participant {{#owner}}maxui-owner{{/owner}}" data-username="{{username}}" style="{{style}}">\
+              <span class="maxui-avatar maxui-little"><img src="{{avatarURL}}"></span>\
+              <span class="maxui-displayname">{{displayName}}\
+                  <i class="maxui-conversation-user-action maxui-icon-trash" {{^owner}}title="Click to kick {{displayName}} out of this conversation"{{/owner}} style="display:none;"></i>\
+                  <i class="maxui-conversation-user-action maxui-icon-crown{{^owner}}-plus{{/owner}}" {{^owner}}title="Click to make {{displayName}} the owner of this conversation"{{/owner}} style="display:none;"></i>\
+                  <div class="maxui-conversation-transfer-to maxui-conversation-confirmation">\
+                      <i class="maxui-icon-cancel-circled"></i>\
+                      <i class="maxui-icon-ok-circled"></i>\
+                  </div>\
+                  <div class="maxui-conversation-kick-user maxui-conversation-confirmation">\
+                      <i class="maxui-icon-cancel-circled"></i>\
+                      <i class="maxui-icon-ok-circled"></i>\
+                  </div>\
+                  <div class="maxui-conversation-add-user maxui-conversation-confirmation">\
+                      <i class="maxui-icon-cancel-circled"></i>\
+                      <i class="maxui-icon-ok-circled"></i>\
+                  </div>\
+              </span>\
+              <span class="maxui-username">{{username}}</span>\
+          </li>\
+            '),
+
+    participants: Hogan.compile('\
 {{#persons}}\
-<div class="maxui-filter maxui-participant" type="participant" username="{{username}}"><span>{{prepend}}{{username}}<a class="maxui-close" href=""><i class="maxui-icon-cancel-circled" alt="tanca"/></a></span></div>\
-{{/persons}}\
-';
+        <div class="maxui-filter maxui-participant" type="participant" username="{{username}}"><span>{{prepend}}{{displayName}}<a class="maxui-close" href=""><i class="maxui-icon-cancel-circled" alt="tanca"/></a></span></div>\
+        {{/persons}}\
+            '),
+
+    postBox: Hogan.compile('\
+      <a href="#" class="maxui-avatar maxui-big">\
+                  <img src="{{avatar}}">\
+              </a>\
+              <div id="maxui-newactivity-box">\
+                   <textarea class="maxui-empty maxui-text-input" data-literal="{{textLiteral}}">{{textLiteral}}</textarea>\
+                   <div class="maxui-error-box"></div>\
+                   <input disabled="disabled" type="button" class="maxui-button maxui-disabled" value="{{buttonLiteral}}">\
+              </div>\
+            '),
+
+    predictive: Hogan.compile('\
+<li data-username="{{username}}" data-displayname="{{displayName}}" class="{{cssclass}}">\
+        <img src="{{avatarURL}}"/><span>{{displayName}}</span>\
+        </li>\
+            ')
 
-var MSTCH_MAXUI_CONVERSATION_SETTINGS = '\
-<div id="maxui-{{panelID}}" {{#canManage}}class="maxui-owner"{{/canManage}}>\
-  <span class="maxui-avatar maxui-big"><img src="{{conversationAvatarURL}}"></span>\
-  <div id="maxui-conversation-displayname-edit">\
-      <input type="text" class="maxui-displayname" value="{{displayName}}"/>\
-      <i class="maxui-icon-cancel-circled"></i>\
-      <i class="maxui-icon-ok-circled"></i>\
-  </div>\
-  <span class="maxui-displayname">{{displayName}}</span>\
-  <span class="maxui-published">{{literals.conversations_info_created}} {{published}}</span>\
-  <div class="maxui-participants">\
-    <h4>{{literals.conversations_info_participants}}</h4>\
-    <ul>\
-      {{#participants}}\
-      <li class="maxui-participant {{#owner}}maxui-owner{{/owner}}" data-username="{{username}}">\
-          <span class="maxui-avatar maxui-little"><img src="{{avatarURL}}"></span>\
-          <span class="maxui-displayname">{{displayName}}\
-              {{#owner}}<label>{{literals.conversations_info_owner}}</label>{{/owner}}\
-              <button class="maxui-button maxui-button-red maxui-conversation-transfer-to">Transfer</button>\
-          </span>\
-          <span class="maxui-username">{{username}}</span>\
-      </li>\
-      {{/participants}}\
-    </ul>\
-  </div>\
-  {{^canManage}}\
-  <div id="maxui-conversation-leave">\
-      <input type="button" class="maxui-button maxui-button-red maxui-button-wide" value="{{literals.conversations_info_leave}}">\
-  </div>\
-  {{/canManage}}\
-  {{#canManage}}\
-  <div id="maxui-conversation-transfer">\
-      <input type="button" class="maxui-button maxui-button-red maxui-button-wide" value="{{literals.conversations_info_transfer}}">\
-      <p>{{literals.conversations_info_transfer_help}}</p>\
-  </div>\
-  {{/canManage}}\
-</div>\
-';
-var templates = {
-                mainUI: Hogan.compile(MSTCH_MAXUI_MAIN_UI),
-               postBox: Hogan.compile(MSTCH_MAXUI_POSTBOX),
-              activity: Hogan.compile(MSTCH_MAXUI_ACTIVITY),
-               comment: Hogan.compile(MSTCH_MAXUI_COMMENT),
-               filters: Hogan.compile(MSTCH_MAXUI_FILTERS),
-          participants: Hogan.compile(MSTCH_MAXUI_PARTICIPANTS),
-          conversation: Hogan.compile(MSTCH_MAXUI_CONVERSATION),
-  conversationSettings: Hogan.compile(MSTCH_MAXUI_CONVERSATION_SETTINGS),
-               message: Hogan.compile(MSTCH_MAXUI_MESSAGE),
-            predictive: Hogan.compile(MSTCH_MAXUI_PREDICTIVE_ITEM)
-
-  }
-
-  return templates
-}
-
-
-;
-
-var max = max || {};
-
-/**
- * @fileoverview Provides literals in several languages
-  */
-
-
-max.literals = function(language) {
-
-    var maxui = {}
-    maxui['en'] = {'months': ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
-                       'new_activity_text': 'Write something...',
-                       'activity': 'activity',
-                       'conversations': 'private conversations',
-                       'conversations_list': 'conversations list',
-                       'conversations_info': 'Info',
-                       'conversations_info_title': 'Conversation information',
-                       'conversations_info_participants': 'Participants',
-                       'conversations_info_owner': 'owner',
-                       'conversations_info_created': 'Created',
-                       'conversations_info_leave': 'Leave conversation',
-                       'conversations_info_transfer': 'Transfer ownership',
-                       'conversations_info_transfer_help': 'Click the transfer button of the participant you want to transfer ownership to. After this, you won\'t be able to modify this conversation settings anymore.',
-                       'participants': 'Talk to',
-                       'search_people': "Write somebody's name...",
-                       'conversation_name': 'Conversation name',
-                       'message': 'Message',
-                       'no_conversations': 'No conversations already',
-                       'no_match_found': 'No match found',
-                       'new_conversation_text': 'Add participants and send a message to start a conversation',
-                       'new_activity_post': "Post activity",
-                       'toggle_comments': "comments",
-                       'new_comment_text': "Comment something...",
-                       'new_comment_post': "Post comment",
-                       'load_more': "Load more",
-                       'context_published_in': "Published in",
-                       'generator_via': "via",
-                       'search_text': "Search in posts...",
-                       'and_more': "and more...",
-                       'new_message_post': "Send message",
-                       'post_permission_unauthorized': "You''re not authorized to post on this context",
-                       'post_permission_not_here': "You're not mentioning @anyone",
-                       'post_permission_not_enough_participants': "You have to add participants",
-                       'post_permission_missing_displayName': "You have to name the conversation",
-                       'delete_activity_confirmation': "Are you sure?",
-                       'delete_activity_delete': "Delete",
-                       'delete_activity_cancel': "Cancel",
-                       'delete_activity_icon': "delete",
-                       'favorites_filter_hint': 'Filter by favorited activity',
-                       'favorites': 'Favorites',
-                       'favorite': 'favorite',
-                       'unfavorite': 'unfavorite',
-                       'like': 'like',
-                       'unlike': 'unlike',
-                       'recent_activity': "Latest activity",
-                       'valued_activity': "Most valued activity",
-                       'recent_favorited_activity': "Latest favorites",
-                       'valued_favorited_activity': "Most valued favorites"
-        }
-
-    maxui['es'] = {'months': ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'],
-                       'new_activity_text': 'Escribe algo...',
-                       'activity': 'actividad',
-                       'conversations': 'conversaciones privadas',
-                       'conversations_list': 'lista de conversaciones',
-                       'conversations_info': 'Info',
-                       'conversations_info_title': 'Información de la conversación',
-                       'conversations_info_participants': 'Participantes',
-                       'conversations_info_owner': 'propietario',
-                       'conversations_info_created': 'Creada',
-                       'conversations_info_leave': 'Abandonar conversación',
-                       'conversations_info_transfer': 'Transferir propiedad',
-                       'conversations_info_transfer_help': 'Click the transfer button of the participant you want to transfer ownership to. After this, you won\'t be able to modify this conversation settings anymore.',
-                       'participants': 'Conversar con',
-                       'search_people': 'Escribe el nombre de alguien...',
-                       'conversation_name': 'Nombre de la conversación',
-                       'message': 'Mensaje',
-                       'no_conversations': 'No hay conversaciones',
-                       'no_match_found': 'No hay coincidencias',
-                       'new_conversation_text': 'Añade participantes y envia el mensaje para iniciar una conversación',
-                       'new_activity_post': "Publica",
-                       'toggle_comments': "comentarios",
-                       'new_comment_text': "Comenta algo...",
-                       'new_comment_post': "Comenta",
-                       'load_more': "Cargar más",
-                       'context_published_in': "Publicado en",
-                       'generator_via': "via",
-                       'search_text': "Busca en las entradas...",
-                       'and_more': "i más...",
-                       'new_message_post':'Envia el mensaje',
-                       'post_permission_unauthorized': 'No estas autorizado a publicar en este contexto',
-                       'post_permission_not_here': "No estas citando a @nadie",
-                       'post_permission_not_enough_participants': "Tienes que añadir participantes",
-                       'post_permission_missing_displayName': "Tienes que dar un nombre a la conversación",
-                       'delete_activity_confirmation': "Estás seguro?",
-                       'delete_activity_delete': "Borrar",
-                       'delete_activity_cancel': "Cancelar",
-                       'delete_activity_icon': "borrar",
-                       'favorites_filter_hint': 'Filtra por actividad favorita',
-                       'favorites': 'Favoritos',
-                       'favorite': 'favorito',
-                       'unfavorite': 'quitar favorito',
-                       'like': 'me gusta',
-                       'unlike': 'ya no me gusta',
-                       'recent_activity': "Últimas actividades",
-                       'valued_activity': "Actividades más valoradas",
-                       'recent_favorited_activity': "Últimas favoritas",
-                       'valued_favorited_activity': "Favoritas más valoradas"
-        }
-
-    maxui['ca'] = {'months': ['gener', 'febrer', 'març', 'abril', 'maig', 'juny', 'juliol', 'agost', 'setembre', 'octubre', 'novembre', 'desembre'],
-                       'new_activity_text': 'Escriu alguna cosa...',
-                       'activity': 'activitat',
-                       'conversations': 'converses privades',
-                       'conversations_list': 'llista de converses',
-                       'conversations_info': 'Info',
-                       'conversations_info_title': 'Informació de la conversa',
-                       'conversations_info_participants': 'Participants',
-                       'conversations_info_owner': 'propietari',
-                       'conversations_info_created': 'Creada',
-                       'conversations_info_leave': 'Marxar de la conversa',
-                       'conversations_info_transfer': 'Transferir propietat',
-                       'conversations_info_transfer_help': 'Click the transfer button of the participant you want to transfer ownership to. After this, you won\'t be able to modify this conversation settings anymore.',
-                       'participants': 'Conversa amb',
-                       'search_people': "Escriu el nom d''algú...",
-                       'conversation_name': 'Nom de la conversa',
-                       'message': 'Missatge',
-                       'no_conversations': 'No hi ha converses',
-                       'no_match_found': "No s'han trobat coincidències",
-                       'new_conversation_text': 'Afegeix participants i envia el missatge per iniciar una conversa',
-                       'new_activity_post': "Publica",
-                       'toggle_comments': "comentaris",
-                       'new_comment_text': "Comenta alguna cosa...",
-                       'new_comment_post': "Comenta",
-                       'load_more': "Carrega'n més",
-                       'context_published_in': "Publicat a",
-                       'generator_via': "via",
-                       'search_text': "Cerca a les entrades...",
-                       'and_more': "i més...",
-                       'new_message_post':'Envia el missatge',
-                       'post_permission_unauthorized': 'No estàs autoritzat a publicar en aquest contexte',
-                       'post_permission_not_here': "No estas citant a @ningú",
-                       'post_permission_not_enough_participants': "Has d'afegir participants",
-                       'post_permission_missing_displayName': "Tens que posar nom a la conversa",
-                       'delete_activity_confirmation': "Estàs segur?",
-                       'delete_activity_delete': "Esborra",
-                       'delete_activity_cancel': "No ho toquis!",
-                       'delete_activity_icon': "esborra",
-                       'favorites_filter_hint': 'Filtra per activitat favorita',
-                       'favorites': 'Favorits',
-                       'favorite': 'favorit',
-                       'unfavorite': 'treure favorit',
-                       'like': "m'agrada",
-                       'unlike': "ja no m'agrada",
-                       'recent_activity': "Darreres activitats",
-                       'valued_activity': "Activitats més valorades",
-                       'recent_favorited_activity': "Darreres favorites",
-                       'valued_favorited_activity': "Favorites més valorades"
-
-        }
-
-    return maxui[language]
-}
-
-
-;
-
-var max = max || {};
-
-/**
- * @fileoverview Provides support functions not directly
- *               related to UI construction
- **/
-max.utils = function() {
-
-  var settings = undefined
-
-  return {
-
-    setSettings: function(maxui_settings) {
-      settings = maxui_settings
-    },
-
-    /**
-    *    Stops propagation of an event, to avoid arrows, esc, enter keys
-    *    bubbling to an input, Used in conjunction with the users prediction box
-    *
-    *    @param {Event} e       The DOM event we want to freeze
-    **/
-    freezeEvent: function (e) {
-          if (e.preventDefault) e.preventDefault();
-          e.returnValue = false;
-          e.cancelBubble = true;
-          if (e.stopPropagation) e.stopPropagation();
-          return false;
-    },
-
-    /**  Strips whitespace at the beggining and end of a string and optionaly between
-    *
-    *    @param {String} s       A text that may contain whitespaces
-    *    @param {Boolean} multi  If true, reduces multiple consecutive whitespaces to one
-    **/
-    normalizeWhiteSpace: function (s, multi) {
-
-        s = s.replace(/(^\s*)|(\s*$)/gi,"");
-        s = s.replace(/\n /,"\n");
-
-        var trimMulti=true
-        if (arguments.length>1)
-            trimMulti=multi
-        if (trimMulti==true)
-            s = s.replace(/[ ]{2,}/gi," ");
-        return s;
-    },
-
-    /**  Searches for urls and hashtags in text and transforms to hyperlinks
-    *    @param {String} text     String containing 0 or more valid links embedded with any other text
-    **/
-    formatText: function (text){
-        if (text) {
-
-            // Format hyperlinks
-            text = text.replace(
-                /((https?\:\/\/)|(www\.))(\S+)(\w{2,4})(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/gi,
-                function(url){
-                    var full_url = url;
-                    if (!full_url.match('^https?:\/\/')) {
-                        full_url = 'http://' + full_url;
-                    }
-                    return '<a href="' + full_url + '">' + url + '</a>';
-                }
-            );
-
-            // Format hashtags links
-            text = text.replace(
-                /(\s|^)#{1}(\w+)/gi,
-                function(){
-                    var pre = arguments[1]
-                    var tag = arguments[2]
-                    return '<a class="maxui-hashtag" href="#" value="'+tag+'">'+pre+'#'+tag+'</a>';
-                }
-            );
-
-            // Format line breaks
-            text = text.replace(/\r?\n/gi, '<br/>')
-
-        }
-        return text;
-    },
-
-    /**  Identifies cors funcionalities and returns a boolean
-         indicating wheter the browser is or isn't CORS capable
-    **/
-    isCORSCapable: function() {
-        var xhrObject = new XMLHttpRequest();
-            //check if the XHR tobject has CORS functionalities
-            if (xhrObject.withCredentials!=undefined){
-                return true;
-              }
-            else {
-                return false;
-              }
-    },
-
-    /**  Removes elements from array by value
-    **/
-    removeValueFrom: function(arr){
-        var what, a= arguments, L= a.length, ax;
-        while(L> 1 && arr.length){
-            what= a[--L];
-            while((ax= arr.indexOf(what))!= -1){
-                arr.splice(ax, 1);
-            }
-        }
-        return arr;
-    },
-
-    /**  Returns the numner of milliseconds since epoch
-    **/
-    timestamp: function() {
-        var date = new Date()
-        return date / 1
-    },
-
-
-    /**  Returns an human readable date from a timestamp in rfc3339 format (cross-browser)
-    *    @param {String} timestamp    A date represented as a string in rfc3339 format '2012-02-09T13:06:43Z'
-    **/
-    formatDate: function(timestamp, lang) {
-        var today = new Date()
-        var thisdate = new Date()
-        var match = timestamp.match(
-          "^([-+]?)(\\d{4,})(?:-?(\\d{2})(?:-?(\\d{2})" +
-          "(?:[Tt ](\\d{2})(?::?(\\d{2})(?::?(\\d{2})(?:\\.(\\d{1,3})(?:\\d+)?)?)?)?" +
-          "(?:[Zz]|(?:([-+])(\\d{2})(?::?(\\d{2}))?)?)?)?)?)?$");
-        if (match) {
-            for (var ints = [2, 3, 4, 5, 6, 7, 8, 10, 11], i = ints.length - 1; i >= 0; --i)
-                match[ints[i]] = (typeof match[ints[i]] != "undefined" && match[ints[i]].length > 0) ? parseInt(match[ints[i]], 10) : 0;
-
-            if (match[1] == '-') // BC/AD
-                match[2] *= -1;
-
-            var ms = Date.UTC(
-               match[2], // Y
-               match[3] - 1, // M
-               match[4], // D
-               match[5], // h
-               match[6], // m
-               match[7], // s
-               match[8] // ms
-              );
-
-            if (typeof match[9] != "undefined" && match[9].length > 0) // offset
-                ms += (match[9] == '+' ? -1 : 1) * (match[10]*3600*1000 + match[11]*60*1000); // oh om
-            if (match[2] >= 0 && match[2] <= 99) // 1-99 AD
-                ms -= 59958144000000;
-
-            thisdate.setTime(ms);
-            if ((today.getTime() - ms ) < 259200000) {
-                formatted = jQuery.easydate.format_date(thisdate, lang)
-            } else {
-                if (lang == 'en') {
-                  formatted = '{0} {1}'.format(match[4], settings.literals.months[match[3]-1])
-                } else if (lang == 'es') {
-                  formatted = '{0} de {1}'.format(match[4], settings.literals.months[match[3]-1])
-                } else if (lang == 'ca') {
-                  prefix = 'de '
-                  if (match[3] == 4 || match[3] == 8 || match[3] == 10 ) {
-                    prefix = "d'"
-                  }
-                  formatted = '{0} {2}{1}'.format(match[4], settings.literals.months[match[3]-1], prefix)
-                }
-
-                // append year if post is + year old
-                if ((today.getTime() - ms ) > 31536000000) {
-                    formatted += ' ' + match[2]
-                }
-
-            }
-            return formatted
-         }
-         else
-             return null;
-    },
-
-    /**  Returns an utf8 decoded string
-    *    @param {String} str_data    an utf-8 String
-    **/
-    utf8_decode: function(str_data) {
-        // Converts a UTF-8 encoded string to ISO-8859-1
-        //
-        // version: 1109.2015
-        // discuss at: http://phpjs.org/functions/utf8_decode
-        // +   original by: Webtoolkit.info (http://www.webtoolkit.info/)
-        // +      input by: Aman Gupta
-        // +   improved by: Kevin van Zonneveld (http://kevin.vanzonneveld.net)
-        // +   improved by: Norman "zEh" Fuchs
-        // +   bugfixed by: hitwork
-        // +   bugfixed by: Onno Marsman
-        // +      input by: Brett Zamir (http://brett-zamir.me)
-        // +   bugfixed by: Kevin van Zonneveld (http://kevin.vanzonneveld.net)
-        // *     example 1: utf8_decode('Kevin van Zonneveld');
-        // *     returns 1: 'Kevin van Zonneveld'
-        var tmp_arr = [],
-            i = 0,
-            ac = 0,
-            c1 = 0,
-            c2 = 0,
-            c3 = 0;
-
-        str_data += '';
-
-        while (i < str_data.length) {
-            c1 = str_data.charCodeAt(i);
-            if (c1 < 128) {
-                tmp_arr[ac++] = String.fromCharCode(c1);
-                i++;
-            } else if (c1 > 191 && c1 < 224) {
-                c2 = str_data.charCodeAt(i + 1);
-                tmp_arr[ac++] = String.fromCharCode(((c1 & 31) << 6) | (c2 & 63));
-                i += 2;
-            } else {
-                c2 = str_data.charCodeAt(i + 1);
-                c3 = str_data.charCodeAt(i + 2);
-                tmp_arr[ac++] = String.fromCharCode(((c1 & 15) << 12) | ((c2 & 63) << 6) | (c3 & 63));
-                i += 3;
-            }
-        }
-
-        return tmp_arr.join('');
-    },
-
-  sha1: function(msg) {
-
-          function rotate_left(n,s) {
-            var t4 = ( n<<s ) | (n>>>(32-s));
-            return t4;
-          };
-
-          function lsb_hex(val) {
-            var str="";
-            var i;
-            var vh;
-            var vl;
-
-            for( i=0; i<=6; i+=2 ) {
-              vh = (val>>>(i*4+4))&0x0f;
-              vl = (val>>>(i*4))&0x0f;
-              str += vh.toString(16) + vl.toString(16);
-            }
-            return str;
-          };
-
-          function cvt_hex(val) {
-            var str="";
-            var i;
-            var v;
-
-            for( i=7; i>=0; i-- ) {
-              v = (val>>>(i*4))&0x0f;
-              str += v.toString(16);
-            }
-            return str;
-          };
-
-
-          function Utf8Encode(string) {
-            string = string.replace(/\r\n/g,"\n");
-            var utftext = "";
-
-            for (var n = 0; n < string.length; n++) {
-
-              var c = string.charCodeAt(n);
-
-              if (c < 128) {
-                utftext += String.fromCharCode(c);
-              }
-              else if((c > 127) && (c < 2048)) {
-                utftext += String.fromCharCode((c >> 6) | 192);
-                utftext += String.fromCharCode((c & 63) | 128);
-              }
-              else {
-                utftext += String.fromCharCode((c >> 12) | 224);
-                utftext += String.fromCharCode(((c >> 6) & 63) | 128);
-                utftext += String.fromCharCode((c & 63) | 128);
-              }
-
-            }
-
-            return utftext;
-          };
-
-      var blockstart;
-      var i, j;
-      var W = new Array(80);
-      var H0 = 0x67452301;
-      var H1 = 0xEFCDAB89;
-      var H2 = 0x98BADCFE;
-      var H3 = 0x10325476;
-      var H4 = 0xC3D2E1F0;
-      var A, B, C, D, E;
-      var temp;
-
-      msg = Utf8Encode(msg);
-
-      var msg_len = msg.length;
-
-      var word_array = new Array();
-      for( i=0; i<msg_len-3; i+=4 ) {
-        j = msg.charCodeAt(i)<<24 | msg.charCodeAt(i+1)<<16 |
-        msg.charCodeAt(i+2)<<8 | msg.charCodeAt(i+3);
-        word_array.push( j );
-      }
-
-      switch( msg_len % 4 ) {
-        case 0:
-          i = 0x080000000;
-        break;
-        case 1:
-          i = msg.charCodeAt(msg_len-1)<<24 | 0x0800000;
-        break;
-
-        case 2:
-          i = msg.charCodeAt(msg_len-2)<<24 | msg.charCodeAt(msg_len-1)<<16 | 0x08000;
-        break;
-
-        case 3:
-          i = msg.charCodeAt(msg_len-3)<<24 | msg.charCodeAt(msg_len-2)<<16 | msg.charCodeAt(msg_len-1)<<8  | 0x80;
-        break;
-      }
-
-      word_array.push( i );
-
-      while( (word_array.length % 16) != 14 ) word_array.push( 0 );
-
-      word_array.push( msg_len>>>29 );
-      word_array.push( (msg_len<<3)&0x0ffffffff );
-
-
-      for ( blockstart=0; blockstart<word_array.length; blockstart+=16 ) {
-
-        for( i=0; i<16; i++ ) W[i] = word_array[blockstart+i];
-        for( i=16; i<=79; i++ ) W[i] = rotate_left(W[i-3] ^ W[i-8] ^ W[i-14] ^ W[i-16], 1);
-
-        A = H0;
-        B = H1;
-        C = H2;
-        D = H3;
-        E = H4;
-
-        for( i= 0; i<=19; i++ ) {
-          temp = (rotate_left(A,5) + ((B&C) | (~B&D)) + E + W[i] + 0x5A827999) & 0x0ffffffff;
-          E = D;
-          D = C;
-          C = rotate_left(B,30);
-          B = A;
-          A = temp;
-        }
-
-        for( i=20; i<=39; i++ ) {
-          temp = (rotate_left(A,5) + (B ^ C ^ D) + E + W[i] + 0x6ED9EBA1) & 0x0ffffffff;
-          E = D;
-          D = C;
-          C = rotate_left(B,30);
-          B = A;
-          A = temp;
-        }
-
-        for( i=40; i<=59; i++ ) {
-          temp = (rotate_left(A,5) + ((B&C) | (B&D) | (C&D)) + E + W[i] + 0x8F1BBCDC) & 0x0ffffffff;
-          E = D;
-          D = C;
-          C = rotate_left(B,30);
-          B = A;
-          A = temp;
-        }
-
-        for( i=60; i<=79; i++ ) {
-          temp = (rotate_left(A,5) + (B ^ C ^ D) + E + W[i] + 0xCA62C1D6) & 0x0ffffffff;
-          E = D;
-          D = C;
-          C = rotate_left(B,30);
-          B = A;
-          A = temp;
-        }
-
-        H0 = (H0 + A) & 0x0ffffffff;
-        H1 = (H1 + B) & 0x0ffffffff;
-        H2 = (H2 + C) & 0x0ffffffff;
-        H3 = (H3 + D) & 0x0ffffffff;
-        H4 = (H4 + E) & 0x0ffffffff;
-
-      }
-
-      var temp = cvt_hex(H0) + cvt_hex(H1) + cvt_hex(H2) + cvt_hex(H3) + cvt_hex(H4);
-
-      return temp.toLowerCase();
-
-    }
-
-  }
-
-}
-
-
-;
-
-if (!Object.keys) {
-    Object.keys = function (obj) {
-        var keys = [],
-            k;
-        for (k in obj) {
-            if (Object.prototype.hasOwnProperty.call(obj, k)) {
-                keys.push(k);
-            }
-        }
-        return keys;
     };
-}
 
-String.prototype.format = function(){
-    var pattern = /\{\d+\}/g;
-    var args = arguments;
-    return this.replace(pattern, function(capture){ return args[capture.match(/\d+/)]; });
-    }
-
-function MaxClient () {
-
-    this.ROUTES = {   users : '/people',
-                      user : '/people/{0}',
-                      avatar : '/people/{0}/avatar',
-                      user_activities : '/people/{0}/activities',
-                      timeline : '/people/{0}/timeline',
-                      user_comments : '/people/{0}/comments',
-                      user_shares : '/people/{0}/shares',
-                      user_likes : '/people/{0}/likes',
-                      follows : '/people/{0}/follows',
-                      follow : '/people/{0}/follows/{1}',
-                      subscriptions : '/people/{0}/subscriptions',
-                      activities : '/contexts/{0}/activities',
-                      activity : '/activities/{0}',
-                      comments : '/activities/{0}/comments',
-                      comment : '/activities/{0}/comments/{1}',
-                      likes : '/activities/{0}/likes',
-                      like : '/activities/{0}/likes/{1}',
-                      favorites : '/activities/{0}/favorites',
-                      favorite : '/activities/{0}/favorites/{1}',
-                      shares : '/activities/{0}/shares',
-                      share : '/activities/{0}/shares/{1}',
-                      conversations : '/conversations',
-                      conversation : '/conversations/{0}',
-                      conversation_owner : '/conversations/{0}/owner',
-                      messages: '/conversations/{0}/messages',
-                      context: '/contexts/{0}'
-
-                   }
+    return templates;
 };
-
-MaxClient.prototype.configure = function(settings) {
-  this.url = settings.server
-	this.mode = settings.mode
-  this.token = settings.token
-  this.actor = {
-            "objectType": "person",
-            "username": settings.username
-        }
-
-};
-
-MaxClient.prototype.POST = function(route, query, callback) {
-    maxclient = this
-    resource_uri = '{0}{1}'.format(this.url, route)
-    // Get method-defined triggers
-    var triggers = {}
-    if (arguments.length>3) triggers = arguments[3]
-
-    if (this.mode=='jquery')
-    {
-           jQuery.ajax( {url: resource_uri,
-             beforeSend: function(xhr) {
-                 xhr.setRequestHeader("X-Oauth-Token", maxclient.token);
-                 xhr.setRequestHeader("X-Oauth-Username", maxclient.actor.username);
-                 xhr.setRequestHeader("X-Oauth-Scope", 'widgetcli');
-             },
-			     type: 'POST',
-			     data: JSON.stringify(query),
-			     async: true,
-			     dataType: 'json'
-			    })
-         .done( function(result) {
-            callback.call(result)
-            if (triggers.done) jQuery(window).trigger(triggers.done, result)
-          })
-         .fail( function(xhr) {
-            jQuery(window).trigger('maxclienterror',xhr)
-            if (triggers.fail) jQuery(window).trigger(triggers.fail, xhr)
-          })
-
-    }
-    else
-    {
-	    var params = {}
-	    params[gadgets.io.RequestParameters.CONTENT_TYPE] = gadgets.io.ContentType.JSON
-	    params[gadgets.io.RequestParameters.METHOD] = gadgets.io.MethodType.POST
-	    params[gadgets.io.RequestParameters.REFRESH_INTERVAL] = 1
-	    params[gadgets.io.RequestParameters.POST_DATA] = JSON.stringify(query)
-
-      var headers = {"X-Oauth-Token": maxclient.token,
-                     "X-Oauth-Username": maxclient.actor.username,
-                     "X-Oauth-Scope": 'widgetcli'}
-      params[gadgets.io.RequestParameters.HEADERS] = headers
-
-	    gadgets.io.makeRequest(
-	                   resource_uri,
-	                   function(result) { callback.call(result.data) },
-	                   params
-	                    )
-
-
-    }
-    return true
-};
-
-MaxClient.prototype.PUT = function(route, query, callback) {
-    maxclient = this
-    resource_uri = '{0}{1}'.format(this.url, route)
-    // Get method-defined triggers
-    var triggers = {}
-    if (arguments.length>3) triggers = arguments[3]
-
-    if (this.mode=='jquery')
-    {
-           jQuery.ajax( {url: resource_uri,
-             beforeSend: function(xhr) {
-                 xhr.setRequestHeader("X-Oauth-Token", maxclient.token);
-                 xhr.setRequestHeader("X-Oauth-Username", maxclient.actor.username);
-                 xhr.setRequestHeader("X-Oauth-Scope", 'widgetcli');
-                 xhr.setRequestHeader("X-HTTP-Method-Override", 'PUT');
-             },
-           type: 'POST',
-           data: JSON.stringify(query),
-           async: true,
-           dataType: 'json'
-          })
-         .done( function(result) {
-            callback.call(result)
-            if (triggers.done) jQuery(window).trigger(triggers.done, result)
-          })
-         .fail( function(xhr) {
-            jQuery(window).trigger('maxclienterror',xhr)
-            if (triggers.fail) jQuery(window).trigger(triggers.fail, xhr)
-          })
-
-    }
-    else
-    {
-      var params = {}
-      params[gadgets.io.RequestParameters.CONTENT_TYPE] = gadgets.io.ContentType.JSON
-      params[gadgets.io.RequestParameters.METHOD] = gadgets.io.MethodType.POST
-      params[gadgets.io.RequestParameters.REFRESH_INTERVAL] = 1
-      params[gadgets.io.RequestParameters.POST_DATA] = JSON.stringify(query)
-
-      var headers = {"X-Oauth-Token": maxclient.token,
-                     "X-Oauth-Username": maxclient.actor.username,
-                     "X-Oauth-Scope": 'widgetcli'}
-      params[gadgets.io.RequestParameters.HEADERS] = headers
-
-      gadgets.io.makeRequest(
-                     resource_uri,
-                     function(result) { callback.call(result.data) },
-                     params
-                      )
-
-
-    }
-    return true
-};
-
-MaxClient.prototype.DELETE = function(route, query, callback) {
-    maxclient = this
-    resource_uri = '{0}{1}'.format(this.url, route)
-    // Get method-defined triggers
-    var triggers = {}
-    if (arguments.length>2) triggers = arguments[2]
-
-    if (this.mode=='jquery')
-    {
-           jQuery.ajax( {url: resource_uri,
-             beforeSend: function(xhr) {
-                 xhr.setRequestHeader("X-Oauth-Token", maxclient.token);
-                 xhr.setRequestHeader("X-Oauth-Username", maxclient.actor.username);
-                 xhr.setRequestHeader("X-Oauth-Scope", 'widgetcli');
-                 xhr.setRequestHeader("X-HTTP-Method-Override", 'DELETE');
-             },
-           type: 'POST',
-           data: JSON.stringify(query),
-           async: true,
-           dataType: 'json'
-          })
-         .done( function(result) {
-            callback.call(result)
-            if (triggers.done) jQuery(window).trigger(triggers.done, result)
-          })
-         .fail( function(xhr) {
-            jQuery(window).trigger('maxclienterror',xhr)
-            if (triggers.fail) jQuery(window).trigger(triggers.fail, xhr)
-          })
-
-    }
-    else
-    {
-      var params = {}
-      params[gadgets.io.RequestParameters.CONTENT_TYPE] = gadgets.io.ContentType.JSON
-      params[gadgets.io.RequestParameters.METHOD] = gadgets.io.MethodType.POST
-      params[gadgets.io.RequestParameters.REFRESH_INTERVAL] = 1
-      params[gadgets.io.RequestParameters.POST_DATA] = JSON.stringify(query)
-
-      var headers = {"X-Oauth-Token": maxclient.token,
-                     "X-Oauth-Username": maxclient.actor.username,
-                     "X-Oauth-Scope": 'widgetcli'}
-      params[gadgets.io.RequestParameters.HEADERS] = headers
-
-      gadgets.io.makeRequest(
-                     resource_uri,
-                     function(result) { callback.call(result.data) },
-                     params
-                      )
-
-
-    }
-    return true
-};
-MaxClient.prototype.GET = function(route, query, callback) {
-    maxclient = this
-    resource_uri = '{0}{1}'.format(this.url, route)
-
-    // Get method-defined triggers
-    var triggers = {}
-    if (arguments.length>3) triggers = arguments[3]
-
-    if (Object.keys(query).length >0)
-    {
-        resource_uri+='?'+jQuery.param(query, true)
-    }
-    if (this.mode=='jquery')
-    {
-	    jQuery.ajax( {url: resource_uri,
-             beforeSend: function(xhr) {
-                 xhr.setRequestHeader("X-Oauth-Token", maxclient.token);
-                 xhr.setRequestHeader("X-Oauth-Username", maxclient.actor.username);
-                 xhr.setRequestHeader("X-Oauth-Scope", 'widgetcli');
-             },
-			     type: 'GET',
-			     async: true,
-			     dataType: 'json'
-			    })
-         .done( function(result) {
-            if (triggers.done) jQuery(window).trigger(triggers.done)
-            callback.call(result)
-          })
-         .fail( function(xhr) {
-            jQuery(window).trigger('maxclienterror',xhr)
-            if (triggers.fail) jQuery(window).trigger(triggers.fail)
-          })
-
-	}
-	else
-	{
-	    var params = {}
-	    params[gadgets.io.RequestParameters.CONTENT_TYPE] = gadgets.io.ContentType.JSON
-	    params[gadgets.io.RequestParameters.METHOD] = gadgets.io.MethodType.GET
-	    params[gadgets.io.RequestParameters.REFRESH_INTERVAL] = 1
-
-      var headers = {"X-Oauth-Token": maxclient.token,
-                     "X-Oauth-Username": maxclient.actor.username,
-                     "X-Oauth-Scope": 'widgetcli'}
-      params[gadgets.io.RequestParameters.HEADERS] = headers
-
-	    gadgets.io.makeRequest(
-	                   resource_uri,
-	                   function(result) { callback.call(result.data) },
-	                   params
-	                    )
-
-     }
-   //return {json:ajax_result,statuscode:xhr['statusText']}
-   return true
-	}
-
-MaxClient.prototype.getUserTimeline = function(username, callback) {
-	var route = this.ROUTES['timeline'].format(username);
-  if (arguments.length>2)
-      var query=arguments[2]
-  else
-      var query={}
-  this.GET(route,query,callback)
-};
-
-MaxClient.prototype.getUserData = function(username, callback) {
-    var route = this.ROUTES['user'].format(username);
-    var query = {}
-    this.GET(route,query,callback)
-};
-
-MaxClient.prototype.getUsersList = function(userquery, callback) {
-    var route = this.ROUTES['users']
-    var query = {username:userquery}
-    this.GET(route,query,callback)
-};
-
-MaxClient.prototype.getContext = function(chash, callback) {
-    var route = this.ROUTES['context'].format(chash)
-    var query = {}
-    this.GET(route,query,callback)
-};
-
-MaxClient.prototype.getActivities = function(options, callback) {
-  var route = this.ROUTES['activities'].format(options.context);
-  var query = {}
-  if (arguments.length>2)
-      query=arguments[2]
-  if (options.tags)
-      if (options.tags.length>0)
-          query['context_tags'] = options.tags
-  this.GET(route,query,callback)
-};
-
-MaxClient.prototype.getConversation = function(chash, callback) {
-    var route = this.ROUTES['conversation'].format(chash)
-    var query = {}
-    this.GET(route,query,callback)
-};
-
-MaxClient.prototype.modifyConversation = function(chash, displayName, callback) {
-
-    var query = {
-        "displayName": displayName,
-    }
-
-    route = this.ROUTES['conversation'].format(chash);
-    this.PUT(route, query, callback)
-
-};
-
-MaxClient.prototype.transferConversationOwnership = function(chash, username, callback) {
-
-    var query = {
-        "actor": {
-          "username": username
-        },
-    }
-
-    route = this.ROUTES['conversation_owner'].format(chash);
-    this.PUT(route, query, callback)
-
-};
-
-MaxClient.prototype.getConversationsForUser = function(username, callback) {
-  var route = this.ROUTES['conversations'];
-  query={}
-  this.GET(route,query,callback)
-};
-
-MaxClient.prototype.getMessagesForConversation = function(hash, callback) {
-  var route = this.ROUTES['messages'].format(hash);
-  query={}
-  this.GET(route,query,callback)
-};
-
-MaxClient.prototype.getCommentsForActivity = function(activityid, callback) {
-  route = this.ROUTES['comments'].format(activityid);
-  var query = {}
-  this.GET(route,query,callback)
-};
-
-
-MaxClient.prototype.addComment = function(comment, activity, callback) {
-
-    var query = {
-        "actor": {},
-        "object": {
-            "objectType": "comment",
-            "content": ""
-            }
-        }
-
-    query.actor = this.actor
-    query.object.content = comment
-
-	  route = this.ROUTES['comments'].format(activity);
-    this.POST(route,query,callback)
-
-};
-
-
-MaxClient.prototype.addActivity = function(text,contexts,callback) {
-    query = {
-        "object": {
-            "objectType": "note",
-            "content": ""
-            }
-        }
-     if (contexts.length>0)
-        { query.contexts = []
-          for (ct=0;ct<contexts.length;ct++)
-          {
-            query.contexts.push({'objectType':'context','url':contexts[ct]})
-          }
-        }
-
-    query.object.content = text
-
-    //We have a generator
-    if (arguments.length>3)
-        {
-          query.generator = arguments[3]
-        }
-
-  	route = this.ROUTES['user_activities'].format(this.actor.username);
-    trigger = {'done': 'maxui-posted-activity',
-               'fail': 'maxui-failed-activity'}
-    this.POST(route,query,callback, trigger)
-};
-
-MaxClient.prototype.removeActivity = function(activity_id,callback) {
-    route = this.ROUTES['activity'].format(activity_id);
-    this.DELETE(route, {}, callback)
-}
-
-MaxClient.prototype.removeActivityComment = function(activity_id,comment_id,callback) {
-    route = this.ROUTES['comment'].format(activity_id, comment_id);
-    this.DELETE(route, {}, callback)
-}
-
-MaxClient.prototype.addMessageAndConversation = function(params,callback) {
-    query = {
-        "object": {
-            "objectType": "note",
-            "content": params.message
-            },
-        "contexts": [ { 'objectType': 'conversation',
-                        'participants': params.participants
-                      }
-                    ]
-        }
-
-    if (params.displayName) {
-      query.contexts[0].displayName = params.displayName
-    }
-
-
-    route = this.ROUTES['conversations']
-    this.POST(route,query,callback)
-};
-
-MaxClient.prototype.addMessage = function(text,chash,callback) {
-    query = {
-        "object": {
-            "objectType": "note",
-            "content": ""
-            }
-        }
-
-    query.object.content = text
-
-    route = this.ROUTES['messages'].format(chash)
-    this.POST(route,query,callback)
-};
-
-MaxClient.prototype.follow = function(username, callback ) {
-    query = {
-        "object": {
-            "objectType": "person",
-            "username": ""
-            }
-        }
-
-    query.object.username = username
-
-	route = this.ROUTES['follow'].format(this.actor.username,username);
-    resp = this.POST(route,query, callback)
-};
-
-MaxClient.prototype.favoriteActivity = function(activityid, callback ) {
-  query = {}
-
-  route = this.ROUTES['favorites'].format(activityid);
-  resp = this.POST(route, query, callback)
-};
-
-MaxClient.prototype.unfavoriteActivity = function(activityid, callback ) {
-  query = {}
-  route = this.ROUTES['favorite'].format(activityid, this.actor.username);
-  resp = this.DELETE(route, query, callback)
-};
-
-MaxClient.prototype.likeActivity = function(activityid, callback ) {
-  query = {}
-
-  route = this.ROUTES['likes'].format(activityid);
-  resp = this.POST(route, query, callback)
-};
-
-MaxClient.prototype.unlikeActivity = function(activityid, callback ) {
-  query = {}
-  route = this.ROUTES['like'].format(activityid, this.actor.username);
-  resp = this.DELETE(route, query, callback)
-};
-
 
 ;
+
+var max = max || {};
 
 (function(jq) {
-    /**
-    *    MaxUI plugin definition
-    *    @param {Object} options    Object containing overrides for default values
-    **/
-    jq.fn.maxUI = function(options) {
 
-        // Keep a reference of the context object
-        var maxui = this
-        maxui.templates = max.templates()
-        maxui.utils = max.utils()
+    /** MaxMessaging
+    *
+    *
+    */
 
-        var defaults = {'maxRequestsAPI' : 'jquery',
-                        'maxServerURL' : 'https://max.upc.edu',
-                        'readContext': undefined,
-                        'writeContexts' : [],
-                        'activitySource': 'timeline',
-                        'enableAlerts': false,
-                        'UISection': 'timeline',
-                        'disableTimeline': false,
-                        'disableConversations': false,
-                        'conversationsSection': 'conversations',
-                        'currentConversationSection': 'conversations',
-                        'activitySortOrder': 'activities',
-                        'transports': undefined,
-                        'domain': undefined,
-                        'maximumConversations': 20,
-                        'contextTagsFilter': []
-                        }
+    function MaxMessaging(maxui) {
+        var self = this;
+        self.maxui = maxui;
+        self.active = false;
+        self.vhost = '/';
 
-        maxui.scrollbar = {
-            dragging: false,
-            width: 10,
-            handle: {
-                height: 20
-            }
+        // Collect info from seettings
+        self.debug = maxui.settings.enableAlerts;
+        self.username = maxui.settings.username;
+        self.token = maxui.settings.oAuthToken;
+        self.stompServer = maxui.settings.maxTalkURL;
+
+        // Construct login merging username with domain (if any)
+        self.domain = self.domainFromMaxServer(maxui.settings.maxServerURL);
+        self.login = "";
+        if (self.domain) {
+            self.login += self.domain + ':';
         }
+        self.login += maxui.settings.username;
 
-        // Object representing an overlay wrapper
+        // Start socket
+        self.ws = new SockJS(self.stompServer);
+        self.bindings = [];
 
-        function MaxOverlay() {
-            this.title= 'Overlay Title',
-            this.content= '',
-            this.el='#maxui-overlay-panel',
-            this.overlay_show_class='.maxui-overlay'
+        self.specification = {
+            user: {
+                id: 'u',
+                type: 'string'
+            },
+            action: {
+                id: 'a',
+                type: 'char',
+                values: {
+                    'add': {id: 'a'},
+                    'delete': {id: 'd'},
+                    'modify': {id: 'm'}
+                }
+            },
+            object: {
+                id: 'o',
+                type: 'char',
+                values: {
+                    'message': {id: 'm'},
+                    'conversation': {id: 'c'}
+                }
+            },
+            data: {
+                id: 'd',
+                type: 'object'
+            },
+            source: {
+                id: 's',
+                type: 'char',
+                values: {
+                    max: {id: 'm'},
+                    widget: {id: 'w'},
+                    ios: {id: 'i'},
+                    android: {id: 'a'}
+                }
+            },
+            domain: {
+                id: 'i',
+                type: 'string'
+            },
+            version: {
+                id: 'v',
+                type: 'string'
+            },
+            published: {
+                id: 'p',
+                type: 'date'
+            },
         };
-        MaxOverlay.prototype.$el = function() {
-            return jq(this.el)
-        },
 
-        MaxOverlay.prototype.setTitle = function(title) {
-            this.$el().find('#maxui-overlay-title').text(title)
-        },
-        MaxOverlay.prototype.setContent = function(content) {
-            this.$el().find('#maxui-overlay-content').html(content)
-        },
-        MaxOverlay.prototype.configure = function(overlay) {
-            this.setTitle(overlay.title)
-            this.setContent(overlay.content)
-            overlay.bind(this)
-        },
-        MaxOverlay.prototype.show = function(overlay) {
-            maxoverlay = this
-            overlay.load(function(data) {
-                maxoverlay.configure(data)
-            })
+        // invert specification to acces by packed value
+        self._specification = {};
+        _.each(self.specification, function(svalue, sname, slist) {
+            var spec = _.clone(svalue);
+            if (_.has(spec, 'values')) {
+                spec.values = {};
+                _.each(svalue.values, function(vvalue, vname, vlist) {
+                    spec.values[vvalue.id] = _.clone(vvalue);
+                    spec.values[vvalue.id].name = vname;
+                    delete spec.values[vvalue.id].id;
+                });
+            }
+            spec.name = sname;
+            delete spec.id;
+            self._specification[svalue.id] = spec;
+        });
+    }
 
-            jq(this.overlay_show_class).show()
-            this.$el().animate({opacity: 1}, 200)
-
-        },
-        MaxOverlay.prototype.hide = function() {
-            overlay = this
-            this.$el().animate({opacity: 0}, 200, function(event) {
-                jq(overlay.overlay_show_class).hide()
-            })
-        }
-
-        maxui.overlay = new MaxOverlay()
-
-        // extend defaults with user-defined settings
-        maxui.settings = jq.extend(defaults,options)
-
-        // save the undotted username for stomp messages
-        maxui.settings.stomp_username = maxui.settings.username.replace('.','_')
-
-        // Check timeline/activities consistency
-        if (maxui.settings.UISection == 'timeline' && maxui.settings.activitySource == 'timeline' && maxui.settings.readContext)
-        {
-            maxui.settings.readContext = undefined
-            maxui.settings.writeContexts = []
-        }
-
+    MaxMessaging.prototype.domainFromMaxServer = function(server) {
+        var self = this;
         // Extract domain out of maxserver url, if present
         // Matches several cases, but always assumes the domain is the last
         // part of the path. SO, urls with subpaths, always will be seen as a
@@ -5669,1017 +7668,1809 @@ MaxClient.prototype.unlikeActivity = function(activityid, callback ) {
         // http://max.upcnet.es/demo/  --> domain "demo"
         // http://max.upcnet.es/subpath/demo/  --> domain "demo"
         // http://max.upcnet.es/subpath/demo  --> domain "demo"
-
         server_regex = regex = /(?:^https?:\/\/)*(.*?)(?:\/([^\/]*)+)?\/?$/g;
-        groups = regex.exec(maxui.settings.maxServerURL)
+        groups = regex.exec(server);
         if (groups[2]) {
-            maxui.settings.domain = groups[2]
+            return groups[2];
         }
 
+    };
 
+    MaxMessaging.prototype.start = function() {
+        var self = this;
+        self.connect();
+
+        // Retry connection if initial failed
+        interval = setInterval(function(event) {
+            if (!self.active) {
+                console.log('connection timeout, retrying');
+                self.ws.close();
+                self.ws = new SockJS(maxui.settings.maxTalkURL);
+                self.connect();
+            } else {
+                clearInterval(interval);
+            }
+        }, 2000);
+    };
+
+    MaxMessaging.prototype.bind = function(params, callback) {
+        var self = this;
+        self.bindings.push({'key': self.pack(params), 'callback': callback});
+    };
+
+    MaxMessaging.prototype.on_message = function(message, destination) {
+        var self = this;
+        var matched_bindings = _.filter(self.bindings, function(binding) {
+            // compare the stored binding key with a normalized key from message
+            var bind_key = _.pick(message, _.keys(binding.key));
+            if (_.isEqual(binding.key, bind_key)) {
+                    return binding;
+                    }
+        });
+        if (self.debug && _.isEmpty(matched_bindings)) {
+            console.error('No defined binding found for this message');
+        } else {
+            _.each(matched_bindings, function(binding, index, list) {
+                var unpacked = self.unpack(message);
+                unpacked.destination = destination;
+                binding.callback(unpacked);
+            });
+        }
+    };
+
+    MaxMessaging.prototype.connect = function() {
+        var self = this;
+        self.stomp = Stomp.over(self.ws);
+        self.stomp.heartbeat.outgoing = 0;
+        self.stomp.heartbeat.incoming = 0;
+
+        if (self.debug) self.stomp.debug = function(message) {
+            console.log(message);
+        };
+
+        self.stomp.connect(
+            self.username,
+            self.token,
+            // Define stomp stomp ON CONNECT callback
+            function(x) {
+                self.stomp.subscribe('/exchange/{0}.subscribe'.format(self.maxui.settings.username), function(stomp_message) {
+                   var data = JSON.parse(stomp_message.body);
+                   var routing_key = /([^/])+$/.exec(stomp_message.headers.destination)[0];
+                   self.on_message(data, routing_key);
+                });
+                self.active = true;
+            },
+            // Define stomp stomp ON ERROR callback
+            function(error) {
+                console.log(error.body);
+            },
+            self.vhost);
+    };
+
+    MaxMessaging.prototype.pack = function(message) {
+        var self = this;
+        var packed = {};
+        var packed_value;
+        _.each(message, function(value, key, list){
+            var spec = self.specification[key];
+            if (_.isUndefined(spec)) {
+                // Raise ??
+            } else {
+                packed_value = undefined;
+                if (_.has(spec, 'values')) {
+                    if (_.has(spec.values, value)) {
+                        packed_value = spec.values[value].id;
+                    }
+                } else {
+                    packed_value = value;
+                }
+                if (!_.isUndefined(packed_value)) {
+                    packed[spec.id] = packed_value;
+                }
+            }
+        });
+        return packed;
+    };
+
+    MaxMessaging.prototype.unpack = function(message) {
+        var self = this;
+        var unpacked = {};
+        var unpacked_value;
+        _.each(message, function(value, key, list){
+            var spec = self._specification[key];
+            if (_.isUndefined(spec)) {
+                // Raise ??
+            } else {
+                unpacked_value = undefined;
+                if (_.has(spec, 'values')) {
+                    if (_.has(spec.values, value)) {
+                        unpacked_value = spec.values[value].name;
+                    }
+                } else {
+                    unpacked_value = value;
+                }
+                if (!_.isUndefined(unpacked_value)) {
+                    unpacked[spec.name] = unpacked_value;
+                }
+            }
+        });
+        return unpacked;
+    };
+
+    MaxMessaging.prototype.prepare = function(params) {
+        var self = this;
+        var base = {
+            'source': 'widget',
+            'version': maxui.version,
+            'user': self.username,
+            'domain': self.domain,
+            'published': maxui.utils.rfc3339(maxui.utils.now()),
+        };
+        // Overwrite any key-value pair in params already defined in base
+        // Trim any key from params not in specification
+        return _.extend(_.pick(params, _.keys(self.specification)), base);
+    };
+
+    MaxMessaging.prototype.send = function(message, routing_key) {
+        var self = this;
+        var message_unpacked = self.prepare(message);
+        result = self.stomp.send('/exchange/{0}.publish/{1}'.format(self.username, routing_key), {}, JSON.stringify(self.pack(message_unpacked)));
+        return message_unpacked;
+    };
+
+
+max.MaxMessaging = MaxMessaging;
+
+})(jQuery);
+
+
+;
+
+var max = max || {};
+/**
+ * @fileoverview Provides literals in several languages
+ */
+max.literals = function(language) {
+    var maxui = {};
+    maxui.en = {
+        'cancel': 'Cancel',
+        'delete': 'Delete',
+        'months': ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
+        'new_activity_text': 'Write something...',
+        'activity': 'activity',
+        'conversations': 'chats',
+        'conversations_list': 'chats list',
+        'conversations_info_title': 'Chat information',
+        'conversations_info_participants': 'Participants',
+        'conversations_info_owner': 'owner',
+        'conversations_info_add': 'Add participant...',
+        'conversations_info_created': 'Created',
+        'conversations_info_leave': 'Leave chat',
+        'conversations_info_delete': 'Delete chat',
+        'conversations_info_delete_warning': 'Warning!',
+        'conversations_info_delete_help': 'If you delete the chat, the participants will not be able to see the messages anymore. To avoid this, cancel and transfer the ownership to someone else.',
+        'conversations_info_kick_message_1': 'Click to kick',
+        'conversations_info_kick_message_2': 'out of this chat',
+        'conversations_info_transfer_message_1': 'Click to make',
+        'conversations_info_transfer_message_2': 'the owner of this chat',
+        'participants': 'Talk to',
+        'chats_load_older': 'Load older',
+        'conversation_name': 'Chat name',
+        'message': 'Message',
+        'no_chats': 'No chats already',
+        'no_match_found': 'No match found',
+        'new_conversation_text': 'Add participants and send a message to start a chat',
+        'new_activity_post': "Post activity",
+        'toggle_comments': "comments",
+        'new_comment_text': "Comment something...",
+        'new_comment_post': "Post comment",
+        'load_more': "Load more",
+        'context_published_in': "Published in",
+        'generator_via': "via",
+        'search_text': "Search in posts...",
+        'and_more': "and more...",
+        'new_message_post': "Send message",
+        'post_permission_unauthorized': "You''re not authorized to post on this context",
+        'post_permission_not_here': "You're not mentioning @anyone",
+        'post_permission_not_enough_participants': "You have to add participants",
+        'post_permission_missing_displayName': "You have to name the chat",
+        'delete_activity_confirmation': "Are you sure?",
+        'delete_activity_delete': "Delete",
+        'delete_activity_cancel': "Cancel",
+        'delete_activity_icon': "delete",
+        'favorites_filter_hint': 'Filter by favorited activity',
+        'favorites': 'Favorites',
+        'favorite': 'favorite',
+        'unfavorite': 'unfavorite',
+        'like': 'like',
+        'unlike': 'unlike',
+        'recent_activity': "Latest activity",
+        'valued_activity': "Most valued activity",
+        'recent_favorited_activity': "Latest favorites",
+        'valued_favorited_activity': "Most valued favorites"
+    };
+    maxui.es = {
+        'cancel': 'Cancelar',
+        'delete': 'Eliminar',
+        'months': ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'],
+        'new_activity_text': 'Escribe algo...',
+        'activity': 'actividad',
+        'conversations': 'chat',
+        'conversations_list': 'lista de chats',
+        'conversations_info_title': 'Información del chat',
+        'conversations_info_participants': 'Participantes',
+        'conversations_info_owner': 'propietario',
+        'conversations_info_add': 'Añade participante...',
+        'conversations_info_created': 'Creada',
+        'conversations_info_leave': 'Abandonar chat',
+        'conversations_info_delete': 'Borra el chat',
+        'conversations_info_delete_warning': 'Atención!',
+        'conversations_info_delete_help': 'Si eliminas el chat, los participantes dejarán de poder ver los mensajes. Para evitar esto cancela y luego traspasa el chat a otra persona.',
+        'conversations_info_kick_message_1': 'Clica para echar a',
+        'conversations_info_kick_message_2': 'de este chat',
+        'conversations_info_transfer_message_1': 'Clica para dar a ',
+        'conversations_info_transfer_message_2': 'la administración del chat',
+        'participants': 'Chatear con',
+        'chats_load_older': 'Cargar antiguos',
+        'conversation_name': 'Nombre de la chat',
+        'message': 'Mensaje',
+        'no_chats': 'No hay chats',
+        'no_match_found': 'No hay coincidencias',
+        'new_conversation_text': 'Añade participantes y envia el mensaje para iniciar un chat',
+        'new_activity_post': "Publica",
+        'toggle_comments': "comentarios",
+        'new_comment_text': "Comenta algo...",
+        'new_comment_post': "Comenta",
+        'load_more': "Cargar más",
+        'context_published_in': "Publicado en",
+        'generator_via': "via",
+        'search_text': "Busca en las entradas...",
+        'and_more': "i más...",
+        'new_message_post': 'Envia el mensaje',
+        'post_permission_unauthorized': 'No estas autorizado a publicar en este contexto',
+        'post_permission_not_here': "No estas citando a @nadie",
+        'post_permission_not_enough_participants': "Tienes que añadir participantes",
+        'post_permission_missing_displayName': "Tienes que dar un nombre al chat",
+        'delete_activity_confirmation': "Estás seguro?",
+        'delete_activity_delete': "Borrar",
+        'delete_activity_cancel': "Cancelar",
+        'delete_activity_icon': "borrar",
+        'favorites_filter_hint': 'Filtra por actividad favorita',
+        'favorites': 'Favoritos',
+        'favorite': 'favorito',
+        'unfavorite': 'quitar favorito',
+        'like': 'me gusta',
+        'unlike': 'ya no me gusta',
+        'recent_activity': "Últimas actividades",
+        'valued_activity': "Actividades más valoradas",
+        'recent_favorited_activity': "Últimas favoritas",
+        'valued_favorited_activity': "Favoritas más valoradas"
+    };
+    maxui.ca = {
+        'cancel': 'Cancelar',
+        'delete': 'Elimina',
+        'months': ['gener', 'febrer', 'març', 'abril', 'maig', 'juny', 'juliol', 'agost', 'setembre', 'octubre', 'novembre', 'desembre'],
+        'new_activity_text': 'Escriu alguna cosa...',
+        'activity': 'activitat',
+        'conversations': 'xats',
+        'conversations_list': 'llista de xats',
+        'conversations_info_title': 'Informació del xat',
+        'conversations_info_participants': 'Participants',
+        'conversations_info_owner': 'propietari',
+        'conversations_info_add': 'Afegeix participant...',
+        'conversations_info_created': 'Creada',
+        'conversations_info_leave': 'Marxar del xat',
+        'conversations_info_delete': 'Esborra el xat',
+        'conversations_info_delete_warning': 'Alerta!',
+        'conversations_info_delete_help': 'Si elimines el xat, la resta de participants deixaran de veure els missatges. Per evitar-ho, cancela i traspassa el xat a algú altre.',
+        'conversations_info_kick_message_1': 'Clica per fer fora a ',
+        'conversations_info_kick_message_2': "d'aquest xat",
+        'conversations_info_transfer_message_1': 'Clica per fer a',
+        'conversations_info_transfer_message_2': "l'administrador d'aquest xat",
+        'participants': 'Xateja amb',
+        'chats_load_older': 'Carregar antics',
+        'conversation_name': 'Nom del xat',
+        'message': 'Missatge',
+        'no_chats': 'No hi ha xats',
+        'no_match_found': "No s'han trobat coincidències",
+        'new_conversation_text': 'Afegeix participants i envia el missatge per iniciar un xat',
+        'new_activity_post': "Publica",
+        'toggle_comments': "comentaris",
+        'new_comment_text': "Comenta alguna cosa...",
+        'new_comment_post': "Comenta",
+        'load_more': "Carrega'n més",
+        'context_published_in': "Publicat a",
+        'generator_via': "via",
+        'search_text': "Cerca a les entrades...",
+        'and_more': "i més...",
+        'new_message_post': 'Envia el missatge',
+        'post_permission_unauthorized': 'No estàs autoritzat a publicar en aquest contexte',
+        'post_permission_not_here': "No estas citant a @ningú",
+        'post_permission_not_enough_participants': "Has d'afegir participants",
+        'post_permission_missing_displayName': "Tens que posar nom al xat",
+        'delete_activity_confirmation': "Estàs segur?",
+        'delete_activity_delete': "Esborra",
+        'delete_activity_cancel': "No ho toquis!",
+        'delete_activity_icon': "esborra",
+        'favorites_filter_hint': 'Filtra per activitat favorita',
+        'favorites': 'Favorits',
+        'favorite': 'favorit',
+        'unfavorite': 'treure favorit',
+        'like': "m'agrada",
+        'unlike': "ja no m'agrada",
+        'recent_activity': "Darreres activitats",
+        'valued_activity': "Activitats més valorades",
+        'recent_favorited_activity': "Darreres favorites",
+        'valued_favorited_activity': "Favorites més valorades"
+    };
+    return maxui[language];
+};
+
+
+;
+
+var max = max || {};
+/**
+ * @fileoverview Provides support functions not directly
+ *               related to UI construction
+ **/
+max.utils = function() {
+    var settings = {};
+    return {
+        setSettings: function(maxui_settings) {
+            settings = maxui_settings;
+        },
+        /**
+         *    Stops propagation of an event, to avoid arrows, esc, enter keys
+         *    bubbling to an input, Used in conjunction with the users prediction box
+         *
+         *    @param {Event} e       The DOM event we want to freeze
+         **/
+        freezeEvent: function(e) {
+            if (e.preventDefault) e.preventDefault();
+            e.returnValue = false;
+            e.cancelBubble = true;
+            if (e.stopPropagation) e.stopPropagation();
+            return false;
+        },
+        /**  Strips whitespace at the beggining and end of a string and optionaly between
+         *
+         *    @param {String} s       A text that may contain whitespaces
+         *    @param {Boolean} multi  If true, reduces multiple consecutive whitespaces to one
+         **/
+        normalizeWhiteSpace: function(s, multi) {
+            s = s.replace(/(^\s*)|(\s*$)/gi, "");
+            s = s.replace(/\n /, "\n");
+            var trimMulti = true;
+            if (arguments.length > 1) trimMulti = multi;
+            if (trimMulti === true) s = s.replace(/[ ]{2,}/gi, " ");
+            return s;
+        },
+        /**  Searches for urls and hashtags in text and transforms to hyperlinks
+         *    @param {String} text     String containing 0 or more valid links embedded with any other text
+         **/
+        formatText: function(text) {
+            if (text) {
+                // Format hyperlinks
+                text = text.replace(/((https?\:\/\/)|(www\.))(\S+)(\w{2,4})(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/gi, function(url) {
+                    var full_url = url;
+                    if (!full_url.match('^https?:\/\/')) {
+                        full_url = 'http://' + full_url;
+                    }
+                    return '<a href="' + full_url + '">' + url + '</a>';
+                });
+                // Format hashtags links
+                text = text.replace(/(\s|^)#{1}(\w+)/gi, function() {
+                    var pre = arguments[1];
+                    var tag = arguments[2];
+                    return '<a class="maxui-hashtag" href="#" value="' + tag + '">' + pre + '#' + tag + '</a>';
+                });
+                // Format line breaks
+                text = text.replace(/\r?\n/gi, '<br/>');
+            }
+            return text;
+        },
+        /**  Identifies cors funcionalities and returns a boolean
+         indicating wheter the browser is or isn't CORS capable
+    **/
+        isCORSCapable: function() {
+            var xhrObject = new XMLHttpRequest();
+            //check if the XHR tobject has CORS functionalities
+            if (xhrObject.withCredentials !== undefined) {
+                return true;
+            } else {
+                return false;
+            }
+        },
+        /**  Removes elements from array by value
+         **/
+        removeValueFrom: function(arr) {
+            var what, a = arguments,
+                L = a.length,
+                ax;
+            while (L > 1 && arr.length) {
+                what = a[--L];
+                while ((ax = arr.indexOf(what)) != -1) {
+                    arr.splice(ax, 1);
+                }
+            }
+            return arr;
+        },
+        /**  Returns the numner of milliseconds since epoch
+         **/
+        timestamp: function() {
+            var date = new Date();
+            return date / 1;
+        },
+        /**  Returns current Date & Time in rfc339 format
+         **/
+        now: function() {
+            now = new Date();
+            return now;
+        },
+        /**  Formats a date in rfc3339 format
+         **/
+        rfc3339: function(date) {
+            function pad(n){return n<10 ? '0'+n : n;}
+            return date.getUTCFullYear()+'-' + pad(date.getUTCMonth()+1)+'-' + pad(date.getUTCDate())+'T' + pad(date.getUTCHours())+':' + pad(date.getUTCMinutes())+':' + pad(date.getUTCSeconds())+'Z';
+        },
+        /**  Returns an human readable date from a timestamp in rfc3339 format (cross-browser)
+         *    @param {String} timestamp    A date represented as a string in rfc3339 format '2012-02-09T13:06:43Z'
+         **/
+        formatDate: function(timestamp, lang) {
+            var today = new Date();
+            var thisdate = new Date();
+            var match = timestamp.match("^([-+]?)(\\d{4,})(?:-?(\\d{2})(?:-?(\\d{2})" + "(?:[Tt ](\\d{2})(?::?(\\d{2})(?::?(\\d{2})(?:\\.(\\d{1,3})(?:\\d+)?)?)?)?" + "(?:[Zz]|(?:([-+])(\\d{2})(?::?(\\d{2}))?)?)?)?)?)?$");
+            if (match) {
+                for (var ints = [2, 3, 4, 5, 6, 7, 8, 10, 11], i = ints.length - 1; i >= 0; --i) match[ints[i]] = (typeof match[ints[i]] != "undefined" && match[ints[i]].length > 0) ? parseInt(match[ints[i]], 10) : 0;
+                if (match[1] == '-') // BC/AD
+                    match[2] *= -1;
+                var ms = Date.UTC(match[2], // Y
+                    match[3] - 1, // M
+                    match[4], // D
+                    match[5], // h
+                    match[6], // m
+                    match[7], // s
+                    match[8] // ms
+                );
+                if (typeof match[9] != "undefined" && match[9].length > 0) // offset
+                    ms += (match[9] == '+' ? -1 : 1) * (match[10] * 3600 * 1000 + match[11] * 60 * 1000); // oh om
+                if (match[2] >= 0 && match[2] <= 99) // 1-99 AD
+                    ms -= 59958144000000;
+
+                var a_day = 1000 * 60 * 60 * 24;  // ms * seconds * minutes * hours
+                var three_days = a_day * 3;
+                var a_year = a_day * 365;
+
+                thisdate.setTime(ms);
+
+                // Dates in the last three days get a humanized date
+                if ((today.getTime() - ms) < three_days) {
+                    formatted = jQuery.easydate.format_date(thisdate, lang);
+
+                // Dates between 3 days and a year, get a 'X of MMMMM', localized
+                // into its language
+                } else {
+                    if (lang == 'en') {
+                        formatted = '{0} {1}'.format(match[4], settings.literals.months[match[3] - 1]);
+                    } else if (lang == 'es') {
+                        formatted = '{0} de {1}'.format(match[4], settings.literals.months[match[3] - 1]);
+                    } else if (lang == 'ca') {
+                        prefix = 'de ';
+                        if (match[3] == 4 || match[3] == 8 || match[3] == 10) {
+                            prefix = "d'";
+                        }
+                        formatted = '{0} {2}{1}'.format(match[4], settings.literals.months[match[3] - 1], prefix);
+                    }
+                    // Finally, show dd/mm/yyy if post is more than one year old
+                    if ((today.getTime() - ms) > a_year) {
+                        formatted = '{0}/{1}/{2}'.format(match[4] ,match[3],match[2]);
+                    }
+                }
+                return formatted;
+            } else return null;
+        },
+        /**  Returns an utf8 decoded string
+         *    @param {String} str_data    an utf-8 String
+         **/
+        utf8_decode: function(str_data) {
+            // Converts a UTF-8 encoded string to ISO-8859-1
+            //
+            // version: 1109.2015
+            // discuss at: http://phpjs.org/functions/utf8_decode
+            // +   original by: Webtoolkit.info (http://www.webtoolkit.info/)
+            // +      input by: Aman Gupta
+            // +   improved by: Kevin van Zonneveld (http://kevin.vanzonneveld.net)
+            // +   improved by: Norman "zEh" Fuchs
+            // +   bugfixed by: hitwork
+            // +   bugfixed by: Onno Marsman
+            // +      input by: Brett Zamir (http://brett-zamir.me)
+            // +   bugfixed by: Kevin van Zonneveld (http://kevin.vanzonneveld.net)
+            // *     example 1: utf8_decode('Kevin van Zonneveld');
+            // *     returns 1: 'Kevin van Zonneveld'
+            var tmp_arr = [],
+                i = 0,
+                ac = 0,
+                c1 = 0,
+                c2 = 0,
+                c3 = 0;
+            str_data += '';
+            while (i < str_data.length) {
+                c1 = str_data.charCodeAt(i);
+                if (c1 < 128) {
+                    tmp_arr[ac++] = String.fromCharCode(c1);
+                    i++;
+                } else if (c1 > 191 && c1 < 224) {
+                    c2 = str_data.charCodeAt(i + 1);
+                    tmp_arr[ac++] = String.fromCharCode(((c1 & 31) << 6) | (c2 & 63));
+                    i += 2;
+                } else {
+                    c2 = str_data.charCodeAt(i + 1);
+                    c3 = str_data.charCodeAt(i + 2);
+                    tmp_arr[ac++] = String.fromCharCode(((c1 & 15) << 12) | ((c2 & 63) << 6) | (c3 & 63));
+                    i += 3;
+                }
+            }
+            return tmp_arr.join('');
+        },
+        sha1: function(msg) {
+            function rotate_left(n, s) {
+                var t4 = (n << s) | (n >>> (32 - s));
+                return t4;
+            }
+
+            function lsb_hex(val) {
+                var str = "";
+                var i;
+                var vh;
+                var vl;
+                for (i = 0; i <= 6; i += 2) {
+                    vh = (val >>> (i * 4 + 4)) & 0x0f;
+                    vl = (val >>> (i * 4)) & 0x0f;
+                    str += vh.toString(16) + vl.toString(16);
+                }
+                return str;
+            }
+
+            function cvt_hex(val) {
+                var str = "";
+                var i;
+                var v;
+                for (i = 7; i >= 0; i--) {
+                    v = (val >>> (i * 4)) & 0x0f;
+                    str += v.toString(16);
+                }
+                return str;
+            }
+
+            function Utf8Encode(string) {
+                string = string.replace(/\r\n/g, "\n");
+                var utftext = "";
+                for (var n = 0; n < string.length; n++) {
+                    var c = string.charCodeAt(n);
+                    if (c < 128) {
+                        utftext += String.fromCharCode(c);
+                    } else if ((c > 127) && (c < 2048)) {
+                        utftext += String.fromCharCode((c >> 6) | 192);
+                        utftext += String.fromCharCode((c & 63) | 128);
+                    } else {
+                        utftext += String.fromCharCode((c >> 12) | 224);
+                        utftext += String.fromCharCode(((c >> 6) & 63) | 128);
+                        utftext += String.fromCharCode((c & 63) | 128);
+                    }
+                }
+                return utftext;
+            }
+            var blockstart;
+            var i, j;
+            var W = new Array(80);
+            var H0 = 0x67452301;
+            var H1 = 0xEFCDAB89;
+            var H2 = 0x98BADCFE;
+            var H3 = 0x10325476;
+            var H4 = 0xC3D2E1F0;
+            var A, B, C, D, E;
+            var temp;
+            msg = Utf8Encode(msg);
+            var msg_len = msg.length;
+            var word_array = [];
+            for (i = 0; i < msg_len - 3; i += 4) {
+                j = msg.charCodeAt(i) << 24 | msg.charCodeAt(i + 1) << 16 | msg.charCodeAt(i + 2) << 8 | msg.charCodeAt(i + 3);
+                word_array.push(j);
+            }
+            switch (msg_len % 4) {
+                case 0:
+                    i = 0x080000000;
+                    break;
+                case 1:
+                    i = msg.charCodeAt(msg_len - 1) << 24 | 0x0800000;
+                    break;
+                case 2:
+                    i = msg.charCodeAt(msg_len - 2) << 24 | msg.charCodeAt(msg_len - 1) << 16 | 0x08000;
+                    break;
+                case 3:
+                    i = msg.charCodeAt(msg_len - 3) << 24 | msg.charCodeAt(msg_len - 2) << 16 | msg.charCodeAt(msg_len - 1) << 8 | 0x80;
+                    break;
+            }
+            word_array.push(i);
+            while ((word_array.length % 16) != 14) word_array.push(0);
+            word_array.push(msg_len >>> 29);
+            word_array.push((msg_len << 3) & 0x0ffffffff);
+            for (blockstart = 0; blockstart < word_array.length; blockstart += 16) {
+                for (i = 0; i < 16; i++) W[i] = word_array[blockstart + i];
+                for (i = 16; i <= 79; i++) W[i] = rotate_left(W[i - 3] ^ W[i - 8] ^ W[i - 14] ^ W[i - 16], 1);
+                A = H0;
+                B = H1;
+                C = H2;
+                D = H3;
+                E = H4;
+                for (i = 0; i <= 19; i++) {
+                    temp = (rotate_left(A, 5) + ((B & C) | (~B & D)) + E + W[i] + 0x5A827999) & 0x0ffffffff;
+                    E = D;
+                    D = C;
+                    C = rotate_left(B, 30);
+                    B = A;
+                    A = temp;
+                }
+                for (i = 20; i <= 39; i++) {
+                    temp = (rotate_left(A, 5) + (B ^ C ^ D) + E + W[i] + 0x6ED9EBA1) & 0x0ffffffff;
+                    E = D;
+                    D = C;
+                    C = rotate_left(B, 30);
+                    B = A;
+                    A = temp;
+                }
+                for (i = 40; i <= 59; i++) {
+                    temp = (rotate_left(A, 5) + ((B & C) | (B & D) | (C & D)) + E + W[i] + 0x8F1BBCDC) & 0x0ffffffff;
+                    E = D;
+                    D = C;
+                    C = rotate_left(B, 30);
+                    B = A;
+                    A = temp;
+                }
+                for (i = 60; i <= 79; i++) {
+                    temp = (rotate_left(A, 5) + (B ^ C ^ D) + E + W[i] + 0xCA62C1D6) & 0x0ffffffff;
+                    E = D;
+                    D = C;
+                    C = rotate_left(B, 30);
+                    B = A;
+                    A = temp;
+                }
+                H0 = (H0 + A) & 0x0ffffffff;
+                H1 = (H1 + B) & 0x0ffffffff;
+                H2 = (H2 + C) & 0x0ffffffff;
+                H3 = (H3 + D) & 0x0ffffffff;
+                H4 = (H4 + E) & 0x0ffffffff;
+            }
+            temp = cvt_hex(H0) + cvt_hex(H1) + cvt_hex(H2) + cvt_hex(H3) + cvt_hex(H4);
+            return temp.toLowerCase();
+        }
+    };
+};
+
+
+;
+
+if (!Object.keys) {
+    Object.keys = function(obj) {
+        var keys = [],
+            k;
+        for (k in obj) {
+            if (Object.prototype.hasOwnProperty.call(obj, k)) {
+                keys.push(k);
+            }
+        }
+        return keys;
+    };
+}
+String.prototype.format = function() {
+    var pattern = /\{\d+\}/g;
+    var args = arguments;
+    return this.replace(pattern, function(capture) {
+        return args[capture.match(/\d+/)];
+    });
+};
+
+function MaxClient() {
+    this.ROUTES = {
+        users: '/people',
+        user: '/people/{0}',
+        avatar: '/people/{0}/avatar',
+        user_activities: '/people/{0}/activities',
+        timeline: '/people/{0}/timeline',
+        user_comments: '/people/{0}/comments',
+        user_shares: '/people/{0}/shares',
+        user_likes: '/people/{0}/likes',
+        follows: '/people/{0}/follows',
+        follow: '/people/{0}/follows/{1}',
+        subscriptions: '/people/{0}/subscriptions',
+        activities: '/contexts/{0}/activities',
+        activity: '/activities/{0}',
+        comments: '/activities/{0}/comments',
+        comment: '/activities/{0}/comments/{1}',
+        likes: '/activities/{0}/likes',
+        like: '/activities/{0}/likes/{1}',
+        favorites: '/activities/{0}/favorites',
+        favorite: '/activities/{0}/favorites/{1}',
+        shares: '/activities/{0}/shares',
+        share: '/activities/{0}/shares/{1}',
+        conversations: '/conversations',
+        conversation: '/conversations/{0}',
+        conversation_owner: '/conversations/{0}/owner',
+        user_conversation: '/people/{0}/conversations/{1}',
+        messages: '/conversations/{0}/messages',
+        context: '/contexts/{0}'
+    };
+}
+MaxClient.prototype.configure = function(settings) {
+    this.url = settings.server;
+    this.mode = settings.mode;
+    this.token = settings.token;
+    this.actor = {
+        "objectType": "person",
+        "username": settings.username
+    };
+};
+MaxClient.prototype.POST = function(route, query, callback) {
+    maxclient = this;
+    resource_uri = '{0}{1}'.format(this.url, route);
+    // Get method-defined triggers
+    var triggers = {};
+    if (arguments.length > 3) triggers = arguments[3];
+    if (this.mode == 'jquery') {
+        jQuery.ajax({
+            url: resource_uri,
+            beforeSend: function(xhr) {
+                xhr.setRequestHeader("X-Oauth-Token", maxclient.token);
+                xhr.setRequestHeader("X-Oauth-Username", maxclient.actor.username);
+                xhr.setRequestHeader("X-Oauth-Scope", 'widgetcli');
+            },
+            type: 'POST',
+            data: JSON.stringify(query),
+            async: true,
+            dataType: 'json'
+        }).done(function(result) {
+            callback.call(result);
+            if (triggers.done) jQuery(window).trigger(triggers.done, result);
+        }).fail(function(xhr) {
+            jQuery(window).trigger('maxclienterror', xhr);
+            if (triggers.fail) jQuery(window).trigger(triggers.fail, xhr);
+        });
+    }
+    return true;
+};
+MaxClient.prototype.PUT = function(route, query, callback) {
+    maxclient = this;
+    resource_uri = '{0}{1}'.format(this.url, route);
+    // Get method-defined triggers
+    var triggers = {};
+    if (arguments.length > 3) triggers = arguments[3];
+    if (this.mode == 'jquery') {
+        jQuery.ajax({
+            url: resource_uri,
+            beforeSend: function(xhr) {
+                xhr.setRequestHeader("X-Oauth-Token", maxclient.token);
+                xhr.setRequestHeader("X-Oauth-Username", maxclient.actor.username);
+                xhr.setRequestHeader("X-Oauth-Scope", 'widgetcli');
+                xhr.setRequestHeader("X-HTTP-Method-Override", 'PUT');
+            },
+            type: 'POST',
+            data: JSON.stringify(query),
+            async: true,
+            dataType: 'json'
+        }).done(function(result) {
+            callback.call(result);
+            if (triggers.done) jQuery(window).trigger(triggers.done, result);
+        }).fail(function(xhr) {
+            jQuery(window).trigger('maxclienterror', xhr);
+            if (triggers.fail) jQuery(window).trigger(triggers.fail, xhr);
+        });
+    }
+    return true;
+};
+MaxClient.prototype.DELETE = function(route, query, callback) {
+    maxclient = this;
+    resource_uri = '{0}{1}'.format(this.url, route);
+    // Get method-defined triggers
+    var triggers = {};
+    if (arguments.length > 2) triggers = arguments[2];
+    if (this.mode == 'jquery') {
+        jQuery.ajax({
+            url: resource_uri,
+            beforeSend: function(xhr) {
+                xhr.setRequestHeader("X-Oauth-Token", maxclient.token);
+                xhr.setRequestHeader("X-Oauth-Username", maxclient.actor.username);
+                xhr.setRequestHeader("X-Oauth-Scope", 'widgetcli');
+                xhr.setRequestHeader("X-HTTP-Method-Override", 'DELETE');
+            },
+            type: 'POST',
+            data: JSON.stringify(query),
+            async: true,
+            dataType: 'json'
+        }).done(function(result) {
+            callback.call(result);
+            if (triggers.done) jQuery(window).trigger(triggers.done, result);
+        }).fail(function(xhr) {
+            jQuery(window).trigger('maxclienterror', xhr);
+            if (triggers.fail) jQuery(window).trigger(triggers.fail, xhr);
+        });
+    }
+    return true;
+};
+MaxClient.prototype.GET = function(route, query, callback) {
+    maxclient = this;
+    resource_uri = '{0}{1}'.format(this.url, route);
+    // Get method-defined triggers
+    var triggers = {};
+    if (arguments.length > 3) triggers = arguments[3];
+    if (Object.keys(query).length > 0) {
+        resource_uri += '?' + jQuery.param(query, true);
+    }
+    if (this.mode == 'jquery') {
+        jQuery.ajax({
+            url: resource_uri,
+            beforeSend: function(xhr) {
+                xhr.setRequestHeader("X-Oauth-Token", maxclient.token);
+                xhr.setRequestHeader("X-Oauth-Username", maxclient.actor.username);
+                xhr.setRequestHeader("X-Oauth-Scope", 'widgetcli');
+            },
+            type: 'GET',
+            async: true,
+            dataType: 'json'
+        }).done(function(result, status, xhr) {
+            if (triggers.done) jQuery(window).trigger(triggers.done);
+            callback.apply(xhr, [result]);
+        }).fail(function(xhr) {
+            jQuery(window).trigger('maxclienterror', xhr);
+            if (triggers.fail) jQuery(window).trigger(triggers.fail);
+        });
+    }
+    return true;
+};
+
+/*
+ * People related endpoints
+ */
+
+MaxClient.prototype.getUserData = function(username, callback) {
+    var route = this.ROUTES.user.format(username);
+    var query = {};
+    this.GET(route, query, callback);
+};
+
+MaxClient.prototype.getUsersList = function(userquery, callback) {
+    var route = this.ROUTES.users;
+    var query = {
+        username: userquery
+    };
+    this.GET(route, query, callback);
+};
+
+/*
+ * Context related endpoints
+ */
+
+MaxClient.prototype.getContext = function(chash, callback) {
+    var route = this.ROUTES.context.format(chash);
+    var query = {};
+    this.GET(route, query, callback);
+};
+
+/*
+ * Activity related endpoints
+ */
+
+MaxClient.prototype.getUserTimeline = function(username, callback) {
+    var route = this.ROUTES.timeline.format(username);
+    var query = {};
+    if (arguments.length > 2) query = arguments[2];
+    this.GET(route, query, callback);
+};
+
+MaxClient.prototype.getActivities = function(options, callback) {
+    var route = this.ROUTES.activities.format(options.context);
+    var query = {};
+    if (arguments.length > 2) query = arguments[2];
+    if (options.tags)
+        if (options.tags.length > 0) query.context_tags = options.tags;
+    this.GET(route, query, callback);
+};
+
+MaxClient.prototype.getCommentsForActivity = function(activityid, callback) {
+    route = this.ROUTES.comments.format(activityid);
+    var query = {};
+    this.GET(route, query, callback);
+};
+
+MaxClient.prototype.addComment = function(comment, activity, callback) {
+    var query = {
+        "actor": {},
+        "object": {
+            "objectType": "comment",
+            "content": ""
+        }
+    };
+    query.actor = this.actor;
+    query.object.content = comment;
+    route = this.ROUTES.comments.format(activity);
+    this.POST(route, query, callback);
+};
+
+MaxClient.prototype.addActivity = function(text, contexts, callback) {
+    query = {
+        "object": {
+            "objectType": "note",
+            "content": ""
+        }
+    };
+    if (contexts.length > 0) {
+        query.contexts = [];
+        for (ct = 0; ct < contexts.length; ct++) {
+            query.contexts.push({
+                'objectType': 'context',
+                'url': contexts[ct]
+            });
+        }
+    }
+    query.object.content = text;
+    //We have a generator
+    if (arguments.length > 3) {
+        query.generator = arguments[3];
+    }
+    route = this.ROUTES.user_activities.format(this.actor.username);
+    trigger = {
+        'done': 'maxui-posted-activity',
+        'fail': 'maxui-failed-activity'
+    };
+    this.POST(route, query, callback, trigger);
+};
+
+MaxClient.prototype.removeActivity = function(activity_id, callback) {
+    route = this.ROUTES.activity.format(activity_id);
+    this.DELETE(route, {}, callback);
+};
+
+MaxClient.prototype.removeActivityComment = function(activity_id, comment_id, callback) {
+    route = this.ROUTES.comment.format(activity_id, comment_id);
+    this.DELETE(route, {}, callback);
+};
+
+/*
+ * Conversation related endpoints
+ */
+
+MaxClient.prototype.getConversationSubscription = function(chash, username, callback) {
+    var route = this.ROUTES.user_conversation.format(username, chash);
+    var query = {};
+    this.GET(route, query, callback);
+};
+
+
+MaxClient.prototype.getConversation = function(chash, callback) {
+    var route = this.ROUTES.conversation.format(chash);
+    var query = {};
+    this.GET(route, query, callback);
+};
+
+MaxClient.prototype.modifyConversation = function(chash, displayName, callback) {
+    var query = {
+        "displayName": displayName
+    };
+    route = this.ROUTES.conversation.format(chash);
+    this.PUT(route, query, callback);
+};
+
+MaxClient.prototype.addUserToConversation = function(chash, username, callback) {
+    var query = {};
+    var route = this.ROUTES.user_conversation.format(username, chash);
+    this.POST(route, query, callback);
+};
+
+MaxClient.prototype.kickUserFromConversation = function(chash, username, callback) {
+    var query = {};
+    var route = this.ROUTES.user_conversation.format(username, chash);
+    this.DELETE(route, query, callback);
+};
+
+MaxClient.prototype.deleteConversation = function(chash, callback) {
+    var query = {};
+    var route = this.ROUTES.conversation.format(chash);
+    this.DELETE(route, query, callback);
+};
+
+MaxClient.prototype.leaveConversation = function(chash, username, callback) {
+    var query = {};
+    var route = this.ROUTES.user_conversation.format(username, chash);
+    this.DELETE(route, query, callback);
+};
+
+MaxClient.prototype.transferConversationOwnership = function(chash, username, callback) {
+    var query = {
+        "actor": {
+            "username": username
+        }
+    };
+    route = this.ROUTES.conversation_owner.format(chash);
+    this.PUT(route, query, callback);
+};
+
+MaxClient.prototype.getConversationsForUser = function(username, callback) {
+    var route = this.ROUTES.conversations;
+    query = {};
+    this.GET(route, query, callback);
+};
+
+MaxClient.prototype.getMessagesForConversation = function(hash, params, callback) {
+    var route = this.ROUTES.messages.format(hash);
+    query = params;
+    this.GET(route, query, callback);
+};
+
+MaxClient.prototype.addMessageAndConversation = function(params, callback) {
+    query = {
+        "object": {
+            "objectType": "note",
+            "content": params.message
+        },
+        "contexts": [{
+                'objectType': 'conversation',
+                'participants': params.participants
+                      }
+                    ]
+    };
+    if (params.displayName) {
+        query.contexts[0].displayName = params.displayName;
+    }
+    route = this.ROUTES.conversations;
+    this.POST(route, query, callback);
+};
+MaxClient.prototype.addMessage = function(text, chash, callback) {
+    query = {
+        "object": {
+            "objectType": "note",
+            "content": ""
+        }
+    };
+    query.object.content = text;
+    route = this.ROUTES.messages.format(chash);
+    this.POST(route, query, callback);
+};
+
+/*
+ * Social-interactions related endpoints
+ */
+
+MaxClient.prototype.follow = function(username, callback) {
+    query = {
+        "object": {
+            "objectType": "person",
+            "username": ""
+        }
+    };
+    query.object.username = username;
+    route = this.ROUTES.follow.format(this.actor.username, username);
+    resp = this.POST(route, query, callback);
+};
+MaxClient.prototype.favoriteActivity = function(activityid, callback) {
+    query = {};
+    route = this.ROUTES.favorites.format(activityid);
+    resp = this.POST(route, query, callback);
+};
+MaxClient.prototype.unfavoriteActivity = function(activityid, callback) {
+    query = {};
+    route = this.ROUTES.favorite.format(activityid, this.actor.username);
+    resp = this.DELETE(route, query, callback);
+};
+MaxClient.prototype.likeActivity = function(activityid, callback) {
+    query = {};
+    route = this.ROUTES.likes.format(activityid);
+    resp = this.POST(route, query, callback);
+};
+MaxClient.prototype.unlikeActivity = function(activityid, callback) {
+    query = {};
+    route = this.ROUTES.like.format(activityid, this.actor.username);
+    resp = this.DELETE(route, query, callback);
+};
+
+
+;
+
+(function(jq) {
+    /**
+     *    MaxUI plugin definition
+     *    @param {Object} options    Object containing overrides for default values
+     **/
+    jq.fn.maxUI = function(options) {
+        // Keep a reference of the context object
+        var maxui = this;
+        maxui.version = '3.7.0';
+        maxui.templates = max.templates();
+        maxui.utils = max.utils();
+        var defaults = {
+            'maxRequestsAPI': 'jquery',
+            'maxServerURL': 'https://max.upc.edu',
+            'readContext': undefined,
+            'writeContexts': [],
+            'activitySource': 'timeline',
+            'enableAlerts': false,
+            'UISection': 'timeline',
+            'disableTimeline': false,
+            'disableConversations': false,
+            'conversationsSection': 'conversations',
+            'currentConversationSection': 'conversations',
+            'activitySortOrder': 'activities',
+            'maximumConversations': 20,
+            'contextTagsFilter': [],
+            'scrollbarWidth': 10,
+            'widgetWidth': '0',
+            'sectionHorizontalPadding': 20,
+            'widgetBorder': 2
+        };
+
+
+        // extend defaults with user-defined settings
+        maxui.settings = jq.extend(defaults, options);
+        // Check timeline/activities consistency
+        if (maxui.settings.UISection == 'timeline' && maxui.settings.activitySource == 'timeline' && maxui.settings.readContext) {
+            maxui.settings.readContext = undefined;
+            maxui.settings.writeContexts = [];
+        }
         // Get language from options or set default.
         // Set literals in the choosen language and extend from user options
-        maxui.language = options.language || 'en'
-        user_literals = options.literals || {}
-        maxui.settings.literals = jq.extend(max.literals(maxui.language), user_literals)
-
+        maxui.language = options.language || 'en';
+        user_literals = options.literals || {};
+        maxui.settings.literals = jq.extend(max.literals(maxui.language), user_literals);
         // Configure maxui without CORS if CORS not available
-        if (!maxui.utils.isCORSCapable())
-            {
-                // IF it has been defined an alias, set as max server url
-                if (maxui.settings.maxServerURLAlias)
-                maxui.settings.maxServerURL = maxui.settings.maxServerURLAlias
-            }
-
-        if (maxui.settings.readContext)
-        {
+        if (!maxui.utils.isCORSCapable()) {
+            // IF it has been defined an alias, set as max server url
+            if (maxui.settings.maxServerURLAlias) maxui.settings.maxServerURL = maxui.settings.maxServerURLAlias;
+        }
+        if (maxui.settings.readContext) {
             // Calculate readContextHash
-            maxui.settings.readContextHash = maxui.utils.sha1(maxui.settings.readContext)
-
+            maxui.settings.readContextHash = maxui.utils.sha1(maxui.settings.readContext);
             // Add read context to write contexts
-            maxui.settings.writeContexts.push(maxui.settings.readContext)
-
+            maxui.settings.writeContexts.push(maxui.settings.readContext);
             // Store the hashes of the write contexts
-            maxui.settings.writeContextsHashes = []
-            for (wc=0;wc<maxui.settings.writeContexts.length;wc++) {
-                maxui.settings.writeContextsHashes.push(maxui.utils.sha1(maxui.settings.writeContexts[wc]))
+            maxui.settings.writeContextsHashes = [];
+            for (wc = 0; wc < maxui.settings.writeContexts.length; wc++) {
+                maxui.settings.writeContextsHashes.push(maxui.utils.sha1(maxui.settings.writeContexts[wc]));
             }
         }
-
         //set default avatar and profile url pattern if user didn't provide it
-        if (!maxui.settings.avatarURLpattern)
-              maxui.settings['avatarURLpattern'] = maxui.settings.maxServerURL+'/people/{0}/avatar'
-
-        if (!maxui.settings.contextAvatarURLpattern)
-               maxui.settings['contextAvatarURLpattern'] = maxui.settings.maxServerURL+'/contexts/{0}/avatar'
-
-        if (!maxui.settings.conversationAvatarURLpattern)
-               maxui.settings['conversationAvatarURLpattern'] = maxui.settings.maxServerURL+'/conversations/{0}/avatar'
-
+        if (!maxui.settings.avatarURLpattern) maxui.settings.avatarURLpattern = maxui.settings.maxServerURL + '/people/{0}/avatar';
+        if (!maxui.settings.contextAvatarURLpattern) maxui.settings.contextAvatarURLpattern = maxui.settings.maxServerURL + '/contexts/{0}/avatar';
+        if (!maxui.settings.conversationAvatarURLpattern) maxui.settings.conversationAvatarURLpattern = maxui.settings.maxServerURL + '/conversations/{0}/avatar';
         // Disable profileURL by now
-
         // if (!maxui.settings.profileURLpattern)
         //        maxui.settings['profileURLpattern'] = maxui.settings.maxServerURL+'/profiles/{0}'
-
         // Catch errors triggered by failed max api calls
-        if (maxui.settings.enableAlerts)
-        jq(window).bind('maxclienterror', function(event,xhr) {
-            var error = JSON.parse(xhr.responseText)
-            alert('The server responded with a "{0}" error, with the following message: "{1}". \n\nPlease try again later or contact administrator at admin@max.upc.edu.'.format(error.error,error.error_description))
-        })
-
+        if (maxui.settings.enableAlerts) jq(window).bind('maxclienterror', function(event, xhr) {
+            var error = JSON.parse(xhr.responseText);
+            alert('The server responded with a "{0}" error, with the following message: "{1}". \n\nPlease try again later or contact administrator at admin@max.upc.edu.'.format(error.error, error.error_description));
+        });
         // Init MAX Client
-        maxui.maxClient = new MaxClient()
-        var maxclient_config = {  server:    maxui.settings.maxServerURL,
-                                    mode:    maxui.settings.maxRequestsAPI,
-                                   username: maxui.settings.username,
-                                   token:    maxui.settings.oAuthToken
-                               }
-        maxui.maxClient.configure(maxclient_config)
+        maxui.maxClient = new MaxClient();
+        var maxclient_config = {
+            server: maxui.settings.maxServerURL,
+            mode: maxui.settings.maxRequestsAPI,
+            username: maxui.settings.username,
+            token: maxui.settings.oAuthToken
+        };
+        maxui.maxClient.configure(maxclient_config);
 
-        // Object representing a conversation configuration panel
-        maxui.conversationSettings = {
-            title: maxui.settings.literals.conversations_info_title,
-            content: '<div>Hello world</div>',
-            panelID: 'conversation-settings-panel',
-            getOwnerSelector: function(selector) {
-                return '#maxui-' + this.panelID + '.maxui-owner ' + selector
-            },
-            getSelector: function(selector) {
-                return '#maxui-' + this.panelID + ' ' + selector
-            },
-            displayNameSlot: {
-                show: function() {
-                    var self = maxui.conversationSettings
-                    var $panel = jq(self.getOwnerSelector(''))
-                    var $displayNameEdit = jq(self.getOwnerSelector('> #maxui-conversation-displayname-edit'))
-                    var $displayName = jq(self.getOwnerSelector('> .maxui-displayname'))
-                    var $displayNameInput = jq(conversation.getOwnerSelector('> #maxui-conversation-displayname-edit input.maxui-displayname'))
+        // Create a instance of a max messaging client
+        // This needs to be before MaxConversations instance creation
+        maxui.messaging = new max.MaxMessaging(maxui);
 
-                    $displayNameInput.width($panel.width() - 82)
-                    $displayName.hide()
-                    $displayNameEdit.show().val($displayName.text()).focus()
-                },
-                hide: function() {
-                    var self = maxui.conversationSettings
-                    var $displayNameEdit = jq(self.getOwnerSelector('> #maxui-conversation-displayname-edit'))
-                    var $displayName = jq(self.getOwnerSelector('> .maxui-displayname'))
-                    var $displayNameInput = jq(conversation.getOwnerSelector('> #maxui-conversation-displayname-edit input.maxui-displayname'))
+        // View representing the conversations section
+        maxui.conversations = new max.views.MaxConversations(maxui, {});
 
-                    $displayName.show()
-                    $displayNameEdit.hide().val('')
-                },
-                save: function() {
-                    var self = maxui.conversationSettings
-                    var $displayNameEdit = jq(self.getOwnerSelector('> #maxui-conversation-displayname-edit'))
-                    var $displayName = jq(self.getOwnerSelector('> .maxui-displayname'))
-                    var $displayNameInput = jq(conversation.getOwnerSelector('> #maxui-conversation-displayname-edit input.maxui-displayname'))
-                    maxui.maxClient.modifyConversation(conversation.data.id, $displayNameInput.val(), function(event) {
-                        self.displayNameSlot.hide()
-                        $displayName.text(this.displayName)
-                    })
-
+        // Bind conversastion message receiving
+        if (!maxui.settings.disableConversations) {
+            maxui.messaging.bind(
+                {action: 'add', object: 'message'},
+                function(message) {
+                    maxui.conversations.ReceiveMessage(message);
                 }
-
-            },
-            bind: function(overlay) {
-                conversation = this
-
-                // Clear previous overla usage bindings
-                overlay.$el().unbind()
-
-                // Open displayName editing box when user clicks on displayName
-                overlay.$el().on('click', conversation.getOwnerSelector('> .maxui-displayname'), function(event) {
-                    conversation.displayNameSlot.show()
-                })
-
-                // Saves or hides displayName editing box when user presses ENTER or ESC
-                overlay.$el().on('keyup', conversation.getOwnerSelector('> #maxui-conversation-displayname-edit input.maxui-displayname'), function(event) {
-                    if (event.which==27) {
-                        conversation.displayNameSlot.hide()
-                    } else if (event.which==13) {
-                        conversation.displayNameSlot.save()
-                    }
-                })
-
-                // Saves displayName when user clicks the ok button
-                overlay.$el().on('click', conversation.getOwnerSelector('#maxui-conversation-displayname-edit i.maxui-icon-ok-circled'), function(event) {
-                    conversation.displayNameSlot.save()
-                })
-
-                // Hides displayName wediting box hen user clicks the cancel button
-                overlay.$el().on('click', conversation.getOwnerSelector('#maxui-conversation-displayname-edit i.maxui-icon-cancel-circled'), function(event) {
-                    conversation.displayNameSlot.hide()
-                })
-
-                // Displays per-user transfer buttons when Owner clicks on transfer ownership button
-                overlay.$el().on('click', conversation.getSelector('#maxui-conversation-transfer .maxui-button'), function(event) {
-                    jq(conversation.getSelector('.maxui-participant .maxui-conversation-transfer-to')).show()
-                    jq(conversation.getSelector('#maxui-conversation-transfer p')).show()
-                })
-
-                // Transfers ownership to selected user and toggles ownership labels and classes accordingly
-                overlay.$el().on('click', conversation.getSelector('.maxui-participant .maxui-conversation-transfer-to'), function(event) {
-                    var $participant = jq(event.currentTarget).closest('.maxui-participant')
-                    var new_owner = $participant.attr('data-username')
-                    maxui.maxClient.transferConversationOwnership(conversation.data.id, new_owner, function(event) {
-                        jq(conversation.getSelector('.maxui-participant .maxui-conversation-transfer-to')).hide()
-                        jq(conversation.getSelector('#maxui-conversation-transfer p')).hide()
-                        var $label = jq(conversation.getSelector('.maxui-participant .maxui-displayname label'))
-                        var $new_owner = jq(conversation.getSelector('.maxui-participant[data-username="'+ new_owner +'"]'))
-                        $new_owner.find('.maxui-displayname').append($label[0].outerHTML)
-                        $label.remove()
-                        overlay.$el().find(conversation.getSelector('')).toggleClass('maxui-owner', false)
-                    })
-
-                })
-
-
-            },
-            load: function(configurator) {
-                var conversation = this
-                maxui.maxClient.getConversation(maxui.settings.currentConversation.hash, function() {
-                    conversation.data = this
-                    var participants = []
-                    for (pt=0;pt<conversation.data.participants.length;pt++) {
-                        var participant = conversation.data.participants[pt]
-                        participant.avatarURL = maxui.settings.avatarURLpattern.format(participant.username)
-                        participant.owner = participant.username == conversation.data.owner
-                        participants.push(participant)
-                    }
-
-                if (conversation.data.participants.length <= 2) {
-                    if (conversation.data.participants[0].username == maxui.settings.username) {
-                        var partner = conversation.data.participants[1]
-                    } else {
-                        var partner = conversation.data.participants[0]
-                    }
-                    var avatar_url = maxui.settings.avatarURLpattern.format(partner.username)
-                } else {
-                    var avatar_url = maxui.settings.conversationAvatarURLpattern.format(conversation.data.id)
+            );
+            maxui.messaging.bind(
+                {action: 'add', object: 'conversation'},
+                function(message) {
+                    maxui.conversations.ReceiveConversation(message);
                 }
-
-                    var params = {
-                                    displayName: conversation.data.displayName,
-                                      conversationAvatarURL: avatar_url,
-                                   participants: participants,
-                                       literals: maxui.settings.literals,
-                                        panelID: conversation.panelID,
-                                      published: maxui.utils.formatDate(conversation.data.published, maxui.language),
-                                      canManage: maxui.settings.username == conversation.data.owner
-                                 }
-                    conversation.content = maxui.templates.conversationSettings.render(params)
-                    configurator(conversation)
-                })
-            }
+            );
         }
 
         // Make settings available to utils package
-        maxui.utils.setSettings(maxui.settings)
+        maxui.utils.setSettings(maxui.settings);
 
         // Get user data and start ui rendering when completed
-        this.maxClient.getUserData(maxui.settings.username, function() {
-
+        this.maxClient.getUserData(maxui.settings.username, function(data) {
             //Determine if user can write in writeContexts
-            var userSubscriptions = {}
-            if (this.subscribedTo)
-            {
-                if (this.subscribedTo)
-                {
-                    if (this.subscribedTo.length>0)
-                    {
-                        for (sc=0;sc<this.subscribedTo.length;sc++)
-                        {
-                            var subscription = this.subscribedTo[sc]
-                            userSubscriptions[subscription.hash]={}
-                            userSubscriptions[subscription.hash]['permissions']={}
-                            for (pm=0;pm<subscription.permissions.length;pm++)
-                            {
-                                var permission=subscription.permissions[pm]
-                                userSubscriptions[subscription.hash]['permissions'][permission]=true
+            var userSubscriptions = {};
+            if (data.subscribedTo) {
+                if (data.subscribedTo) {
+                    if (data.subscribedTo.length > 0) {
+                        for (sc = 0; sc < data.subscribedTo.length; sc++) {
+                            var subscription = data.subscribedTo[sc];
+                            userSubscriptions[subscription.hash] = {};
+                            userSubscriptions[subscription.hash].permissions = {};
+                            for (pm = 0; pm < subscription.permissions.length; pm++) {
+                                var permission = subscription.permissions[pm];
+                                userSubscriptions[subscription.hash].permissions[permission] = true;
                             }
                         }
                     }
                 }
             }
+            maxui.settings.subscriptions = userSubscriptions;
 
-            maxui.settings.subscriptions = userSubscriptions
-
-            // Start socket listener
-
-            if (!maxui.settings.disableConversations) {
-
-                // Collect conversation ids
-                maxui.conversations = []
-                var talking_items = this.talkingIn || []
-                for (co=0;co<talking_items.length;co++) {
-                    maxui.conversations.push(talking_items[co].id)
-                }
-
-                // Stomp.js boilerplate
-                ws = new SockJS(maxui.settings.maxTalkURL);
-                maxui.client = Stomp.over(ws);
-
-                 var on_connect = function(x) {
-                    for (co=0;co<maxui.conversations.length;co++) {
-                        conversation_id = maxui.conversations[co]
-                        maxui.client.subscribe('/exchange/{0}'.format(conversation_id), function(d) {maxui.insertMessage(d)})
-                    }
-                    maxui.client.subscribe('/exchange/new/{0}'.format(maxui.settings.username), function(d) {
-                        data = JSON.parse(d.body)
-                        if (maxui.settings.UISection == 'conversations' && maxui.settings.conversationsSection == 'conversations')
-                            maxui.printConversations( function() { maxui.toggleSection('conversations')
-                                                                   $('.maxui-message-count:first').css({'background-color':'red'})
-                                                                 })
-                        maxui.client.subscribe('/exchange/{0}'.format(data.conversation), function(d) {maxui.insertMessage(d)})
-                    });
-                };
-
-                var on_error =  function(error) {
-                  console.log(error.body);
-                };
-                if (maxui.settings.enableAlerts)
-                    maxui.client.debug = function(a){console.log(a);};
-
-                maxui.client.heartbeat.outgoing = 0;
-                maxui.client.heartbeat.incoming = 0;
-                var stomp_user_with_domain = ""
-                if (maxui.settings.domain) {
-                    stomp_user_with_domain += maxui.settings.domain + ':'
-                }
-                stomp_user_with_domain += maxui.settings.username
-                maxui.client.connect(stomp_user_with_domain, maxui.settings.oAuthToken, on_connect, on_error, '/');
-            }
+            maxui.messaging.start();
 
             // render main interface
-
-            var showCT = maxui.settings.UISection == 'conversations'
-            var showTL = maxui.settings.UISection == 'timeline'
-            var toggleTL = maxui.settings.disableTimeline == false && !showTL
-            var toggleCT = maxui.settings.disableConversations == false && !showCT
-            var containerWidth = maxui.width() - maxui.scrollbar.width
-
+            var showCT = maxui.settings.UISection == 'conversations';
+            var showTL = maxui.settings.UISection == 'timeline';
+            var toggleTL = maxui.settings.disableTimeline === false && !showTL;
+            var toggleCT = maxui.settings.disableConversations === false && !showCT;
+            var containerWidth = maxui.width() - maxui.settings.scrollbarWidth;
             var params = {
-                                  username: maxui.settings.username,
-                                  literals: maxui.settings.literals,
-                         showConversations: showCT ? 'display:block;' : 'display:none;',
-                   showConversationsToggle: toggleCT ? 'display:block;' : 'display:none;',
-                              showTimeline: showTL ? 'display:block;' : 'display:none;',
-                        showTimelineToggle: toggleTL ? 'display:block;' : 'display:none;',
-                             messagesStyle: 'width:{0}px;left:{0}px;'.format(containerWidth)
-                     }
-            var mainui = maxui.templates.mainUI.render(params)
-            maxui.html(mainui)
-            if (maxui.settings.UISection=='conversations')
-                maxui.printConversations( function() { maxui.bindEvents()
-                                                       maxui.toggleSection('conversations')
-                                                     })
-            else if (maxui.settings.UISection=='timeline')
-                maxui.printActivities({}, function() { maxui.bindEvents() })
-        })
+                username: maxui.settings.username,
+                literals: maxui.settings.literals,
+                showConversations: showCT ? 'display:block;' : 'display:none;',
+                showConversationsToggle: toggleCT ? 'display:block;' : 'display:none;',
+                showTimeline: showTL ? 'display:block;' : 'display:none;',
+                showTimelineToggle: toggleTL ? 'display:block;' : 'display:none;',
+                messagesStyle: 'width:{0}px;left:{0}px;'.format(containerWidth)
+            };
+            var mainui = maxui.templates.mainUI.render(params);
+            maxui.html(mainui);
 
+
+            maxui.overlay = new max.views.MaxOverlay();
+
+            // Define widths
+            // XXX TODO :Read from renderer styles, not hardcoded values
+            maxui.settings.widgetWidth = maxui.width();
+            maxui.settings.sectionsWidth = maxui.settings.widgetWidth - maxui.settings.scrollbarWidth - maxui.settings.widgetBorder;
+
+            // First-rendering of conversations list, even if it's not displayed on start
+            if (!maxui.settings.disableConversations) {
+                maxui.conversations.render();
+                maxui.conversations.listview.load(data.talkingIn);
+            }
+            if (maxui.settings.UISection == 'conversations') {
+                maxui.bindEvents();
+                maxui.toggleSection('conversations');
+            }
+            else if (maxui.settings.UISection == 'timeline') {
+                maxui.printActivities({}, function(event) {
+                    maxui.bindEvents();
+                });
+            }
+        });
         // allow jq chaining
         return maxui;
     };
 
-
-    jq.fn.insertMessage = function(d) {
-        maxui = this
-
-        data = JSON.parse(d.body)
-        console.log('New message from user {0} on {1}'.format(data.username, data.conversation))
-        if (maxui.settings.UISection == 'conversations' && maxui.settings.conversationsSection == 'messages') {
-            maxui.printMessages(data.conversation, function() {
-                maxui.scrollbar.setContentPosition(100)
-            })
-
-        }
-        else if (maxui.settings.UISection == 'conversations' && maxui.settings.conversationsSection == 'conversations')
-            maxui.printConversations( function() {
-                maxui.toggleSection('conversations')
-                $('.maxui-message-count:first').css({'background-color':'red'})
-            })
-    }
-
-    jq.fn.bindEvents =function() {
-
-        maxui = this
-
-        maxui.scrollbar.$dragger = jq('.maxui-dragger')
-        maxui.scrollbar.$bar = jq('#maxui-scrollbar')
-
-        jq('#maxui-conversations').on('mousewheel', function(event, delta, deltaX, deltaY) {
-            event.preventDefault()
-            event.stopPropagation()
-
-            if (maxui.scrollbar.enabled()) {
-                var movable_height = maxui.scrollbar.$target.height() - maxui.scrollbar.maxtop - maxui.scrollbar.handle.height
-                var actual_margin = parseInt(maxui.scrollbar.$target.css('margin-top'))
-                var new_margin = actual_margin + (deltaY * -1 * 30)
-                if (new_margin > 0) new_margin = 0
-                if (new_margin < (movable_height * -1)) new_margin = movable_height * -1
-
-                maxui.scrollbar.$target.css({'margin-top': new_margin})
-                var new_margin = new_margin * -1
-                var relative_pos = ( new_margin * 100 ) / movable_height
-                maxui.scrollbar.setDraggerPosition(relative_pos)
-            }
-        })
-
-        maxui.scrollbar.setHeight = function(height) {
-            var wrapper_top = $('#maxui-conversations .maxui-wrapper').offset().top - maxui.offset().top -1
-            console.log(wrapper_top)
-            maxui.scrollbar.$bar.css({'height':height, 'top':wrapper_top})
-            maxui.scrollbar.maxtop = height - maxui.scrollbar.handle.height -2
-        }
-        maxui.scrollbar.setTarget = function(selector) {
-            maxui.scrollbar.$target = jq(selector)
-        }
-        maxui.scrollbar.setDraggerPosition = function(relative_pos) {
-            margintop = (maxui.scrollbar.maxtop * relative_pos) / 100
-            maxui.scrollbar.$dragger.css({'margin-top': margintop})
-        }
-        maxui.scrollbar.setContentPosition = function(relative_pos) {
-            if (maxui.scrollbar.enabled()) {
-                var movable_height = maxui.scrollbar.$target.height() - maxui.scrollbar.maxtop - maxui.scrollbar.handle.height
-                var margintop = (movable_height * relative_pos) / 100
-                maxui.scrollbar.$target.css({'margin-top': margintop * -1})
-                maxui.scrollbar.setDraggerPosition(relative_pos)
-            } else {
-                maxui.scrollbar.$target.css({'margin-top': ''})
-                maxui.scrollbar.setDraggerPosition(0)
-            }
-        }
-        maxui.scrollbar.enabled = function() {
-            return maxui.scrollbar.$target.height() > maxui.scrollbar.maxtop
-        }
-
-
-
-        jq(document).on('mousemove' ,function(event) {
-
-            if (maxui.scrollbar.dragging) {
-                event.stopPropagation()
-                event.preventDefault()
-
-                // drag only if target content is taller than scrollbar
-                if (maxui.scrollbar.enabled()) {
-
-                    // Calculate dragger position, constrained to actual limits
-                    var margintop = event.clientY - maxui.scrollbar.$bar.offset().top
-                    if (margintop < 0) margintop = 0
-                    if (margintop >= maxui.scrollbar.maxtop) margintop = maxui.scrollbar.maxtop
-
-                    // Calculate dragger position relative to 100 and move content
-                    var relative_position = (margintop * 100) / maxui.scrollbar.maxtop
-                    maxui.scrollbar.setContentPosition(relative_position)
-                }
-            }
-        })
-
-        jq(document.body).on('mousedown', '.maxui-dragger', function(event) {
-            event.stopPropagation()
-            event.preventDefault()
-            maxui.scrollbar.dragging = true
-        })
-
-        jq(document).on('mouseup', function(event) {
-            maxui.scrollbar.dragging = false
-        })
-
-        //Assign click to conversations info
-        jq('#maxui-conversation-info.maxui-button').click(function (event) {
-            event.preventDefault()
-            event.stopPropagation()
-            maxui.overlay.show(maxui.conversationSettings)
-        })
-
-        //Assign click to conversations info close
-        jq('#maxui-overlay-panel .maxui-close').click(function (event) {
-            event.preventDefault()
-            event.stopPropagation()
-            maxui.overlay.hide()
-        })
-
+    jq.fn.bindEvents = function() {
+        maxui = this;
 
         //Assign click to loadmore
-        jq('#maxui-more-activities .maxui-button').click(function (event) {
-            event.preventDefault()
-            if (jq('#maxui-search').hasClass('folded'))
-            {
-                maxui.loadMoreActivities()
-            }
-            else
-            {
-                last_result_id = jq('.maxui-activity:last').attr('id')
-                maxui.reloadFilters(last_result_id)
-            }
-            })
-
-        //Assign click to toggle search filters if any search filter defined
-        jq('#maxui-search-toggle').click(function (event) {
-            event.preventDefault()
-            if (!jq(this).hasClass('maxui-disabled'))
-            {
-                jq('#maxui-search').toggleClass('folded')
-                if (jq('#maxui-search').hasClass('folded'))
-                    maxui.printActivities({})
-                else
-                    maxui.reloadFilters()
-            }
-            })
-
-        //Assign Commentbox toggling via delegating the click to the activities container
-        jq('#maxui-activities').on('click','.maxui-commentaction',function (event) {
-            event.preventDefault()
-            window.status=''
-            jq(this).closest('.maxui-activity').find('.maxui-comments').toggle(200)
-            })
-
-        //Assign Username and avatar clicking via delegating the click to the activities container
-        jq('#maxui-activities').on('click','.maxui-actor',function (event) {
-            event.preventDefault()
-            var actor = jq(this).find('.maxui-username').text()
-            maxui.addFilter({type:'actor', value:actor})
-            jq('#maxui-search').toggleClass('folded',false)
-
-            })
-
-        //Assign Username and avatar clicking via delegating the click to the activities container
-        jq('#maxui-search').on('click','#maxui-favorites-filter',function (event) {
-            event.preventDefault()
-            var favoritesButton = jq(event.currentTarget)
-            var filterFavorites = !favoritesButton.hasClass('active')
-            if (filterFavorites) {
-                maxui.addFilter({type:'favorites', value:true, visible:false})
-                var valued_literal = maxui.settings.literals.valued_favorited_activity
-                var recent_literal = maxui.settings.literals.recent_favorited_activity
+        jq('#maxui-more-activities .maxui-button').click(function(event) {
+            event.preventDefault();
+            if (jq('#maxui-search').hasClass('folded')) {
+                maxui.loadMoreActivities();
             } else {
-                maxui.delFilter({type:'favorites', value:true})
-                var valued_literal = maxui.settings.literals.valued_activity
-                var recent_literal = maxui.settings.literals.recent_activity
+                last_result_id = jq('.maxui-activity:last').attr('id');
+                maxui.reloadFilters(last_result_id);
             }
-            favoritesButton.toggleClass('active', filterFavorites)
-            jq('#maxui-activity-sort .maxui-most-recent').text(recent_literal)
-            jq('#maxui-activity-sort .maxui-most-valued').text(valued_literal)
-            })
-
+        });
+        //Assign click to toggle search filters if any search filter defined
+        jq('#maxui-search-toggle').click(function(event) {
+            event.preventDefault();
+            if (!jq(this).hasClass('maxui-disabled')) {
+                jq('#maxui-search').toggleClass('folded');
+                if (jq('#maxui-search').hasClass('folded')) maxui.printActivities({});
+                else maxui.reloadFilters();
+            }
+        });
+        //Assign Commentbox toggling via delegating the click to the activities container
+        jq('#maxui-activities').on('click', '.maxui-commentaction', function(event) {
+            event.preventDefault();
+            window.status = '';
+            jq(this).closest('.maxui-activity').find('.maxui-comments').toggle(200);
+        });
+        //Assign Username and avatar clicking via delegating the click to the activities container
+        jq('#maxui-activities').on('click', '.maxui-actor', function(event) {
+            event.preventDefault();
+            var actor = jq(this).find('.maxui-username').text();
+            maxui.addFilter({
+                type: 'actor',
+                value: actor
+            });
+            jq('#maxui-search').toggleClass('folded', false);
+        });
+        //Assign Username and avatar clicking via delegating the click to the activities container
+        jq('#maxui-search').on('click', '#maxui-favorites-filter', function(event) {
+            event.preventDefault();
+            var favoritesButton = jq(event.currentTarget);
+            var filterFavorites = !favoritesButton.hasClass('active');
+            var valued_literal = '';
+            var recent_literal = '';
+            if (filterFavorites) {
+                maxui.addFilter({
+                    type: 'favorites',
+                    value: true,
+                    visible: false
+                });
+                valued_literal = maxui.settings.literals.valued_favorited_activity;
+                recent_literal = maxui.settings.literals.recent_favorited_activity;
+            } else {
+                maxui.delFilter({
+                    type: 'favorites',
+                    value: true
+                });
+                valued_literal = maxui.settings.literals.valued_activity;
+                recent_literal = maxui.settings.literals.recent_activity;
+            }
+            favoritesButton.toggleClass('active', filterFavorites);
+            jq('#maxui-activity-sort .maxui-most-recent').text(recent_literal);
+            jq('#maxui-activity-sort .maxui-most-valued').text(valued_literal);
+        });
         //Assign hashtag filtering via delegating the click to the activities container
-        jq('#maxui-activities').on('click','.maxui-hashtag',function (event) {
-            event.preventDefault()
-            maxui.addFilter({type:'hashtag', value:jq(this).attr('value')})
-            jq('#maxui-search').toggleClass('folded',false)
-            })
-
+        jq('#maxui-activities').on('click', '.maxui-hashtag', function(event) {
+            event.preventDefault();
+            maxui.addFilter({
+                type: 'hashtag',
+                value: jq(this).attr('value')
+            });
+            jq('#maxui-search').toggleClass('folded', false);
+        });
         //Assign filter closing via delegating the click to the filters container
-        jq('#maxui-search-filters').on('click','.maxui-close',function (event) {
-            event.preventDefault()
-            var filter = jq(this.parentNode.parentNode)
-            maxui.delFilter({type:filter.attr('type'), value:filter.attr('value')})
-            })
-
+        jq('#maxui-search-filters').on('click', '.maxui-close', function(event) {
+            event.preventDefault();
+            var filter = jq(this.parentNode.parentNode);
+            maxui.delFilter({
+                type: filter.attr('type'),
+                value: filter.attr('value')
+            });
+        });
         //Assign filter closing via delegating the click to the filters container
-        jq('#maxui-new-participants').on('click','.maxui-close',function (event) {
-            event.preventDefault()
-            var filter = jq(this.parentNode.parentNode)
-            maxui.delPerson({username:filter.attr('username')})
-            })
-
+        jq('#maxui-new-participants').on('click', '.maxui-close', function(event) {
+            event.preventDefault();
+            var filter = jq(this.parentNode.parentNode);
+            maxui.delPerson({
+                username: filter.attr('username')
+            });
+        });
         //Assign filter closing via delegating the click to the filters container
-        jq('#maxui-new-displayName').on('keyup','input',function (event) {
-            event.preventDefault()
-            maxui.reloadPersons()
-
-            })
-
+        jq('#maxui-new-displayName').on('keyup', 'input', function(event) {
+            event.preventDefault();
+            maxui.reloadPersons();
+        });
         //Assign user mention suggestion to textarea by click
-        jq('#maxui-newactivity').on('click','.maxui-prediction',function (event) {
-            event.preventDefault()
-
-            var $selected = jq(this)
-            var $area = jq('#maxui-newactivity-box textarea')
-            var $predictive = jq('#maxui-newactivity #maxui-predictive')
-            var text = $area.val()
-
-            var matchMention = new RegExp('^\\s*@([\\w\\.]+)')
-            var match = text.match(matchMention)
-            var replacement = text.replace(matchMention, '@'+$selected.text()+' ')
-            $predictive.hide()
-            $area.val(replacement)
-            $area.focus()
-            })
-
+        jq('#maxui-newactivity').on('click', '.maxui-prediction', function(event) {
+            event.preventDefault();
+            var $selected = jq(this);
+            var $area = jq('#maxui-newactivity-box textarea');
+            var $predictive = jq('#maxui-newactivity #maxui-predictive');
+            var text = $area.val();
+            var matchMention = new RegExp('^\\s*@([\\w\\.]+)');
+            var match = text.match(matchMention);
+            var replacement = text.replace(matchMention, '@' + $selected.text() + ' ');
+            $predictive.hide();
+            $area.val(replacement);
+            $area.focus();
+        });
         // Close predictive window if clicked outside
         jq(document).on('click', function(event) {
-            var $predictive = jq('#maxui-conversation-predictive')
-            $predictive.hide()
-        })
-
-       //Assign user mention suggestion to input by click
-        jq('#maxui-conversation-predictive').on('click','.maxui-prediction',function (event) {
-            event.preventDefault()
-            console.log('click')
-            var $selected = jq(this)
-            var $area = jq('#maxui-add-people-box .maxui-text-input')
-            var $predictive = jq('#maxui-conversation-predictive')
-            var text = $area.val()
-
-            var matchMention = new RegExp('^\\s*([\\w\\.]+)\s*')
-            var match = text.match(matchMention)
-            var replacement = text.replace(matchMention, $selected.text())
-
-            maxui.addPerson({'username': replacement})
-            $predictive.hide()
-            $area.val('').focus()
-            })
-
-        //Assign activation of conversations section by its button
-        jq('#maxui-show-conversations').on('click',function (event) {
-            event.preventDefault()
-            window.status=''
-            maxui.printConversations( function() { maxui.toggleSection('conversations') })
-
-            })
-
-        //Assign activation of conversations section by its button
-        jq('#maxui-back-conversations').on('click',function (event) {
-            event.preventDefault()
-            window.status=''
-            maxui.printConversations( function() { maxui.toggleMessages('conversations') })
-            })
+            var $predictive = jq('.maxui-predictive');
+            $predictive.hide();
+        });
+        //Assign user mention suggestion to input by click
+        jq('#maxui-conversation-predictive').on('click', '.maxui-prediction', function(event) {
+            event.preventDefault();
+            console.log('click');
+            var $selected = jq(this);
+            var $area = jq('#maxui-add-people-box .maxui-text-input');
+            var $predictive = jq('#maxui-conversation-predictive');
+            var username = $selected.attr('data-username');
+            var displayname = $selected.attr('data-displayname');
+            maxui.addPerson({
+                'username': username,
+                'displayName': displayname
+            });
+            $predictive.hide();
+            $area.val('').focus();
+        });
+        //Assign toggling conversations section
+        jq('#maxui-show-conversations').on('click', function(event) {
+            event.preventDefault();
+            window.status = '';
+            maxui.toggleSection('conversations');
+        });
 
         //Assign activation of timeline section by its button
-        jq('#maxui-show-timeline').on('click',function (event) {
-            event.preventDefault()
-            window.status=''
-            maxui.printActivities({}, function() { maxui.toggleSection('timeline') })
-            })
-
-        //Assign activation of messages section by delegating the clicl of a conversation arrow to the conversations container
-        jq('#maxui-conversations').on('click', '.maxui-conversation',function (event) {
-            event.preventDefault()
-            window.status=''
-            var conversation_hash = jq(event.target).closest('.maxui-conversation').attr('id')
-            var conversation_displayName = jq(event.target).closest('.maxui-conversation').attr('data-displayname')
-            maxui.settings.currentConversation = {'hash': conversation_hash, 'displayName': conversation_displayName}
-            maxui.printMessages(conversation_hash, function() { maxui.toggleMessages('messages') })
-            })
-
+        jq('#maxui-show-timeline').on('click', function(event) {
+            event.preventDefault();
+            window.status = '';
+            maxui.printActivities({}, function(event) {
+                maxui.toggleSection('timeline');
+            });
+        });
         //Toggle favorite status via delegating the click to the activities container
-        jq('#maxui-activities').on('click','.maxui-action.maxui-favorites',function (event) {
-            event.preventDefault()
-            var $favorites = jq(this)
-            var $activity = jq(this).closest('.maxui-activity')
-            var activityid = $activity.attr('id')
-            var favorited = $favorites.hasClass('maxui-favorited')
-
+        jq('#maxui-activities').on('click', '.maxui-action.maxui-favorites', function(event) {
+            event.preventDefault();
+            var $favorites = jq(this);
+            var $activity = jq(this).closest('.maxui-activity');
+            var activityid = $activity.attr('id');
+            var favorited = $favorites.hasClass('maxui-favorited');
             if (favorited) {
                 maxui.maxClient.unfavoriteActivity(activityid, function(event) {
-                    $favorites.toggleClass('maxui-favorited', false)
-                })
+                    $favorites.toggleClass('maxui-favorited', false);
+                });
             } else {
                 maxui.maxClient.favoriteActivity(activityid, function(event) {
-                    $favorites.toggleClass('maxui-favorited', true)
-                })
-
+                    $favorites.toggleClass('maxui-favorited', true);
+                });
             }
-        })
-
+        });
         //Toggle like status via delegating the click to the activities container
-        jq('#maxui-activities').on('click','.maxui-action.maxui-likes',function (event) {
-            event.preventDefault()
-            var $likes = jq(this)
-            var $activity = jq(this).closest('.maxui-activity')
-            var activityid = $activity.attr('id')
-            var liked = $likes.hasClass('maxui-liked')
-
+        jq('#maxui-activities').on('click', '.maxui-action.maxui-likes', function(event) {
+            event.preventDefault();
+            var $likes = jq(this);
+            var $activity = jq(this).closest('.maxui-activity');
+            var activityid = $activity.attr('id');
+            var liked = $likes.hasClass('maxui-liked');
             if (liked) {
                 maxui.maxClient.unlikeActivity(activityid, function(event) {
-                    $likes.toggleClass('maxui-liked', false)
-                })
+                    $likes.toggleClass('maxui-liked', false);
+                });
             } else {
                 maxui.maxClient.likeActivity(activityid, function(event) {
-                    $likes.toggleClass('maxui-liked', true)
-                })
+                    $likes.toggleClass('maxui-liked', true);
+                });
             }
-        })
-
+        });
         //Assign activity removal confirmation dialog toggle via delegating the click to the activities container
-        jq('#maxui-activities').on('click','.maxui-action.maxui-delete',function (event) {
-            console.log('delete')
-            event.preventDefault()
-            var $activity = jq(this).closest('.maxui-activity')
-            var $dialog = $activity.find('.maxui-actions > .maxui-popover')
-
+        jq('#maxui-activities').on('click', '.maxui-action.maxui-delete', function(event) {
+            console.log('delete');
+            event.preventDefault();
+            var $activity = jq(this).closest('.maxui-activity');
+            var $dialog = $activity.find('.maxui-actions > .maxui-popover');
             if (!$dialog.is(':visible')) {
-                jq('.maxui-popover').css({opacity:0}).hide()
-                $dialog.show()
-                $dialog.animate({opacity:1}, 300)
+                jq('.maxui-popover').css({
+                    opacity: 0
+                }).hide();
+                $dialog.show();
+                $dialog.animate({
+                    opacity: 1
+                }, 300);
             } else {
-                $dialog.animate({opacity:0}, 300)
-                jq('.maxui-popover').css({opacity:0}).hide()
+                $dialog.animate({
+                    opacity: 0
+                }, 300);
+                jq('.maxui-popover').css({
+                    opacity: 0
+                }).hide();
             }
-        })
-
+        });
         //Assign activity removal confirmation dialog via delegating the click to the activities container
-        jq('#maxui-activities').on('click','.maxui-actions .maxui-button-cancel',function (event) {
-            event.preventDefault()
-            var $activity = jq(this).closest('.maxui-activity')
+        jq('#maxui-activities').on('click', '.maxui-actions .maxui-button-cancel', function(event) {
+            event.preventDefault();
+            var $activity = jq(this).closest('.maxui-activity');
             // Hide all visible dialogs
-            $popover = jq('.maxui-popover:visible').css({opacity:0})
-            $popover.hide()
-        })
-
+            $popover = jq('.maxui-popover:visible').css({
+                opacity: 0
+            });
+            $popover.hide();
+        });
         //Assign activity removal via delegating the click to the activities container
-        jq('#maxui-activities').on('click','.maxui-actions .maxui-button-delete',function (event) {
-            console.log('delete activityid')
-            event.preventDefault()
-            var $activity = jq(this).closest('.maxui-activity')
-            var activityid = $activity.attr('id')
+        jq('#maxui-activities').on('click', '.maxui-actions .maxui-button-delete', function(event) {
+            console.log('delete activityid');
+            event.preventDefault();
+            var $activity = jq(this).closest('.maxui-activity');
+            var activityid = $activity.attr('id');
             maxui.maxClient.removeActivity(activityid, function(event) {
-                var $popover =jq('.maxui-popover:visible').animate({opacity:0}, 300)
-                $activity.css({height:$activity.height(), 'min-height':'auto'})
-                $activity.animate({height: 0, opacity:0}, 100, function(event) {
-                    $activity.remove()
-                    $popover.hide()
-
-                })
-            })
-
-        })
-
+                var $popover = jq('.maxui-popover:visible').animate({
+                    opacity: 0
+                }, 300);
+                $activity.css({
+                    height: $activity.height(),
+                    'min-height': 'auto'
+                });
+                $activity.animate({
+                    height: 0,
+                    opacity: 0
+                }, 100, function(event) {
+                    $activity.remove();
+                    $popover.hide();
+                });
+            });
+        });
         //Assign activity comment removal confirmation dialog toggle via delegating the click to the activities container
-        jq('#maxui-activities').on('click','.maxui-delete-comment',function (event) {
-            event.preventDefault()
-            var $comment = jq(this).closest('.maxui-comment')
-            var $dialog = $comment.find('.maxui-popover')
-
+        jq('#maxui-activities').on('click', '.maxui-delete-comment', function(event) {
+            event.preventDefault();
+            var $comment = jq(this).closest('.maxui-comment');
+            var $dialog = $comment.find('.maxui-popover');
             if (!$dialog.is(':visible')) {
-                jq('.maxui-popover').css({opacity:0}).hide()
-                $dialog.show()
-                $dialog.animate({opacity:1}, 300)
+                jq('.maxui-popover').css({
+                    opacity: 0
+                }).hide();
+                $dialog.show();
+                $dialog.animate({
+                    opacity: 1
+                }, 300);
             } else {
-               $dialog.animate({opacity:0}, 300)
-               jq('.maxui-popover').css({opacity:0}).hide()
+                $dialog.animate({
+                    opacity: 0
+                }, 300);
+                jq('.maxui-popover').css({
+                    opacity: 0
+                }).hide();
             }
-        })
-
+        });
         //Assign activity comment removal confirmation dialog via delegating the click to the activities container
-        jq('#maxui-activities').on('click','.maxui-comment .maxui-button-cancel',function (event) {
-            event.preventDefault()
-            var $comment = jq(this).closest('.maxui-comment')
-            var $dialog = $comment.find('.maxui-popover')
-
-            $popover = jq('.maxui-popover').css({opacity:0})
-            $popover.hide()
-        })
-
-
+        jq('#maxui-activities').on('click', '.maxui-comment .maxui-button-cancel', function(event) {
+            event.preventDefault();
+            var $comment = jq(this).closest('.maxui-comment');
+            var $dialog = $comment.find('.maxui-popover');
+            $popover = jq('.maxui-popover').css({
+                opacity: 0
+            });
+            $popover.hide();
+        });
         //Assign activity comment removal via delegating the click to the activities container
-        jq('#maxui-activities').on('click','.maxui-comment .maxui-button-delete',function (event) {
-            console.log('delete comment')
-            event.preventDefault()
-            var $comment = jq(this).closest('.maxui-comment')
-            var $activity = $comment.closest('.maxui-activity')
-            var activityid = $activity.attr('id')
-            var commentid = $comment.attr('id')
+        jq('#maxui-activities').on('click', '.maxui-comment .maxui-button-delete', function(event) {
+            console.log('delete comment');
+            event.preventDefault();
+            var $comment = jq(this).closest('.maxui-comment');
+            var $activity = $comment.closest('.maxui-activity');
+            var activityid = $activity.attr('id');
+            var commentid = $comment.attr('id');
             maxui.maxClient.removeActivityComment(activityid, commentid, function() {
-                var $popover =jq('.maxui-popover').animate({opacity:0}, 300)
-                $comment.css({height:$activity.height(), 'min-height':'auto'})
-                $comment.animate({height: 0, opacity:0}, 100, function(event) {
-                    $comment.remove()
-                    $popover.hide()
-                })
-            })
-
-        })
-
-
-        jq('#maxui-activity-sort').on('click', 'a.maxui-sort-action.maxui-most-recent', function (event) {
-            event.preventDefault()
-            $sortbutton = jq(this)
+                var $popover = jq('.maxui-popover').animate({
+                    opacity: 0
+                }, 300);
+                $comment.css({
+                    height: $activity.height(),
+                    'min-height': 'auto'
+                });
+                $comment.animate({
+                    height: 0,
+                    opacity: 0
+                }, 100, function(event) {
+                    $comment.remove();
+                    $popover.hide();
+                });
+            });
+        });
+        jq('#maxui-activity-sort').on('click', 'a.maxui-sort-action.maxui-most-recent', function(event) {
+            event.preventDefault();
+            $sortbutton = jq(this);
             if (!$sortbutton.hasClass('active')) {
-                jq('#maxui-activity-sort .maxui-sort-action.active').toggleClass('active', false)
-                $sortbutton.toggleClass('active', true)
-                maxui.printActivities({})
+                jq('#maxui-activity-sort .maxui-sort-action.active').toggleClass('active', false);
+                $sortbutton.toggleClass('active', true);
+                maxui.printActivities({});
             }
-
-        })
-
-        jq('#maxui-activity-sort').on('click', 'a.maxui-sort-action.maxui-most-valued', function (event) {
-            event.preventDefault()
-            $sortbutton = jq(this)
+        });
+        jq('#maxui-activity-sort').on('click', 'a.maxui-sort-action.maxui-most-valued', function(event) {
+            event.preventDefault();
+            $sortbutton = jq(this);
             if (!$sortbutton.hasClass('active')) {
-                jq('#maxui-activity-sort .maxui-sort-action.active').toggleClass('active', false)
-                $sortbutton.toggleClass('active', true)
-                maxui.printActivities({sortBy: 'likes'})
+                jq('#maxui-activity-sort .maxui-sort-action.active').toggleClass('active', false);
+                $sortbutton.toggleClass('active', true);
+                maxui.printActivities({
+                    sortBy: 'likes'
+                });
             }
-
-        })
-// **************************************************************************************
-//                    add people predicting
-// **************************************************************************************
-        var selector = '.maxui-text-input'
-        jq('#maxui-add-people-box')
-        .on('focusin',selector, function(event) {
-                  event.preventDefault()
-                  var text = jq(this).val()
-                  var literal = jq(this).attr('data-literal')
-                  normalized = maxui.utils.normalizeWhiteSpace(text,false)
-                  if ( normalized==literal )
-                      jq(this).val('')
-        })
-
-         .on('keydown', selector, function(event) {
-           if ( jq('#maxui-conversation-predictive:visible').length>0 &&  (event.which==40 || event.which==38 || event.which==13 || event.which==9)) {
-              maxui.utils.freezeEvent(event)
-           }
-         })
-
-        .on('keyup',selector, function(event) {
-                  event.preventDefault()
-                  event.stopPropagation()
-                  var text = jq(this).val()
-                  var normalized = maxui.utils.normalizeWhiteSpace(text,false)
-                  if (normalized=='')
-                  {   jq(this).attr('class','maxui-empty maxui-text-input')
-                      jq(this).removeAttr('title')
-                  }
-                  else
-                  {   if (maxui.settings.canwrite) {
-                          jq(this).attr('class','maxui-text-input')
-                      }
-                  }
-                  var key = event.which
-                  var matchMention = new RegExp('^\\s*([\\w\\.]+)\\s*')
-                  var match = text.match(matchMention)
-
-                  var matchMentionEOL = new RegExp('^\\s*([\\w\\.]+)\\s*$')
-                  var matchEOL = text.match(matchMentionEOL)
-
-                  var $selected = jq('#maxui-conversation-predictive .maxui-prediction.selected')
-                  var $area = jq(this)
-                  var $predictive = jq('#maxui-conversation-predictive')
-                  var num_predictions = $predictive.find('.maxui-prediction').length
-                  var is_predicting = jq('#maxui-conversation-predictive:visible').length>0
-
-                  // Up & down
-                  if (key==40 && is_predicting && num_predictions>1) {
-                    var $next = $selected.next()
-                    $selected.removeClass('selected')
-                    if ($next.length>0) $next.addClass('selected')
-                    else {$selected.siblings(':first').addClass('selected')}
-                  }
-                  else if (key==38 && is_predicting && num_predictions>1) {
-                    var $prev = $selected.prev()
-                    $selected.removeClass('selected')
-                    if ($prev.length>0) $prev.addClass('selected')
-                    else {$selected.siblings(':last').addClass('selected')}
-                  }
-                  else if (key==27) {
-                    $predictive.hide()
-                  }
-                  else if ((key==13 || key==9) && is_predicting) {
-                    console.log('intro')
-                    var matchMention2 = new RegExp('^\\s*([\\w\\.]+\\s*)')
-                    var replacement = text.replace(matchMention2, $selected.text())
-                    console.log(replacement)
-                    maxui.addPerson({'username': replacement})
-                    $predictive.hide()
-                    $area.val('').focus()
-                  }
-
-                  else //1
-                  {
-                      if (maxui.settings.conversationsSection=='conversations') {
-                          if (match) {
-                              $area.attr('class','maxui-text-input')
-                              if (matchEOL) {
-                                  $predictive.show()
-                                  $predictive.html('<ul></ul>')
-                                  maxui.printPredictions(match[1], '#maxui-conversation-predictive')
-                              }
-                          }
-
-                          else {
-                              $predictive.hide()
-                              $area.attr('class','maxui-empty maxui-text-input')
-                              if (!text.match(RegExp('^\\s*@')) ) {
-                                  $area.attr('class','maxui-text-input error')
-                                  $area.attr('title', maxui.settings.literals.post_permission_not_here)
-                              }
-                          }
-                      }
-                 } //1
-
-
-        })
-
-        .on('focusout',selector, function(event) {
-                  event.preventDefault()
-                  var text = jq(this).val()
-                  var literal = jq(this).attr('data-literal')
-                  normalized = maxui.utils.normalizeWhiteSpace(text,false)
-                  if ( normalized=='' )
-                      jq(this).val(literal)
-        })
-
-
-// **************************************************************************************
-
-
-
+        });
+        // **************************************************************************************
+        //                    add people predicting
+        // **************************************************************************************
+        var selector = '.maxui-text-input';
+        jq('#maxui-add-people-box').on('focusin', selector, function(event) {
+            event.preventDefault();
+            var text = jq(this).val();
+            var literal = jq(this).attr('data-literal');
+            normalized = maxui.utils.normalizeWhiteSpace(text, false);
+            if (normalized == literal) jq(this).val('');
+        }).on('keydown', selector, function(event) {
+            if (jq('#maxui-conversation-predictive:visible').length > 0 && (event.which == 40 || event.which == 38 || event.which == 13 || event.which == 9)) {
+                maxui.utils.freezeEvent(event);
+            }
+        }).on('keyup', selector, function(event) {
+            event.preventDefault();
+            event.stopPropagation();
+            var text = jq(this).val();
+            var normalized = maxui.utils.normalizeWhiteSpace(text, false);
+            if (normalized === '') {
+                jq(this).attr('class', 'maxui-empty maxui-text-input');
+                jq(this).removeAttr('title');
+            } else {
+                if (maxui.settings.canwrite) {
+                    jq(this).attr('class', 'maxui-text-input');
+                }
+            }
+            var key = event.which;
+            var matchMention = new RegExp('^\\s*([\\w\\.]+)\\s*');
+            var match = text.match(matchMention);
+            var matchMentionEOL = new RegExp('^\\s*([\\w\\.]+)\\s*$');
+            var matchEOL = text.match(matchMentionEOL);
+            var $selected = jq('#maxui-conversation-predictive .maxui-prediction.selected');
+            var $area = jq(this);
+            var $predictive = jq('#maxui-conversation-predictive');
+            var num_predictions = $predictive.find('.maxui-prediction').length;
+            var is_predicting = jq('#maxui-conversation-predictive:visible').length > 0;
+            // Up & down
+            if (key == 40 && is_predicting && num_predictions > 1) {
+                var $next = $selected.next();
+                $selected.removeClass('selected');
+                if ($next.length > 0) {
+                    $next.addClass('selected');
+                } else {
+                    $selected.siblings(':first').addClass('selected');
+                }
+            } else if (key == 38 && is_predicting && num_predictions > 1) {
+                var $prev = $selected.prev();
+                $selected.removeClass('selected');
+                if ($prev.length > 0) {
+                    $prev.addClass('selected');
+                } else {
+                    $selected.siblings(':last').addClass('selected');
+                }
+            } else if (key == 27) {
+                $predictive.hide();
+            } else if ((key == 13 || key == 9) && is_predicting) {
+                var username = $selected.attr('data-username');
+                var displayname = $selected.attr('data-displayname');
+                maxui.addPerson({
+                    'username': username,
+                    'displayName': displayname
+                });
+                $predictive.hide();
+                $area.val('').focus();
+            } else //1
+            {
+                if (maxui.settings.conversationsSection == 'conversations') {
+                    if (match) {
+                        $area.attr('class', 'maxui-text-input');
+                        if (matchEOL) {
+                            $predictive.show();
+                            $predictive.html('<ul></ul>');
+                            maxui.printPredictions(match[1], '#maxui-conversation-predictive');
+                        }
+                    } else {
+                        $predictive.hide();
+                        $area.attr('class', 'maxui-empty maxui-text-input');
+                        if (!text.match(RegExp('^\\s*@'))) {
+                            $area.attr('class', 'maxui-text-input error');
+                            $area.attr('title', maxui.settings.literals.post_permission_not_here);
+                        }
+                    }
+                }
+            } //1
+        }).on('focusout', selector, function(event) {
+            event.preventDefault();
+            var text = jq(this).val();
+            var literal = jq(this).attr('data-literal');
+            normalized = maxui.utils.normalizeWhiteSpace(text, false);
+            if (normalized === '') jq(this).val(literal);
+        });
+        // **************************************************************************************
         //Assign Activity post action And textarea behaviour
-        maxui.bindActionBehaviour('#maxui-newactivity','#maxui-newactivity-box', {}, function(text)
-                {
-
-                if (maxui.settings.UISection=='timeline') {
-                    maxui.sendActivity(text)
-                    jq('#maxui-search').toggleClass('folded',true)
-                }
-
-                else if (maxui.settings.UISection=='conversations') {
-                    if (maxui.settings.conversationsSection=='conversations') {
-
-                        var participants_box = $('#maxui-new-participants')[0]
-                        var participants = []
-                        for (i=0;i<participants_box.people.length;i++)
-                            participants.push(participants_box.people[i].username)
-                        var message = jq('#maxui-newactivity textarea').val()
-
-                        var options = {
-                            participants: participants,
-                            message: message
-                        }
-
-                        if (participants.length>1) {
-                            var displayName = jq('#maxui-add-people-box #maxui-new-displayName input').val()
-                            options.displayName = displayName
-                        }
-                        maxui.createConversationAndSendMessage(options, function() {
-                            participants_box.people = []
-                            maxui.reloadPersons()
-                        })
+        maxui.bindActionBehaviour('#maxui-newactivity', '#maxui-newactivity-box', {}, function(text) {
+            if (maxui.settings.UISection == 'timeline') {
+                maxui.sendActivity(text);
+                jq('#maxui-search').toggleClass('folded', true);
+            } else if (maxui.settings.UISection == 'conversations') {
+                if (maxui.settings.conversationsSection == 'conversations') {
+                    var participants_box = $('#maxui-new-participants')[0];
+                    var participants = [];
+                    for (i = 0; i < participants_box.people.length; i++) participants.push(participants_box.people[i].username);
+                    var message = jq('#maxui-newactivity textarea').val();
+                    var options = {
+                        participants: participants,
+                        message: message
+                    };
+                    if (participants.length > 1) {
+                        var displayName = jq('#maxui-add-people-box #maxui-new-displayName input').val();
+                        options.displayName = displayName;
                     }
-                    else {
-                      maxui.sendMessage(text, maxui.settings.currentConversation.hash)
+                    maxui.conversations.create(options);
 
-                    }
-
+                } else {
+                    maxui.conversations.send(text);
                 }
-
-
-                },
-                function(text, area, button, ev) {
-
-                  var key = ev.which
-                  var matchMention = new RegExp('^\\s*@([\\w\\.]+)\s*')
-                  var match = text.match(matchMention)
-
-                  var matchMentionEOL = new RegExp('^\\s*@([\\w\\.]+)\s*$')
-                  var matchEOL = text.match(matchMentionEOL)
-
-                  var $selected = jq('#maxui-newactivity .maxui-prediction.selected')
-                  var $area = jq(area)
-                  var $predictive = jq('#maxui-newactivity #maxui-predictive')
-                  var num_predictions = $predictive.find('.maxui-prediction').length
-                  var is_predicting = jq('#maxui-newactivity #maxui-predictive:visible').length>0
-
-                  // Up & down
-                  if (key==40 && is_predicting && num_predictions>1) {
-                    var $next = $selected.next()
-                    $selected.removeClass('selected')
-                    if ($next.length>0) $next.addClass('selected')
-                    else {$selected.siblings(':first').addClass('selected')}
-                  }
-                  else if (key==38 && is_predicting && num_predictions>1) {
-                    var $prev = $selected.prev()
-                    $selected.removeClass('selected')
-                    if ($prev.length>0) $prev.addClass('selected')
-                    else {$selected.siblings(':last').addClass('selected')}
-                  }
-                  else if (key==27) {
-                    $predictive.hide()
-                  }
-                  else if ((key==13 || key==9) && is_predicting) {
-                    var matchMention2 = new RegExp('^\\s*@([\\w\\.]+)')
-                    var replacement = text.replace(matchMention2, '@'+$selected.text()+' ')
-                    $predictive.hide()
-                    $area.val(replacement).focus()
-                  }
-
-                  else if (text=='') {
-                      if (maxui.settings.UISection=='timeline')
-                          jq(button).val(maxui.settings.literals.new_activity_post)
-                  }
-
-                  else //1
-                  {
-                      if (maxui.settings.UISection=='timeline') {
-
-                          if (match) {
-                              jq(button).val(maxui.settings.literals.new_message_post)
-                              if (matchEOL) {
-                                  $predictive.show()
-                                  $predictive.html('<ul></ul>')
-                                  maxui.printPredictions(match[1], '#maxui-newactivity #maxui-predictive')
-                              }
-                              jq(button).removeAttr('disabled')
-                              jq(button).attr('class','maxui-button')
-                              $area.attr('class','maxui-text-input')
-
-
-                          }
-                          else {
-                              jq(button).val(maxui.settings.literals.new_activity_post)
-                              $predictive.hide()
-                              if (!text.match(RegExp('^\\s*@')) && !maxui.settings.canwrite) {
-                                  $area.attr('class','maxui-text-input error')
-                                  $area.attr('title', maxui.settings.literals.post_permission_unauthorized)
-                              }                          }
-                      }
-
-                      else if (maxui.settings.UISection=='conversations') {
-
-                          if (maxui.settings.conversationsSection=='conversations') {
-                            maxui.reloadPersons()
-                          }
-                          else if (maxui.settings.conversationsSection=='messages') {
-                              $predictive.hide()
-                              jq(button).removeAttr('disabled')
-                              jq(button).attr('class','maxui-button')
-                              $area.attr('class','maxui-text-input')
-                          }
-
-
-                      } //elseif
-
-                  } //1
-                }) //function
-
-
-
+            }
+        }, function(text, area, button, ev) {
+            var key = ev.which;
+            var matchMention = new RegExp('^\\s*@([\\w\\.]+)\\s*');
+            var match = text.match(matchMention);
+            var matchMentionEOL = new RegExp('^\\s*@([\\w\\.]+)\\s*$');
+            var matchEOL = text.match(matchMentionEOL);
+            var $selected = jq('#maxui-newactivity .maxui-prediction.selected');
+            var $area = jq(area);
+            var $predictive = jq('#maxui-newactivity #maxui-predictive');
+            var num_predictions = $predictive.find('.maxui-prediction').length;
+            var is_predicting = jq('#maxui-newactivity #maxui-predictive:visible').length > 0;
+            // Up & down
+            if (key == 40 && is_predicting && num_predictions > 1) {
+                var $next = $selected.next();
+                $selected.removeClass('selected');
+                if ($next.length > 0) {
+                    $next.addClass('selected');
+                } else {
+                    $selected.siblings(':first').addClass('selected');
+                }
+            } else if (key == 38 && is_predicting && num_predictions > 1) {
+                var $prev = $selected.prev();
+                $selected.removeClass('selected');
+                if ($prev.length > 0) {
+                    $prev.addClass('selected');
+                } else {
+                    $selected.siblings(':last').addClass('selected');
+                }
+            } else if (key == 27) {
+                $predictive.hide();
+            } else if ((key == 13 || key == 9) && is_predicting) {
+                var matchMention2 = new RegExp('^\\s*@([\\w\\.]+)');
+                var replacement = text.replace(matchMention2, '@' + $selected.text() + ' ');
+                $predictive.hide();
+                $area.val(replacement).focus();
+            } else if (text === '') {
+                if (maxui.settings.UISection == 'timeline') jq(button).val(maxui.settings.literals.new_activity_post);
+            } else //1
+            {
+                if (maxui.settings.UISection == 'timeline') {
+                    if (match) {
+                        jq(button).val(maxui.settings.literals.new_message_post);
+                        if (matchEOL) {
+                            $predictive.show();
+                            $predictive.html('<ul></ul>');
+                            maxui.printPredictions(match[1], '#maxui-newactivity #maxui-predictive');
+                        }
+                        jq(button).removeAttr('disabled');
+                        jq(button).attr('class', 'maxui-button');
+                        $area.attr('class', 'maxui-text-input');
+                    } else {
+                        jq(button).val(maxui.settings.literals.new_activity_post);
+                        $predictive.hide();
+                        if (!text.match(RegExp('^\\s*@')) && !maxui.settings.canwrite) {
+                            $area.attr('class', 'maxui-text-input error');
+                            $area.attr('title', maxui.settings.literals.post_permission_unauthorized);
+                        }
+                    }
+                } else if (maxui.settings.UISection == 'conversations') {
+                    if (maxui.settings.conversationsSection == 'conversations') {
+                        maxui.reloadPersons();
+                    } else if (maxui.settings.conversationsSection == 'messages') {
+                        $predictive.hide();
+                        jq(button).removeAttr('disabled');
+                        jq(button).attr('class', 'maxui-button');
+                        $area.attr('class', 'maxui-text-input');
+                    }
+                } //elseif
+            } //1
+        }); //function;
         //Assign Commentbox send comment action And textarea behaviour
-        maxui.bindActionBehaviour('#maxui-activities', '.maxui-newcommentbox', {}, function(text)
-               {
-               var activityid = jq(this).closest('.maxui-activity').attr('id')
-               maxui.maxClient.addComment(text, activityid, function() {
-                            jq('#activityContainer textarea').val('')
-                            var activity_id = this.object.inReplyTo[0].id
-                            maxui.printCommentsForActivity(activity_id)
-                            jq('#'+activity_id+' .maxui-newcommentbox textarea').val('')
-                            jq('#'+activity_id+' .maxui-newcommentbox .maxui-button').attr('disabled','disabled')
-                            })
-              })
-
+        maxui.bindActionBehaviour('#maxui-activities', '.maxui-newcommentbox', {}, function(text) {
+            var activityid = jq(this).closest('.maxui-activity').attr('id');
+            maxui.maxClient.addComment(text, activityid, function() {
+                jq('#activityContainer textarea').val('');
+                var activity_id = this.object.inReplyTo[0].id;
+                maxui.printCommentsForActivity(activity_id);
+                jq('#' + activity_id + ' .maxui-newcommentbox textarea').val('');
+                jq('#' + activity_id + ' .maxui-newcommentbox .maxui-button').attr('disabled', 'disabled');
+            });
+        });
         //Assign Search box search action And input behaviour
-        maxui.bindActionBehaviour('#maxui-search','#maxui-search-box', {}, function(text)
-               {
-                console.log('behaviour')
-               maxui.textSearch(text)
-               jq('#maxui-search').toggleClass('folded',false)
-               jq('#maxui-search-text').val('')
-               })
+        maxui.bindActionBehaviour('#maxui-search', '#maxui-search-box', {}, function(text) {
+            console.log('behaviour');
+            maxui.textSearch(text);
+            jq('#maxui-search').toggleClass('folded', false);
+            jq('#maxui-search-text').val('');
+        });
         // // Execute search if <enter> pressed
         // jq('#maxui-search .maxui-text-input').keyup(function(e) {
         //           if (e.keyCode == 13) {
@@ -6688,1195 +9479,765 @@ MaxClient.prototype.unlikeActivity = function(activityid, callback ) {
         //              jq('#maxui-search').toggleClass('folded',false)
         //           }
         // });
-    }
-
+    };
     /**
-    *    Takes a  button-input pair identified by 'maxui-button' and 'maxui-text-input'
-    *    classes respectively, contained in a container and applies focusin/out
-    *    and clicking behaviour
-    *
-    *    @param {String} delegate         CSS selector identifying the parent container on which to delegate events
-    *    @param {String} target           CSS selector identifying the direct container on which execute events
-    *    @param {object} options          Extra options, currently ignore-button, to avoid button updates
-    *    @param {Function} clickFunction  Function to execute when click on the button
-    **/
+     *    Takes a  button-input pair identified by 'maxui-button' and 'maxui-text-input'
+     *    classes respectively, contained in a container and applies focusin/out
+     *    and clicking behaviour
+     *
+     *    @param {String} delegate         CSS selector identifying the parent container on which to delegate events
+     *    @param {String} target           CSS selector identifying the direct container on which execute events
+     *    @param {object} options          Extra options, currently ignore-button, to avoid button updates
+     *    @param {Function} clickFunction  Function to execute when click on the button
+     **/
     jq.fn.bindActionBehaviour = function(delegate, target, options, clickFunction) {
-
         // Clear input when focusing in only if user hasn't typed anything yet
-        var maxui = this
-        var selector = target+' .maxui-text-input'
-        if (arguments.length>4) { var extra_bind = arguments[4] }
-        else { var extra_bind = null }
-        jq(delegate)
-
-        .on('focusin',selector, function(event) {
-                  event.preventDefault()
-                  var text = jq(this).val()
-                  var literal = jq(this).attr('data-literal')
-                  normalized = maxui.utils.normalizeWhiteSpace(text,false)
-                  if ( normalized==literal )
-                      jq(this).val('')
-        })
-
-         .on('keydown', selector, function(event) {
-           if ( jq(delegate + ' #maxui-predictive:visible').length>0 &&  (event.which==40 || event.which==38 || event.which==13 || event.which==9)) {
-              maxui.utils.freezeEvent(event)
-           } else if(event.which==13 && event.shiftKey==false && !options.ignore_button) {
-                event.preventDefault()
-                var $area = jq(this).parent().find('.maxui-text-input')
-                var literal = $area.attr('data-literal')
-                var text = $area.val()
-                var normalized = maxui.utils.normalizeWhiteSpace(text,false)
-
-                if (normalized!=literal & normalized!='')
-                    clickFunction.apply(this,[text])
-
-           }
-
-
-         })
-
-        .on('keyup',selector, function(event) {
-                  event.preventDefault()
-                  event.stopPropagation()
-                  var text = jq(this).val()
-                  var button = jq(this).parent().find('.maxui-button')
-                  var normalized = maxui.utils.normalizeWhiteSpace(text,false)
-                  if (normalized=='' && !options.ignore_button)
-                  {   jq(button).attr('disabled', 'disabled')
-                      jq(button).attr('class','maxui-button maxui-disabled')
-                      jq(this).attr('class','maxui-empty maxui-text-input')
-                      jq(this).removeAttr('title')
-                      jq('.maxui-error-box').animate({'margin-top': -25}, 200)
-
-                  }
-                  else
-                  {   if (maxui.settings.canwrite && !options.ignore_button) {
-                          jq(button).removeAttr('disabled')
-                          jq(button).attr('class','maxui-button')
-                          jq(this).attr('class','maxui-text-input')
-                      }
-                  }
-
-                  if (extra_bind!=null) {
-                    extra_bind(text, this, button, event)
-                  }
-
-
-        })
-
-        .on('focusout',selector, function(event) {
-                  event.preventDefault()
-                  var text = jq(this).val()
-                  var literal = jq(this).attr('data-literal')
-                  normalized = maxui.utils.normalizeWhiteSpace(text,false)
-                  if ( normalized=='' )
-                      jq(this).val(literal)
-        })
-
-        .on('click',target+' .maxui-button',function (event) {
-            event.preventDefault()
-            var $area = jq(this).parent().find('.maxui-text-input')
-            var literal = $area.attr('data-literal')
-            var text = $area.val()
-            var normalized = maxui.utils.normalizeWhiteSpace(text,false)
-
-            if ((normalized!=literal & normalized!='') || options.empty_click)
-                clickFunction.apply(this,[text])
-            })
-
-    }
-
-    /**
-    *    Updates the search filters with a new collection of keywords/hashtags extracted of
-    *    a user-entered text, and reloads the search query. Identifies special characters
-    *    at the first position of each keyword to identify keyword type
-    *
-    *    @param {String} text    A string containing whitespace-separated keywords/#hashtags
-    **/
-    jq.fn.textSearch = function (text) {
-                maxui = this
-                //Normalize spaces
-                normalized = maxui.utils.normalizeWhiteSpace(text)
-                var keywords = normalized.split(' ')
-                for (kw=0;kw<keywords.length;kw++)
-                {
-                    var kwtype = 'keyword'
-                    var keyword = keywords[kw]
-
-                    switch (keyword[0])
-                    {
-                    case '#': var kwtype='hashtag';
-                              var keyword = keyword.substr(1);
-                              break;
-                    case '@': var kwtype='actor';
-                              var keyword = keyword.substr(1);
-                              break;
-                    default:  var kwtype = 'keyword';
-                              break;
-                    }
-
-                    if (keyword.length>=3)
-                        this.addFilter({type:kwtype, value:keyword}, false)
-                }
-                this.reloadFilters()
-    }
-
-
-    /**
-    *    Prepares a object with the current active filters
-    *
-    *    @param {String} (optional)    A string containing the id of the last activity loaded
-    **/
-    jq.fn.getFilters = function() {
-
-        var maxui=this
-        var params = {filters:maxui.filters}
-        if (params.filters == undefined) {
-            params.filters = []
+        var maxui = this;
+        var selector = target + ' .maxui-text-input';
+        var extra_bind = null;
+        if (arguments.length > 4) {
+            extra_bind = arguments[4];
         }
-        var filters = {}
+        jq(delegate).on('focusin', selector, function(event) {
+            event.preventDefault();
+            var text = jq(this).val();
+            var literal = jq(this).attr('data-literal');
+            normalized = maxui.utils.normalizeWhiteSpace(text, false);
+            if (normalized == literal) jq(this).val('');
+        }).on('keydown', selector, function(event) {
+            if (jq(delegate + ' #maxui-predictive:visible').length > 0 && (event.which == 40 || event.which == 38 || event.which == 13 || event.which == 9)) {
+                maxui.utils.freezeEvent(event);
+            } else if (event.which == 13 && event.shiftKey === false && !options.ignore_button) {
+                event.preventDefault();
+                var $area = jq(this).parent().find('.maxui-text-input');
+                var literal = $area.attr('data-literal');
+                var text = $area.val();
+                var normalized = maxui.utils.normalizeWhiteSpace(text, false);
+                if (normalized != literal & normalized !== '') clickFunction.apply(this, [text]);
+            }
+        }).on('keyup', selector, function(event) {
+            event.preventDefault();
+            event.stopPropagation();
+            var text = jq(this).val();
+            var button = jq(this).parent().find('.maxui-button');
+            var normalized = maxui.utils.normalizeWhiteSpace(text, false);
+            if (normalized === '' && !options.ignore_button) {
+                jq(button).attr('disabled', 'disabled');
+                jq(button).attr('class', 'maxui-button maxui-disabled');
+                jq(this).attr('class', 'maxui-empty maxui-text-input');
+                jq(this).removeAttr('title');
+                jq('.maxui-error-box').animate({
+                    'margin-top': -25
+                }, 200);
+            } else {
+                if (maxui.settings.canwrite && !options.ignore_button) {
+                    jq(button).removeAttr('disabled');
+                    jq(button).attr('class', 'maxui-button');
+                    jq(this).attr('class', 'maxui-text-input');
+                }
+            }
+            if (extra_bind !== null) {
+                extra_bind(text, this, button, event);
+            }
+        }).on('focusout', selector, function(event) {
+            event.preventDefault();
+            var text = jq(this).val();
+            var literal = jq(this).attr('data-literal');
+            normalized = maxui.utils.normalizeWhiteSpace(text, false);
+            if (normalized === '') jq(this).val(literal);
+        }).on('click', target + ' .maxui-button', function(event) {
+            event.preventDefault();
+            var $area = jq(this).parent().find('.maxui-text-input');
+            var literal = $area.attr('data-literal');
+            var text = $area.val();
+            var normalized = maxui.utils.normalizeWhiteSpace(text, false);
+            if ((normalized != literal & normalized !== '') || options.empty_click) clickFunction.apply(this, [text]);
+        });
+    };
+    /**
+     *    Updates the search filters with a new collection of keywords/hashtags extracted of
+     *    a user-entered text, and reloads the search query. Identifies special characters
+     *    at the first position of each keyword to identify keyword type
+     *
+     *    @param {String} text    A string containing whitespace-separated keywords/#hashtags
+     **/
+    jq.fn.textSearch = function(text) {
+        maxui = this;
+        //Normalize spaces
+        normalized = maxui.utils.normalizeWhiteSpace(text);
+        var keywords = normalized.split(' ');
+        for (kw = 0; kw < keywords.length; kw++) {
+            var kwtype = 'keyword';
+            var keyword = keywords[kw];
+            switch (keyword[0]) {
+                case '#':
+                    kwtype = 'hashtag';
+                    keyword = keyword.substr(1);
+                    break;
+                case '@':
+                    kwtype = 'actor';
+                    keyword = keyword.substr(1);
+                    break;
+                default:
+                    kwtype = 'keyword';
+                    break;
+            }
+            if (keyword.length >= 3) this.addFilter({
+                type: kwtype,
+                value: keyword
+            }, false);
+        }
+        this.reloadFilters();
+    };
+    /**
+     *    Prepares a object with the current active filters
+     *
+     *    @param {String} (optional)    A string containing the id of the last activity loaded
+     **/
+    jq.fn.getFilters = function() {
+        var maxui = this;
+        var params = {
+            filters: maxui.filters
+        };
+        if (params.filters === undefined) {
+            params.filters = [];
+        }
+        var filters = {};
         // group filters
-        enableSearchToggle = false
-        for (f=0;f<params.filters.length;f++) {
-            var filter = params.filters[f]
-
+        enableSearchToggle = false;
+        for (f = 0; f < params.filters.length; f++) {
+            var filter = params.filters[f];
             // Enable toggle button only if there's at least one visible filter
             if (filter.visible) {
-                enableSearchToggle = true
+                enableSearchToggle = true;
             }
             if (!filters[filter.type]) {
-                filters[filter.type]=[]
+                filters[filter.type] = [];
             }
-            filters[filter.type].push(filter.value)
+            filters[filter.type].push(filter.value);
         }
-
         // Accept a optional parameter indicating search start point
-        if (arguments.length>0)
-            filters['before'] = arguments[0]
-
-        return {filters: filters, visible:enableSearchToggle}
-   }
-
-
+        if (arguments.length > 0) filters.before = arguments[0];
+        return {
+            filters: filters,
+            visible: enableSearchToggle
+        };
+    };
     /**
-    *    Reloads the current filters UI and executes the search, optionally starting
-    *    at a given point of the timeline
-    *
-    *    @param {String} (optional)    A string containing the id of the last activity loaded
-    **/
+     *    Reloads the current filters UI and executes the search, optionally starting
+     *    at a given point of the timeline
+     *
+     *    @param {String} (optional)    A string containing the id of the last activity loaded
+     **/
     jq.fn.reloadFilters = function() {
-
-        var maxui=this
-        var params = {filters:maxui.filters}
-        var activity_items = maxui.templates.filters.render(params)
-        jq('#maxui-search-filters').html(activity_items)
-
+        var maxui = this;
+        var params = {
+            filters: maxui.filters
+        };
+        var activity_items = maxui.templates.filters.render(params);
+        jq('#maxui-search-filters').html(activity_items);
         // Accept a optional parameter indicating search start point
-        if (arguments.length>0) {
-            filters = maxui.getFilters(arguments[0])
+        if (arguments.length > 0) {
+            filters = maxui.getFilters(arguments[0]);
         } else {
-            filters = maxui.getFilters()
+            filters = maxui.getFilters();
         }
-
-        maxui.printActivities()
-
+        maxui.printActivities({});
         //Enable or disable filter toogle if there are visible filters defined (or not)
-        jq('#maxui-search').toggleClass('folded',!filters.visible)
-   }
-
-
+        jq('#maxui-search').toggleClass('folded', !filters.visible);
+    };
     /**
-    *    Adds a new filter to the search if its not present
-    *    @param {Object} filter    An object repesenting a filter, with the keys "type" and "value"
-    **/
+     *    Adds a new filter to the search if its not present
+     *    @param {Object} filter    An object repesenting a filter, with the keys "type" and "value"
+     **/
     jq.fn.delFilter = function(filter) {
-        maxui = this
-        var deleted = false
-        var index = -1
-        for (i=0;i<maxui.filters.length;i++)
-             if (maxui.filters[i].value==filter.value & maxui.filters[i].type==filter.type)
-              {
-                 deleted = true
-                 maxui.filters.splice(i,1)
-              }
-        if (deleted)
-            this.reloadFilters()
-    }
-
+        maxui = this;
+        var deleted = false;
+        var index = -1;
+        for (i = 0; i < maxui.filters.length; i++)
+            if (maxui.filters[i].value == filter.value & maxui.filters[i].type == filter.type) {
+                deleted = true;
+                maxui.filters.splice(i, 1);
+            }
+        if (deleted) this.reloadFilters();
+    };
     /**
-    *    Adds a new filter to the search if its not present
-    *    @param {Object} filter    An object repesenting a filter, with the keys "type" and "value"
-    **/
+     *    Adds a new filter to the search if its not present
+     *    @param {Object} filter    An object repesenting a filter, with the keys "type" and "value"
+     **/
     jq.fn.addFilter = function(filter) {
-        maxui = this
-        var reload=true
+        maxui = this;
+        var reload = true;
         //Reload or not by func argument
-        if (arguments.length>1)
-            reload=arguments[1]
-
-        if (!maxui.filters)
-            { maxui.filters = []}
-
-
+        if (arguments.length > 1) reload = arguments[1];
+        if (!maxui.filters) {
+            maxui.filters = [];
+        }
         // show filters bu default unless explicitly specified on filter argument
         if (!filter.hasOwnProperty('visible')) {
-            filter.visible = true
+            filter.visible = true;
         }
-
-        switch (filter.type)
-        {
-        case "hashtag": filter['prepend']='#';break;
-        case "actor": filter['prepend']='@';break;
-        default:        filter['prepend']='';break;
+        switch (filter.type) {
+            case "hashtag":
+                filter.prepend = '#';
+                break;
+            case "actor":
+                filter.prepend = '@';
+                break;
+            default:
+                filter.prepend = '';
+                break;
         }
-
-
-        var already_filtered = false
-        for (i=0;i<maxui.filters.length;i++)
-             if (maxui.filters[i].value==filter.value & maxui.filters[i].type==filter.type)
-                 already_filtered = true
-
-         if (!already_filtered)
-         {
-            maxui.filters.push(filter)
-            if(reload==true)
-                this.reloadFilters()
-         }
-    }
-
+        var already_filtered = false;
+        for (i = 0; i < maxui.filters.length; i++)
+            if (maxui.filters[i].value == filter.value & maxui.filters[i].type == filter.type) already_filtered = true;
+        if (!already_filtered) {
+            maxui.filters.push(filter);
+            if (reload === true) this.reloadFilters();
+        }
+    };
     /**
-    *    Reloads the current filters UI and executes the search, optionally starting
-    *    at a given point of the timeline
-    *
-    *    @param {String} (optional)    A string containing the id of the last activity loaded
-    **/
+     *    Reloads the current filters UI and executes the search, optionally starting
+     *    at a given point of the timeline
+     *
+     *    @param {String} (optional)    A string containing the id of the last activity loaded
+     **/
     jq.fn.reloadPersons = function() {
-
-        var maxui=this
-        $participants_box = jq('#maxui-new-participants')
-        participants_box = $participants_box[0]
+        var maxui = this;
+        $participants_box = jq('#maxui-new-participants');
+        participants_box = $participants_box[0];
         if (!participants_box.people) {
-            participants_box.people = []
+            participants_box.people = [];
         }
-        $button = jq('#maxui-newactivity input.maxui-button')
-
-        $newmessagebox = jq('#maxui-newactivity')
-        var message = $newmessagebox.find('textarea').val()
-        var placeholder = $newmessagebox.find('textarea').attr('data-literal')
-        message = maxui.utils.normalizeWhiteSpace(message)
-
-        $newdisplaynamebox = jq('#maxui-add-people-box #maxui-new-displayName')
-        var displayName = $newdisplaynamebox.find('input').val()
-        displayName = maxui.utils.normalizeWhiteSpace(displayName)
-
-        var params = {persons:participants_box.people}
-        var participants_items = maxui.templates.participants.render(params)
-        jq('#maxui-new-participants').html(participants_items)
-
-
-        jq('#maxui-add-people-box .maxui-label .maxui-count').text('({0}/{1})'.format(participants_box.people.length + 1,maxui.settings.maximumConversations))
-
-        if (participants_box.people.length>0) {
-            if ((participants_box.people.length==1 || displayName!='') && message!='' && message!=placeholder) {
-                $button.removeAttr('disabled')
-                $button.attr('class','maxui-button')
-                $newmessagebox.find('textarea').attr('class','maxui-text-input')
-                $newmessagebox.find('.maxui-error-box').animate({'margin-top': -25}, 200)
+        $button = jq('#maxui-newactivity input.maxui-button');
+        $newmessagebox = jq('#maxui-newactivity');
+        var message = $newmessagebox.find('textarea').val();
+        var placeholder = $newmessagebox.find('textarea').attr('data-literal');
+        message = maxui.utils.normalizeWhiteSpace(message);
+        $newdisplaynamebox = jq('#maxui-add-people-box #maxui-new-displayName');
+        var displayName = $newdisplaynamebox.find('input').val();
+        displayName = maxui.utils.normalizeWhiteSpace(displayName);
+        var params = {
+            persons: participants_box.people
+        };
+        var participants_items = maxui.templates.participants.render(params);
+        jq('#maxui-new-participants').html(participants_items);
+        jq('#maxui-add-people-box .maxui-label .maxui-count').text('({0}/{1})'.format(participants_box.people.length + 1, maxui.settings.maximumConversations));
+        if (participants_box.people.length > 0) {
+            if ((participants_box.people.length == 1 || displayName !== '') && message !== '' && message != placeholder) {
+                $button.removeAttr('disabled');
+                $button.attr('class', 'maxui-button');
+                $newmessagebox.find('textarea').attr('class', 'maxui-text-input');
+                $newmessagebox.find('.maxui-error-box').animate({
+                    'margin-top': -25
+                }, 200);
             } else {
-                $button.attr('disabled', 'disabled')
-                $button.attr('class','maxui-button maxui-disabled')
-                if (displayName=='') {
-                    $newmessagebox.find('textarea').attr('class','maxui-text-input error')
-                    $newmessagebox.find('.maxui-error-box').text(maxui.settings.literals.post_permission_missing_displayName)
-                    $newmessagebox.find('.maxui-error-box').animate({'margin-top': -4}, 200)
+                $button.attr('disabled', 'disabled');
+                $button.attr('class', 'maxui-button maxui-disabled');
+                if (displayName === '') {
+                    $newmessagebox.find('textarea').attr('class', 'maxui-text-input error');
+                    $newmessagebox.find('.maxui-error-box').text(maxui.settings.literals.post_permission_missing_displayName);
+                    $newmessagebox.find('.maxui-error-box').animate({
+                        'margin-top': -4
+                    }, 200);
                 }
             }
-
-            $participants_box.show()
-            $newmessagebox.show()
-            if (participants_box.people.length>1) {
-                $newdisplaynamebox.show()
+            $participants_box.show();
+            $newmessagebox.show();
+            if (participants_box.people.length > 1) {
+                $newdisplaynamebox.show();
             } else {
-                $newdisplaynamebox.hide()
-                $newdisplaynamebox.find('.maxui-text-input').val('')
+                $newdisplaynamebox.hide();
+                $newdisplaynamebox.find('.maxui-text-input').val('');
             }
-
         } else {
-            $button.attr('disabled', 'disabled')
-            $button.attr('class','maxui-button maxui-disabled')
-            $participants_box.hide()
-            $newmessagebox.find('textarea').attr('class','maxui-text-input error')
-            $newmessagebox.find('.maxui-error-box').text(maxui.settings.literals.post_permission_not_enough_participants)
-            $newmessagebox.find('.maxui-error-box').animate({'margin-top': -4}, 200)
-
-            $newdisplaynamebox.hide()
-            $newdisplaynamebox.find('.maxui-text-input').val('')
+            $button.attr('disabled', 'disabled');
+            $button.attr('class', 'maxui-button maxui-disabled');
+            $participants_box.hide();
+            $newmessagebox.find('textarea').attr('class', 'maxui-text-input error');
+            $newmessagebox.find('.maxui-error-box').text(maxui.settings.literals.post_permission_not_enough_participants);
+            $newmessagebox.find('.maxui-error-box').animate({
+                'margin-top': -4
+            }, 200);
+            $newdisplaynamebox.hide();
+            $newdisplaynamebox.find('.maxui-text-input').val('');
         }
-   }
-
+    };
     /**
-    *    Removes a person from the list of new conversation
-    *    @param {String} person    A String representing a user's username
-    **/
+     *    Removes a person from the list of new conversation
+     *    @param {String} person    A String representing a user's username
+     **/
     jq.fn.delPerson = function(person) {
-        maxui = this
-        var deleted = false
-        var index = -1
-        participants_box = $('#maxui-new-participants')[0]
-        for (i=0;i<participants_box.people.length;i++)
-             if (participants_box.people[i].username == person.username)
-              {
-                 deleted = true
-                 participants_box.people.splice(i,1)
-              }
-        if (deleted)
-            this.reloadPersons()
-    }
-
+        maxui = this;
+        var deleted = false;
+        var index = -1;
+        participants_box = $('#maxui-new-participants')[0];
+        for (i = 0; i < participants_box.people.length; i++)
+            if (participants_box.people[i].username == person.username) {
+                deleted = true;
+                participants_box.people.splice(i, 1);
+            }
+        if (deleted) this.reloadPersons();
+    };
     /**
-    *    Adds a new person to the list of new conversation
-    *    @param {String} person    A String representing a user's username
-    **/
+     *    Adds a new person to the list of new conversation
+     *    @param {String} person    A String representing a user's username
+     **/
     jq.fn.addPerson = function(person) {
-        maxui = this
-        participants_box = $('#maxui-new-participants')[0]
-        var reload=true
+        maxui = this;
+        participants_box = $('#maxui-new-participants')[0];
+        var reload = true;
         //Reload or not by func argument
-        if (arguments.length>1)
-            reload=arguments[1]
-
-        var already_filtered = false
-
-        if (!participants_box.people)
-            { participants_box.people = []}
-
-        if (person.username != maxui.settings.username && participants_box.people.length < (maxui.settings.maximumConversations -1) ) {
-            for (i=0;i<participants_box.people.length;i++)
-                 if (participants_box.people[i].username == person.username)
-                     already_filtered = true
-
-             if (!already_filtered)
-             {
-                participants_box.people.push(person)
-                if(reload==true)
-                    this.reloadPersons()
-             }
+        if (arguments.length > 1) reload = arguments[1];
+        var already_filtered = false;
+        if (!participants_box.people) {
+            participants_box.people = [];
         }
-    }
-
+        if (person.username != maxui.settings.username && participants_box.people.length < (maxui.settings.maximumConversations - 1)) {
+            for (i = 0; i < participants_box.people.length; i++)
+                if (participants_box.people[i].username == person.username) already_filtered = true;
+            if (!already_filtered) {
+                participants_box.people.push(person);
+                if (reload === true) this.reloadPersons();
+            }
+        }
+    };
     /**
-    *    Toggles between Conversations and Messages
-    **/
-    jq.fn.toggleMessages = function(sectionToEnable) {
-        maxui = this
-
-        var $conversations = jq('#maxui-conversations')
-        var $conversations_list = jq('#maxui-conversations-list')
-        var $conversations_wrapper = $conversations.find('.maxui-wrapper')
-        var $messages = jq('#maxui-messages')
-        var $message_list = jq('#maxui-message-list')
-        var $postbox = jq('#maxui-newactivity-box textarea')
-        var $common_header = $conversations.find('#maxui-common-header')
-        var $addpeople = jq('#maxui-add-people-box')
-
-        var widgetWidth = maxui.width() // Real width of the widget, without the two 1-pixel borders
-        var sectionHorizontalPadding = 20
-        var widgetBorder = 2
-        var widgetScrollbar = maxui.scrollbar.width
-        var sectionsWidth = widgetWidth - widgetScrollbar - widgetBorder
-        var height = 320
-
-
-        if (sectionToEnable=='messages' && sectionToEnable!=maxui.settings.conversationsSection)
-        {
-            $addpeople.animate({'height': 0, 'padding-top':0, 'padding-bottom':0}, 400, function(event) {
-                $addpeople.css({'border-color': 'transparent'})
-            })
-            $common_header.find('h3').text(maxui.settings.currentConversation.displayName)
-            $conversations_list.animate({'margin-left':sectionsWidth * (-1) }, 400)
-            $messages.animate({'left':0, 'margin-left':0}, 400, function(event) {
-                $conversations_wrapper.height(height - 31 - 45)
-                $common_header.animate({'height':45}, 100, function(event) {
-                    maxui.scrollbar.setHeight(height-31-45)
-                    maxui.scrollbar.setTarget('#maxui-conversations #maxui-messages')
-                    maxui.scrollbar.setContentPosition(100)
-                })
-            })
-            $messages.width(sectionsWidth)
-            maxui.settings.conversationsSection='messages'
-            var literal = maxui.settings.literals.new_activity_text
-            $postbox.val(literal).attr('data-literal', literal)
-
-        }
-        if (sectionToEnable=='conversations' && sectionToEnable!=maxui.settings.conversationsSection) {
-            $common_header.animate({'height':0}, 100, function(event) {
-                $addpeople.css({'border-color': '#ccc'})
-                maxui.scrollbar.setHeight(height-31)
-                maxui.scrollbar.setTarget('#maxui-conversations #maxui-conversations-list')
-                maxui.scrollbar.setContentPosition(0)
-                $addpeople.animate({'height': 19, 'padding-top':6, 'padding-bottom':6}, 400, function(event) {
-                    $addpeople.removeAttr('style')
-                })
-            })
-            $conversations_wrapper.height(height - 31)
-            var widgetWidth = $conversations_list.width()+11 // +2 To include border
-            $conversations_list.animate({'margin-left':0 }, 400)
-            $messages.animate({'left':widgetWidth + 20 }, 400)
-            maxui.settings.conversationsSection='conversations'
-            var literal = maxui.settings.literals.new_conversation_text
-            $postbox.val(literal).attr('data-literal', literal)
-        }
-    }
-
-
-    /**
-    *    Toggles between main sections
-    **/
+     *    Toggles between main sections
+     **/
     jq.fn.toggleSection = function(sectionToEnable) {
-        maxui = this
-        var $search = jq('#maxui-search')
-        var $activitysort = jq('#maxui-activity-sort')
-        var $timeline = jq('#maxui-timeline')
-        var $timeline_wrapper = jq('#maxui-timeline .maxui-wrapper')
-        var $conversations = jq('#maxui-conversations')
-        var $common_header = $conversations.find('#maxui-common-header')
-        var $back_conversations = $conversations.find('#maxui-back-conversations')
-        var $conversations_user_input = $conversations.find('input#add-user-input')
-        var $conversations_list = jq('#maxui-conversations #maxui-conversations-list')
-        var $conversations_wrapper = jq('#maxui-conversations .maxui-wrapper')
-        var $postbutton = jq('#maxui-newactivity-box .maxui-button')
-        var $conversationsbutton = jq('#maxui-show-conversations')
-        var $timelinebutton = jq('#maxui-show-timeline')
-        var $addpeople = jq('#maxui-add-people-box')
+        maxui = this;
+        var $search = jq('#maxui-search');
+        var $activitysort = jq('#maxui-activity-sort');
+        var $timeline = jq('#maxui-timeline');
+        var $timeline_wrapper = jq('#maxui-timeline .maxui-wrapper');
+        var $conversations = jq('#maxui-conversations');
+        var $common_header = jq('#maxui-common-header');
+        var $back_conversations = $conversations.find('#maxui-back-conversations');
+        var $conversations_user_input = $conversations.find('input#add-user-input');
+        var $conversations_list = jq('#maxui-conversations #maxui-conversations-list');
+        var $conversations_wrapper = jq('#maxui-conversations .maxui-wrapper');
+        var $postbutton = jq('#maxui-newactivity-box .maxui-button');
+        var $conversationsbutton = jq('#maxui-show-conversations');
+        var $timelinebutton = jq('#maxui-show-timeline');
+        var $addpeople = jq('#maxui-add-people-box');
+        // Real width of the widget, without the two 1-pixel borders;
+        var widgetWidth = maxui.width();
+        var sectionPadding = 10;
+        var widgetBorder = 1;
+        var sectionsWidth = widgetWidth - maxui.conversations.scrollbar.width - (sectionPadding * 2) - (widgetBorder * 2);
+        var height = 320;
+        if (sectionToEnable == 'conversations' && maxui.settings.currentConversationSection == 'conversations') {
 
-        var widgetWidth = maxui.width() // Real width of the widget, without the two 1-pixel borders
-        var sectionPadding = 10
-        var widgetBorder = 1
-        var sectionsWidth = widgetWidth - maxui.scrollbar.width - (sectionPadding * 2) - (widgetBorder * 2)
-        var height = 320
-
-        if (sectionToEnable=='conversations' && maxui.settings.currentConversationSection=='conversations')
-        {
-
-          //$conversations.width($conversations.width())
-          //$conversations_list.width($conversations.width())
-          var height = 320
-          $conversations.show()
-          $addpeople.show()
-
-          $common_header.animate({'height':0}, 400)
-          $conversations_user_input.focus()
-          $conversations.animate({'height':height-31}, 400, function(event) {
-            $conversations_wrapper.height(height - 31)
-          })
-          $conversations_list.width(sectionsWidth)
-          $timeline.animate({'height':0}, 400)
-          $search.hide(400)
-          $activitysort.hide(400)
-          maxui.settings.UISection='conversations'
-          $postbutton.val(maxui.settings.literals.new_message_post)
-          $conversationsbutton.hide()
-          if (!maxui.settings.disableTimeline) $timelinebutton.show()
-          maxui.scrollbar.setHeight(height-31)
-          maxui.scrollbar.setTarget('#maxui-conversations #maxui-conversations-list')
+            $conversations.show();
+            $common_header.removeClass('maxui-showing-messages').addClass('maxui-showing-conversations');
+            $addpeople.show();
+            $conversations_user_input.focus();
+            $conversations.animate({
+                'height': height
+            }, 400, function(event) {
+                $conversations_wrapper.height(height);
+            });
+            $conversations_list.width(sectionsWidth);
+            $timeline.animate({
+                'height': 0
+            }, 400);
+            $search.hide(400);
+            $activitysort.hide(400);
+            maxui.settings.UISection = 'conversations';
+            $postbutton.val(maxui.settings.literals.new_message_post);
+            $conversationsbutton.hide();
+            if (!maxui.settings.disableTimeline) $timelinebutton.show();
+            maxui.conversations.scrollbar.setHeight(height - 45);
+            maxui.conversations.scrollbar.setTarget('#maxui-conversations #maxui-conversations-list');
         }
-        if (sectionToEnable=='timeline')
-        {
-          $timeline.show()
-          var timeline_height = $timeline_wrapper.height()
-          $timeline.animate({'height':timeline_height}, 400, function(event) {
-              $timeline.css('height','')
-          })
-          $conversations.animate({'height':0}, 400, function(event) {
-              $conversations.hide()
-              $addpeople.hide()
-          })
-          $search.show(400)
-          $activitysort.show(400)
-          //maxui.settings.currentConversationSection=='conversations'
-          maxui.settings.UISection='timeline'
-          $postbutton.val(maxui.settings.literals.new_activity_post)
-          if (!maxui.settings.disableConversations) $conversationsbutton.show()
-          $timelinebutton.hide()
-
+        if (sectionToEnable == 'timeline') {
+            $timeline.show();
+            var timeline_height = $timeline_wrapper.height();
+            $timeline.animate({
+                'height': timeline_height
+            }, 400, function(event) {
+                $timeline.css('height', '');
+            });
+            $conversations.animate({
+                'height': 0
+            }, 400, function(event) {
+                $conversations.hide();
+                $addpeople.hide();
+            });
+            $search.show(400);
+            $activitysort.show(400);
+            //maxui.settings.currentConversationSection=='conversations'
+            maxui.settings.UISection = 'timeline';
+            $postbutton.val(maxui.settings.literals.new_activity_post);
+            if (!maxui.settings.disableConversations) $conversationsbutton.show();
+            $timelinebutton.hide();
         }
-
-        }
-
-
+    };
     /**
-    *    Returns the current settings of the plugin
-    **/
+     *    Returns the current settings of the plugin
+     **/
     jq.fn.Settings = function() {
-        maxui = this
-        return maxui.settings
-        }
-
-
-    /**
-    *    Sends a post when user clicks `post activity` button with
-    *    the current contents of the `maxui-newactivity` textarea
-    **/
-    jq.fn.createConversationAndSendMessage = function (options, post_creation) {
-        maxui = this
-        var func_params = []
-
-        options.participants.push(maxui.settings.username)
-        func_params.push(options)
-
-        if (maxui.settings.UISection=='conversations') {
-            func_params.push( function() {
-                            post_creation()
-                            var chash = this.contexts[0].id
-                            var activityid = this.id
-
-                            maxui.settings.currentConversation = {hash: chash}
-                            if (options.displayName) {
-                                maxui.settings.currentConversation.displayName = options.displayName
-                            } else {
-                                maxui.settings.currentConversation.displayName = options.participants[0].displayName
-                            }
-
-                            maxui.printMessages(chash, function() {
-                                   maxui.toggleMessages('messages')
-                                   id = maxui.client.subscribe('/exchange/{0}'.format(chash), function(d) {maxui.insertMessage(d)})
-                            })
-                       })
-        } else {
-            func_params.push( function() {
-                            jq('#maxui-newactivity textarea').val('')
-                            jq('#maxui-newactivity .maxui-button').attr('disabled','disabled')
-                            maxui.printConversations( function() { maxui.toggleSection('conversations') })
-                           })
-        }
-
-        var messageAdder = maxui.maxClient.addMessageAndConversation
-        messageAdder.apply(maxui.maxClient, func_params)
-
-    }
+        maxui = this;
+        return maxui.settings;
+    };
 
     /**
-    *    Sends a post when user clicks `post activity` button with
-    *    the current contents of the `maxui-newactivity` textarea
-    **/
-    jq.fn.sendMessage = function (text, chash) {
-        maxui = this
-        var func_params = []
-        func_params.push(text)
-        func_params.push(chash)
-        func_params.push( function() {
-                            jq('#maxui-newactivity textarea').val('')
-                            jq('#maxui-newactivity .maxui-button').attr('disabled','disabled')
-                            maxui.printMessages(chash, function() {maxui.toggleMessages('messages')})
-                            // var activityid = this.id
-                            // maxui.io.emit('talk', { conversation: chash, timestamp: maxui.utils.timestamp(), messageID: activityid } )
-
-                           })
-
-        var messageAdder = maxui.maxClient.addMessage
-        messageAdder.apply(maxui.maxClient, func_params)
-
-    }
-
-    /**
-    *    Sends a post when user clicks `post activity` button with
-    *    the current contents of the `maxui-newactivity` textarea
-    **/
-    jq.fn.sendActivity = function () {
-        maxui=this
-        var text = jq('#maxui-newactivity textarea').val()
-        var func_params = []
-        func_params.push(text)
-        func_params.push(maxui.settings.writeContexts)
-        func_params.push( function() {
-                              jq('#maxui-newactivity textarea').val('')
-                              jq('#maxui-newactivity .maxui-button').attr('disabled','disabled')
-                              var first = jq('.maxui-activity:first')
-                              if (first.length>0)
-                                  { filter = {after:first.attr('id')}
-                                    maxui.printActivities(filter)
-                                  }
-                              else {
-                                    maxui.printActivities({})
-                                  }
-                              })
-
+     *    Sends a post when user clicks `post activity` button with
+     *    the current contents of the `maxui-newactivity` textarea
+     **/
+    jq.fn.sendActivity = function() {
+        maxui = this;
+        var text = jq('#maxui-newactivity textarea').val();
+        var func_params = [];
+        func_params.push(text);
+        func_params.push(maxui.settings.writeContexts);
+        func_params.push(function() {
+            jq('#maxui-newactivity textarea').val('');
+            jq('#maxui-newactivity .maxui-button').attr('disabled', 'disabled');
+            var first = jq('.maxui-activity:first');
+            if (first.length > 0) {
+                filter = {
+                    after: first.attr('id')
+                };
+                maxui.printActivities(filter);
+            } else {
+                maxui.printActivities({});
+            }
+        });
         //Pass generator to activity post if defined
-        if (maxui.settings.generatorName) { func_params.push(maxui.settings.generatorName) }
-
-        var activityAdder = maxui.maxClient.addActivity
-        activityAdder.apply(maxui.maxClient, func_params)
-
-    }
-
+        if (maxui.settings.generatorName) {
+            func_params.push(maxui.settings.generatorName);
+        }
+        var activityAdder = maxui.maxClient.addActivity;
+        activityAdder.apply(maxui.maxClient, func_params);
+    };
     /**
-    *    Loads more activities from max posted earlier than
-    *    the oldest loaded activity
-    **/
-    jq.fn.loadMoreActivities = function () {
-        maxui=this
-        filter = {before:jq('.maxui-activity:last').attr('id')}
-        maxui.printActivities(filter)
-
-    }
-
-
+     *    Loads more activities from max posted earlier than
+     *    the oldest loaded activity
+     **/
+    jq.fn.loadMoreActivities = function() {
+        maxui = this;
+        filter = {
+            before: jq('.maxui-activity:last').attr('id')
+        };
+        maxui.printActivities(filter);
+    };
     /**
-    *    Renders the conversations list of the current user, defined in settings.username
-    **/
+     *    Renders the conversations list of the current user, defined in settings.username
+     **/
     jq.fn.printPredictions = function(query, predictive_selector) {
-        var maxui = this
-
-        var func_params = []
-        func_params.push(query)
-        func_params.push( function() { maxui.formatPredictions(this, predictive_selector) })
-
-        var userListRetriever = this.maxClient.getUsersList
-        userListRetriever.apply(this.maxClient,func_params)
-    }
-
+        var maxui = this;
+        var func_params = [];
+        func_params.push(query);
+        func_params.push(function(items) {
+            maxui.formatPredictions(items, predictive_selector);
+        });
+        var userListRetriever = this.maxClient.getUsersList;
+        userListRetriever.apply(this.maxClient, func_params);
+    };
     /**
-    *
-    *
-    **/
+     *
+     *
+     **/
     jq.fn.formatPredictions = function(items, predictive_selector) {
         var maxui = this;
-
         // String to store the generated html pieces of each conversation item
-        var predictions = ''
-
-
-
+        var predictions = '';
         // Iterate through all the conversations
-        for (i=0;i<items.length;i++)
-            {
-            var prediction = items[i]
-            if (prediction.username != maxui.username)
-                {
-                var avatar_url = maxui.settings.avatarURLpattern.format(prediction.username)
+        for (i = 0; i < items.length; i++) {
+            var prediction = items[i];
+            if (prediction.username != maxui.username) {
+                var avatar_url = maxui.settings.avatarURLpattern.format(prediction.username);
                 var params = {
-                                   username: prediction.username,
-                                  avatarURL: avatar_url,
-                                   cssclass: 'maxui-prediction' + (i == 0 && ' selected' || '')
-                             }
-
+                    username: prediction.username,
+                    displayName: prediction.displayName,
+                    avatarURL: avatar_url,
+                    cssclass: 'maxui-prediction' + (i === 0 && ' selected' || '')
+                };
                 // Render the conversations template and append it at the end of the rendered covnersations
-                predictions = predictions + maxui.templates.predictive.render(params)
-                }
+                predictions = predictions + maxui.templates.predictive.render(params);
             }
-
-        if (predictions == '') {
-            predictions = '<li>' + maxui.settings.literals.no_match_found + '</li>'
         }
-
-        jq(predictive_selector + ' ul').html(predictions)
-
-        if (arguments.length>2) {
-          var callback = arguments[2]
-          callback()
+        if (predictions === '') {
+            predictions = '<li>' + maxui.settings.literals.no_match_found + '</li>';
         }
-    }
-
-
+        jq(predictive_selector + ' ul').html(predictions);
+        if (arguments.length > 2) {
+            var callback = arguments[2];
+            callback();
+        }
+    };
 
     /**
-    *    Renders the conversations list of the current user, defined in settings.username
-    **/
-    jq.fn.printConversations = function() {
-        var maxui = this
-        // Render the postbox UI if user has permission
-
-        var showCT = maxui.settings.UISection == 'conversations'
-        var toggleCT = maxui.settings.disableConversations == false && !showCT
-
-        var params = {        avatar: maxui.settings.avatarURLpattern.format(maxui.settings.username),
-                        allowPosting: true,
-                       buttonLiteral: maxui.settings.literals.new_message_post,
-                         textLiteral: maxui.settings.literals.new_conversation_text,
-                            literals: maxui.settings.literals,
-             showConversationsToggle: toggleCT ? 'display:block;' : 'display:none;'
-                    }
-        var postbox = maxui.templates.postBox.render(params)
-        var $postbox = jq('#maxui-newactivity')
-        $postbox.html(postbox)
-
-
-
-        var func_params = []
-        func_params.push(maxui.settings.username)
-        if (arguments.length>0)
-        {
-            var callback = arguments[0]
-            func_params.push( function() {
-                                  maxui.formatConversations(this, callback)
-
-                                })
-        }
-        else
-        {
-            func_params.push( function() { maxui.formatConversations(this) })
-        }
-
-        var conversationsRetriever = this.maxClient.getConversationsForUser
-        conversationsRetriever.apply(this.maxClient,func_params)
-    }
-
-    /**
-    *
-    *
-    **/
-    jq.fn.formatConversations = function(items) {
-        var maxui = this;
-
-        // String to store the generated html pieces of each conversation item
-        var conversations = ''
-
-        // Iterate through all the conversations
-        for (i=0;i<items.length;i++)
-            {
-            var conversation = items[i]
-
-            if (conversation.participants.length <= 2) {
-                if (conversation.participants[0].username == maxui.settings.username) {
-                    var partner = conversation.participants[1] }
-                else {
-                    var partner = conversation.participants[0]
-                }
-
-                var avatar_url = maxui.settings.avatarURLpattern.format(partner.username)
-            } else {
-                var avatar_url = maxui.settings.conversationAvatarURLpattern.format(conversation.id)
-            }
-                var displayName = conversation.displayName
-
-            var params = {
-                                   id: conversation.id,
-                          displayName: displayName,
-                                 text: maxui.utils.formatText(conversation.lastMessage.content),
-                             messages: conversation.messages,
-                             literals: maxui.settings.literals,
-                                 date: maxui.utils.formatDate(conversation.lastMessage.published, maxui.language),
-                            avatarURL: avatar_url
-                         }
-
-            // Render the conversations template and append it at the end of the rendered covnersations
-            conversations = conversations + maxui.templates.conversation.render(params)
-
-            }
-        if (items.length>0) {
-            jq('#maxui-conversations-list').html(conversations)
-        }
-
-        if (arguments.length>1) {
-          var callback = arguments[1]
-          callback()
-        }
-    }
-
-    /**
-    *    Renders the messages of the choosen conversation
-    **/
-    jq.fn.printMessages = function(conversation_hash) {
-        var maxui = this
-
-        var func_params = []
-        func_params.push(conversation_hash)
-        if (arguments.length>1)
-        {
-            var callback = arguments[1]
-            func_params.push( function() {
-                                  maxui.formatMessages(this, callback)
-
-                                })
-        }
-        else
-        {
-            func_params.push( function() { maxui.formatMessages(this) })
-        }
-
-        var messagesRetriever = this.maxClient.getMessagesForConversation
-        messagesRetriever.apply(this.maxClient,func_params)
-    }
-
-    /**
-    *
-    *
-    **/
-    jq.fn.formatMessages = function(items) {
-        var maxui = this;
-
-        // String to store the generated html pieces of each conversation item
-        var messages = ''
-
-        // Iterate through all the conversations
-        for (i=0;i<items.length;i++)
-            {
-            var message = items[i]
-            var avatar_url = maxui.settings.avatarURLpattern.format(message.actor.username)
-
-            // Store in origin, who is the sender of the message, the authenticated user or anyone else
-            origin = 'maxui-user-notme'
-            if (message.actor.username==maxui.settings.username) origin = 'maxui-user-me'
-
-            var params = {
-                                   id: message.id,
-                                 text: maxui.utils.formatText(message.object.content),
-                                 date: maxui.utils.formatDate(message.published, maxui.language),
-                               origin: origin,
-                             literals: maxui.settings.literals,
-                             avatarURL: avatar_url
-                         }
-
-            // Render the conversations template and append it at the end of the rendered covnersations
-            messages = messages + maxui.templates.message.render(params)
-
-            }
-        jq('#maxui-messages #maxui-message-list').html(messages)
-
-        if (arguments.length>1) {
-          var callback = arguments[1]
-          callback()
-        }
-    }
-
-    /**
-    *    Renders the N activities passed in items on the timeline slot. This function is
-    *    meant to be called as a callback of a call to a max webservice returning a list
-    *    of activity objects
-    *
-    *    @param {String} items     a list of objects representing activities, returned by max
-    *    @param {String} insertAt  were to prepend or append activities, 'beginning' or 'end
-    *    @param {Function} (optional)  A function to call when all formatting is finished
-    **/
+     *    Renders the N activities passed in items on the timeline slot. This function is
+     *    meant to be called as a callback of a call to a max webservice returning a list
+     *    of activity objects
+     *
+     *    @param {String} items     a list of objects representing activities, returned by max
+     *    @param {String} insertAt  were to prepend or append activities, 'beginning' or 'end
+     *    @param {Function} (optional)  A function to call when all formatting is finished
+     **/
     jq.fn.formatActivities = function(items, insertAt) {
-            var maxui = this;
-            var activities = ''
-
-            // Iterate through all the activities
-            for (i=0;i<items.length;i++)
-                {
-                    var activity = items[i]
-
-                    // Take first context (if exists) to display in the 'published on' field
-                    // XXX TODO Build a coma-separated list of contexts ??
-                    var contexts = undefined
-                    if (activity.hasOwnProperty('contexts'))
-                         {
-                             if (activity.contexts.length>0)
-                                 contexts = activity.contexts[0]
-                         }
-
-                    // Take generator property (if exists) and set it only if it's different
-                    // from the application name defined in settings
-                    var generator = undefined
-                    if (activity.hasOwnProperty('generator'))
-                         {
-                            if (activity.generator!=maxui.settings.generatorName)
-                                generator = activity.generator
-                         }
-
-                    // Prepare avatar image url depending on actor type
-                    var avatar_url = ''
-                    if (activity.actor.objectType=='person') {
-                        avatar_url = maxui.settings.avatarURLpattern.format(activity.actor.username)
-                      }
-                    else if (activity.actor.objectType=='context') {
-                        avatar_url = maxui.settings.contextAvatarURLpattern.format(activity.actor.hash)
-                      }
-                    // Take replies (if exists) and format to be included as a formatted
-                    // subobject ready for hogan
-                    var replies = []
-                    if (activity.replies)
-                        {
-                            if (activity.replies.length>0)
-                                {
-                                    for (r=0;r<activity.replies.length;r++)
-                                        {
-                                        var comment = activity.replies[r]
-                                        reply = {
-                                                           id: comment.id,
-                                                       actor: comment.actor,
-                                                         date: maxui.utils.formatDate(comment.published,maxui.language),
-                                                         text: maxui.utils.formatText(comment.content),
-                                                    avatarURL: maxui.settings.avatarURLpattern.format(comment.actor.username),
-                                             canDeleteComment: comment.deletable,
-                                                     literals: maxui.settings.literals
-
-                                                }
-                                        replies.push(reply)
-                                        }
-                                }
-                        }
-
-                    // Take all the latter properties and join them into an object
-                    // containing all the needed params to render the template
-                        var params = {
-                                           id: activity.id,
-                                        actor: activity.actor,
-                                     literals: maxui.settings.literals,
-                                         date: maxui.utils.formatDate(activity.published, maxui.language),
-                                         text: maxui.utils.formatText(activity.object.content),
-                                      replies: replies,
-                                    favorited: activity.favorited,
-                                        likes: activity.likesCount ? activity.likesCount : 0,
-                               showLikesCount: maxui.currentSortOrder == 'likes',
-                                        liked: activity.liked,
-
-                                    avatarURL: avatar_url,
-                                  publishedIn: contexts,
-                            canDeleteActivity: activity.deletable,
-                                          via: generator
-
-                                 }
-                    // Render the activities template and append it at the end of the rendered activities
-                    // partials is used to render each comment found in the activities
-                    var partials = {comment: maxui.templates.comment}
-                    var activities = activities + maxui.templates.activity.render(params, partials)
-                }
-
-
-            // Prepare animation and insert activities at the top of activity stream
-            if (insertAt == 'beggining')
-            {
-                // Load all the activities in a overflow-hidden div to calculate the height
-                jq('#maxui-preload .maxui-wrapper').prepend(activities)
-                var ritems = jq('#maxui-preload .maxui-wrapper .maxui-activity')
-                var heightsum = 0
-                for (i=0;i<ritems.length;i++)
-                      heightsum += jq(ritems[i]).height()+18
-
-                // Move the hidden div to be hidden on top of the last activity and behind the main UI
-                var currentPreloadHeight = jq('#maxui-preload').height()
-                jq('#maxui-preload').height(heightsum-currentPreloadHeight)
-                jq('#maxui-preload').css( {"margin-top":(heightsum-currentPreloadHeight)*-1})
-
-                // Animate it to appear sliding on the bottom of the main UI
-                jq('#maxui-preload').animate({"margin-top":0}, 200, function()
-                   {
-                        // When the animation ends, move the new activites to its native container
-                        jq('#maxui-preload .maxui-wrapper').html("")
-                        jq('#maxui-activities').prepend(activities)
-                        jq('#maxui-preload').height(0)
-
-                   })
-
+        var maxui = this;
+        var activities = '';
+        // Iterate through all the activities
+        for (i = 0; i < items.length; i++) {
+            var activity = items[i];
+            // Take first context (if exists) to display in the 'published on' field
+            // XXX TODO Build a coma-separated list of contexts ??
+            var contexts = null;
+            if (activity.hasOwnProperty('contexts')) {
+                if (activity.contexts.length > 0) contexts = activity.contexts[0];
             }
-            // Insert at the end
-            else if (insertAt == 'end')
-                jq('#maxui-activities').append(activities)
-            // Otherwise, replace everything
-            else
-                jq('#maxui-activities').html(activities)
-
-          // if Has a callback, execute it
-          if (arguments.length>2)
-              {
-                arguments[2].call()
-              }
-
-        }
-
-    /**
-    *    Renders the N comments passed in items on the timeline slot. This function is
-    *    meant to be called as a callback of a call to a max webservice returning comments
-    *    @param {String} items         a list of objects representing comments, returned by max
-    *    @param {String} activity_id   id of the activity where comments belong to
-    **/
-    jq.fn.formatComment = function(items, activity_id) {
-            // When receiving the list of activities from max
-            // construct the object for Hogan
-            // `activities `contain the list of activity objects
-            // `formatedDate` contain a function maxui will be rendered inside the template
-            //             to obtain the published date in a "human readable" way
-            // `avatarURL` contain a function maxui will be rendered inside the template
-            //             to obtain the avatar url for the activity's actor
-
-            // Save reference to the maxui class, as inside below defined functions
-            // the this variable will contain the activity item being processed
-            maxui = this;
-            var comments = ''
-
-            for (i=0;i<items.length;i++)
-                {
-                    var comment = items[i]
-
-                    var params = {   literals:maxui.settings.literals,
-                                           id: comment.id,
-                                       actor: comment.actor,
-                                         date: maxui.utils.formatDate(comment.published, maxui.language),
-                                         text: maxui.utils.formatText(comment.content),
-                                    avatarURL: maxui.settings.avatarURLpattern.format(comment.actor.username),
-                             canDeleteComment: comment.deletable
-                                 }
-                    // Render the comment template and append it at the end of the rendered comments
-                    var comments = comments + maxui.templates.comment.render(params)
-                }
-            // Insert new comments by replacing previous comments with all comments
-            jq('.maxui-activity#'+activity_id+' .maxui-commentsbox').html(comments)
-            // Update comment count
-            comment_count = jq('.maxui-activity#'+activity_id+' .maxui-commentaction strong')
-            jq(comment_count).text(eval(jq(comment_count).text())+1)
-        }
-
-
-    /**
-    *    Renders the postbox
-    **/
-    jq.fn.renderPostbox = function() {
-        var maxui = this
-        // Render the postbox UI if user has permission
-        var showCT = maxui.settings.UISection == 'conversations'
-        var toggleCT = maxui.settings.disableConversations == false && !showCT
-
-        var params = {        avatar: maxui.settings.avatarURLpattern.format(maxui.settings.username),
-                        allowPosting: maxui.settings.canwrite,
-                       buttonLiteral: maxui.settings.literals.new_activity_post,
-                         textLiteral: maxui.settings.literals.new_activity_text,
-                            literals: maxui.settings.literals,
-             showConversationsToggle: toggleCT ? 'display:block;' : 'display:none;'
+            // Take generator property (if exists) and set it only if it's different
+            // from the application name defined in settings
+            var generator = null;
+            if (activity.hasOwnProperty('generator')) {
+                if (activity.generator != maxui.settings.generatorName) generator = activity.generator;
+            }
+            // Prepare avatar image url depending on actor type
+            var avatar_url = '';
+            if (activity.actor.objectType == 'person') {
+                avatar_url = maxui.settings.avatarURLpattern.format(activity.actor.username);
+            } else if (activity.actor.objectType == 'context') {
+                avatar_url = maxui.settings.contextAvatarURLpattern.format(activity.actor.hash);
+            }
+            // Take replies (if exists) and format to be included as a formatted
+            // subobject ready for hogan
+            var replies = [];
+            if (activity.replies) {
+                if (activity.replies.length > 0) {
+                    for (r = 0; r < activity.replies.length; r++) {
+                        var comment = activity.replies[r];
+                        reply = {
+                            id: comment.id,
+                            actor: comment.actor,
+                            date: maxui.utils.formatDate(comment.published, maxui.language),
+                            text: maxui.utils.formatText(comment.content),
+                            avatarURL: maxui.settings.avatarURLpattern.format(comment.actor.username),
+                            canDeleteComment: comment.deletable,
+                            literals: maxui.settings.literals
+                        };
+                        replies.push(reply);
                     }
-        var postbox = maxui.templates.postBox.render(params)
-        var $postbox = jq('#maxui-newactivity')
-        $postbox.html(postbox)
-
-
-    }
-
-
+                }
+            }
+            // Take all the latter properties and join them into an object
+            // containing all the needed params to render the template
+            var params = {
+                id: activity.id,
+                actor: activity.actor,
+                literals: maxui.settings.literals,
+                date: maxui.utils.formatDate(activity.published, maxui.language),
+                text: maxui.utils.formatText(activity.object.content),
+                replies: replies,
+                favorited: activity.favorited,
+                likes: activity.likesCount ? activity.likesCount : 0,
+                showLikesCount: maxui.currentSortOrder == 'likes',
+                liked: activity.liked,
+                avatarURL: avatar_url,
+                publishedIn: contexts,
+                canDeleteActivity: activity.deletable,
+                via: generator
+            };
+            // Render the activities template and append it at the end of the rendered activities
+            // partials is used to render each comment found in the activities
+            var partials = {
+                comment: maxui.templates.comment
+            };
+            activities = activities + maxui.templates.activity.render(params, partials);
+        }
+        // Prepare animation and insert activities at the top of activity stream
+        if (insertAt == 'beggining') {
+            // Load all the activities in a overflow-hidden div to calculate the height
+            jq('#maxui-preload .maxui-wrapper').prepend(activities);
+            var ritems = jq('#maxui-preload .maxui-wrapper .maxui-activity');
+            var heightsum = 0;
+            for (i = 0; i < ritems.length; i++) heightsum += jq(ritems[i]).height() + 18;
+            // Move the hidden div to be hidden on top of the last activity and behind the main UI
+            var currentPreloadHeight = jq('#maxui-preload').height();
+            jq('#maxui-preload').height(heightsum - currentPreloadHeight);
+            jq('#maxui-preload').css({
+                "margin-top": (heightsum - currentPreloadHeight) * -1
+            });
+            // Animate it to appear sliding on the bottom of the main UI
+            jq('#maxui-preload').animate({
+                "margin-top": 0
+            }, 200, function() {
+                // When the animation ends, move the new activites to its native container
+                jq('#maxui-preload .maxui-wrapper').html("");
+                jq('#maxui-activities').prepend(activities);
+                jq('#maxui-preload').height(0);
+            });
+        }
+        // Insert at the end
+        else if (insertAt == 'end') jq('#maxui-activities').append(activities);
+        // Otherwise, replace everything
+        else jq('#maxui-activities').html(activities);
+        // if Has a callback, execute it
+        if (arguments.length > 2) {
+            arguments[2].call();
+        }
+    };
     /**
-    *    Renders the timeline of the current user, defined in settings.username
-    **/
+     *    Renders the N comments passed in items on the timeline slot. This function is
+     *    meant to be called as a callback of a call to a max webservice returning comments
+     *    @param {String} items         a list of objects representing comments, returned by max
+     *    @param {String} activity_id   id of the activity where comments belong to
+     **/
+    jq.fn.formatComment = function(items, activity_id) {
+        // When receiving the list of activities from max
+        // construct the object for Hogan
+        // `activities `contain the list of activity objects
+        // `formatedDate` contain a function maxui will be rendered inside the template
+        //             to obtain the published date in a "human readable" way
+        // `avatarURL` contain a function maxui will be rendered inside the template
+        //             to obtain the avatar url for the activity's actor
+        // Save reference to the maxui class, as inside below defined functions
+        // the this variable will contain the activity item being processed
+        maxui = this;
+        var comments = '';
+        for (i = 0; i < items.length; i++) {
+            var comment = items[i];
+            var params = {
+                literals: maxui.settings.literals,
+                id: comment.id,
+                actor: comment.actor,
+                date: maxui.utils.formatDate(comment.published, maxui.language),
+                text: maxui.utils.formatText(comment.content),
+                avatarURL: maxui.settings.avatarURLpattern.format(comment.actor.username),
+                canDeleteComment: comment.deletable
+            };
+            // Render the comment template and append it at the end of the rendered comments
+            comments = comments + maxui.templates.comment.render(params);
+        }
+        // Insert new comments by replacing previous comments with all comments
+        jq('.maxui-activity#' + activity_id + ' .maxui-commentsbox').html(comments);
+        // Update comment count
+        comment_count = jq('.maxui-activity#' + activity_id + ' .maxui-commentaction strong');
+        jq(comment_count).text(parseInt(jq(comment_count).text(), 10) + 1);
+    };
+    /**
+     *    Renders the postbox
+     **/
+    jq.fn.renderPostbox = function() {
+        var maxui = this;
+        // Render the postbox UI if user has permission
+        var showCT = maxui.settings.UISection == 'conversations';
+        var toggleCT = maxui.settings.disableConversations === false && !showCT;
+        var params = {
+            avatar: maxui.settings.avatarURLpattern.format(maxui.settings.username),
+            allowPosting: maxui.settings.canwrite,
+            buttonLiteral: maxui.settings.literals.new_activity_post,
+            textLiteral: maxui.settings.literals.new_activity_text,
+            literals: maxui.settings.literals,
+            showConversationsToggle: toggleCT ? 'display:block;' : 'display:none;'
+        };
+        var postbox = maxui.templates.postBox.render(params);
+        var $postbox = jq('#maxui-newactivity');
+        $postbox.html(postbox);
+    };
+    /**
+     *    Renders the timeline of the current user, defined in settings.username
+     **/
     jq.fn.printActivities = function(ufilters) {
         // save a reference to the container object to be able to access it
         // from callbacks defined in inner levels
-        var maxui = this
-
-        var func_params = []
-        var insert_at = 'replace'
-
+        var maxui = this;
+        var func_params = [];
+        var insert_at = 'replace';
         // Get current defined filters and update with custom
-        var filters = maxui.getFilters().filters
-        jq.extend(filters, ufilters)
-
-        if (filters.before)
-            {insert_at = 'end'}
-        if (filters.after)
-            {insert_at = 'beggining'}
-
+        var filters = maxui.getFilters().filters;
+        jq.extend(filters, ufilters);
+        if (filters.before) {
+            insert_at = 'end';
+        }
+        if (filters.after) {
+            insert_at = 'beggining';
+        }
         if (!filters.sortBy) {
             if (jq('#maxui-activity-sort .maxui-sort-action.maxui-most-valued').hasClass('active')) {
-                filters.sortBy = 'likes'
+                filters.sortBy = 'likes';
             } else {
-                filters.sortBy = maxui.settings.activitySortOrder
+                filters.sortBy = maxui.settings.activitySortOrder;
             }
         }
-
-        maxui.currentSortOrder = filters.sortBy
-
-        if (maxui.settings.activitySource=='timeline')
-        {
-            var activityRetriever = this.maxClient.getUserTimeline
-            func_params.push(maxui.settings.username)
-        }
-        else if (maxui.settings.activitySource=='activities')
-        {
-            var activityRetriever = this.maxClient.getActivities
+        maxui.currentSortOrder = filters.sortBy;
+        var activityRetriever = null;
+        if (maxui.settings.activitySource == 'timeline') {
+            activityRetriever = this.maxClient.getUserTimeline;
+            func_params.push(maxui.settings.username);
+        } else if (maxui.settings.activitySource == 'activities') {
+            activityRetriever = this.maxClient.getActivities;
             options = {
                 context: maxui.settings.readContextHash,
                 tags: maxui.settings.contextTagsFilter
-            }
-            func_params.push(options)
+            };
+            func_params.push(options);
         }
-
-        if (arguments.length>1)
-        {
-            var callback = arguments[1]
-            func_params.push( function(event) {
-                var items = this
+        if (arguments.length > 1) {
+            var callback = arguments[1];
+            func_params.push(function(items) {
                 // Determine write permission, granted by default if we don't find a restriction
-                maxui.settings.canwrite = true
-
+                maxui.settings.canwrite = true;
                 // If we don't have a context, we're in timeline, so we can write
                 if (maxui.settings.activitySource == 'activities') {
-                    maxui.maxClient.getContext(
-                        maxui.settings.readContextHash,
-                        function (event) {
-                            var context = this
-
-                            // Add read context if user is not subscribed to it{
-                            var subscriptions = maxui.settings.subscriptions
-                            if (!subscriptions[context.hash])
-                            {
-                                subscriptions[context.hash]={}
-                                subscriptions[context.hash]['permissions']={}
-
-                                // Check only for public defaults, as any other permission would require
-                                // a susbcription, that we already checked that doesn't exists
-                                subscriptions[context.hash]['permissions']['read'] = context.permissions.read=='public'
-                                subscriptions[context.hash]['permissions']['write'] = context.permissions.write=='public'
-                            }
-
-                            // Iterate through all the defined write contexts to check for write permissions on
-                            // the current user
-                            for (wc=0;wc<maxui.settings.writeContexts.length;wc++)
-                                {
-                                    var write_context = maxui.settings.writeContextsHashes[wc]
-                                    if (subscriptions[write_context]['permissions'])
-                                    {
-                                      if (subscriptions[write_context]['permissions'].write!=true)
-                                      {
-                                          maxui.settings.canwrite = false
-                                      }
-                                    }
-                                    else { maxui.settings.canwrite = false }
-                                }
-
-
-                            maxui.renderPostbox()
-                            // format the result items as activities
-                            maxui.formatActivities(items, insert_at, callback)
-
+                    maxui.maxClient.getContext(maxui.settings.readContextHash, function(context) {
+                        // Add read context if user is not subscribed to it{
+                        var subscriptions = maxui.settings.subscriptions;
+                        if (!subscriptions[context.hash]) {
+                            subscriptions[context.hash] = {};
+                            subscriptions[context.hash].permissions = {};
+                            // Check only for public defaults, as any other permission would require
+                            // a susbcription, that we already checked that doesn't exists
+                            subscriptions[context.hash].permissions.read = context.permissions.read == 'public';
+                            subscriptions[context.hash].permissions.write = context.permissions.write == 'public';
                         }
-                    )
+                        // Iterate through all the defined write contexts to check for write permissions on
+                        // the current user
+                        for (wc = 0; wc < maxui.settings.writeContexts.length; wc++) {
+                            var write_context = maxui.settings.writeContextsHashes[wc];
+                            if (subscriptions[write_context].permissions) {
+                                if (subscriptions[write_context].permissions.write !== true) {
+                                    maxui.settings.canwrite = false;
+                                }
+                            } else {
+                                maxui.settings.canwrite = false;
+                            }
+                        }
+                        maxui.renderPostbox();
+                        // format the result items as activities
+                        maxui.formatActivities(items, insert_at, callback);
+                    });
                 } else {
-                    maxui.renderPostbox(items, insert_at, callback)
-                            // format the result items as activities
-                    maxui.formatActivities(items, insert_at, callback)
+                    maxui.renderPostbox(items, insert_at, callback);
+                    // format the result items as activities
+                    maxui.formatActivities(items, insert_at, callback);
                 }
-
-            })
+            });
+        } else {
+            func_params.push(function(items) {
+                maxui.formatActivities(items, insert_at);
+            });
         }
-        else
-        {
-            func_params.push( function() {
-                maxui.formatActivities(this, insert_at)})
-        }
-
-
         // if passed as param, assume an object with search filtering params
         // one or all of [limit, before, after, hashtag]
-        func_params.push(filters)
-
-        activityRetriever.apply(this.maxClient,func_params)
-        }
-
+        func_params.push(filters);
+        activityRetriever.apply(this.maxClient, func_params);
+    };
     /**
-    *    Renders the timeline of the current user, defined in settings.username
-    **/
+     *    Renders the timeline of the current user, defined in settings.username
+     **/
     jq.fn.printCommentsForActivity = function(activity_id) {
-
-
-        var maxui = this
-        var func_params = []
-
-        func_params.push(activity_id)
-        func_params.push(function() {maxui.formatComment(this, activity_id)})
-        this.maxClient.getCommentsForActivity.apply(this.maxClient, func_params)
-
-    }
-
-
+        var maxui = this;
+        var func_params = [];
+        func_params.push(activity_id);
+        func_params.push(function(data) {
+            maxui.formatComment(data, activity_id);
+        });
+        this.maxClient.getCommentsForActivity.apply(this.maxClient, func_params);
+    };
 })(jQuery);
 
 
@@ -7891,9 +10252,9 @@ MaxClient.prototype.unlikeActivity = function(activityid, callback ) {
 // of async loading of the maxui main file.
 // In the example.js file lives the code that the api consumer has to insert in the host application
 //
-window.setTimeout(function () {
-    if(window._MAXUI.onReady && !window._MAXUI.hasRun){
+window.setTimeout(function() {
+    if (window._MAXUI.onReady && !window._MAXUI.hasRun) {
         window._MAXUI.hasRun = true;
         _MAXUI.onReady();
     }
-  },0)
+}, 0);
