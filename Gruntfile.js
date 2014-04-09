@@ -126,6 +126,7 @@ module.exports = function(grunt) {
               'libs/json2.js',
               'libs/sockjs-0.3.4.js',
               'libs/stomp-2.3.1.js',
+              'libs/underscore-1.6.0.js',
               'libs/uuid-1.4.1.js',
               'src/max.views.inputs.js',
               'src/max.views.overlay.js',
