@@ -19,6 +19,7 @@ var max = max || {};
         // Collect info from seettings
         self.debug = maxui.settings.enableAlerts;
         self.username = maxui.settings.username;
+        self.displayName = maxui.settings.displayName
         self.token = maxui.settings.oAuthToken;
         self.stompServer = maxui.settings.maxTalkURL;
 
@@ -37,7 +38,11 @@ var max = max || {};
         self.specification = {
             user: {
                 id: 'u',
-                type: 'string'
+                type: 'object',
+                fields: {
+                    'username': {'id': 'u'},
+                    'displayname': {'id': 'd'}
+                }
             },
             action: {
                 id: 'a',
@@ -96,6 +101,15 @@ var max = max || {};
                     delete spec.values[vvalue.id].id;
                 });
             }
+            if (_.has(spec, 'fields') && spec.type == 'object') {
+                spec.fields = {};
+                _.each(svalue.fields, function(vvalue, vname, vlist) {
+                    spec.fields[vvalue.id] = _.clone(vvalue);
+                    spec.fields[vvalue.id].name = vname;
+                    delete spec.fields[vvalue.id].id;
+                });
+            }
+
             spec.name = sname;
             delete spec.id;
             self._specification[svalue.id] = spec;
@@ -200,19 +214,34 @@ var max = max || {};
         var self = this;
         var packed = {};
         var packed_value;
+
         _.each(message, function(value, key, list){
             var spec = self.specification[key];
             if (_.isUndefined(spec)) {
                 // Raise ??
             } else {
-                packed_value = undefined;
+                var packed_value = undefined;
                 if (_.has(spec, 'values')) {
                     if (_.has(spec.values, value)) {
                         packed_value = spec.values[value].id;
                     }
                 } else {
                     packed_value = value;
+
+                    if (_.has(spec, 'fields') && spec.type == 'object' && _.isObject(packed_value)) {
+                        var packed_inner = {};
+                        _.each(message[key], function(inner_value, inner_key, inner_list){
+                            if (_.has(spec.fields, inner_key)) {
+                                packed_key = spec.fields[inner_key].id;
+                            } else {
+                                packed_key = inner_key;
+                            }
+                            packed_inner[packed_key] = inner_value;
+                        });
+                        packed_value = packed_inner;
+                    }
                 }
+
                 if (!_.isUndefined(packed_value)) {
                     packed[spec.id] = packed_value;
                 }
@@ -231,13 +260,31 @@ var max = max || {};
                 // Raise ??
             } else {
                 unpacked_value = undefined;
+                // change packed value if field has a values mapping
                 if (_.has(spec, 'values')) {
                     if (_.has(spec.values, value)) {
                         unpacked_value = spec.values[value].name;
                     }
+                // otherwise leave the raw value
                 } else {
-                    unpacked_value = value;
+                    var unpacked_value = value;
+                    //change inner object keys if the field has a field keys mapping
+
+                    if (_.has(spec, 'fields') && spec.type == 'object' && _.isObject(unpacked_value)) {
+                        var unpacked_inner = {}
+                        _.each(message[key], function(inner_value, inner_key, inner_list){
+                            if (_.has(spec.fields, inner_key)) {
+                                unpacked_key = spec.fields[inner_key].name;
+                            } else {
+                                unpacked_key = inner_key;
+                            }
+                            unpacked_inner[unpacked_key] = inner_value;
+                        });
+                        unpacked_value = unpacked_inner;
+                    }
                 }
+
+                // Include key/value only if the value is defined
                 if (!_.isUndefined(unpacked_value)) {
                     unpacked[spec.name] = unpacked_value;
                 }
@@ -251,7 +298,10 @@ var max = max || {};
         var base = {
             'source': 'widget',
             'version': maxui.version,
-            'user': self.username,
+            'user': {
+                'username': self.username,
+                'displayname': self.displayName,
+            },
             'domain': self.domain,
             'published': maxui.utils.rfc3339(maxui.utils.now()),
         };

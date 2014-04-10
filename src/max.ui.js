@@ -110,6 +110,7 @@
         // Get user data and start ui rendering when completed
         this.maxClient.getUserData(maxui.settings.username, function(data) {
             //Determine if user can write in writeContexts
+            maxui.settings.displayName = data.displayName || maxui.settings.username;
             var userSubscriptions = {};
             if (data.subscribedTo) {
                 if (data.subscribedTo) {

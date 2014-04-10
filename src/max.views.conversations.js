@@ -286,7 +286,10 @@ var views = function() {
             message = {
                 'action': 'add',
                 'object': 'message',
-                'user': message.actor.username,
+                'user': {
+                    'username': message.actor.username,
+                    'displayName': message.actor.displayName
+                },
                 'published': message.published,
                 'data': {
                     'displayName': message.actor.displayName,
@@ -337,10 +340,10 @@ var views = function() {
         // Iterate through all the conversations
         for (i = 0; i < self.messages[self.mainview.active].length; i++) {
             var message = self.messages[self.mainview.active][i];
-            var avatar_url = self.maxui.settings.avatarURLpattern.format(message.user);
+            var avatar_url = self.maxui.settings.avatarURLpattern.format(message.user.username);
             // Store in origin, who is the sender of the message, the authenticated user or anyone else
             var origin = 'maxui-user-notme';
-            if (message.user == self.maxui.settings.username) origin = 'maxui-user-me';
+            if (message.user.username == self.maxui.settings.username) origin = 'maxui-user-me';
             var params = {
                 id: message.data.uuid,
                 text: self.maxui.utils.formatText(message.data.text),
@@ -523,7 +526,6 @@ var views = function() {
         var message_uuid = uuid.v1();
         message = {
             data: {
-                "displayName": "Carles Bruguera",
                 "uuid": uuid.v1(),
                 "text": text
             },
@@ -599,7 +601,7 @@ var views = function() {
     MaxConversations.prototype.ReceiveMessage = function(message) {
         var self = this;
         // Insert message only if the message is from another user.
-        if (message.user != self.maxui.settings.username) {
+        if (message.user.username != self.maxui.settings.username) {
             console.log('New message from user {0} on {1}'.format(message.user, message.destination));
             self.messagesview.append(message);
 
@@ -632,7 +634,7 @@ var views = function() {
     MaxConversations.prototype.ReceiveConversation = function(message) {
         var self = this;
         // Insert conversation only if the message is from another user.
-        if (message.user != self.maxui.settings.username) {
+        if (message.user.username != self.maxui.settings.username) {
 
             if (self.maxui.settings.UISection == 'conversations' && self.maxui.settings.conversationsSection == 'conversations') {
                 self.active = message.destination;
