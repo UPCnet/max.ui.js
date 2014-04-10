@@ -7577,7 +7577,12 @@ var max = max || {};
         self.stompServer = self.maxui.settings.maxTalkURL;
 
         // Construct login merging username with domain (if any)
-        self.domain = self.domainFromMaxServer(self.maxui.settings.maxServerURL);
+        // if domain explicitly specified, take it, otherwise deduce it from url
+        if (maxui.settings.domain) {
+            self.domain = maxui.settings.domain;
+        } else {
+            self.domain = self.domainFromMaxServer(self.maxui.settings.maxServerURL);
+        }
         self.login = "";
         if (self.domain) {
             self.login += self.domain + ':';
