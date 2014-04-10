@@ -6822,7 +6822,10 @@ var views = function() {
             message = {
                 'action': 'add',
                 'object': 'message',
-                'user': message.actor.username,
+                'user': {
+                    'username': message.actor.username,
+                    'displayName': message.actor.displayName
+                },
                 'published': message.published,
                 'data': {
                     'displayName': message.actor.displayName,
@@ -6873,10 +6876,10 @@ var views = function() {
         // Iterate through all the conversations
         for (i = 0; i < self.messages[self.mainview.active].length; i++) {
             var message = self.messages[self.mainview.active][i];
-            var avatar_url = self.maxui.settings.avatarURLpattern.format(message.user);
+            var avatar_url = self.maxui.settings.avatarURLpattern.format(message.user.username);
             // Store in origin, who is the sender of the message, the authenticated user or anyone else
             var origin = 'maxui-user-notme';
-            if (message.user == self.maxui.settings.username) origin = 'maxui-user-me';
+            if (message.user.username == self.maxui.settings.username) origin = 'maxui-user-me';
             var params = {
                 id: message.data.uuid,
                 text: self.maxui.utils.formatText(message.data.text),
@@ -7059,7 +7062,6 @@ var views = function() {
         var message_uuid = uuid.v1();
         message = {
             data: {
-                "displayName": "Carles Bruguera",
                 "uuid": uuid.v1(),
                 "text": text
             },
@@ -7135,7 +7137,7 @@ var views = function() {
     MaxConversations.prototype.ReceiveMessage = function(message) {
         var self = this;
         // Insert message only if the message is from another user.
-        if (message.user != self.maxui.settings.username) {
+        if (message.user.username != self.maxui.settings.username) {
             console.log('New message from user {0} on {1}'.format(message.user, message.destination));
             self.messagesview.append(message);
 
@@ -7168,7 +7170,7 @@ var views = function() {
     MaxConversations.prototype.ReceiveConversation = function(message) {
         var self = this;
         // Insert conversation only if the message is from another user.
-        if (message.user != self.maxui.settings.username) {
+        if (message.user.username != self.maxui.settings.username) {
 
             if (self.maxui.settings.UISection == 'conversations' && self.maxui.settings.conversationsSection == 'conversations') {
                 self.active = message.destination;
@@ -7569,20 +7571,18 @@ var max = max || {};
         self.maxui = maxui;
         self.active = false;
         self.vhost = '/';
-
         // Collect info from seettings
-        self.debug = maxui.settings.enableAlerts;
-        self.username = maxui.settings.username;
-        self.token = maxui.settings.oAuthToken;
-        self.stompServer = maxui.settings.maxTalkURL;
+        self.debug = self.maxui.settings.enableAlerts;
+        self.token = self.maxui.settings.oAuthToken;
+        self.stompServer = self.maxui.settings.maxTalkURL;
 
         // Construct login merging username with domain (if any)
-        self.domain = self.domainFromMaxServer(maxui.settings.maxServerURL);
+        self.domain = self.domainFromMaxServer(self.maxui.settings.maxServerURL);
         self.login = "";
         if (self.domain) {
             self.login += self.domain + ':';
         }
-        self.login += maxui.settings.username;
+        self.login += self.maxui.settings.username;
 
         // Start socket
         self.ws = new SockJS(self.stompServer);
@@ -7591,7 +7591,11 @@ var max = max || {};
         self.specification = {
             user: {
                 id: 'u',
-                type: 'string'
+                type: 'object',
+                fields: {
+                    'username': {'id': 'u'},
+                    'displayname': {'id': 'd'}
+                }
             },
             action: {
                 id: 'a',
@@ -7650,6 +7654,15 @@ var max = max || {};
                     delete spec.values[vvalue.id].id;
                 });
             }
+            if (_.has(spec, 'fields') && spec.type == 'object') {
+                spec.fields = {};
+                _.each(svalue.fields, function(vvalue, vname, vlist) {
+                    spec.fields[vvalue.id] = _.clone(vvalue);
+                    spec.fields[vvalue.id].name = vname;
+                    delete spec.fields[vvalue.id].id;
+                });
+            }
+
             spec.name = sname;
             delete spec.id;
             self._specification[svalue.id] = spec;
@@ -7686,7 +7699,7 @@ var max = max || {};
             if (!self.active) {
                 console.log('connection timeout, retrying');
                 self.ws.close();
-                self.ws = new SockJS(maxui.settings.maxTalkURL);
+                self.ws = new SockJS(self.maxui.settings.maxTalkURL);
                 self.connect();
             } else {
                 clearInterval(interval);
@@ -7732,7 +7745,7 @@ var max = max || {};
         };
 
         self.stomp.connect(
-            self.username,
+            self.maxui.settings.username,
             self.token,
             // Define stomp stomp ON CONNECT callback
             function(x) {
@@ -7754,19 +7767,34 @@ var max = max || {};
         var self = this;
         var packed = {};
         var packed_value;
+
         _.each(message, function(value, key, list){
             var spec = self.specification[key];
             if (_.isUndefined(spec)) {
                 // Raise ??
             } else {
-                packed_value = undefined;
+                var packed_value = undefined;
                 if (_.has(spec, 'values')) {
                     if (_.has(spec.values, value)) {
                         packed_value = spec.values[value].id;
                     }
                 } else {
                     packed_value = value;
+
+                    if (_.has(spec, 'fields') && spec.type == 'object' && _.isObject(packed_value)) {
+                        var packed_inner = {};
+                        _.each(message[key], function(inner_value, inner_key, inner_list){
+                            if (_.has(spec.fields, inner_key)) {
+                                packed_key = spec.fields[inner_key].id;
+                            } else {
+                                packed_key = inner_key;
+                            }
+                            packed_inner[packed_key] = inner_value;
+                        });
+                        packed_value = packed_inner;
+                    }
                 }
+
                 if (!_.isUndefined(packed_value)) {
                     packed[spec.id] = packed_value;
                 }
@@ -7785,13 +7813,31 @@ var max = max || {};
                 // Raise ??
             } else {
                 unpacked_value = undefined;
+                // change packed value if field has a values mapping
                 if (_.has(spec, 'values')) {
                     if (_.has(spec.values, value)) {
                         unpacked_value = spec.values[value].name;
                     }
+                // otherwise leave the raw value
                 } else {
-                    unpacked_value = value;
+                    var unpacked_value = value;
+                    //change inner object keys if the field has a field keys mapping
+
+                    if (_.has(spec, 'fields') && spec.type == 'object' && _.isObject(unpacked_value)) {
+                        var unpacked_inner = {}
+                        _.each(message[key], function(inner_value, inner_key, inner_list){
+                            if (_.has(spec.fields, inner_key)) {
+                                unpacked_key = spec.fields[inner_key].name;
+                            } else {
+                                unpacked_key = inner_key;
+                            }
+                            unpacked_inner[unpacked_key] = inner_value;
+                        });
+                        unpacked_value = unpacked_inner;
+                    }
                 }
+
+                // Include key/value only if the value is defined
                 if (!_.isUndefined(unpacked_value)) {
                     unpacked[spec.name] = unpacked_value;
                 }
@@ -7805,7 +7851,10 @@ var max = max || {};
         var base = {
             'source': 'widget',
             'version': maxui.version,
-            'user': self.username,
+            'user': {
+                'username': self.maxui.settings.username,
+                'displayname': self.maxui.settings.displayName,
+            },
             'domain': self.domain,
             'published': maxui.utils.rfc3339(maxui.utils.now()),
         };
@@ -7817,7 +7866,7 @@ var max = max || {};
     MaxMessaging.prototype.send = function(message, routing_key) {
         var self = this;
         var message_unpacked = self.prepare(message);
-        result = self.stomp.send('/exchange/{0}.publish/{1}'.format(self.username, routing_key), {}, JSON.stringify(self.pack(message_unpacked)));
+        result = self.stomp.send('/exchange/{0}.publish/{1}'.format(self.maxui.settings.username, routing_key), {}, JSON.stringify(self.pack(message_unpacked)));
         return message_unpacked;
     };
 
@@ -8890,6 +8939,7 @@ MaxClient.prototype.unlikeActivity = function(activityid, callback) {
         // Get user data and start ui rendering when completed
         this.maxClient.getUserData(maxui.settings.username, function(data) {
             //Determine if user can write in writeContexts
+            maxui.settings.displayName = data.displayName || maxui.settings.username;
             var userSubscriptions = {};
             if (data.subscribedTo) {
                 if (data.subscribedTo) {
