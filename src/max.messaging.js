@@ -15,21 +15,18 @@ var max = max || {};
         self.maxui = maxui;
         self.active = false;
         self.vhost = '/';
-
         // Collect info from seettings
-        self.debug = maxui.settings.enableAlerts;
-        self.username = maxui.settings.username;
-        self.displayName = maxui.settings.displayName
-        self.token = maxui.settings.oAuthToken;
-        self.stompServer = maxui.settings.maxTalkURL;
+        self.debug = self.maxui.settings.enableAlerts;
+        self.token = self.maxui.settings.oAuthToken;
+        self.stompServer = self.maxui.settings.maxTalkURL;
 
         // Construct login merging username with domain (if any)
-        self.domain = self.domainFromMaxServer(maxui.settings.maxServerURL);
+        self.domain = self.domainFromMaxServer(self.maxui.settings.maxServerURL);
         self.login = "";
         if (self.domain) {
             self.login += self.domain + ':';
         }
-        self.login += maxui.settings.username;
+        self.login += self.maxui.settings.username;
 
         // Start socket
         self.ws = new SockJS(self.stompServer);
@@ -146,7 +143,7 @@ var max = max || {};
             if (!self.active) {
                 console.log('connection timeout, retrying');
                 self.ws.close();
-                self.ws = new SockJS(maxui.settings.maxTalkURL);
+                self.ws = new SockJS(self.maxui.settings.maxTalkURL);
                 self.connect();
             } else {
                 clearInterval(interval);
@@ -192,7 +189,7 @@ var max = max || {};
         };
 
         self.stomp.connect(
-            self.username,
+            self.maxui.settings.username,
             self.token,
             // Define stomp stomp ON CONNECT callback
             function(x) {
@@ -299,8 +296,8 @@ var max = max || {};
             'source': 'widget',
             'version': maxui.version,
             'user': {
-                'username': self.username,
-                'displayname': self.displayName,
+                'username': self.maxui.settings.username,
+                'displayname': self.maxui.settings.displayName,
             },
             'domain': self.domain,
             'published': maxui.utils.rfc3339(maxui.utils.now()),
@@ -313,7 +310,7 @@ var max = max || {};
     MaxMessaging.prototype.send = function(message, routing_key) {
         var self = this;
         var message_unpacked = self.prepare(message);
-        result = self.stomp.send('/exchange/{0}.publish/{1}'.format(self.username, routing_key), {}, JSON.stringify(self.pack(message_unpacked)));
+        result = self.stomp.send('/exchange/{0}.publish/{1}'.format(self.maxui.settings.username, routing_key), {}, JSON.stringify(self.pack(message_unpacked)));
         return message_unpacked;
     };
 
