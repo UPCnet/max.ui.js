@@ -292,10 +292,9 @@ var views = function() {
                 },
                 'published': message.published,
                 'data': {
-                    'displayName': message.actor.displayName,
-                    'uuid': message.id,
                     'text': message.object.content
                 },
+                'uuid': message.id,
                 'destination': message.contexts[0].id,
                 'ack': message.ack
             };
@@ -317,14 +316,17 @@ var views = function() {
             message = {
                 'action': 'add',
                 'object': 'message',
-                'user': message.actor.username,
+                'user': {
+                    'username': message.actor.username,
+                    'displayName': message.actor.displayName
+                },
                 'published': message.published,
                 'data': {
                     'conversation': message.contexts[0].id,
                     'displayName': message.actor.displayName,
-                    'uuid': message.id,
                     'text': message.object.content
                 },
+                'uuid': message.id,
                 'ack': message.ack
             };
         }
@@ -345,7 +347,7 @@ var views = function() {
             var origin = 'maxui-user-notme';
             if (message.user.username == self.maxui.settings.username) origin = 'maxui-user-me';
             var params = {
-                id: message.data.uuid,
+                id: message.uuid,
                 text: self.maxui.utils.formatText(message.data.text),
                 date: self.maxui.utils.formatDate(message.published, maxui.language),
                 origin: origin,
@@ -523,10 +525,8 @@ var views = function() {
     MaxConversations.prototype.send = function(text) {
         var self = this;
 
-        var message_uuid = uuid.v1();
         message = {
             data: {
-                "uuid": uuid.v1(),
                 "text": text
             },
             action: 'add',
@@ -619,12 +619,12 @@ var views = function() {
                 self.listview.render();
             }
         } else {
-            console.log('Message {0} succesfully delivered'.format(message.data.uuid));
+            console.log('Message {0} succesfully delivered'.format(message.uuid));
             var interval = setInterval(function(event) {
-                var $message = jq('#' + message.data.uuid + ' .maxui-icon-check');
+                var $message = jq('#' + message.uuid + ' .maxui-icon-check');
                 if ($message) {
                     $message.addClass('maxui-ack');
-                    self.messagesview.ack(message.data.uuid);
+                    self.messagesview.ack(message.uuid);
                     clearInterval(interval);
                 }
             }, 10);

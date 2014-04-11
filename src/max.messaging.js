@@ -38,6 +38,10 @@ var max = max || {};
         self.bindings = [];
 
         self.specification = {
+            uuid: {
+                id: 'g',
+                type: 'string'
+            },
             user: {
                 id: 'u',
                 type: 'object',
@@ -222,7 +226,7 @@ var max = max || {};
             if (_.isUndefined(spec)) {
                 // Raise ??
             } else {
-                var packed_value = undefined;
+                var packed_value;
                 if (_.has(spec, 'values')) {
                     if (_.has(spec.values, value)) {
                         packed_value = spec.values[value].id;
@@ -261,7 +265,7 @@ var max = max || {};
             if (_.isUndefined(spec)) {
                 // Raise ??
             } else {
-                unpacked_value = undefined;
+                var unpacked_value;
                 // change packed value if field has a values mapping
                 if (_.has(spec, 'values')) {
                     if (_.has(spec.values, value)) {
@@ -269,11 +273,11 @@ var max = max || {};
                     }
                 // otherwise leave the raw value
                 } else {
-                    var unpacked_value = value;
+                    unpacked_value = value;
                     //change inner object keys if the field has a field keys mapping
 
                     if (_.has(spec, 'fields') && spec.type == 'object' && _.isObject(unpacked_value)) {
-                        var unpacked_inner = {}
+                        var unpacked_inner = {};
                         _.each(message[key], function(inner_value, inner_key, inner_list){
                             if (_.has(spec.fields, inner_key)) {
                                 unpacked_key = spec.fields[inner_key].name;
@@ -306,6 +310,7 @@ var max = max || {};
             },
             'domain': self.domain,
             'published': maxui.utils.rfc3339(maxui.utils.now()),
+            'uuid': uuid.v1()
         };
         // Overwrite any key-value pair in params already defined in base
         // Trim any key from params not in specification
