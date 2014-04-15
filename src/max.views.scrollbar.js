@@ -14,7 +14,7 @@ var views = function() {
     */
 
     function MaxScrollbar(options) {
-        self = this;
+        var self = this;
         self.width = options.width;
         self.handle = options.handle;
         self.dragging = false;

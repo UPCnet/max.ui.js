@@ -97,7 +97,7 @@ var views = function() {
         self.conversations.reverse();
     };
 
-    MaxConversationsList.prototype.delete = function(conversation_id) {
+    MaxConversationsList.prototype.remove = function(conversation_id) {
         var self = this;
         self.conversations = _.filter(self.conversations, function(conversation){ return conversation.id != conversation_id;});
         self.sort();
@@ -567,7 +567,7 @@ var views = function() {
                     'published': message.published
                 },
                 'participants': options.participants,
-                'tags': message.contexts[0].tags,
+                'tags': message.contexts[0].tags
             };
             self.active = chash;
             self.listview.insert(conversation);

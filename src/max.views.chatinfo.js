@@ -180,8 +180,7 @@ var views = function() {
                     'maxui-input-submit': function(event) {self.predictive.choose(event);},
                     'maxui-input-cancel': function(event) {self.predictive.hide(event);},
                     'maxui-input-up': function(event) {self.predictive.moveup(event);},
-                    'maxui-input-down': function(event) {self.predictive.movedown(event);},
-
+                    'maxui-input-down': function(event) {self.predictive.movedown(event);}
                 }
         });
 
@@ -214,7 +213,7 @@ var views = function() {
         overlay.$el().on('click', self.getSelector('#maxui-conversation-leave .maxui-button'), function(event) {
             var leaving_username = maxui.settings.username;
             maxui.maxClient.kickUserFromConversation(self.data.id, leaving_username, function(event) {
-                maxui.conversations.listview.delete(self.data.id);
+                maxui.conversations.listview.remove(self.data.id);
                 overlay.hide();
                 $('#maxui-back-conversations a').trigger('click');
             });
@@ -228,7 +227,7 @@ var views = function() {
         // User confirms deleting a conversation
         overlay.$el().on('click', self.getSelector('#maxui-conversation-delete .maxui-help .maxui-confirmation-ok'), function(event) {
             maxui.maxClient.deleteConversation(self.data.id, function(event) {
-                maxui.conversations.listview.delete(self.data.id);
+                maxui.conversations.listview.remove(self.data.id);
                 overlay.hide();
                 $('#maxui-back-conversations a').trigger('click');
             });

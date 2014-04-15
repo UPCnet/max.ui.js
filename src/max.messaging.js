@@ -92,7 +92,7 @@ var max = max || {};
             published: {
                 id: 'p',
                 type: 'date'
-            },
+            }
         };
 
         // invert specification to acces by packed value
@@ -306,7 +306,7 @@ var max = max || {};
             'version': maxui.version,
             'user': {
                 'username': self.maxui.settings.username,
-                'displayname': self.maxui.settings.displayName,
+                'displayname': self.maxui.settings.displayName
             },
             'domain': self.domain,
             'published': maxui.utils.rfc3339(maxui.utils.now()),
