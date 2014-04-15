@@ -2,6 +2,27 @@ CHANGELOG
 =========
 
 
+4.0.0 (2014-04-15)
+------------------
+* Refactor all code into views except timeline and postbox
+* Refactor build system using grunt
+* Refactor conversations based on new rabbitmq architecture
+* Rewrite css using less
+* Get rid of images in favour of the fontello font
+* Implement stomp messaging in a separate library
+* Conversation configuration overlay
+* Intelligent people search widget
+* Live reloading tools for css/less
+* Move templates in plain text files, concatened with grunt
+* Updated all third-party libs
+* Added js and css source maps
+* JSlinted all code
+* Literals changes
+* Updated date formats output
+* Loading of old messages in conversations
+* Conversation messages ack'ing
+* New conversation messages alerts on all views
+
 3.6 (2014-01-13)
 ----------------
  * Social features: Like and Favorite
