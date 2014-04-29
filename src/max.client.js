@@ -153,21 +153,33 @@ MaxClient.prototype.GET = function(route, query, callback) {
     if (Object.keys(query).length > 0) {
         resource_uri += '?' + jQuery.param(query, true);
     }
+
+    var ajax_options = {
+        url: resource_uri,
+        beforeSend: function(xhr) {
+            xhr.setRequestHeader("X-Oauth-Token", maxclient.token);
+            xhr.setRequestHeader("X-Oauth-Username", maxclient.actor.username);
+            xhr.setRequestHeader("X-Oauth-Scope", 'widgetcli');
+        },
+        processData: true,
+        type: 'GET',
+        async: true,
+        dataType: 'json'
+    };
+
+    if (arguments.length>3) {
+        _.extend(ajax_options, arguments[3]);
+    }
+
     if (this.mode == 'jquery') {
-        jQuery.ajax({
-            url: resource_uri,
-            beforeSend: function(xhr) {
-                xhr.setRequestHeader("X-Oauth-Token", maxclient.token);
-                xhr.setRequestHeader("X-Oauth-Username", maxclient.actor.username);
-                xhr.setRequestHeader("X-Oauth-Scope", 'widgetcli');
-            },
-            type: 'GET',
-            async: true,
-            dataType: 'json'
-        }).done(function(result, status, xhr) {
+        jQuery.ajax(ajax_options)
+
+        .done(function(result, status, xhr) {
             if (triggers.done) jQuery(window).trigger(triggers.done);
             callback.apply(xhr, [result]);
-        }).fail(function(xhr) {
+        })
+
+        .fail(function(xhr) {
             jQuery(window).trigger('maxclienterror', xhr);
             if (triggers.fail) jQuery(window).trigger(triggers.fail);
         });
@@ -345,6 +357,16 @@ MaxClient.prototype.getConversationsForUser = function(username, callback) {
     var route = this.ROUTES.conversations;
     query = {};
     this.GET(route, query, callback);
+};
+
+MaxClient.prototype.getMessageImage = function(route, callback) {
+    query = {};
+    ajax_options = {
+        processData:false,
+        dataType: undefined,
+        contentType: 'application/base64'
+    };
+    this.GET(route, query, callback, ajax_options);
 };
 
 MaxClient.prototype.getMessagesForConversation = function(hash, params, callback) {

@@ -163,7 +163,6 @@ var views = function() {
     // Renders the conversations list of the current user, defined in settings.username
     MaxConversationsList.prototype.render = function() {
         var self = this;
-
         // String to store the generated html pieces of each conversation item
         // by default showing a "no conversations" message
         var html = '<span id="maxui-info">' + self.maxui.settings.literals.no_chats + '<span>';
@@ -280,10 +279,11 @@ var views = function() {
 
     MaxConversationMessages.prototype.append = function(message) {
         var self = this;
+        var _message;
         update_params = [];
         // Convert activity from max to mimic rabbit response
         if (!_.has(message, 'data')) {
-            message = {
+            _message = {
                 'action': 'add',
                 'object': 'message',
                 'user': {
@@ -292,20 +292,26 @@ var views = function() {
                 },
                 'published': message.published,
                 'data': {
-                    'text': message.object.content
+                    'text': message.object.content,
+                    'objectType': message.object.objectType,
                 },
                 'uuid': message.id,
                 'destination': message.contexts[0].id,
                 'ack': message.ack
             };
+
+            if (_.contains(['image', 'file'], message.object.objectType)) {
+                _message.data.fullURL = message.object.fullURL;
+                _message.data.thumbURL = message.object.thumbURL;
+            }
             // If it's a message from max, update last message on listview
-            self.mainview.listview.updateLastMessage(message.destination, {'content': message.data.text, 'published': message.published});
+            self.mainview.listview.updateLastMessage(_message.destination, {'content': _message.data.text, 'published': _message.published});
         } else {
             // Is a message from rabbit, update last message on listview and increment unread counter
-            self.mainview.listview.updateLastMessage(message.destination, {'content': message.data.text, 'published': message.published}, true);
+            self.mainview.listview.updateLastMessage(_message.destination, {'content': _message.data.text, 'published': _message.published}, true);
         }
-        self.messages[message.destination] = self.messages[message.destination] || [];
-        self.messages[message.destination].push(message);
+        self.messages[_message.destination] = self.messages[_message.destination] || [];
+        self.messages[_message.destination].push(_message);
     };
 
     MaxConversationMessages.prototype.prepend = function(message, index) {
@@ -313,7 +319,7 @@ var views = function() {
 
         // Convert activity from max to mimic rabbit response
         if (!_.has(message, 'data')) {
-            message = {
+            _message = {
                 'action': 'add',
                 'object': 'message',
                 'user': {
@@ -322,17 +328,22 @@ var views = function() {
                 },
                 'published': message.published,
                 'data': {
-                    'conversation': message.contexts[0].id,
-                    'displayName': message.actor.displayName,
-                    'text': message.object.content
+                    'text': message.object.content,
+                    'objectType': message.object.objectType,
                 },
                 'uuid': message.id,
+                'destination': message.contexts[0].id,
                 'ack': message.ack
             };
+
+            if (_.contains(['image', 'file'], message.object.objectType)) {
+                _message.data.fullURL = message.object.fullURL;
+                _message.data.thumbURL = message.object.thumbURL;
+            }
         }
 
         self.messages[self.mainview.active] = self.messages[self.mainview.active] || [];
-        self.messages[self.mainview.active].splice(index, 0, message);
+        self.messages[self.mainview.active].splice(index, 0, _message);
     };
 
     MaxConversationMessages.prototype.render = function() {
@@ -340,6 +351,7 @@ var views = function() {
         // String to store the generated html pieces of each conversation item
         var messages = '';
         // Iterate through all the conversations
+        images_to_render = [];
         for (i = 0; i < self.messages[self.mainview.active].length; i++) {
             var message = self.messages[self.mainview.active][i];
             var avatar_url = self.maxui.settings.avatarURLpattern.format(message.user.username);
@@ -357,8 +369,18 @@ var views = function() {
             };
             // Render the conversations template and append it at the end of the rendered covnersations
             messages = messages + self.maxui.templates.message.render(params);
+            if (message.data.objectType == 'image') {
+                images_to_render.push(message);
+            }
         }
         jq('#maxui-messages #maxui-message-list').html(messages);
+
+        _.each(images_to_render, function(message, index, list) {
+            self.maxui.maxClient.getMessageImage('/messages/{0}/image/thumb'.format(message.uuid), function(encoded_image_data) {
+                var imagetag = '<img class="maxui-embedded" alt="" src="data:image/png;base64,{0}" />'.format(encoded_image_data);
+                $('.maxui-message#{0} .maxui-body'.format(message.uuid)).before(imagetag);
+            });
+        });
 
         $moremessages = jq('#maxui-messages #maxui-more-messages');
         if (self.remaining == "1") $moremessages.show();

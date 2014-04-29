@@ -532,6 +532,12 @@
            logged user and rest of users of a conversation
         */
 }
+#maxui-container .maxui-message img.maxui-embedded {
+  -moz-border-radius: 10px;
+  -webkit-border-radius: 10px;
+  border-radius: 10px;
+  margin: 5px 0px;
+}
 #maxui-container .maxui-message.maxui-user-me {
   text-align: right;
 }
