@@ -1128,6 +1128,7 @@
             } else {
                 maxui.printActivities({});
             }
+
         });
         //Pass generator to activity post if defined
         if (maxui.settings.generatorName) {
@@ -1206,6 +1207,9 @@
         var maxui = this;
         var activities = '';
         // Iterate through all the activities
+
+        var images_to_render = []
+
         for (i = 0; i < items.length; i++) {
             var activity = items[i];
             // Take first context (if exists) to display in the 'published on' field
@@ -1271,6 +1275,10 @@
                 comment: maxui.templates.comment
             };
             activities = activities + maxui.templates.activity.render(params, partials);
+
+            if (activity.object.objectType == 'image') {
+                images_to_render.push(activity);
+            }
         }
         // Prepare animation and insert activities at the top of activity stream
         if (insertAt == 'beggining') {
@@ -1303,6 +1311,13 @@
         if (arguments.length > 2) {
             arguments[2].call();
         }
+
+        _.each(images_to_render, function(activity, index, list) {
+            self.maxui.maxClient.getMessageImage('/activities/{0}/image/thumb'.format(activity.id), function(encoded_image_data) {
+                var imagetag = '<img class="maxui-embedded" alt="" src="data:image/png;base64,{0}" />'.format(encoded_image_data);
+                $('.maxui-activity#{0} .maxui-body'.format(activity.id)).before(imagetag);
+            });
+        });
     };
     /**
      *    Renders the N comments passed in items on the timeline slot. This function is

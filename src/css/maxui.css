@@ -1114,6 +1114,12 @@
   position: relative;
   margin-bottom: 5px;
 }
+#maxui-container #maxui-activities .maxui-activity img.maxui-embedded {
+  -moz-border-radius: 10px;
+  -webkit-border-radius: 10px;
+  border-radius: 10px;
+  margin: 5px 0px;
+}
 #maxui-container #maxui-activities .maxui-activity .maxui-footer {
   margin-left: 54px;
 }
