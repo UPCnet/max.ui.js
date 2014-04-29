@@ -23,7 +23,17 @@ max.templates = function() {
                   <span class="maxui-username">{{actor.username}}&nbsp;</span>\
                 </div>\
                 <div class="maxui-activity-message">\
+                    {{#fileDownload}}\
+                    <form action="/activities/{{id}}/file/download" method="POST">\
+                        <input type="hidden" name="X-Oauth-Token" value="{{auth.token}}">\
+                        <input type="hidden" name="X-Oauth-Username" value="{{auth.username}}">\
+                        <input type="hidden" name="X-Oauth-Scope" value="widgetcli">\
+                        <input type="hidden" name="X-HTTP-Method-Override" value="GET">\
+                        <span class="maxui-icon-doc-inv"></span><input type="submit" class="maxui-download" name="submit" value="File download">\
+                    </form>\
+                    {{/fileDownload}}\
                     <p class="maxui-body">{{&text}}</p>\
+        \
                 </div>\
             </div>\
             <div class="maxui-footer">\
@@ -297,6 +307,15 @@ max.templates = function() {
             <div class="maxui-activity-content">\
                 <span class="maxui-avatar maxui-little"><img src="{{avatarURL}}"></span>\
                 <div class="maxui-balloon">\
+                    {{#fileDownload}}\
+                    <form action="/messages/{{id}}/file/download" method="POST">\
+                        <input type="hidden" name="X-Oauth-Token" value="{{auth.token}}">\
+                        <input type="hidden" name="X-Oauth-Username" value="{{auth.username}}">\
+                        <input type="hidden" name="X-Oauth-Scope" value="widgetcli">\
+                        <input type="hidden" name="X-HTTP-Method-Override" value="GET">\
+                        <span class="maxui-icon-doc-inv"></span><input type="submit" class="maxui-download maxui-icon-doc-inv" name="submit" value="File download">\
+                    </form>\
+                    {{/fileDownload}}\
                     <p class="maxui-body">{{&text}}</p>\
                     <span class="maxui-publisheddate">{{date}}</span>\
                     <i class="maxui-icon-check{{#ack}} maxui-ack{{/ack}}"></i>\

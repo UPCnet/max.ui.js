@@ -365,7 +365,9 @@ var views = function() {
                 origin: origin,
                 literals: self.maxui.settings.literals,
                 avatarURL: avatar_url,
-                ack: message.ack ? origin == 'maxui-user-me' : false
+                ack: message.ack ? origin == 'maxui-user-me' : false,
+                fileDownload: message.data.objectType == 'file',
+                auth: {'token': maxui.settings.oAuthToken, 'username': maxui.settings.username},
             };
             // Render the conversations template and append it at the end of the rendered covnersations
             messages = messages + self.maxui.templates.message.render(params);

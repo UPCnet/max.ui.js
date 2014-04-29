@@ -16,6 +16,28 @@
 
     img { -ms-interpolation-mode: bicubic; image-rendering: optimizeQuality;}
 
+    form { margin:0;}
+
+    .maxui-icon-doc-inv:before, .maxui-icon-doc-inv:hover:before {
+        color:@linkColor;
+    }
+
+    input.maxui-download {
+        padding-left:0px;
+        border:none;
+        outline:none;
+        background: none;
+        color: @linkColor;
+        &:hover {
+            outline:none;
+            color: @hoverLinkColor;
+            cursor:pointer;
+        }
+        &:focus {
+            outline:none;
+        }
+    }
+
     a {
         text-decoration: none;
         color:@linkColor;

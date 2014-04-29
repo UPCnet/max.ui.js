@@ -1256,6 +1256,7 @@
             var params = {
                 id: activity.id,
                 actor: activity.actor,
+                auth: {'token': maxui.settings.oAuthToken, 'username': maxui.settings.username},
                 literals: maxui.settings.literals,
                 date: maxui.utils.formatDate(activity.published, maxui.language),
                 text: maxui.utils.formatText(activity.object.content),
@@ -1267,7 +1268,8 @@
                 avatarURL: avatar_url,
                 publishedIn: contexts,
                 canDeleteActivity: activity.deletable,
-                via: generator
+                via: generator,
+                fileDownload: activity.object.objectType == 'file'
             };
             // Render the activities template and append it at the end of the rendered activities
             // partials is used to render each comment found in the activities
