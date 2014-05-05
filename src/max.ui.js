@@ -1208,7 +1208,7 @@
         var activities = '';
         // Iterate through all the activities
 
-        var images_to_render = []
+        var images_to_render = [];
 
         for (i = 0; i < items.length; i++) {
             var activity = items[i];

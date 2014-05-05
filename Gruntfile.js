@@ -147,7 +147,7 @@ module.exports = function(grunt) {
 
     // Syntax checker
     jshint: {
-      all: ['max*.js',]
+      all: ['src/max*.js',]
     },
 
     jsbeautifier : {
