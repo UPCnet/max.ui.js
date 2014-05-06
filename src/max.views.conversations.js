@@ -293,7 +293,7 @@ var views = function() {
                 'published': message.published,
                 'data': {
                     'text': message.object.content,
-                    'objectType': message.object.objectType,
+                    'objectType': message.object.objectType
                 },
                 'uuid': message.id,
                 'destination': message.contexts[0].id,
@@ -329,7 +329,7 @@ var views = function() {
                 'published': message.published,
                 'data': {
                     'text': message.object.content,
-                    'objectType': message.object.objectType,
+                    'objectType': message.object.objectType
                 },
                 'uuid': message.id,
                 'destination': message.contexts[0].id,
@@ -367,7 +367,7 @@ var views = function() {
                 avatarURL: avatar_url,
                 ack: message.ack ? origin == 'maxui-user-me' : false,
                 fileDownload: message.data.objectType == 'file',
-                auth: {'token': maxui.settings.oAuthToken, 'username': maxui.settings.username},
+                auth: {'token': maxui.settings.oAuthToken, 'username': maxui.settings.username}
             };
             // Render the conversations template and append it at the end of the rendered covnersations
             messages = messages + self.maxui.templates.message.render(params);

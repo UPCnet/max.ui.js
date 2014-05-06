@@ -751,7 +751,7 @@
                 jq(this).attr('class', 'maxui-empty maxui-text-input');
                 jq(this).removeAttr('title');
                 jq('.maxui-error-box').animate({
-                    'margin-top': -25
+                    'margin-top': -26
                 }, 200);
             } else {
                 if (maxui.settings.canwrite && !options.ignore_button) {
@@ -953,7 +953,7 @@
                 $button.attr('class', 'maxui-button');
                 $newmessagebox.find('textarea').attr('class', 'maxui-text-input');
                 $newmessagebox.find('.maxui-error-box').animate({
-                    'margin-top': -25
+                    'margin-top': -26
                 }, 200);
             } else {
                 $button.attr('disabled', 'disabled');

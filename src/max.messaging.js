@@ -150,7 +150,6 @@ var max = max || {};
         // Retry connection if initial failed
         interval = setInterval(function(event) {
             if (!self.active) {
-                console.log('connection timeout, retrying');
                 self.ws.close();
                 self.ws = new SockJS(self.maxui.settings.maxTalkURL);
                 self.connect();
@@ -175,7 +174,7 @@ var max = max || {};
                     }
         });
         if (self.debug && _.isEmpty(matched_bindings)) {
-            console.error('No defined binding found for this message');
+            //window.console.error('No defined binding found for this message');
         } else {
             _.each(matched_bindings, function(binding, index, list) {
                 var unpacked = self.unpack(message);
@@ -194,7 +193,7 @@ var max = max || {};
         self.stomp.heartbeat.incoming = 0;
 
         if (self.debug) self.stomp.debug = function(message) {
-            console.log(message);
+            //window.console.log(message);
         };
 
         self.stomp.connect(
@@ -211,7 +210,7 @@ var max = max || {};
             },
             // Define stomp stomp ON ERROR callback
             function(error) {
-                console.log(error.body);
+                //window.console.log(error.body);
             },
             self.vhost);
     };

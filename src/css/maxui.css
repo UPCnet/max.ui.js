@@ -1286,6 +1286,8 @@
   color: #6f6f6f;
   width: 100%;
   display: block;
+  font: 13px/18px Arial, "HelveticaNeue", "Helvetica Neue", Helvetica, sans-serif;
+  margin: 2px 0px;
 }
 #maxui-container #maxui-mainpanel #maxui-add-people-box #maxui-new-displayName {
   border-top: 1px #cccccc solid;
@@ -1328,7 +1330,7 @@
   background-color: #fd5a4b;
   color: #fff;
   border-radius: 3px;
-  margin-top: -25px;
+  margin-top: -26px;
   z-index: 100;
   text-align: left;
   padding: 4px 5px;
