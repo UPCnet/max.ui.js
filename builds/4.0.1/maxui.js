@@ -6893,6 +6893,7 @@ var views = function() {
             // Store in origin, who is the sender of the message, the authenticated user or anyone else
             var origin = 'maxui-user-notme';
             if (message.user.username == self.maxui.settings.username) origin = 'maxui-user-me';
+            _.defaults(message.data, {filename: message.uuid});
             var params = {
                 id: message.uuid,
                 text: self.maxui.utils.formatText(message.data.text),
@@ -6902,6 +6903,7 @@ var views = function() {
                 avatarURL: avatar_url,
                 ack: message.ack ? origin == 'maxui-user-me' : false,
                 fileDownload: message.data.objectType == 'file',
+                filename: message.data.filename,
                 auth: {'token': maxui.settings.oAuthToken, 'username': maxui.settings.username}
             };
             // Render the conversations template and append it at the end of the rendered covnersations
@@ -6915,7 +6917,7 @@ var views = function() {
         _.each(images_to_render, function(message, index, list) {
             self.maxui.maxClient.getMessageImage('/messages/{0}/image/thumb'.format(message.uuid), function(encoded_image_data) {
                 var imagetag = '<img class="maxui-embedded" alt="" src="data:image/png;base64,{0}" />'.format(encoded_image_data);
-                $('.maxui-message#{0} .maxui-body'.format(message.uuid)).before(imagetag);
+                $('.maxui-message#{0} .maxui-body'.format(message.uuid)).after(imagetag);
             });
         });
 
@@ -7250,7 +7252,7 @@ max.templates = function() {
                         <input type="hidden" name="X-Oauth-Username" value="{{auth.username}}">\
                         <input type="hidden" name="X-Oauth-Scope" value="widgetcli">\
                         <input type="hidden" name="X-HTTP-Method-Override" value="GET">\
-                        <span class="maxui-icon-doc-inv"></span><input type="submit" class="maxui-download" name="submit" value="File download">\
+                        <span class="maxui-icon-download"></span><input type="submit" class="maxui-download" name="submit" value="{{filename}}">\
                     </form>\
                     {{/fileDownload}}\
                     <p class="maxui-body">{{&text}}</p>\
@@ -7534,7 +7536,7 @@ max.templates = function() {
                         <input type="hidden" name="X-Oauth-Username" value="{{auth.username}}">\
                         <input type="hidden" name="X-Oauth-Scope" value="widgetcli">\
                         <input type="hidden" name="X-HTTP-Method-Override" value="GET">\
-                        <span class="maxui-icon-doc-inv"></span><input type="submit" class="maxui-download maxui-icon-doc-inv" name="submit" value="File download">\
+                        <span class="maxui-icon-download"></span><input type="submit" class="maxui-download" name="submit" value="File download">\
                     </form>\
                     {{/fileDownload}}\
                     <p class="maxui-body">{{&text}}</p>\
@@ -10155,6 +10157,7 @@ MaxClient.prototype.unlikeActivity = function(activityid, callback) {
             }
             // Take all the latter properties and join them into an object
             // containing all the needed params to render the template
+            _.defaults(activity.object, {filename: activity.id});
             var params = {
                 id: activity.id,
                 actor: activity.actor,
@@ -10171,7 +10174,8 @@ MaxClient.prototype.unlikeActivity = function(activityid, callback) {
                 publishedIn: contexts,
                 canDeleteActivity: activity.deletable,
                 via: generator,
-                fileDownload: activity.object.objectType == 'file'
+                fileDownload: activity.object.objectType == 'file',
+                filename: activity.object.filename
             };
             // Render the activities template and append it at the end of the rendered activities
             // partials is used to render each comment found in the activities
@@ -10219,7 +10223,7 @@ MaxClient.prototype.unlikeActivity = function(activityid, callback) {
         _.each(images_to_render, function(activity, index, list) {
             self.maxui.maxClient.getMessageImage('/activities/{0}/image/thumb'.format(activity.id), function(encoded_image_data) {
                 var imagetag = '<img class="maxui-embedded" alt="" src="data:image/png;base64,{0}" />'.format(encoded_image_data);
-                $('.maxui-activity#{0} .maxui-body'.format(activity.id)).before(imagetag);
+                $('.maxui-activity#{0} .maxui-body'.format(activity.id)).after(imagetag);
             });
         });
     };
