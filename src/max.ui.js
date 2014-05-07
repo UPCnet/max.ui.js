@@ -1253,6 +1253,7 @@
             }
             // Take all the latter properties and join them into an object
             // containing all the needed params to render the template
+            _.defaults(activity.object, {filename: activity.id});
             var params = {
                 id: activity.id,
                 actor: activity.actor,
@@ -1269,7 +1270,8 @@
                 publishedIn: contexts,
                 canDeleteActivity: activity.deletable,
                 via: generator,
-                fileDownload: activity.object.objectType == 'file'
+                fileDownload: activity.object.objectType == 'file',
+                filename: activity.object.filename
             };
             // Render the activities template and append it at the end of the rendered activities
             // partials is used to render each comment found in the activities
@@ -1317,7 +1319,7 @@
         _.each(images_to_render, function(activity, index, list) {
             self.maxui.maxClient.getMessageImage('/activities/{0}/image/thumb'.format(activity.id), function(encoded_image_data) {
                 var imagetag = '<img class="maxui-embedded" alt="" src="data:image/png;base64,{0}" />'.format(encoded_image_data);
-                $('.maxui-activity#{0} .maxui-body'.format(activity.id)).before(imagetag);
+                $('.maxui-activity#{0} .maxui-body'.format(activity.id)).after(imagetag);
             });
         });
     };

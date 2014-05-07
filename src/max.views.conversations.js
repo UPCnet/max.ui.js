@@ -358,6 +358,7 @@ var views = function() {
             // Store in origin, who is the sender of the message, the authenticated user or anyone else
             var origin = 'maxui-user-notme';
             if (message.user.username == self.maxui.settings.username) origin = 'maxui-user-me';
+            _.defaults(message.data, {filename: message.uuid});
             var params = {
                 id: message.uuid,
                 text: self.maxui.utils.formatText(message.data.text),
@@ -367,6 +368,7 @@ var views = function() {
                 avatarURL: avatar_url,
                 ack: message.ack ? origin == 'maxui-user-me' : false,
                 fileDownload: message.data.objectType == 'file',
+                filename: message.data.filename,
                 auth: {'token': maxui.settings.oAuthToken, 'username': maxui.settings.username}
             };
             // Render the conversations template and append it at the end of the rendered covnersations
@@ -380,7 +382,7 @@ var views = function() {
         _.each(images_to_render, function(message, index, list) {
             self.maxui.maxClient.getMessageImage('/messages/{0}/image/thumb'.format(message.uuid), function(encoded_image_data) {
                 var imagetag = '<img class="maxui-embedded" alt="" src="data:image/png;base64,{0}" />'.format(encoded_image_data);
-                $('.maxui-message#{0} .maxui-body'.format(message.uuid)).before(imagetag);
+                $('.maxui-message#{0} .maxui-body'.format(message.uuid)).after(imagetag);
             });
         });
 

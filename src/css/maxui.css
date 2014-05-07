@@ -1,8 +1,8 @@
 @import "../css/hacks.css";
 @font-face {
   font-family: 'maxicons';
-  src: url('../font/maxicons.eot?60858704');
-  src: url('../font/maxicons.eot?60858704#iefix') format('embedded-opentype'), url('../font/maxicons.woff?60858704') format('woff'), url('../font/maxicons.ttf?60858704') format('truetype'), url('../font/maxicons.svg?60858704#maxicons') format('svg');
+  src: url('../font/maxicons.eot?47950801');
+  src: url('../font/maxicons.eot?47950801#iefix') format('embedded-opentype'), url('../font/maxicons.woff?47950801') format('woff'), url('../font/maxicons.ttf?47950801') format('truetype'), url('../font/maxicons.svg?47950801#maxicons') format('svg');
   font-weight: normal;
   font-style: normal;
 }
@@ -12,7 +12,7 @@
 @media screen and (-webkit-min-device-pixel-ratio:0) {
   @font-face {
     font-family: 'maxicons';
-    src: url('../font/maxicons.svg?60858704#maxicons') format('svg');
+    src: url('../font/maxicons.svg?47950801#maxicons') format('svg');
   }
 }
 */
@@ -81,6 +81,10 @@
   content: '\e803';
 }
 /* '' */
+.maxui-icon-download:before {
+  content: '\e819';
+}
+/* '' */
 .maxui-icon-chat:before {
   content: '\e805';
 }
@@ -89,10 +93,6 @@
   content: '\e804';
 }
 /* '' */
-.maxui-icon-trash:before {
-  content: '\e806';
-}
-/* '' */
 .maxui-icon-crown-plus:before {
   content: '\e814';
 }
@@ -141,10 +141,10 @@
   content: '\e818';
 }
 /* '' */
-.maxui-icon-doc-inv:before {
-  content: '\e819';
+.maxui-icon-trash:before {
+  content: '\e806';
 }
-/* '' */
+/* '' */
 /*
    Animation example, for spinners
 */
@@ -1205,8 +1205,8 @@
 #maxui-container form {
   margin: 0;
 }
-#maxui-container .maxui-icon-doc-inv:before,
-#maxui-container .maxui-icon-doc-inv:hover:before {
+#maxui-container .maxui-icon-download:before,
+#maxui-container .maxui-icon-download:hover:before {
   color: #007bc0;
 }
 #maxui-container input.maxui-download {

@@ -29,7 +29,7 @@ max.templates = function() {
                         <input type="hidden" name="X-Oauth-Username" value="{{auth.username}}">\
                         <input type="hidden" name="X-Oauth-Scope" value="widgetcli">\
                         <input type="hidden" name="X-HTTP-Method-Override" value="GET">\
-                        <span class="maxui-icon-doc-inv"></span><input type="submit" class="maxui-download" name="submit" value="File download">\
+                        <span class="maxui-icon-download"></span><input type="submit" class="maxui-download" name="submit" value="{{filename}}">\
                     </form>\
                     {{/fileDownload}}\
                     <p class="maxui-body">{{&text}}</p>\
@@ -313,7 +313,7 @@ max.templates = function() {
                         <input type="hidden" name="X-Oauth-Username" value="{{auth.username}}">\
                         <input type="hidden" name="X-Oauth-Scope" value="widgetcli">\
                         <input type="hidden" name="X-HTTP-Method-Override" value="GET">\
-                        <span class="maxui-icon-doc-inv"></span><input type="submit" class="maxui-download maxui-icon-doc-inv" name="submit" value="File download">\
+                        <span class="maxui-icon-download"></span><input type="submit" class="maxui-download" name="submit" value="File download">\
                     </form>\
                     {{/fileDownload}}\
                     <p class="maxui-body">{{&text}}</p>\
