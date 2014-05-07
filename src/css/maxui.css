@@ -748,6 +748,7 @@
   outline: none;
 }
 #maxui-container textarea.maxui-text-input {
+  margin-bottom: 0px;
   width: 100%;
   color: #6f6f6f;
   height: 48px;
