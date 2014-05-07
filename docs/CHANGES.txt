@@ -1,6 +1,12 @@
 CHANGELOG
 =========
 
+4.0.1 (2014-05-7)
+-----------------
+ * ie and firefox fixes [Carles Bruguera]
+ * Add forms for download protected images [Carles Bruguera]
+ * Visualize images on context activities [Carles Bruguera]
+ * Visualize image attachments on chat messages [Carles Bruguera]
 
 4.0.0 (2014-04-15)
 ------------------
