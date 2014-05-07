@@ -713,6 +713,7 @@
   color: #6f6f6f;
 }
 #maxui-container .maxui-text-input {
+  margin-bottom: 0px;
   -moz-border-radius: 3px;
   -webkit-border-radius: 3px;
   border-radius: 3px;
