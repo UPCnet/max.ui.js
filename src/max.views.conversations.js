@@ -113,6 +113,7 @@ var views = function() {
 
     MaxConversationsList.prototype.show = function() {
         var self = this;
+        self.mainview.$newparticipants.show();
          // Load conversations from max if never loaded
         if (self.conversations.length === 0) {
             self.load();
@@ -396,6 +397,18 @@ var views = function() {
 
     MaxConversationMessages.prototype.show = function(conversation_hash) {
         var self = this;
+        self.mainview.loadWrappers();
+
+        // PLEASE CLEAN THIS SHIT
+        $button = jq('#maxui-newactivity').find('input.maxui-button');
+        $button.removeAttr('disabled');
+        $button.attr('class', 'maxui-button');
+        self.mainview.$newmessagebox.find('textarea').attr('class', 'maxui-text-input');
+        self.mainview.$newmessagebox.find('.maxui-error-box').animate({
+                    'margin-top': -26
+                }, 200);
+        self.mainview.$newparticipants.hide();
+        // UNTIL HERE
 
         self.mainview.active = conversation_hash;
         self.mainview.listview.resetUnread(conversation_hash);
@@ -501,6 +514,7 @@ var views = function() {
         self.$common_header = self.$conversations.find('#maxui-common-header');
         self.$addpeople = jq('#maxui-add-people-box');
         self.$newparticipants = $('#maxui-new-participants');
+        self.$newmessagebox = jq('#maxui-newactivity');
     };
 
     MaxConversations.prototype.render = function() {

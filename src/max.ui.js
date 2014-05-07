@@ -950,14 +950,11 @@
         jq('#maxui-new-participants').html(participants_items);
         jq('#maxui-add-people-box .maxui-label .maxui-count').text('({0}/{1})'.format(participants_box.people.length + 1, maxui.settings.maximumConversations));
         if (participants_box.people.length > 0) {
-            if ((participants_box.people.length == 1 || displayName !== '') && message !== '' && message != placeholder) {
-                $button.removeAttr('disabled');
-                $button.attr('class', 'maxui-button');
-                $newmessagebox.find('textarea').attr('class', 'maxui-text-input');
-                $newmessagebox.find('.maxui-error-box').animate({
-                    'margin-top': -26
-                }, 200);
-            } else {
+
+            var has_more_than_one_participant = participants_box.people.length > 1;
+            var has_a_displayname = displayName !== '';
+
+            if (has_more_than_one_participant && !has_a_displayname) {
                 $button.attr('disabled', 'disabled');
                 $button.attr('class', 'maxui-button maxui-disabled');
                 if (displayName === '') {
@@ -967,7 +964,15 @@
                         'margin-top': -4
                     }, 200);
                 }
+            } else {
+                $button.removeAttr('disabled');
+                $button.attr('class', 'maxui-button');
+                $newmessagebox.find('textarea').attr('class', 'maxui-text-input');
+                $newmessagebox.find('.maxui-error-box').animate({
+                    'margin-top': -26
+                }, 200);
             }
+
             $participants_box.show();
             $newmessagebox.show();
             if (participants_box.people.length > 1) {
@@ -976,7 +981,8 @@
                 $newdisplaynamebox.hide();
                 $newdisplaynamebox.find('.maxui-text-input').val('');
             }
-        } else {
+
+        } else if (message !== '' && message != placeholder) {
             $button.attr('disabled', 'disabled');
             $button.attr('class', 'maxui-button maxui-disabled');
             $participants_box.hide();
@@ -1080,6 +1086,7 @@
             $postbox.show();
         }
         if (sectionToEnable == 'timeline') {
+            maxui.conversations.listview.show();
             $timeline.show();
             var timeline_height = $timeline_wrapper.height();
             $timeline.animate({
@@ -1103,6 +1110,7 @@
             if (maxui.settings.hidePostboxOnTimeline) {
                 $postbox.hide();
             }
+
         }
     };
     /**
