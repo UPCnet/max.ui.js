@@ -249,7 +249,7 @@ max.templates = function() {
                 </div>\
             </div>\
         \
-           <div id="maxui-newactivity">\
+           <div id="maxui-newactivity" {{#hidePostbox}}style="display:none;"{{/hidePostbox}}>\
            </div>\
         \
            <div id="maxui-search" class="folded">\

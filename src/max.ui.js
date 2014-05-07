@@ -27,7 +27,8 @@
             'scrollbarWidth': 10,
             'widgetWidth': '0',
             'sectionHorizontalPadding': 20,
-            'widgetBorder': 2
+            'widgetBorder': 2,
+            'hidePostboxOnTimeline': false
         };
 
 
@@ -144,7 +145,8 @@
                 showConversationsToggle: toggleCT ? 'display:block;' : 'display:none;',
                 showTimeline: showTL ? 'display:block;' : 'display:none;',
                 showTimelineToggle: toggleTL ? 'display:block;' : 'display:none;',
-                messagesStyle: 'width:{0}px;left:{0}px;'.format(containerWidth)
+                messagesStyle: 'width:{0}px;left:{0}px;'.format(containerWidth),
+                hidePostbox: maxui.settings.hidePostboxOnTimeline
             };
             var mainui = maxui.templates.mainUI.render(params);
             maxui.html(mainui);
@@ -1042,6 +1044,7 @@
         var $conversations_list = jq('#maxui-conversations #maxui-conversations-list');
         var $conversations_wrapper = jq('#maxui-conversations .maxui-wrapper');
         var $postbutton = jq('#maxui-newactivity-box .maxui-button');
+        var $postbox = jq('#maxui-newactivity');
         var $conversationsbutton = jq('#maxui-show-conversations');
         var $timelinebutton = jq('#maxui-show-timeline');
         var $addpeople = jq('#maxui-add-people-box');
@@ -1074,6 +1077,7 @@
             if (!maxui.settings.disableTimeline) $timelinebutton.show();
             maxui.conversations.scrollbar.setHeight(height - 45);
             maxui.conversations.scrollbar.setTarget('#maxui-conversations #maxui-conversations-list');
+            $postbox.show();
         }
         if (sectionToEnable == 'timeline') {
             $timeline.show();
@@ -1096,6 +1100,9 @@
             $postbutton.val(maxui.settings.literals.new_activity_post);
             if (!maxui.settings.disableConversations) $conversationsbutton.show();
             $timelinebutton.hide();
+            if (maxui.settings.hidePostboxOnTimeline) {
+                $postbox.hide();
+            }
         }
     };
     /**
