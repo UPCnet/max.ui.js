@@ -15,10 +15,17 @@ var max = max || {};
         self.maxui = maxui;
         self.active = false;
         self.vhost = '/';
+        self.max_retries = 3;
+        self.retry_interval = 3000;
         // Collect info from seettings
         self.debug = self.maxui.settings.enableAlerts;
         self.token = self.maxui.settings.oAuthToken;
         self.stompServer = self.maxui.settings.maxTalkURL;
+
+        // Sensible default for stomp server
+        if (_.isUndefined(self.stompServer)) {
+            self.stompServer = self.maxui.settings.maxServerURL + '/stomp';
+        }
 
         // Construct login merging username with domain (if any)
         // if domain explicitly specified, take it, otherwise deduce it from url
@@ -146,17 +153,22 @@ var max = max || {};
     MaxMessaging.prototype.start = function() {
         var self = this;
         self.connect();
-
+        var current_try = 1;
         // Retry connection if initial failed
         interval = setInterval(function(event) {
-            if (!self.active) {
+            if (!self.active && current_try <= self.max_retries) {
+                window.console.log('Connection retry #{0}'.format(current_try));
                 self.ws.close();
                 self.ws = new SockJS(self.maxui.settings.maxTalkURL);
                 self.connect();
             } else {
+                if (!self.active) {
+                    window.console.log('Connection failure after {0} reconnect attempts'.format(self.max_retries));
+                }
                 clearInterval(interval);
             }
-        }, 2000);
+            current_try += 1;
+        },self.retry_interval);
     };
 
     MaxMessaging.prototype.bind = function(params, callback) {
@@ -174,7 +186,7 @@ var max = max || {};
                     }
         });
         if (self.debug && _.isEmpty(matched_bindings)) {
-            //window.console.error('No defined binding found for this message');
+            window.console.error('No defined binding found for this message');
         } else {
             _.each(matched_bindings, function(binding, index, list) {
                 var unpacked = self.unpack(message);
@@ -188,12 +200,13 @@ var max = max || {};
 
     MaxMessaging.prototype.connect = function() {
         var self = this;
+        var attempt = 0;
         self.stomp = Stomp.over(self.ws);
         self.stomp.heartbeat.outgoing = 0;
         self.stomp.heartbeat.incoming = 0;
 
         if (self.debug) self.stomp.debug = function(message) {
-            //window.console.log(message);
+            window.console.log(message);
         };
 
         self.stomp.connect(
@@ -210,7 +223,7 @@ var max = max || {};
             },
             // Define stomp stomp ON ERROR callback
             function(error) {
-                //window.console.log(error.body);
+                window.console.log(error.body);
             },
             self.vhost);
     };

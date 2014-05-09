@@ -31,7 +31,6 @@
             'hidePostboxOnTimeline': false
         };
 
-
         // extend defaults with user-defined settings
         maxui.settings = jq.extend(defaults, options);
         // Check timeline/activities consistency
@@ -130,7 +129,10 @@
             }
             maxui.settings.subscriptions = userSubscriptions;
 
-            maxui.messaging.start();
+            // Start messaging only if conversations enabled
+            if (!maxui.settings.disableConversations) {
+                maxui.messaging.start();
+            }
 
             // render main interface
             var showCT = maxui.settings.UISection == 'conversations';
