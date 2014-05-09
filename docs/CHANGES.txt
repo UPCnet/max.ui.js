@@ -1,6 +1,12 @@
 CHANGELOG
 =========
 
+4.0.2 (2014-05-09)
+------------------
+ * Set a maximum of 3 attemps when connecting to stomp endpoint
+ * Don't open websocket if conversations disabled
+ * Sensible default for stomp url
+
 4.0.1 (2014-05-7)
 -----------------
  * ie and firefox fixes [Carles Bruguera]
