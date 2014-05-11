@@ -111,7 +111,7 @@ def main():
         sys.exit(1)
     # Store downloaded js source for map
     path = '/'.join(config['js_location'].split('/')[:-1])
-    open(path + '/ma', 'w').write(js)
+    open(path + '/maxui.js', 'w').write(js)
 
     #Download and modify CSS
     css = downloadFile(config, 'builds/{}/maxui.min.css'.format(version))
