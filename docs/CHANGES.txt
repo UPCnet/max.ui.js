@@ -1,6 +1,11 @@
 CHANGELOG
 =========
 
+4.0.3 (unreleased)
+------------------
+ * Recover check icon used in ack's
+ * Recover upload older feature
+
 4.0.2 (2014-05-09)
 ------------------
  * Set a maximum of 3 attemps when connecting to stomp endpoint
