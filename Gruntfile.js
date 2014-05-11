@@ -61,14 +61,25 @@ module.exports = function(grunt) {
     },
 
     replace: {
-      dist: {
+      // Replaces font location for releases
+      fontlocation: {
         src: ['dist/maxui.min.css'],
         overwrite: true,                 // overwrite matched source files
         replacements: [{
           from: "../font/maxicons",
           to: "font/maxicons"
         }]
+      },
+      // Puts version number from package into place
+      version: {
+        src: ['src/max.ui.js'],
+        overwrite: true,                 // overwrite matched source files
+        replacements: [{
+          from: /maxui.version = '[.\d]+';/g,
+          to: "maxui.version = '<%= grunt.file.readJSON('package.json').version %>';"
+        }]
       }
+
     },
 
     // Download Fontello fonts based on local configuration
@@ -237,7 +248,7 @@ dalek: {
   grunt.loadNpmTasks('grunt-dalek');
 
 
-  grunt.registerTask('dist', ['concat:dist', 'uglify:dist', 'cssmin:dist', 'replace:dist', 'copy:dist']);
+  grunt.registerTask('dist', ['replace:version', 'concat:dist', 'uglify:dist', 'cssmin:dist', 'replace:fontlocation', 'copy:dist']);
   grunt.registerTask('build', ['copy:build']);
   grunt.registerTask('templates', ['concat:templates']);
 
