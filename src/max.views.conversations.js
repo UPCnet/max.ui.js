@@ -254,7 +254,7 @@ var views = function() {
     MaxConversationMessages.prototype.ack = function(message_id) {
         var self = this;
         self.messages[self.mainview.active] = _.map(self.messages[self.mainview.active], function(message) {
-            if (message_id == message.messageID) {
+            if (message_id == message.uuid) {
                 message.ack = true;
             }
             return message;
@@ -269,7 +269,7 @@ var views = function() {
     MaxConversationMessages.prototype.loadOlder = function() {
         var self = this;
         var older_loaded = _.first(self.messages[self.mainview.active]);
-        self.maxui.maxClient.getMessagesForConversation(self.mainview.active, {limit:10, before:older_loaded.messageID}, function(messages) {
+        self.maxui.maxClient.getMessagesForConversation(self.mainview.active, {limit:10, before:older_loaded.uuid}, function(messages) {
             self.remaining = this.getResponseHeader('X-Has-Remaining-Items');
             _.each(messages, function(message, index, list) {
                 message.ack = true;

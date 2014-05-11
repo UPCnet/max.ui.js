@@ -1,8 +1,8 @@
 @import "../css/hacks.css";
 @font-face {
   font-family: 'maxicons';
-  src: url('../font/maxicons.eot?47950801');
-  src: url('../font/maxicons.eot?47950801#iefix') format('embedded-opentype'), url('../font/maxicons.woff?47950801') format('woff'), url('../font/maxicons.ttf?47950801') format('truetype'), url('../font/maxicons.svg?47950801#maxicons') format('svg');
+  src: url('../font/maxicons.eot?72087839');
+  src: url('../font/maxicons.eot?72087839#iefix') format('embedded-opentype'), url('../font/maxicons.woff?72087839') format('woff'), url('../font/maxicons.ttf?72087839') format('truetype'), url('../font/maxicons.svg?72087839#maxicons') format('svg');
   font-weight: normal;
   font-style: normal;
 }
@@ -12,7 +12,7 @@
 @media screen and (-webkit-min-device-pixel-ratio:0) {
   @font-face {
     font-family: 'maxicons';
-    src: url('../font/maxicons.svg?47950801#maxicons') format('svg');
+    src: url('../font/maxicons.svg?72087839#maxicons') format('svg');
   }
 }
 */
@@ -137,6 +137,10 @@
   content: '\e816';
 }
 /* '' */
+.maxui-icon-check:before {
+  content: '\e81a';
+}
+/* '' */
 .maxui-icon-cancel:before {
   content: '\e818';
 }
