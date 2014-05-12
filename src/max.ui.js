@@ -3,6 +3,8 @@
      *    MaxUI plugin definition
      *    @param {Object} options    Object containing overrides for default values
      **/
+    var settings = {};
+
     jq.fn.maxUI = function(options) {
         // Keep a reference of the context object
         var maxui = this;
@@ -28,11 +30,15 @@
             'widgetWidth': '0',
             'sectionHorizontalPadding': 20,
             'widgetBorder': 2,
+            'loglevel': 'info',
             'hidePostboxOnTimeline': false
         };
 
         // extend defaults with user-defined settings
         maxui.settings = jq.extend(defaults, options);
+        maxui.logger = new max.MaxLogging(maxui);
+        maxui.logger.setLevel(maxui.settings.loglevel);
+
         // Check timeline/activities consistency
         if (maxui.settings.UISection == 'timeline' && maxui.settings.activitySource == 'timeline' && maxui.settings.readContext) {
             maxui.settings.readContext = undefined;
@@ -298,7 +304,6 @@
         //Assign user mention suggestion to input by click
         jq('#maxui-conversation-predictive').on('click', '.maxui-prediction', function(event) {
             event.preventDefault();
-            console.log('click');
             var $selected = jq(this);
             var $area = jq('#maxui-add-people-box .maxui-text-input');
             var $predictive = jq('#maxui-conversation-predictive');
@@ -362,7 +367,6 @@
         });
         //Assign activity removal confirmation dialog toggle via delegating the click to the activities container
         jq('#maxui-activities').on('click', '.maxui-action.maxui-delete', function(event) {
-            console.log('delete');
             event.preventDefault();
             var $activity = jq(this).closest('.maxui-activity');
             var $dialog = $activity.find('.maxui-actions > .maxui-popover');
@@ -395,7 +399,6 @@
         });
         //Assign activity removal via delegating the click to the activities container
         jq('#maxui-activities').on('click', '.maxui-actions .maxui-button-delete', function(event) {
-            console.log('delete activityid');
             event.preventDefault();
             var $activity = jq(this).closest('.maxui-activity');
             var activityid = $activity.attr('id');
@@ -450,7 +453,6 @@
         });
         //Assign activity comment removal via delegating the click to the activities container
         jq('#maxui-activities').on('click', '.maxui-comment .maxui-button-delete', function(event) {
-            console.log('delete comment');
             event.preventDefault();
             var $comment = jq(this).closest('.maxui-comment');
             var $activity = $comment.closest('.maxui-activity');
@@ -694,7 +696,6 @@
         });
         //Assign Search box search action And input behaviour
         maxui.bindActionBehaviour('#maxui-search', '#maxui-search-box', {}, function(text) {
-            console.log('behaviour');
             maxui.textSearch(text);
             jq('#maxui-search').toggleClass('folded', false);
             jq('#maxui-search-text').val('');
@@ -702,7 +703,6 @@
         // // Execute search if <enter> pressed
         // jq('#maxui-search .maxui-text-input').keyup(function(e) {
         //           if (e.keyCode == 13) {
-        //             console.log('enter')
         //              maxui.textSearch(jq(this).attr('value'))
         //              jq('#maxui-search').toggleClass('folded',false)
         //           }
@@ -1119,6 +1119,7 @@
      *    Returns the current settings of the plugin
      **/
     jq.fn.Settings = function() {
+        debugger
         maxui = this;
         return maxui.settings;
     };
@@ -1498,4 +1499,9 @@
         });
         this.maxClient.getCommentsForActivity.apply(this.maxClient, func_params);
     };
-})(jQuery);
+
+    jq.maxui = function() {};
+    jq.maxui.settings = function() {return maxui.settings;};
+
+
+}(jQuery));

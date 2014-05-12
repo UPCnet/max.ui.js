@@ -12,6 +12,7 @@ var max = max || {};
 
     function MaxMessaging(maxui) {
         var self = this;
+        self.logtag = 'MESSAGING';
         self.maxui = maxui;
         self.active = false;
         self.vhost = '/';
@@ -152,18 +153,19 @@ var max = max || {};
 
     MaxMessaging.prototype.start = function() {
         var self = this;
+        self.maxui.logger.info('Connecting ...', self.logtag);
         self.connect();
         var current_try = 1;
         // Retry connection if initial failed
         interval = setInterval(function(event) {
             if (!self.active && current_try <= self.max_retries) {
-                window.console.log('Connection retry #{0}'.format(current_try));
+                self.maxui.logger.debug('Connection retry #{0}'.format(current_try), self.logtag);
                 self.ws.close();
                 self.ws = new SockJS(self.maxui.settings.maxTalkURL);
                 self.connect();
             } else {
                 if (!self.active) {
-                    window.console.log('Connection failure after {0} reconnect attempts'.format(self.max_retries));
+                    self.maxui.logger.error('Connection failure after {0} reconnect attempts'.format(self.max_retries), self.logtag);
                 }
                 clearInterval(interval);
             }
@@ -185,8 +187,8 @@ var max = max || {};
                     return binding;
                     }
         });
-        if (self.debug && _.isEmpty(matched_bindings)) {
-            window.console.error('No defined binding found for this message');
+        if (_.isEmpty(matched_bindings)) {
+            self.maxui.logger.warning('Ignoring received message\n{0}\n No binding found for this message', self.logtag);
         } else {
             _.each(matched_bindings, function(binding, index, list) {
                 var unpacked = self.unpack(message);
@@ -205,8 +207,8 @@ var max = max || {};
         self.stomp.heartbeat.outgoing = 0;
         self.stomp.heartbeat.incoming = 0;
 
-        if (self.debug) self.stomp.debug = function(message) {
-            window.console.log(message);
+        self.stomp.debug = function(message) {
+            self.maxui.logger.debug(message, self.logtag);
         };
 
         self.stomp.connect(
@@ -220,10 +222,11 @@ var max = max || {};
                    self.on_message(data, routing_key);
                 });
                 self.active = true;
+                self.maxui.logger.info('Succesfully connected to {0}'.format(self.stompServer), self.logtag);
             },
             // Define stomp stomp ON ERROR callback
             function(error) {
-                window.console.log(error.body);
+                self.maxui.logger.error(error.body);
             },
             self.vhost);
     };

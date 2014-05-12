@@ -29,6 +29,7 @@ var views = function() {
             self.maxui.maxClient.getConversationsForUser.apply(self.maxui.maxClient, [
             self.maxui.settings.username,
                 function(data) {
+                    self.maxui.logger.info('Loaded {0} conversations from max'.format(self.maxui.settings.username), self.mainview.logtag);
                     self.conversations = data;
                     self.render();
                     conversations();
@@ -242,6 +243,7 @@ var views = function() {
         var self = this;
         self.messages[self.mainview.active] = [];
         self.maxui.maxClient.getMessagesForConversation(self.mainview.active, {limit:10}, function(messages) {
+            self.maxui.logger.info('Loaded conversation {0} messages from max'.format(self.mainview.active), self.mainview.logtag);
             self.remaining = this.getResponseHeader('X-Has-Remaining-Items');
             _.each(messages, function(message, index, list) {
                 message.ack = true;
@@ -469,6 +471,7 @@ var views = function() {
 
     function MaxConversations(maxui, options) {
         var self = this;
+        self.logtag = 'CONVERSATIONS';
         self.el = '#maxui-conversations';
         self.$el = jq(self.el);
         self.maxui = maxui;
@@ -645,7 +648,7 @@ var views = function() {
         var self = this;
         // Insert message only if the message is from another user.
         if (message.user.username != self.maxui.settings.username) {
-            console.log('New message from user {0} on {1}'.format(message.user, message.destination));
+            self.maxui.logger.log('New message from user {0} on {1}'.format(message.user, message.destination));
             self.messagesview.append(message);
 
             if (self.maxui.settings.UISection == 'conversations' && self.maxui.settings.conversationsSection == 'messages') {
@@ -662,7 +665,7 @@ var views = function() {
                 self.listview.render();
             }
         } else {
-            console.log('Message {0} succesfully delivered'.format(message.uuid));
+            self.maxui.logger.info("Message {0} succesfully delivered".format(message.uuid));
             var interval = setInterval(function(event) {
                 var $message = jq('#' + message.uuid + ' .maxui-icon-check');
                 if ($message) {

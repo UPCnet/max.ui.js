@@ -146,6 +146,7 @@ module.exports = function(grunt) {
               'src/max.views.conversations.js',
               'src/max.templates.js',
               'src/max.messaging.js',
+              'src/max.logging.js',
               'src/max.literals.js',
               'src/max.utils.js',
               'src/max.client.js',

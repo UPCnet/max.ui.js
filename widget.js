@@ -17,34 +17,30 @@ function getURLParameter(name) {
 
 jQuery().ready(function() {
 
-    var settings = {}
+    var settings = {};
 
     // Get parameters from URL Configuration
-    var username = getURLParameter('user')
-    var preset = getURLParameter('preset')
-    var transports = getURLParameter('transports')
-    preset = preset=="null" ? 'timeline' : preset
+    var username = getURLParameter('user');
+    var preset = getURLParameter('preset');
+    var transports = getURLParameter('transports');
+    preset = preset=="null" ? 'timeline' : preset;
 
     // Get Widget basic configuration parameters
     $.get('/maxui-dev/presets/base.json', 'json')
       .always( function(data)
       {
-         $.extend(settings, data)
+         $.extend(settings, data);
 
         // When done, extend settings with parameters from selected preset
         $.get('/maxui-dev/presets/' + preset + '.json', function(data)
-          { $.extend(settings, data)
+          { $.extend(settings, data);
 
             // Overwrite username if supplied
-            if (username!="null") settings['username'] = username
-
+            if (username!="null") settings.username = username;
 
             // After all, fire up the widget
-            jQuery('#container').maxUI(settings)
-          })
+            jQuery('#container').maxUI(settings);
+          });
 
-      })
-
-
-
-})
+      });
+});
