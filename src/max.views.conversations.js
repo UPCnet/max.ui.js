@@ -395,43 +395,45 @@ var views = function() {
         var messages = '';
         // Iterate through all the conversations
         images_to_render = [];
-        for (i = 0; i < self.messages[self.mainview.active].length; i++) {
-            var message = self.messages[self.mainview.active][i];
-            var avatar_url = self.maxui.settings.avatarURLpattern.format(message.user.username);
-            // Store in origin, who is the sender of the message, the authenticated user or anyone else
-            var origin = 'maxui-user-notme';
-            if (message.user.username == self.maxui.settings.username) origin = 'maxui-user-me';
-            _.defaults(message.data, {filename: message.uuid});
-            var params = {
-                id: message.uuid,
-                text: self.maxui.utils.formatText(message.data.text),
-                date: self.maxui.utils.formatDate(message.published, maxui.language),
-                origin: origin,
-                literals: self.maxui.settings.literals,
-                avatarURL: avatar_url,
-                ack: message.ack ? origin == 'maxui-user-me' : false,
-                fileDownload: message.data.objectType == 'file',
-                filename: message.data.filename,
-                auth: {'token': maxui.settings.oAuthToken, 'username': maxui.settings.username}
-            };
-            // Render the conversations template and append it at the end of the rendered covnersations
-            messages = messages + self.maxui.templates.message.render(params);
-            if (message.data.objectType == 'image') {
-                images_to_render.push(message);
+        if (self.messages[self.mainview.active]) {
+            for (i = 0; i < self.messages[self.mainview.active].length; i++) {
+                var message = self.messages[self.mainview.active][i];
+                var avatar_url = self.maxui.settings.avatarURLpattern.format(message.user.username);
+                // Store in origin, who is the sender of the message, the authenticated user or anyone else
+                var origin = 'maxui-user-notme';
+                if (message.user.username == self.maxui.settings.username) origin = 'maxui-user-me';
+                _.defaults(message.data, {filename: message.uuid});
+                var params = {
+                    id: message.uuid,
+                    text: self.maxui.utils.formatText(message.data.text),
+                    date: self.maxui.utils.formatDate(message.published, maxui.language),
+                    origin: origin,
+                    literals: self.maxui.settings.literals,
+                    avatarURL: avatar_url,
+                    ack: message.ack ? origin == 'maxui-user-me' : false,
+                    fileDownload: message.data.objectType == 'file',
+                    filename: message.data.filename,
+                    auth: {'token': maxui.settings.oAuthToken, 'username': maxui.settings.username}
+                };
+                // Render the conversations template and append it at the end of the rendered covnersations
+                messages = messages + self.maxui.templates.message.render(params);
+                if (message.data.objectType == 'image') {
+                    images_to_render.push(message);
+                }
             }
-        }
-        jq('#maxui-messages #maxui-message-list').html(messages);
+            jq('#maxui-messages #maxui-message-list').html(messages);
 
-        _.each(images_to_render, function(message, index, list) {
-            self.maxui.maxClient.getMessageImage('/messages/{0}/image/thumb'.format(message.uuid), function(encoded_image_data) {
-                var imagetag = '<img class="maxui-embedded" alt="" src="data:image/png;base64,{0}" />'.format(encoded_image_data);
-                $('.maxui-message#{0} .maxui-body'.format(message.uuid)).after(imagetag);
+            _.each(images_to_render, function(message, index, list) {
+                self.maxui.maxClient.getMessageImage('/messages/{0}/image/thumb'.format(message.uuid), function(encoded_image_data) {
+                    var imagetag = '<img class="maxui-embedded" alt="" src="data:image/png;base64,{0}" />'.format(encoded_image_data);
+                    $('.maxui-message#{0} .maxui-body'.format(message.uuid)).after(imagetag);
+                });
             });
-        });
 
-        $moremessages = jq('#maxui-messages #maxui-more-messages');
-        if (self.remaining == "1") $moremessages.show();
-        else $moremessages.hide();
+            $moremessages = jq('#maxui-messages #maxui-more-messages');
+            if (self.remaining == "1") $moremessages.show();
+            else $moremessages.hide();
+        }
 
     };
 
