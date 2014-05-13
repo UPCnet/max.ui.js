@@ -64,7 +64,8 @@ var max = max || {};
                 values: {
                     'add': {id: 'a'},
                     'delete': {id: 'd'},
-                    'modify': {id: 'm'}
+                    'modify': {id: 'm'},
+                    'refresh': {id: 'r'}
                 }
             },
             object: {

@@ -24,7 +24,7 @@ var views = function() {
         var self = this;
         if (_.isArray(conversations)) {
             self.conversations = conversations;
-            self.render();
+            self.render(false);
         } else if (_.isFunction(conversations)) {
             self.maxui.maxClient.getConversationsForUser.apply(self.maxui.maxClient, [
             self.maxui.settings.username,
@@ -32,6 +32,7 @@ var views = function() {
                     self.maxui.logger.info('Loaded {0} conversations from max'.format(self.maxui.settings.username), self.mainview.logtag);
                     self.conversations = data;
                     self.render();
+                    // In this point, converations is a callback argument
                     conversations();
                 }
             ]);
@@ -55,7 +56,7 @@ var views = function() {
                     }
                 });
             } else {
-                data.messages = 1;
+                data.unread_messages = 1;
                 self.conversations.push(data);
             }
             self.sort();
@@ -68,12 +69,15 @@ var views = function() {
         var self = this;
         var increment = 0;
         if (arguments.length > 2)
-            increment = 1;
+            if (arguments[2]) {
+                increment = arguments[2];
+            }
 
         self.conversations = _.map(self.conversations, function(conversation) {
             if (conversation.id == conversation_id) {
                 conversation.lastMessage = message;
-                conversation.messages += increment;
+                _.defaults(conversation, {unread_messages: 0});
+                conversation.unread_messages += increment;
             }
             return conversation;
         }, self);
@@ -85,7 +89,7 @@ var views = function() {
 
         self.conversations = _.map(self.conversations, function(conversation) {
             if (conversation.id == conversation_id) {
-                conversation.messages = 0;
+                conversation.unread_messages = 0;
             }
             return conversation;
         }, self);
@@ -131,7 +135,6 @@ var views = function() {
         var self = this;
         self.mainview.loadWrappers();
         var literal = '';
-
         if (!self.mainview.visible()) {
             self.mainview.$addpeople.css({
                 'border-color': '#ccc'
@@ -165,6 +168,10 @@ var views = function() {
 
     // Renders the conversations list of the current user, defined in settings.username
     MaxConversationsList.prototype.render = function() {
+        var overwrite_postbox = true;
+        if (arguments.length > 0) {
+            overwrite_postbox = arguments[0];
+        }
         var self = this;
         // String to store the generated html pieces of each conversation item
         // by default showing a "no conversations" message
@@ -184,8 +191,9 @@ var views = function() {
 
         var postbox = self.maxui.templates.postBox.render(params);
         var $postbox = jq('#maxui-newactivity');
-        $postbox.html(postbox);
-
+        if (overwrite_postbox) {
+            $postbox.html(postbox);
+        }
 
         // Reset the html container if we have conversations
         if (self.conversations.length > 0) html = '';
@@ -212,11 +220,11 @@ var views = function() {
                 id: conversation.id,
                 displayName: displayName,
                 text: self.maxui.utils.formatText(conversation.lastMessage.content),
-                messages: conversation.messages,
+                messages: conversation.unread_messages,
                 literals: self.maxui.settings.literals,
                 date: self.maxui.utils.formatDate(conversation.lastMessage.published, self.maxui.language),
                 avatarURL: avatar_url,
-                hasUnread: conversation.messages > 0
+                hasUnread: conversation.unread_messages > 0
             };
             // Render the conversations template and append it at the end of the rendered covnersations
             html += self.maxui.templates.conversation.render(conv_params);
@@ -241,14 +249,28 @@ var views = function() {
     // Loads the last 10 messages of a conversation
     MaxConversationMessages.prototype.load = function() {
         var self = this;
-        self.messages[self.mainview.active] = [];
-        self.maxui.maxClient.getMessagesForConversation(self.mainview.active, {limit:10}, function(messages) {
-            self.maxui.logger.info('Loaded conversation {0} messages from max'.format(self.mainview.active), self.mainview.logtag);
+        var conversation_id = self.mainview.active;
+        var set_unread = false;
+        if (arguments.length > 0) {
+            conversation_id = arguments[0];
+            set_unread = true;
+        }
+        self.messages[conversation_id] = [];
+        self.maxui.maxClient.getMessagesForConversation(conversation_id, {limit:10}, function(messages) {
+            self.maxui.logger.info('Loaded conversation {0} messages from max'.format(conversation_id), self.mainview.logtag);
             self.remaining = this.getResponseHeader('X-Has-Remaining-Items');
             _.each(messages, function(message, index, list) {
                 message.ack = true;
                 self.append(message);
             });
+
+            // Update last message and unread indicators.
+            // Increment of unread counter will be done only when loading a specific conversation.
+            // As the only time we specify a conversation id is on refreshing,only then will increment unread count
+            var last_message = _.last(self.messages[conversation_id]);
+            self.mainview.listview.updateLastMessage(conversation_id, {'content': last_message.data.text, 'published': last_message.published}, set_unread);
+            self.mainview.listview.render(false);
+            self.mainview.updateUnreadConversations();
             self.render();
         });
     };
@@ -267,6 +289,21 @@ var views = function() {
         var self = this;
         self.mainview.$common_header.find('#maxui-back-conversations h3').text(title);
     };
+
+
+    MaxConversationMessages.prototype.loadNew = function() {
+        var self = this;
+        var newest_loaded = _.last(self.messages[self.mainview.active]);
+        self.maxui.maxClient.getMessagesForConversation(self.mainview.active, {limit:10, after:newest_loaded.uuid}, function(messages) {
+            self.remaining = this.getResponseHeader('X-Has-Remaining-Items');
+            _.each(messages, function(message, index, list) {
+                message.ack = true;
+                self.prepend(message, index);
+            });
+            self.render();
+        });
+    };
+
 
     MaxConversationMessages.prototype.loadOlder = function() {
         var self = this;
@@ -634,7 +671,7 @@ var views = function() {
         var self = this;
         var $showconversations = $('#maxui-show-conversations .maxui-unread-conversations');
         var conversations_with_unread_messages = _.filter(self.listview.conversations, function(conversation) {
-            if (conversation.messages > 0) return conversation;
+            if (conversation.unread_messages > 0) return conversation;
         });
         if (conversations_with_unread_messages.length > 0) {
             $showconversations.text(conversations_with_unread_messages.length);
@@ -657,9 +694,6 @@ var views = function() {
 
             } else if (self.maxui.settings.UISection == 'conversations' && self.maxui.settings.conversationsSection == 'conversations') {
                 self.listview.render();
-                $('.maxui-message-count:first').css({
-                    'background-color': 'red'
-                });
             } else if (self.maxui.settings.UISection == 'timeline') {
                 self.updateUnreadConversations();
                 self.listview.render();

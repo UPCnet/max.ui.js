@@ -94,7 +94,7 @@
         // View representing the conversations section
         maxui.conversations = new max.views.MaxConversations(maxui, {});
 
-        // Bind conversastion message receiving
+        // Bind conversation message receiving
         if (!maxui.settings.disableConversations) {
             maxui.messaging.bind(
                 {action: 'add', object: 'message'},
@@ -108,6 +108,13 @@
                     maxui.conversations.ReceiveConversation(message);
                 }
             );
+            maxui.messaging.bind(
+                {action: 'refresh', object: 'conversation'},
+                function(message) {
+                    maxui.conversations.messagesview.load(message.destination);
+                }
+            );
+
         }
 
         // Make settings available to utils package
@@ -1041,6 +1048,7 @@
      **/
     jq.fn.toggleSection = function(sectionToEnable) {
         maxui = this;
+        var textarea_literal;
         var $search = jq('#maxui-search');
         var $activitysort = jq('#maxui-activity-sort');
         var $timeline = jq('#maxui-timeline');
@@ -1053,6 +1061,7 @@
         var $conversations_wrapper = jq('#maxui-conversations .maxui-wrapper');
         var $postbutton = jq('#maxui-newactivity-box .maxui-button');
         var $postbox = jq('#maxui-newactivity');
+        var $postbox_text = jq('#maxui-newactivity-box textarea');
         var $conversationsbutton = jq('#maxui-show-conversations');
         var $timelinebutton = jq('#maxui-show-timeline');
         var $addpeople = jq('#maxui-add-people-box');
@@ -1081,6 +1090,8 @@
             $activitysort.hide(400);
             maxui.settings.UISection = 'conversations';
             $postbutton.val(maxui.settings.literals.new_message_post);
+            textarea_literal = maxui.settings.literals.new_conversation_text;
+            $postbox_text.val(textarea_literal).attr('data-literal', textarea_literal);
             $conversationsbutton.hide();
             if (!maxui.settings.disableTimeline) $timelinebutton.show();
             maxui.conversations.scrollbar.setHeight(height - 45);
@@ -1088,7 +1099,7 @@
             $postbox.show();
         }
         if (sectionToEnable == 'timeline') {
-            maxui.conversations.listview.show();
+            maxui.conversations.listview.toggle();
             $timeline.show();
             var timeline_height = $timeline_wrapper.height();
             $timeline.animate({
@@ -1104,9 +1115,11 @@
             });
             $search.show(400);
             $activitysort.show(400);
-            //maxui.settings.currentConversationSection=='conversations'
+
             maxui.settings.UISection = 'timeline';
             $postbutton.val(maxui.settings.literals.new_activity_post);
+            textarea_literal = maxui.settings.literals.new_activity_text;
+            $postbox_text.val(textarea_literal).attr('data-literal', textarea_literal);
             if (!maxui.settings.disableConversations) $conversationsbutton.show();
             $timelinebutton.hide();
             if (maxui.settings.hidePostboxOnTimeline) {
@@ -1119,7 +1132,6 @@
      *    Returns the current settings of the plugin
      **/
     jq.fn.Settings = function() {
-        debugger
         maxui = this;
         return maxui.settings;
     };
@@ -1335,7 +1347,7 @@
         }
 
         _.each(images_to_render, function(activity, index, list) {
-            self.maxui.maxClient.getMessageImage('/activities/{0}/image/thumb'.format(activity.id), function(encoded_image_data) {
+            maxui.maxClient.getMessageImage('/activities/{0}/image/thumb'.format(activity.id), function(encoded_image_data) {
                 var imagetag = '<img class="maxui-embedded" alt="" src="data:image/png;base64,{0}" />'.format(encoded_image_data);
                 $('.maxui-activity#{0} .maxui-body'.format(activity.id)).after(imagetag);
             });
