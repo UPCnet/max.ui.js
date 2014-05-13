@@ -65,7 +65,8 @@ var max = max || {};
                     'add': {id: 'a'},
                     'delete': {id: 'd'},
                     'modify': {id: 'm'},
-                    'refresh': {id: 'r'}
+                    'refresh': {id: 'r'},
+                    'ack': {id: 'k'}
                 }
             },
             object: {
@@ -87,7 +88,9 @@ var max = max || {};
                     max: {id: 'm'},
                     widget: {id: 'w'},
                     ios: {id: 'i'},
-                    android: {id: 'a'}
+                    android: {id: 'a'},
+                    tweety: {id: 't'},
+                    maxbunny: {id: 'b'},
                 }
             },
             domain: {

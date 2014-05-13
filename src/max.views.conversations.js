@@ -620,6 +620,7 @@ var views = function() {
         jq('#maxui-newactivity textarea').val('');
         jq('#maxui-newactivity .maxui-button').attr('disabled', 'disabled');
         sent.ack = false;
+
         sent.destination = self.active;
         self.messagesview.append(sent);
         self.messagesview.render();
@@ -698,17 +699,9 @@ var views = function() {
                 self.updateUnreadConversations();
                 self.listview.render();
             }
-        } else {
-            self.maxui.logger.info("Message {0} succesfully delivered".format(message.uuid));
-            var interval = setInterval(function(event) {
-                var $message = jq('#' + message.uuid + ' .maxui-icon-check');
-                if ($message) {
-                    $message.addClass('maxui-ack');
-                    self.messagesview.ack(message.uuid);
-                    clearInterval(interval);
-                }
-            }, 10);
-        }
+        } //else {
+          //  Receiving our own message after going trough rabbitmq
+        //}
     };
 
     MaxConversations.prototype.ReceiveConversation = function(message) {
