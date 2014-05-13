@@ -1,7 +1,15 @@
 CHANGELOG
 =========
 
-4.0.3 (unreleased)
+4.0.4 (2014-05-13)
+------------------
+
+ * Enable real ack's [Carles Bruguera]
+ * Respond to refresh notifications Fix weird literal changes [Carles Bruguera]
+ * Added logging facility [Carles Bruguera]
+ * Fix literals [Carles Bruguera]
+
+4.0.3 (2014-05-12)
 ------------------
  * Recover check icon used in ack's
  * Recover upload older feature
