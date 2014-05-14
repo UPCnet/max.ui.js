@@ -275,14 +275,24 @@ var views = function() {
         });
     };
 
-    MaxConversationMessages.prototype.ack = function(message_id) {
+    MaxConversationMessages.prototype.ack = function(message) {
         var self = this;
-        self.messages[self.mainview.active] = _.map(self.messages[self.mainview.active], function(message) {
-            if (message_id == message.uuid) {
-                message.ack = true;
-            }
-            return message;
-        });
+        self.maxui.logger.info("Acknowledged Message {0} --> {1}".format(message.uuid, message.data.id), self.mainview.logtag);
+        var $message = jq('#' + message.uuid);
+        var $message_ack = $message.find('.maxui-icon-check');
+        if ($message_ack) {
+            $message_ack.addClass('maxui-ack');
+            // mark currentyly stored message as ack'd
+            self.messages[self.mainview.active] = _.map(self.messages[self.mainview.active], function(stored_message) {
+                if (message.uuid == stored_message.uuid) {
+                    stored_message.ack = true;
+                }
+                return stored_message;
+            });
+
+            // Change rendered message id
+            $message.attr('id', message.data.id);
+        }
     };
 
     MaxConversationMessages.prototype.exists = function(message) {
@@ -696,7 +706,7 @@ var views = function() {
         var message_from_another_user = message.user.username != self.maxui.settings.username;
         var message_not_in_list = self.messagesview.exists(message);
         if (message_from_another_user || message_not_in_list) {
-            self.maxui.logger.log('New message from user {0} on {1}'.format(message.user, message.destination));
+            self.maxui.logger.log('New message from user {0} on {1}'.format(message.user.username, message.destination), self.logtag);
             self.messagesview.append(message);
 
             if (self.maxui.settings.UISection == 'conversations' && self.maxui.settings.conversationsSection == 'messages') {

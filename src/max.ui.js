@@ -117,14 +117,7 @@
             maxui.messaging.bind(
                 {action: 'ack', object: 'message'},
                 function(message) {
-                    maxui.logger.info("Message {0} succesfully delivered".format(message.uuid), 'CONVERSATIONS');
-                    var $message = jq('#' + message.uuid);
-                    var $message_ack = $message.find('.maxui-icon-check');
-                    if ($message_ack) {
-                        $message_ack.addClass('maxui-ack');
-                        maxui.conversations.messagesview.ack(message.uuid);
-                        $message.attr('id', message.data.id);
-                    }
+                    maxui.conversations.messagesview.ack(message);
                 }
             );
         }
