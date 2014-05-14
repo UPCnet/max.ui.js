@@ -285,6 +285,12 @@ var views = function() {
         });
     };
 
+    MaxConversationMessages.prototype.exists = function(message) {
+        var self = this;
+        found = _.findWhere(self.messages[message.destination], {"uuid": message.uuid});
+        return _.isUndefined(found);
+    };
+
     MaxConversationMessages.prototype.setTitle = function(title) {
         var self = this;
         self.mainview.$common_header.find('#maxui-back-conversations h3').text(title);
@@ -687,7 +693,9 @@ var views = function() {
     MaxConversations.prototype.ReceiveMessage = function(message) {
         var self = this;
         // Insert message only if the message is from another user.
-        if (message.user.username != self.maxui.settings.username) {
+        var message_from_another_user = message.user.username != self.maxui.settings.username;
+        var message_not_in_list = self.messagesview.exists(message);
+        if (message_from_another_user || message_not_in_list) {
             self.maxui.logger.log('New message from user {0} on {1}'.format(message.user, message.destination));
             self.messagesview.append(message);
 
