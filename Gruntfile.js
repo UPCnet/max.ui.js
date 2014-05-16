@@ -159,6 +159,16 @@ module.exports = function(grunt) {
 
     // Syntax checker
     jshint: {
+      options: {
+        curly: false,
+        eqeqeq: false,
+        eqnull: false,
+        browser: true,
+        es3: true,
+        globals: {
+          jQuery: false
+        },
+      },
       all: ['src/max*.js',]
     },
 
