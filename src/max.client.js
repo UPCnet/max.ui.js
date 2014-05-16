@@ -63,28 +63,32 @@ MaxClient.prototype.POST = function(route, query, callback) {
     resource_uri = '{0}{1}'.format(this.url, route);
     // Get method-defined triggers
     var triggers = {};
-    if (arguments.length > 3) triggers = arguments[3];
-    if (this.mode == 'jquery') {
-        jQuery.ajax({
-            url: resource_uri,
-            beforeSend: function(xhr) {
-                xhr.setRequestHeader("X-Oauth-Token", maxclient.token);
-                xhr.setRequestHeader("X-Oauth-Username", maxclient.actor.username);
-                xhr.setRequestHeader("X-Oauth-Scope", 'widgetcli');
-            },
-            type: 'POST',
-            contentType: 'application/json',
-            data: JSON.stringify(query),
-            async: true,
-            dataType: 'json'
-        }).done(function(result) {
-            callback.call(result);
-            if (triggers.done) jQuery(window).trigger(triggers.done, result);
-        }).fail(function(xhr) {
-            jQuery(window).trigger('maxclienterror', xhr);
-            if (triggers.fail) jQuery(window).trigger(triggers.fail, xhr);
-        });
+    if (arguments.length > 3) {
+        triggers = arguments[3];
     }
+    jQuery.ajax({
+        url: resource_uri,
+        beforeSend: function(xhr) {
+            xhr.setRequestHeader("X-Oauth-Token", maxclient.token);
+            xhr.setRequestHeader("X-Oauth-Username", maxclient.actor.username);
+            xhr.setRequestHeader("X-Oauth-Scope", 'widgetcli');
+        },
+        type: 'POST',
+        contentType: 'application/json',
+        data: JSON.stringify(query),
+        async: true,
+        dataType: 'json'
+    }).done(function(result) {
+        callback.call(result);
+        if (triggers.done) {
+            jQuery(window).trigger(triggers.done, result);
+        }
+    }).fail(function(xhr) {
+        jQuery(window).trigger('maxclienterror', xhr);
+        if (triggers.fail) {
+            jQuery(window).trigger(triggers.fail, xhr);
+        }
+    });
     return true;
 };
 MaxClient.prototype.PUT = function(route, query, callback) {
@@ -92,30 +96,34 @@ MaxClient.prototype.PUT = function(route, query, callback) {
     resource_uri = '{0}{1}'.format(this.url, route);
     // Get method-defined triggers
     var triggers = {};
-    if (arguments.length > 3) triggers = arguments[3];
-
-    if (this.mode == 'jquery') {
-        jQuery.ajax({
-            url: resource_uri,
-            beforeSend: function(xhr) {
-                xhr.setRequestHeader("X-Oauth-Token", maxclient.token);
-                xhr.setRequestHeader("X-Oauth-Username", maxclient.actor.username);
-                xhr.setRequestHeader("X-Oauth-Scope", 'widgetcli');
-                xhr.setRequestHeader("X-HTTP-Method-Override", 'PUT');
-            },
-            contentType: 'application/json',
-            type: 'POST',
-            data: JSON.stringify(query),
-            async: true,
-            dataType: 'json'
-        }).done(function(result) {
-            callback.call(result);
-            if (triggers.done) jQuery(window).trigger(triggers.done, result);
-        }).fail(function(xhr) {
-            jQuery(window).trigger('maxclienterror', xhr);
-            if (triggers.fail) jQuery(window).trigger(triggers.fail, xhr);
-        });
+    if (arguments.length > 3) {
+        triggers = arguments[3];
     }
+
+    jQuery.ajax({
+        url: resource_uri,
+        beforeSend: function(xhr) {
+            xhr.setRequestHeader("X-Oauth-Token", maxclient.token);
+            xhr.setRequestHeader("X-Oauth-Username", maxclient.actor.username);
+            xhr.setRequestHeader("X-Oauth-Scope", 'widgetcli');
+            xhr.setRequestHeader("X-HTTP-Method-Override", 'PUT');
+        },
+        contentType: 'application/json',
+        type: 'POST',
+        data: JSON.stringify(query),
+        async: true,
+        dataType: 'json'
+    }).done(function(result) {
+        callback.call(result);
+        if (triggers.done) {
+            jQuery(window).trigger(triggers.done, result);
+        }
+    }).fail(function(xhr) {
+        jQuery(window).trigger('maxclienterror', xhr);
+        if (triggers.fail) {
+            jQuery(window).trigger(triggers.fail, xhr);
+        }
+    });
     return true;
 };
 MaxClient.prototype.DELETE = function(route, query, callback) {
@@ -123,28 +131,32 @@ MaxClient.prototype.DELETE = function(route, query, callback) {
     resource_uri = '{0}{1}'.format(this.url, route);
     // Get method-defined triggers
     var triggers = {};
-    if (arguments.length > 2) triggers = arguments[2];
-    if (this.mode == 'jquery') {
-        jQuery.ajax({
-            url: resource_uri,
-            beforeSend: function(xhr) {
-                xhr.setRequestHeader("X-Oauth-Token", maxclient.token);
-                xhr.setRequestHeader("X-Oauth-Username", maxclient.actor.username);
-                xhr.setRequestHeader("X-Oauth-Scope", 'widgetcli');
-                xhr.setRequestHeader("X-HTTP-Method-Override", 'DELETE');
-            },
-            type: 'POST',
-            data: JSON.stringify(query),
-            async: true,
-            dataType: 'json'
-        }).done(function(result) {
-            callback.call(result);
-            if (triggers.done) jQuery(window).trigger(triggers.done, result);
-        }).fail(function(xhr) {
-            jQuery(window).trigger('maxclienterror', xhr);
-            if (triggers.fail) jQuery(window).trigger(triggers.fail, xhr);
-        });
+    if (arguments.length > 2) {
+        triggers = arguments[2];
     }
+    jQuery.ajax({
+        url: resource_uri,
+        beforeSend: function(xhr) {
+            xhr.setRequestHeader("X-Oauth-Token", maxclient.token);
+            xhr.setRequestHeader("X-Oauth-Username", maxclient.actor.username);
+            xhr.setRequestHeader("X-Oauth-Scope", 'widgetcli');
+            xhr.setRequestHeader("X-HTTP-Method-Override", 'DELETE');
+        },
+        type: 'POST',
+        data: JSON.stringify(query),
+        async: true,
+        dataType: 'json'
+    }).done(function(result) {
+        callback.call(result);
+        if (triggers.done) {
+            jQuery(window).trigger(triggers.done, result);
+        }
+    }).fail(function(xhr) {
+        jQuery(window).trigger('maxclienterror', xhr);
+        if (triggers.fail) {
+            jQuery(window).trigger(triggers.fail, xhr);
+        }
+    });
     return true;
 };
 MaxClient.prototype.GET = function(route, query, callback) {
@@ -178,13 +190,17 @@ MaxClient.prototype.GET = function(route, query, callback) {
         jQuery.ajax(ajax_options)
 
         .done(function(result, status, xhr) {
-            if (triggers.done) jQuery(window).trigger(triggers.done);
+            if (triggers.done) {
+                jQuery(window).trigger(triggers.done);
+            }
             callback.apply(xhr, [result]);
         })
 
         .fail(function(xhr) {
             jQuery(window).trigger('maxclienterror', xhr);
-            if (triggers.fail) jQuery(window).trigger(triggers.fail);
+            if (triggers.fail) {
+                jQuery(window).trigger(triggers.fail);
+            }
         });
     }
     return true;

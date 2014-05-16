@@ -34,7 +34,7 @@ var views = function() {
             event.stopPropagation();
             if (self.enabled()) {
                 var movable_height = self.$target.height() - self.maxtop - self.handle.height;
-                var actual_margin = parseInt(self.$target.css('margin-top'));
+                var actual_margin = parseInt(self.$target.css('margin-top'), 10);
                 var new_margin = actual_margin + (deltaY * -1 * 10);
                 if (new_margin > 0) new_margin = 0;
                 if (new_margin < (movable_height * -1)) new_margin = movable_height * -1;

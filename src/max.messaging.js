@@ -90,7 +90,7 @@ var max = max || {};
                     ios: {id: 'i'},
                     android: {id: 'a'},
                     tweety: {id: 't'},
-                    maxbunny: {id: 'b'},
+                    maxbunny: {id: 'b'}
                 }
             },
             domain: {

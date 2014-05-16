@@ -16,16 +16,16 @@ var max = max || {};
         debug: 0,
         info:  1,
         warn:  2,
-        error: 3,
+        error: 3
     };
 
     function MaxLogging(options) {
-        self = this;
+        var self = this;
         self.level = 0;
     }
 
     MaxLogging.prototype.setLevel = function(level) {
-        self = this;
+        var self = this;
         self.level = levels[level];
     };
 
