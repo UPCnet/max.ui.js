@@ -6,6 +6,8 @@ CHANGELOG
 
  * Specify contentType to avoid jsonp ?? WTF [Carles Bruguera]
  * Don't try to render messages before loading them [Carles Bruguera]
+ * Move acknowledge message to conversations view [Carles Bruguera]
+ * Render received messages from the same user from other apps [Carles Bruguera]
 
 4.0.4 (2014-05-13)
 ------------------
