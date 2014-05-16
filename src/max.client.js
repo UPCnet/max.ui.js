@@ -73,6 +73,7 @@ MaxClient.prototype.POST = function(route, query, callback) {
                 xhr.setRequestHeader("X-Oauth-Scope", 'widgetcli');
             },
             type: 'POST',
+            contentType: 'application/json',
             data: JSON.stringify(query),
             async: true,
             dataType: 'json'
@@ -92,6 +93,7 @@ MaxClient.prototype.PUT = function(route, query, callback) {
     // Get method-defined triggers
     var triggers = {};
     if (arguments.length > 3) triggers = arguments[3];
+
     if (this.mode == 'jquery') {
         jQuery.ajax({
             url: resource_uri,
@@ -101,6 +103,7 @@ MaxClient.prototype.PUT = function(route, query, callback) {
                 xhr.setRequestHeader("X-Oauth-Scope", 'widgetcli');
                 xhr.setRequestHeader("X-HTTP-Method-Override", 'PUT');
             },
+            contentType: 'application/json',
             type: 'POST',
             data: JSON.stringify(query),
             async: true,
