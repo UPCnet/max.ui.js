@@ -1,6 +1,12 @@
 CHANGELOG
 =========
 
+4.0.5 (2014-05-16)
+------------------
+
+ * Specify contentType to avoid jsonp ?? WTF [Carles Bruguera]
+ * Don't try to render messages before loading them [Carles Bruguera]
+
 4.0.4 (2014-05-13)
 ------------------
 
