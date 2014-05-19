@@ -10,7 +10,7 @@ max.templates = function() {
 
     var templates = {
 
-    activity: Hogan.compile('\
+        activity: Hogan.compile('\
 <div class="maxui-activity" id="{{id}}" userid="{{actor.id}}" username="{{actor.username}}">\
             <div class="maxui-activity-content">\
                 <div class="maxui-topright">\
@@ -84,7 +84,7 @@ max.templates = function() {
         </div>\
             '),
 
-    comment: Hogan.compile('\
+        comment: Hogan.compile('\
 <div class="maxui-comment" id="{{id}}" userid="{{actor.id}}" displayname="{{actor.username}}">\
             <div class="maxui-activity-content">\
                <span class="maxui-publisheddate">{{date}}</span>\
@@ -112,7 +112,7 @@ max.templates = function() {
         </div>\
             '),
 
-    conversation: Hogan.compile('\
+        conversation: Hogan.compile('\
 <div class="maxui-conversation" id="{{id}}" data-displayname="{{displayName}}">\
             <div class="maxui-activity-content">\
                 <div class="maxui-topright">\
@@ -136,7 +136,7 @@ max.templates = function() {
         </div>\
             '),
 
-    conversationSettings: Hogan.compile('\
+        conversationSettings: Hogan.compile('\
 <div id="maxui-{{panelID}}" {{#canManage}}class="maxui-owner"{{/canManage}}>\
           <span class="maxui-avatar maxui-big"><img src="{{conversationAvatarURL}}"></span>\
           <div id="maxui-conversation-displayname-edit">\
@@ -190,7 +190,7 @@ max.templates = function() {
         </div>\
             '),
 
-    filters: Hogan.compile('\
+        filters: Hogan.compile('\
 {{#filters}}\
             {{#visible}}\
             <div class="maxui-filter maxui-{{type}}" type="{{type}}" value="{{value}}"><span>{{prepend}}{{value}}<a class="maxui-close" href=""><i class="maxui-icon-cancel-circled" alt="tanca"/></a></span></div>\
@@ -198,7 +198,7 @@ max.templates = function() {
         {{/filters}}\
             '),
 
-    mainUI: Hogan.compile('\
+        mainUI: Hogan.compile('\
 <div id="maxui-container">\
         {{#username}}\
          <div id="maxui-mainpanel">\
@@ -302,7 +302,7 @@ max.templates = function() {
         </div>\
             '),
 
-    message: Hogan.compile('\
+        message: Hogan.compile('\
 <div class="maxui-message {{origin}}" id="{{id}}">\
             <div class="maxui-activity-content">\
                 <span class="maxui-avatar maxui-little"><img src="{{avatarURL}}"></span>\
@@ -325,7 +325,7 @@ max.templates = function() {
         </div>\
             '),
 
-    participant: Hogan.compile('\
+        participant: Hogan.compile('\
   <li class="maxui-participant {{#owner}}maxui-owner{{/owner}}" data-username="{{username}}" style="{{style}}">\
               <span class="maxui-avatar maxui-little"><img src="{{avatarURL}}"></span>\
               <span class="maxui-displayname">{{displayName}}\
@@ -348,13 +348,13 @@ max.templates = function() {
           </li>\
             '),
 
-    participants: Hogan.compile('\
+        participants: Hogan.compile('\
 {{#persons}}\
         <div class="maxui-filter maxui-participant" type="participant" username="{{username}}"><span>{{prepend}}{{displayName}}<a class="maxui-close" href=""><i class="maxui-icon-cancel-circled" alt="tanca"/></a></span></div>\
         {{/persons}}\
             '),
 
-    postBox: Hogan.compile('\
+        postBox: Hogan.compile('\
       <a href="#" class="maxui-avatar maxui-big">\
                   <img src="{{avatar}}">\
               </a>\
@@ -365,7 +365,7 @@ max.templates = function() {
               </div>\
             '),
 
-    predictive: Hogan.compile('\
+        predictive: Hogan.compile('\
 <li data-username="{{username}}" data-displayname="{{displayName}}" class="{{cssclass}}">\
         <img src="{{avatarURL}}"/><span>{{displayName}}</span>\
         </li>\

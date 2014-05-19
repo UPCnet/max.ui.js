@@ -36,7 +36,9 @@ var max = max || {};
 
     MaxLogging.prototype.debug = function(message) {
         var tag = 'MAXUI';
-        if (arguments.length > 1) tag = arguments[1];
+        if (arguments.length > 1) {
+            tag = arguments[1];
+        }
         var self = this;
         if (self.level <= levels.debug) {
             self.log(message, tag);
@@ -45,7 +47,9 @@ var max = max || {};
 
     MaxLogging.prototype.info = function(message) {
         var tag = 'MAXUI';
-        if (arguments.length > 1) tag = arguments[1];
+        if (arguments.length > 1) {
+            tag = arguments[1];
+        }
         var self = this;
         if (self.level <= levels.info) {
             self.log(message, tag);
@@ -54,7 +58,9 @@ var max = max || {};
 
     MaxLogging.prototype.warn = function(message) {
         var tag = 'MAXUI';
-        if (arguments.length > 1) tag = arguments[1];
+        if (arguments.length > 1) {
+            tag = arguments[1];
+        }
         var self = this;
         if (self.level <= levels.warn) {
             self.log(message, tag);
@@ -63,8 +69,9 @@ var max = max || {};
 
     MaxLogging.prototype.error = function(message) {
         var tag = 'MAXUI';
-        if (arguments.length > 1) tag = arguments[1];
-
+        if (arguments.length > 1) {
+            tag = arguments[1];
+        }
         var self = this;
         if (self.level <= levels.error) {
             self.log(message, tag);
@@ -73,6 +80,6 @@ var max = max || {};
 
 
 
-max.MaxLogging = MaxLogging;
+    max.MaxLogging = MaxLogging;
 
 })(jQuery);

@@ -105,7 +105,7 @@ module.exports = function(grunt) {
             process: function(src, filepath) {
               // Strip .mustache extension
               var variable_name = filepath.substr(14, filepath.length - 23);
-              return "    " + variable_name + ": Hogan.compile('\\\n" + src.replace(/\n/g, '\\\n        ') + "    ')";
+              return "        " + variable_name + ": Hogan.compile('\\\n" + src.replace(/\n/g, '\\\n        ') + "    ')";
             },
             banner: '/*jshint multistr: true */\n' +
                     'var max = max || {};\n\n' +
@@ -160,13 +160,14 @@ module.exports = function(grunt) {
     // Syntax checker
     jshint: {
       options: {
-        curly: false,
+        indent: 4,
+        curly: true,
         eqeqeq: true,
-        eqnull: false,
+        eqnull: true,
         browser: true,
         es3: true,
         globals: {
-          jQuery: false
+          jQuery: true
         },
       },
       all: ['src/max*.js',]

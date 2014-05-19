@@ -16,10 +16,14 @@ max.utils = function() {
          *    @param {Event} e       The DOM event we want to freeze
          **/
         freezeEvent: function(e) {
-            if (e.preventDefault) e.preventDefault();
+            if (e.preventDefault) {
+                e.preventDefault();
+            }
             e.returnValue = false;
             e.cancelBubble = true;
-            if (e.stopPropagation) e.stopPropagation();
+            if (e.stopPropagation) {
+                e.stopPropagation();
+            }
             return false;
         },
         /**  Strips whitespace at the beggining and end of a string and optionaly between
@@ -31,8 +35,12 @@ max.utils = function() {
             s = s.replace(/(^\s*)|(\s*$)/gi, "");
             s = s.replace(/\n /, "\n");
             var trimMulti = true;
-            if (arguments.length > 1) trimMulti = multi;
-            if (trimMulti === true) s = s.replace(/[ ]{2,}/gi, " ");
+            if (arguments.length > 1) {
+                trimMulti = multi;
+            }
+            if (trimMulti === true) {
+                s = s.replace(/[ ]{2,}/gi, " ");
+            }
             return s;
         },
         /**  Searches for urls and hashtags in text and transforms to hyperlinks
@@ -79,7 +87,7 @@ max.utils = function() {
                 ax;
             while (L > 1 && arr.length) {
                 what = a[--L];
-                while ((ax = arr.indexOf(what)) != -1) {
+                while ((ax = arr.indexOf(what)) !== -1) {
                     arr.splice(ax, 1);
                 }
             }
@@ -111,9 +119,12 @@ max.utils = function() {
             var thisdate = new Date();
             var match = timestamp.match("^([-+]?)(\\d{4,})(?:-?(\\d{2})(?:-?(\\d{2})" + "(?:[Tt ](\\d{2})(?::?(\\d{2})(?::?(\\d{2})(?:\\.(\\d{1,3})(?:\\d+)?)?)?)?" + "(?:[Zz]|(?:([-+])(\\d{2})(?::?(\\d{2}))?)?)?)?)?)?$");
             if (match) {
-                for (var ints = [2, 3, 4, 5, 6, 7, 8, 10, 11], i = ints.length - 1; i >= 0; --i) match[ints[i]] = (typeof match[ints[i]] != "undefined" && match[ints[i]].length > 0) ? parseInt(match[ints[i]], 10) : 0;
-                if (match[1] == '-') // BC/AD
+                for (var ints = [2, 3, 4, 5, 6, 7, 8, 10, 11], i = ints.length - 1; i >= 0; --i) {
+                    match[ints[i]] = (typeof match[ints[i]] !== "undefined" && match[ints[i]].length > 0) ? parseInt(match[ints[i]], 10) : 0;
+                }
+                if (match[1] === '-') { // BC/AD
                     match[2] *= -1;
+                }
                 var ms = Date.UTC(match[2], // Y
                     match[3] - 1, // M
                     match[4], // D
@@ -122,10 +133,12 @@ max.utils = function() {
                     match[7], // s
                     match[8] // ms
                 );
-                if (typeof match[9] != "undefined" && match[9].length > 0) // offset
-                    ms += (match[9] == '+' ? -1 : 1) * (match[10] * 3600 * 1000 + match[11] * 60 * 1000); // oh om
-                if (match[2] >= 0 && match[2] <= 99) // 1-99 AD
+                if (typeof match[9] !== "undefined" && match[9].length > 0) { // offset
+                    ms += (match[9] === '+' ? -1 : 1) * (match[10] * 3600 * 1000 + match[11] * 60 * 1000); // oh om
+                }
+                if (match[2] >= 0 && match[2] <= 99) { // 1-99 AD
                     ms -= 59958144000000;
+                }
 
                 var a_day = 1000 * 60 * 60 * 24;  // ms * seconds * minutes * hours
                 var three_days = a_day * 3;
@@ -140,13 +153,13 @@ max.utils = function() {
                 // Dates between 3 days and a year, get a 'X of MMMMM', localized
                 // into its language
                 } else {
-                    if (lang == 'en') {
+                    if (lang === 'en') {
                         formatted = '{0} {1}'.format(match[4], settings.literals.months[match[3] - 1]);
-                    } else if (lang == 'es') {
+                    } else if (lang === 'es') {
                         formatted = '{0} de {1}'.format(match[4], settings.literals.months[match[3] - 1]);
-                    } else if (lang == 'ca') {
+                    } else if (lang === 'ca') {
                         prefix = 'de ';
-                        if (match[3] == 4 || match[3] == 8 || match[3] == 10) {
+                        if (match[3] === 4 || match[3] === 8 || match[3] === 10) {
                             prefix = "d'";
                         }
                         formatted = '{0} {2}{1}'.format(match[4], settings.literals.months[match[3] - 1], prefix);
@@ -157,7 +170,9 @@ max.utils = function() {
                     }
                 }
                 return formatted;
-            } else return null;
+            } else {
+                return null;
+            }
         },
         /**  Returns an utf8 decoded string
          *    @param {String} str_data    an utf-8 String
@@ -282,12 +297,18 @@ max.utils = function() {
                     break;
             }
             word_array.push(i);
-            while ((word_array.length % 16) != 14) word_array.push(0);
+            while ((word_array.length % 16) !== 14) {
+                word_array.push(0);
+            }
             word_array.push(msg_len >>> 29);
             word_array.push((msg_len << 3) & 0x0ffffffff);
             for (blockstart = 0; blockstart < word_array.length; blockstart += 16) {
-                for (i = 0; i < 16; i++) W[i] = word_array[blockstart + i];
-                for (i = 16; i <= 79; i++) W[i] = rotate_left(W[i - 3] ^ W[i - 8] ^ W[i - 14] ^ W[i - 16], 1);
+                for (i = 0; i < 16; i++) {
+                    W[i] = word_array[blockstart + i];
+                }
+                for (i = 16; i <= 79; i++) {
+                    W[i] = rotate_left(W[i - 3] ^ W[i - 8] ^ W[i - 14] ^ W[i - 16], 1);
+                }
                 A = H0;
                 B = H1;
                 C = H2;

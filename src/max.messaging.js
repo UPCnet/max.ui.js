@@ -119,7 +119,7 @@ var max = max || {};
                     delete spec.values[vvalue.id].id;
                 });
             }
-            if (_.has(spec, 'fields') && spec.type == 'object') {
+            if (_.has(spec, 'fields') && spec.type === 'object') {
                 spec.fields = {};
                 _.each(svalue.fields, function(vvalue, vname, vlist) {
                     spec.fields[vvalue.id] = _.clone(vvalue);
@@ -188,8 +188,8 @@ var max = max || {};
             // compare the stored binding key with a normalized key from message
             var bind_key = _.pick(message, _.keys(binding.key));
             if (_.isEqual(binding.key, bind_key)) {
-                    return binding;
-                    }
+                return binding;
+            }
         });
         if (_.isEmpty(matched_bindings)) {
             self.maxui.logger.warning('Ignoring received message\n{0}\n No binding found for this message', self.logtag);
@@ -221,9 +221,9 @@ var max = max || {};
             // Define stomp stomp ON CONNECT callback
             function(x) {
                 self.stomp.subscribe('/exchange/{0}.subscribe'.format(self.maxui.settings.username), function(stomp_message) {
-                   var data = JSON.parse(stomp_message.body);
-                   var routing_key = /([^/])+$/.exec(stomp_message.headers.destination)[0];
-                   self.on_message(data, routing_key);
+                    var data = JSON.parse(stomp_message.body);
+                    var routing_key = /([^/])+$/.exec(stomp_message.headers.destination)[0];
+                    self.on_message(data, routing_key);
                 });
                 self.active = true;
                 self.maxui.logger.info('Succesfully connected to {0}'.format(self.stompServer), self.logtag);
@@ -253,7 +253,7 @@ var max = max || {};
                 } else {
                     packed_value = value;
 
-                    if (_.has(spec, 'fields') && spec.type == 'object' && _.isObject(packed_value)) {
+                    if (_.has(spec, 'fields') && spec.type === 'object' && _.isObject(packed_value)) {
                         var packed_inner = {};
                         _.each(message[key], function(inner_value, inner_key, inner_list){
                             if (_.has(spec.fields, inner_key)) {
@@ -295,7 +295,7 @@ var max = max || {};
                     unpacked_value = value;
                     //change inner object keys if the field has a field keys mapping
 
-                    if (_.has(spec, 'fields') && spec.type == 'object' && _.isObject(unpacked_value)) {
+                    if (_.has(spec, 'fields') && spec.type === 'object' && _.isObject(unpacked_value)) {
                         var unpacked_inner = {};
                         _.each(message[key], function(inner_value, inner_key, inner_list){
                             if (_.has(spec.fields, inner_key)) {
@@ -344,6 +344,6 @@ var max = max || {};
     };
 
 
-max.MaxMessaging = MaxMessaging;
+    max.MaxMessaging = MaxMessaging;
 
 })(jQuery);

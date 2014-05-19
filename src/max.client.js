@@ -164,7 +164,9 @@ MaxClient.prototype.GET = function(route, query, callback) {
     resource_uri = '{0}{1}'.format(this.url, route);
     // Get method-defined triggers
     var triggers = {};
-    if (arguments.length > 3) triggers = arguments[3];
+    if (arguments.length > 3) {
+        triggers = arguments[3];
+    }
     if (Object.keys(query).length > 0) {
         resource_uri += '?' + jQuery.param(query, true);
     }
@@ -239,16 +241,23 @@ MaxClient.prototype.getContext = function(chash, callback) {
 MaxClient.prototype.getUserTimeline = function(username, callback) {
     var route = this.ROUTES.timeline.format(username);
     var query = {};
-    if (arguments.length > 2) query = arguments[2];
+    if (arguments.length > 2) {
+        query = arguments[2];
+    }
     this.GET(route, query, callback);
 };
 
 MaxClient.prototype.getActivities = function(options, callback) {
     var route = this.ROUTES.activities.format(options.context);
     var query = {};
-    if (arguments.length > 2) query = arguments[2];
-    if (options.tags)
-        if (options.tags.length > 0) query.context_tags = options.tags;
+    if (arguments.length > 2) {
+        query = arguments[2];
+    }
+    if (options.tags) {
+        if (options.tags.length > 0) {
+            query.context_tags = options.tags;
+        }
+    }
     this.GET(route, query, callback);
 };
 
@@ -399,10 +408,9 @@ MaxClient.prototype.addMessageAndConversation = function(params, callback) {
             "content": params.message
         },
         "contexts": [{
-                'objectType': 'conversation',
-                'participants': params.participants
-                      }
-                    ]
+            'objectType': 'conversation',
+            'participants': params.participants
+        }]
     };
     if (params.displayName) {
         query.contexts[0].displayName = params.displayName;

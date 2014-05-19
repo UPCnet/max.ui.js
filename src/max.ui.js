@@ -40,7 +40,7 @@
         maxui.logger.setLevel(maxui.settings.loglevel);
 
         // Check timeline/activities consistency
-        if (maxui.settings.UISection == 'timeline' && maxui.settings.activitySource == 'timeline' && maxui.settings.readContext) {
+        if (maxui.settings.UISection === 'timeline' && maxui.settings.activitySource === 'timeline' && maxui.settings.readContext) {
             maxui.settings.readContext = undefined;
             maxui.settings.writeContexts = [];
         }
@@ -52,7 +52,9 @@
         // Configure maxui without CORS if CORS not available
         if (!maxui.utils.isCORSCapable()) {
             // IF it has been defined an alias, set as max server url
-            if (maxui.settings.maxServerURLAlias) maxui.settings.maxServerURL = maxui.settings.maxServerURLAlias;
+            if (maxui.settings.maxServerURLAlias) {
+                maxui.settings.maxServerURL = maxui.settings.maxServerURLAlias;
+            }
         }
         if (maxui.settings.readContext) {
             // Calculate readContextHash
@@ -66,17 +68,25 @@
             }
         }
         //set default avatar and profile url pattern if user didn't provide it
-        if (!maxui.settings.avatarURLpattern) maxui.settings.avatarURLpattern = maxui.settings.maxServerURL + '/people/{0}/avatar';
-        if (!maxui.settings.contextAvatarURLpattern) maxui.settings.contextAvatarURLpattern = maxui.settings.maxServerURL + '/contexts/{0}/avatar';
-        if (!maxui.settings.conversationAvatarURLpattern) maxui.settings.conversationAvatarURLpattern = maxui.settings.maxServerURL + '/conversations/{0}/avatar';
+        if (!maxui.settings.avatarURLpattern) {
+            maxui.settings.avatarURLpattern = maxui.settings.maxServerURL + '/people/{0}/avatar';
+        }
+        if (!maxui.settings.contextAvatarURLpattern) {
+            maxui.settings.contextAvatarURLpattern = maxui.settings.maxServerURL + '/contexts/{0}/avatar';
+        }
+        if (!maxui.settings.conversationAvatarURLpattern) {
+            maxui.settings.conversationAvatarURLpattern = maxui.settings.maxServerURL + '/conversations/{0}/avatar';
+        }
         // Disable profileURL by now
         // if (!maxui.settings.profileURLpattern)
         //        maxui.settings['profileURLpattern'] = maxui.settings.maxServerURL+'/profiles/{0}'
         // Catch errors triggered by failed max api calls
-        if (maxui.settings.enableAlerts) jq(window).bind('maxclienterror', function(event, xhr) {
-            var error = JSON.parse(xhr.responseText);
-            alert('The server responded with a "{0}" error, with the following message: "{1}". \n\nPlease try again later or contact administrator at admin@max.upc.edu.'.format(error.error, error.error_description));
-        });
+        if (maxui.settings.enableAlerts) {
+            jq(window).bind('maxclienterror', function(event, xhr) {
+                var error = JSON.parse(xhr.responseText);
+                alert('The server responded with a "{0}" error, with the following message: "{1}". \n\nPlease try again later or contact administrator at admin@max.upc.edu.'.format(error.error, error.error_description));
+            });
+        }
         // Init MAX Client
         maxui.maxClient = new MaxClient();
         var maxclient_config = {
@@ -153,8 +163,8 @@
             }
 
             // render main interface
-            var showCT = maxui.settings.UISection == 'conversations';
-            var showTL = maxui.settings.UISection == 'timeline';
+            var showCT = maxui.settings.UISection === 'conversations';
+            var showTL = maxui.settings.UISection === 'timeline';
             var toggleTL = maxui.settings.disableTimeline === false && !showTL;
             var toggleCT = maxui.settings.disableConversations === false && !showCT;
             var containerWidth = maxui.width() - maxui.settings.scrollbarWidth;
@@ -184,11 +194,11 @@
                 maxui.conversations.render();
                 maxui.conversations.listview.load(data.talkingIn);
             }
-            if (maxui.settings.UISection == 'conversations') {
+            if (maxui.settings.UISection === 'conversations') {
                 maxui.bindEvents();
                 maxui.toggleSection('conversations');
             }
-            else if (maxui.settings.UISection == 'timeline') {
+            else if (maxui.settings.UISection === 'timeline') {
                 maxui.printActivities({}, function(event) {
                     maxui.bindEvents();
                 });
@@ -216,8 +226,12 @@
             event.preventDefault();
             if (!jq(this).hasClass('maxui-disabled')) {
                 jq('#maxui-search').toggleClass('folded');
-                if (jq('#maxui-search').hasClass('folded')) maxui.printActivities({});
-                else maxui.reloadFilters();
+                if (jq('#maxui-search').hasClass('folded')) {
+                    maxui.printActivities({});
+                }
+                else {
+                    maxui.reloadFilters();
+                }
             }
         });
         //Assign Commentbox toggling via delegating the click to the activities container
@@ -516,9 +530,11 @@
             var text = jq(this).val();
             var literal = jq(this).attr('data-literal');
             normalized = maxui.utils.normalizeWhiteSpace(text, false);
-            if (normalized == literal) jq(this).val('');
+            if (normalized === literal) {
+                jq(this).val('');
+            }
         }).on('keydown', selector, function(event) {
-            if (jq('#maxui-conversation-predictive:visible').length > 0 && (event.which == 40 || event.which == 38 || event.which == 13 || event.which == 9)) {
+            if (jq('#maxui-conversation-predictive:visible').length > 0 && (event.which === 40 || event.which === 38 || event.which === 13 || event.which === 9)) {
                 maxui.utils.freezeEvent(event);
             }
         }).on('keyup', selector, function(event) {
@@ -545,7 +561,7 @@
             var num_predictions = $predictive.find('.maxui-prediction').length;
             var is_predicting = jq('#maxui-conversation-predictive:visible').length > 0;
             // Up & down
-            if (key == 40 && is_predicting && num_predictions > 1) {
+            if (key === 40 && is_predicting && num_predictions > 1) {
                 var $next = $selected.next();
                 $selected.removeClass('selected');
                 if ($next.length > 0) {
@@ -553,7 +569,7 @@
                 } else {
                     $selected.siblings(':first').addClass('selected');
                 }
-            } else if (key == 38 && is_predicting && num_predictions > 1) {
+            } else if (key === 38 && is_predicting && num_predictions > 1) {
                 var $prev = $selected.prev();
                 $selected.removeClass('selected');
                 if ($prev.length > 0) {
@@ -561,9 +577,9 @@
                 } else {
                     $selected.siblings(':last').addClass('selected');
                 }
-            } else if (key == 27) {
+            } else if (key === 27) {
                 $predictive.hide();
-            } else if ((key == 13 || key == 9) && is_predicting) {
+            } else if ((key === 13 || key === 9) && is_predicting) {
                 var username = $selected.attr('data-username');
                 var displayname = $selected.attr('data-displayname');
                 maxui.addPerson({
@@ -574,7 +590,7 @@
                 $area.val('').focus();
             } else //1
             {
-                if (maxui.settings.conversationsSection == 'conversations') {
+                if (maxui.settings.conversationsSection === 'conversations') {
                     if (match) {
                         $area.attr('class', 'maxui-text-input');
                         if (matchEOL) {
@@ -597,19 +613,23 @@
             var text = jq(this).val();
             var literal = jq(this).attr('data-literal');
             normalized = maxui.utils.normalizeWhiteSpace(text, false);
-            if (normalized === '') jq(this).val(literal);
+            if (normalized === '') {
+                jq(this).val(literal);
+            }
         });
         // **************************************************************************************
         //Assign Activity post action And textarea behaviour
         maxui.bindActionBehaviour('#maxui-newactivity', '#maxui-newactivity-box', {}, function(text) {
-            if (maxui.settings.UISection == 'timeline') {
+            if (maxui.settings.UISection === 'timeline') {
                 maxui.sendActivity(text);
                 jq('#maxui-search').toggleClass('folded', true);
-            } else if (maxui.settings.UISection == 'conversations') {
-                if (maxui.settings.conversationsSection == 'conversations') {
+            } else if (maxui.settings.UISection === 'conversations') {
+                if (maxui.settings.conversationsSection === 'conversations') {
                     var participants_box = $('#maxui-new-participants')[0];
                     var participants = [];
-                    for (i = 0; i < participants_box.people.length; i++) participants.push(participants_box.people[i].username);
+                    for (i = 0; i < participants_box.people.length; i++) {
+                        participants.push(participants_box.people[i].username);
+                    }
                     var message = jq('#maxui-newactivity textarea').val();
                     var options = {
                         participants: participants,
@@ -637,7 +657,7 @@
             var num_predictions = $predictive.find('.maxui-prediction').length;
             var is_predicting = jq('#maxui-newactivity #maxui-predictive:visible').length > 0;
             // Up & down
-            if (key == 40 && is_predicting && num_predictions > 1) {
+            if (key === 40 && is_predicting && num_predictions > 1) {
                 var $next = $selected.next();
                 $selected.removeClass('selected');
                 if ($next.length > 0) {
@@ -645,7 +665,7 @@
                 } else {
                     $selected.siblings(':first').addClass('selected');
                 }
-            } else if (key == 38 && is_predicting && num_predictions > 1) {
+            } else if (key === 38 && is_predicting && num_predictions > 1) {
                 var $prev = $selected.prev();
                 $selected.removeClass('selected');
                 if ($prev.length > 0) {
@@ -653,18 +673,20 @@
                 } else {
                     $selected.siblings(':last').addClass('selected');
                 }
-            } else if (key == 27) {
+            } else if (key === 27) {
                 $predictive.hide();
-            } else if ((key == 13 || key == 9) && is_predicting) {
+            } else if ((key === 13 || key === 9) && is_predicting) {
                 var matchMention2 = new RegExp('^\\s*@([\\w\\.]+)');
                 var replacement = text.replace(matchMention2, '@' + $selected.text() + ' ');
                 $predictive.hide();
                 $area.val(replacement).focus();
             } else if (text === '') {
-                if (maxui.settings.UISection == 'timeline') jq(button).val(maxui.settings.literals.new_activity_post);
+                if (maxui.settings.UISection === 'timeline') {
+                    jq(button).val(maxui.settings.literals.new_activity_post);
+                }
             } else //1
             {
-                if (maxui.settings.UISection == 'timeline') {
+                if (maxui.settings.UISection === 'timeline') {
                     if (match) {
                         jq(button).val(maxui.settings.literals.new_message_post);
                         if (matchEOL) {
@@ -683,10 +705,10 @@
                             $area.attr('title', maxui.settings.literals.post_permission_unauthorized);
                         }
                     }
-                } else if (maxui.settings.UISection == 'conversations') {
-                    if (maxui.settings.conversationsSection == 'conversations') {
+                } else if (maxui.settings.UISection === 'conversations') {
+                    if (maxui.settings.conversationsSection === 'conversations') {
                         maxui.reloadPersons();
-                    } else if (maxui.settings.conversationsSection == 'messages') {
+                    } else if (maxui.settings.conversationsSection === 'messages') {
                         $predictive.hide();
                         jq(button).removeAttr('disabled');
                         jq(button).attr('class', 'maxui-button');
@@ -714,7 +736,7 @@
         });
         // // Execute search if <enter> pressed
         // jq('#maxui-search .maxui-text-input').keyup(function(e) {
-        //           if (e.keyCode == 13) {
+        //           if (e.keyCode === 13) {
         //              maxui.textSearch(jq(this).attr('value'))
         //              jq('#maxui-search').toggleClass('folded',false)
         //           }
@@ -743,17 +765,21 @@
             var text = jq(this).val();
             var literal = jq(this).attr('data-literal');
             normalized = maxui.utils.normalizeWhiteSpace(text, false);
-            if (normalized == literal) jq(this).val('');
+            if (normalized === literal) {
+                jq(this).val('');
+            }
         }).on('keydown', selector, function(event) {
-            if (jq(delegate + ' #maxui-predictive:visible').length > 0 && (event.which == 40 || event.which == 38 || event.which == 13 || event.which == 9)) {
+            if (jq(delegate + ' #maxui-predictive:visible').length > 0 && (event.which === 40 || event.which === 38 || event.which === 13 || event.which === 9)) {
                 maxui.utils.freezeEvent(event);
-            } else if (event.which == 13 && event.shiftKey === false && !options.ignore_button) {
+            } else if (event.which === 13 && event.shiftKey === false && !options.ignore_button) {
                 event.preventDefault();
                 var $area = jq(this).parent().find('.maxui-text-input');
                 var literal = $area.attr('data-literal');
                 var text = $area.val();
                 var normalized = maxui.utils.normalizeWhiteSpace(text, false);
-                if (normalized != literal & normalized !== '') clickFunction.apply(this, [text]);
+                if (normalized !== literal & normalized !== '') {
+                    clickFunction.apply(this, [text]);
+                }
             }
         }).on('keyup', selector, function(event) {
             event.preventDefault();
@@ -784,14 +810,18 @@
             var text = jq(this).val();
             var literal = jq(this).attr('data-literal');
             normalized = maxui.utils.normalizeWhiteSpace(text, false);
-            if (normalized === '') jq(this).val(literal);
+            if (normalized === '') {
+                jq(this).val(literal);
+            }
         }).on('click', target + ' .maxui-button', function(event) {
             event.preventDefault();
             var $area = jq(this).parent().find('.maxui-text-input');
             var literal = $area.attr('data-literal');
             var text = $area.val();
             var normalized = maxui.utils.normalizeWhiteSpace(text, false);
-            if ((normalized != literal & normalized !== '') || options.empty_click) clickFunction.apply(this, [text]);
+            if ((normalized !== literal & normalized !== '') || options.empty_click) {
+                clickFunction.apply(this, [text]);
+            }
         });
     };
     /**
@@ -822,10 +852,12 @@
                     kwtype = 'keyword';
                     break;
             }
-            if (keyword.length >= 3) this.addFilter({
-                type: kwtype,
-                value: keyword
-            }, false);
+            if (keyword.length >= 3) {
+                this.addFilter({
+                    type: kwtype,
+                    value: keyword
+                }, false);
+            }
         }
         this.reloadFilters();
     };
@@ -857,7 +889,9 @@
             filters[filter.type].push(filter.value);
         }
         // Accept a optional parameter indicating search start point
-        if (arguments.length > 0) filters.before = arguments[0];
+        if (arguments.length > 0) {
+            filters.before = arguments[0];
+        }
         return {
             filters: filters,
             visible: enableSearchToggle
@@ -894,12 +928,15 @@
         maxui = this;
         var deleted = false;
         var index = -1;
-        for (i = 0; i < maxui.filters.length; i++)
-            if (maxui.filters[i].value == filter.value & maxui.filters[i].type == filter.type) {
+        for (i = 0; i < maxui.filters.length; i++) {
+            if (maxui.filters[i].value === filter.value & maxui.filters[i].type === filter.type) {
                 deleted = true;
                 maxui.filters.splice(i, 1);
             }
-        if (deleted) this.reloadFilters();
+        }
+        if (deleted) {
+            this.reloadFilters();
+        }
     };
     /**
      *    Adds a new filter to the search if its not present
@@ -909,7 +946,9 @@
         maxui = this;
         var reload = true;
         //Reload or not by func argument
-        if (arguments.length > 1) reload = arguments[1];
+        if (arguments.length > 1) {
+            reload = arguments[1];
+        }
         if (!maxui.filters) {
             maxui.filters = [];
         }
@@ -929,11 +968,16 @@
                 break;
         }
         var already_filtered = false;
-        for (i = 0; i < maxui.filters.length; i++)
-            if (maxui.filters[i].value == filter.value & maxui.filters[i].type == filter.type) already_filtered = true;
+        for (i = 0; i < maxui.filters.length; i++) {
+            if (maxui.filters[i].value === filter.value & maxui.filters[i].type === filter.type) {
+                already_filtered = true;
+            }
+        }
         if (!already_filtered) {
             maxui.filters.push(filter);
-            if (reload === true) this.reloadFilters();
+            if (reload === true) {
+                this.reloadFilters();
+            }
         }
     };
     /**
@@ -996,7 +1040,7 @@
                 $newdisplaynamebox.find('.maxui-text-input').val('');
             }
 
-        } else if (message !== '' && message != placeholder) {
+        } else if (message !== '' && message !== placeholder) {
             $button.attr('disabled', 'disabled');
             $button.attr('class', 'maxui-button maxui-disabled');
             $participants_box.hide();
@@ -1018,12 +1062,15 @@
         var deleted = false;
         var index = -1;
         participants_box = $('#maxui-new-participants')[0];
-        for (i = 0; i < participants_box.people.length; i++)
-            if (participants_box.people[i].username == person.username) {
+        for (i = 0; i < participants_box.people.length; i++) {
+            if (participants_box.people[i].username === person.username) {
                 deleted = true;
                 participants_box.people.splice(i, 1);
             }
-        if (deleted) this.reloadPersons();
+        }
+        if (deleted) {
+            this.reloadPersons();
+        }
     };
     /**
      *    Adds a new person to the list of new conversation
@@ -1034,17 +1081,24 @@
         participants_box = $('#maxui-new-participants')[0];
         var reload = true;
         //Reload or not by func argument
-        if (arguments.length > 1) reload = arguments[1];
+        if (arguments.length > 1) {
+            reload = arguments[1];
+        }
         var already_filtered = false;
         if (!participants_box.people) {
             participants_box.people = [];
         }
-        if (person.username != maxui.settings.username && participants_box.people.length < (maxui.settings.maximumConversations - 1)) {
-            for (i = 0; i < participants_box.people.length; i++)
-                if (participants_box.people[i].username == person.username) already_filtered = true;
+        if (person.username !== maxui.settings.username && participants_box.people.length < (maxui.settings.maximumConversations - 1)) {
+            for (i = 0; i < participants_box.people.length; i++) {
+                if (participants_box.people[i].username === person.username) {
+                    already_filtered = true;
+                }
+            }
             if (!already_filtered) {
                 participants_box.people.push(person);
-                if (reload === true) this.reloadPersons();
+                if (reload === true) {
+                    this.reloadPersons();
+                }
             }
         }
     };
@@ -1076,7 +1130,7 @@
         var widgetBorder = 1;
         var sectionsWidth = widgetWidth - maxui.conversations.scrollbar.width - (sectionPadding * 2) - (widgetBorder * 2);
         var height = 320;
-        if (sectionToEnable == 'conversations' && maxui.settings.currentConversationSection == 'conversations') {
+        if (sectionToEnable === 'conversations' && maxui.settings.currentConversationSection === 'conversations') {
 
             $conversations.show();
             $common_header.removeClass('maxui-showing-messages').addClass('maxui-showing-conversations');
@@ -1098,12 +1152,14 @@
             textarea_literal = maxui.settings.literals.new_conversation_text;
             $postbox_text.val(textarea_literal).attr('data-literal', textarea_literal);
             $conversationsbutton.hide();
-            if (!maxui.settings.disableTimeline) $timelinebutton.show();
+            if (!maxui.settings.disableTimeline) {
+                $timelinebutton.show();
+            }
             maxui.conversations.scrollbar.setHeight(height - 45);
             maxui.conversations.scrollbar.setTarget('#maxui-conversations #maxui-conversations-list');
             $postbox.show();
         }
-        if (sectionToEnable == 'timeline') {
+        if (sectionToEnable === 'timeline') {
             maxui.conversations.listview.toggle();
             $timeline.show();
             var timeline_height = $timeline_wrapper.height();
@@ -1125,7 +1181,9 @@
             $postbutton.val(maxui.settings.literals.new_activity_post);
             textarea_literal = maxui.settings.literals.new_activity_text;
             $postbox_text.val(textarea_literal).attr('data-literal', textarea_literal);
-            if (!maxui.settings.disableConversations) $conversationsbutton.show();
+            if (!maxui.settings.disableConversations) {
+                $conversationsbutton.show();
+            }
             $timelinebutton.hide();
             if (maxui.settings.hidePostboxOnTimeline) {
                 $postbox.hide();
@@ -1207,7 +1265,7 @@
         // Iterate through all the conversations
         for (i = 0; i < items.length; i++) {
             var prediction = items[i];
-            if (prediction.username != maxui.username) {
+            if (prediction.username !== maxui.username) {
                 var avatar_url = maxui.settings.avatarURLpattern.format(prediction.username);
                 var params = {
                     username: prediction.username,
@@ -1251,19 +1309,23 @@
             // XXX TODO Build a coma-separated list of contexts ??
             var contexts = null;
             if (activity.hasOwnProperty('contexts')) {
-                if (activity.contexts.length > 0) contexts = activity.contexts[0];
+                if (activity.contexts.length > 0) {
+                    contexts = activity.contexts[0];
+                }
             }
             // Take generator property (if exists) and set it only if it's different
             // from the application name defined in settings
             var generator = null;
             if (activity.hasOwnProperty('generator')) {
-                if (activity.generator != maxui.settings.generatorName) generator = activity.generator;
+                if (activity.generator !== maxui.settings.generatorName) {
+                    generator = activity.generator;
+                }
             }
             // Prepare avatar image url depending on actor type
             var avatar_url = '';
-            if (activity.actor.objectType == 'person') {
+            if (activity.actor.objectType === 'person') {
                 avatar_url = maxui.settings.avatarURLpattern.format(activity.actor.username);
-            } else if (activity.actor.objectType == 'context') {
+            } else if (activity.actor.objectType === 'context') {
                 avatar_url = maxui.settings.contextAvatarURLpattern.format(activity.actor.hash);
             }
             // Take replies (if exists) and format to be included as a formatted
@@ -1299,13 +1361,13 @@
                 replies: replies,
                 favorited: activity.favorited,
                 likes: activity.likesCount ? activity.likesCount : 0,
-                showLikesCount: maxui.currentSortOrder == 'likes',
+                showLikesCount: maxui.currentSortOrder === 'likes',
                 liked: activity.liked,
                 avatarURL: avatar_url,
                 publishedIn: contexts,
                 canDeleteActivity: activity.deletable,
                 via: generator,
-                fileDownload: activity.object.objectType == 'file',
+                fileDownload: activity.object.objectType === 'file',
                 filename: activity.object.filename
             };
             // Render the activities template and append it at the end of the rendered activities
@@ -1315,17 +1377,19 @@
             };
             activities = activities + maxui.templates.activity.render(params, partials);
 
-            if (activity.object.objectType == 'image') {
+            if (activity.object.objectType === 'image') {
                 images_to_render.push(activity);
             }
         }
         // Prepare animation and insert activities at the top of activity stream
-        if (insertAt == 'beggining') {
+        if (insertAt === 'beggining') {
             // Load all the activities in a overflow-hidden div to calculate the height
             jq('#maxui-preload .maxui-wrapper').prepend(activities);
             var ritems = jq('#maxui-preload .maxui-wrapper .maxui-activity');
             var heightsum = 0;
-            for (i = 0; i < ritems.length; i++) heightsum += jq(ritems[i]).height() + 18;
+            for (i = 0; i < ritems.length; i++) {
+                heightsum += jq(ritems[i]).height() + 18;
+            }
             // Move the hidden div to be hidden on top of the last activity and behind the main UI
             var currentPreloadHeight = jq('#maxui-preload').height();
             jq('#maxui-preload').height(heightsum - currentPreloadHeight);
@@ -1343,9 +1407,13 @@
             });
         }
         // Insert at the end
-        else if (insertAt == 'end') jq('#maxui-activities').append(activities);
+        else if (insertAt === 'end') {
+            jq('#maxui-activities').append(activities);
+        }
         // Otherwise, replace everything
-        else jq('#maxui-activities').html(activities);
+        else {
+            jq('#maxui-activities').html(activities);
+        }
         // if Has a callback, execute it
         if (arguments.length > 2) {
             arguments[2].call();
@@ -1402,7 +1470,7 @@
     jq.fn.renderPostbox = function() {
         var maxui = this;
         // Render the postbox UI if user has permission
-        var showCT = maxui.settings.UISection == 'conversations';
+        var showCT = maxui.settings.UISection === 'conversations';
         var toggleCT = maxui.settings.disableConversations === false && !showCT;
         var params = {
             avatar: maxui.settings.avatarURLpattern.format(maxui.settings.username),
@@ -1443,10 +1511,10 @@
         }
         maxui.currentSortOrder = filters.sortBy;
         var activityRetriever = null;
-        if (maxui.settings.activitySource == 'timeline') {
+        if (maxui.settings.activitySource === 'timeline') {
             activityRetriever = this.maxClient.getUserTimeline;
             func_params.push(maxui.settings.username);
-        } else if (maxui.settings.activitySource == 'activities') {
+        } else if (maxui.settings.activitySource === 'activities') {
             activityRetriever = this.maxClient.getActivities;
             options = {
                 context: maxui.settings.readContextHash,
@@ -1460,7 +1528,7 @@
                 // Determine write permission, granted by default if we don't find a restriction
                 maxui.settings.canwrite = true;
                 // If we don't have a context, we're in timeline, so we can write
-                if (maxui.settings.activitySource == 'activities') {
+                if (maxui.settings.activitySource === 'activities') {
                     maxui.maxClient.getContext(maxui.settings.readContextHash, function(context) {
                         // Add read context if user is not subscribed to it{
                         var subscriptions = maxui.settings.subscriptions;
@@ -1469,8 +1537,8 @@
                             subscriptions[context.hash].permissions = {};
                             // Check only for public defaults, as any other permission would require
                             // a susbcription, that we already checked that doesn't exists
-                            subscriptions[context.hash].permissions.read = context.permissions.read == 'public';
-                            subscriptions[context.hash].permissions.write = context.permissions.write == 'public';
+                            subscriptions[context.hash].permissions.read = context.permissions.read === 'public';
+                            subscriptions[context.hash].permissions.write = context.permissions.write === 'public';
                         }
                         // Iterate through all the defined write contexts to check for write permissions on
                         // the current user
