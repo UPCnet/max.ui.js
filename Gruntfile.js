@@ -33,7 +33,7 @@ module.exports = function (grunt) {
                 // the less directory.
                 files: ['src/less/*.less', 'src/font/*.less', 'src/less/classes/*.less'],
                 // The tasks to run
-                tasks: ['less']
+                tasks: ['less', 'concat:less']
             },
             // This task is for detecting changes in compiled .css files, and signal livereload on the browser
             livereload: {
@@ -101,6 +101,15 @@ module.exports = function (grunt) {
         },
 
         concat: {
+            less: {
+                options: {
+                    separator: '\n\n/*' +
+                        '\n   CSS HACKS for IEx' +
+                        '\n*/\n\n'
+                },
+                src: ["src/css/maxui.css", "src/css/hacks.css"],
+                dest: 'src/css/maxui.css'
+            },
             templates: {
                 options: {
                     separator: ",\n\n",
@@ -285,5 +294,6 @@ module.exports = function (grunt) {
     grunt.registerTask('dist', ['replace:version', 'concat:dist', 'uglify:dist', 'cssmin:dist', 'replace:fontlocation', 'copy:dist']);
     grunt.registerTask('build', ['copy:build']);
     grunt.registerTask('templates', ['concat:templates']);
+    grunt.registerTask('')
 
 };

@@ -61,7 +61,9 @@ var max = max || {};
                 }
                 self.sort();
                 self.render();
-                callback();
+                if (!_.isUndefined(callback)) {
+                    callback();
+                }
             });
         };
 

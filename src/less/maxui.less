@@ -4,7 +4,6 @@
 @import "variables.less";
 @import "mixins.less";
 @import "classes.less";
-@import "../css/hacks.css";
 
 
 #maxui-container{
@@ -12,6 +11,7 @@
     border: 1px solid @borderColor;
     text-shadow: 0 1px @textShadowColor;
     font:13px/18px Arial, "HelveticaNeue","Helvetica Neue",Helvetica,sans-serif;
+    font-style: normal;
     color:@textColor;
 
     img { -ms-interpolation-mode: bicubic; image-rendering: optimizeQuality;}
@@ -38,6 +38,9 @@
         }
     }
 
+    a, span {
+        font-style: normal;
+    }
     a {
         text-decoration: none;
         color:@linkColor;
@@ -286,6 +289,7 @@
         #maxui-overlay-background {
             background-color: black;
             opacity:0.25;
+            -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=25)";
             z-index: 1000;
         }
         #maxui-overlay-wrapper {
