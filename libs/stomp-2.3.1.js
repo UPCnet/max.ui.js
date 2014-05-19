@@ -45,7 +45,7 @@
 
     Frame.sizeOfUTF8 = function(s) {
       if (s) {
-        return encodeURI(s).split(/%..|./).length - 1;
+        return encodeURI(s).match(/%..|./g).length
       } else {
         return 0;
       }
