@@ -14,7 +14,7 @@ var max = max || {};
         */
 
         function MaxViewName(options) {
-            self = this;
+            var self = this;
         }
 
         MaxViewName.prototype.methodname = function($element) {

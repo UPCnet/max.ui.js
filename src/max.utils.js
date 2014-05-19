@@ -102,7 +102,7 @@ max.utils = function() {
         /**  Returns current Date & Time in rfc339 format
          **/
         now: function() {
-            now = new Date();
+            var now = new Date();
             return now;
         },
         /**  Formats a date in rfc3339 format
@@ -116,6 +116,8 @@ max.utils = function() {
          **/
         formatDate: function(timestamp, lang) {
             var today = new Date();
+            var formatted = '';
+            var prefix = '';
             var thisdate = new Date();
             var match = timestamp.match("^([-+]?)(\\d{4,})(?:-?(\\d{2})(?:-?(\\d{2})" + "(?:[Tt ](\\d{2})(?::?(\\d{2})(?::?(\\d{2})(?:\\.(\\d{1,3})(?:\\d+)?)?)?)?" + "(?:[Zz]|(?:([-+])(\\d{2})(?::?(\\d{2}))?)?)?)?)?)?$");
             if (match) {
@@ -221,19 +223,6 @@ max.utils = function() {
             function rotate_left(n, s) {
                 var t4 = (n << s) | (n >>> (32 - s));
                 return t4;
-            }
-
-            function lsb_hex(val) {
-                var str = "";
-                var i;
-                var vh;
-                var vl;
-                for (i = 0; i <= 6; i += 2) {
-                    vh = (val >>> (i * 4 + 4)) & 0x0f;
-                    vl = (val >>> (i * 4)) & 0x0f;
-                    str += vh.toString(16) + vl.toString(16);
-                }
-                return str;
             }
 
             function cvt_hex(val) {

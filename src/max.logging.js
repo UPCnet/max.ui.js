@@ -30,7 +30,6 @@ var max = max || {};
     };
 
     MaxLogging.prototype.log = function(message, tag) {
-        var self = this;
         window.console.log('{0}: {1}'.format(tag, message));
     };
 

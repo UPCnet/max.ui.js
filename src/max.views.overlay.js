@@ -15,15 +15,17 @@ var max = max || {};
         */
 
         // Object representing an overlay wrapper
-        function MaxOverlay() {
-            this.title = 'Overlay Title';
-            this.content = '';
-            this.el = '#maxui-overlay-panel';
-            this.overlay_show_class = '.maxui-overlay';
-            jq(this.el + ' .maxui-close').click(function(event) {
+        function MaxOverlay(maxui) {
+            var self = this;
+            self.maxui = maxui;
+            self.title = 'Overlay Title';
+            self.content = '';
+            self.el = '#maxui-overlay-panel';
+            self.overlay_show_class = '.maxui-overlay';
+            jq(self.el + ' .maxui-close').click(function(event) {
                 event.preventDefault();
                 event.stopPropagation();
-                maxui.overlay.hide();
+                self.maxui.overlay.hide();
             });
         }
         MaxOverlay.prototype.$el = function() {
@@ -41,22 +43,22 @@ var max = max || {};
             overlay.bind(this);
         };
         MaxOverlay.prototype.show = function(overlay) {
-            maxoverlay = this;
+            var self = this;
             overlay.load(function(data) {
-                maxoverlay.configure(data);
+                self.configure(data);
             });
-            jq(this.overlay_show_class).show();
-            this.$el().animate({
+            jq(self.overlay_show_class).show();
+            self.$el().animate({
                 opacity: 1
             }, 200);
         };
         MaxOverlay.prototype.hide = function() {
-            this.$el().trigger('maxui-overlay-close', []);
-            overlay = this;
-            this.$el().animate({
+            var self = this;
+            self.$el().trigger('maxui-overlay-close', []);
+            self.$el().animate({
                 opacity: 0
             }, 200, function(event) {
-                jq(overlay.overlay_show_class).hide();
+                jq(self.overlay_show_class).hide();
             });
         };
 

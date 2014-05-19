@@ -1,3 +1,4 @@
+/*global _MAXUI */
 //
 // Loader function for max.ui.js
 //

@@ -17,6 +17,7 @@ var max = max || {};
         function MaxPredictive(options) {
             var self = this;
             self.minchars = options.minchars;
+            self.maxui = options.maxui;
             self.source = options.source;
             self.action = options.action;
             self.filter = options.filter;
@@ -48,8 +49,6 @@ var max = max || {};
         MaxPredictive.prototype.moveup = function(event) {
             var self = this;
             var $selected = self.$list.find('.maxui-prediction.selected');
-            var num_predictions = self.$list.find('.maxui-prediction').length;
-            var is_predicting = self.$el.is(":visible").length > 0;
             var $prev = $selected.prev();
             if ($prev.length > 0) {
                 self.select($prev);
@@ -61,8 +60,6 @@ var max = max || {};
         MaxPredictive.prototype.movedown = function(event) {
             var self = this;
             var $selected = self.$list.find('.maxui-prediction.selected');
-            var num_predictions = self.$list.find('.maxui-prediction').length;
-            var is_predicting = self.$el.is(":visible").length > 0;
             var $next = $selected.next();
             $selected.removeClass('selected');
             if ($next.length > 0) {
@@ -75,8 +72,6 @@ var max = max || {};
         MaxPredictive.prototype.matchingRequest = function(text) {
             var self = this;
             var previous_request;
-            var pre_previous_request;
-            var previous_usernames;
             var previous_text = text.substr(0, text.length - 1);
 
             jq.each(self.requests, function(key, value) {
@@ -100,7 +95,7 @@ var max = max || {};
         MaxPredictive.prototype.show = function(event) {
             var self = this;
             var $input = jq(event.target);
-            var text = maxui.utils.normalizeWhiteSpace($input.val(), false);
+            var text = self.maxui.utils.normalizeWhiteSpace($input.val(), false);
             if (text.length >= this.minchars) {
                 var matching_request = self.matchingRequest(text);
                 if (self.requests.hasOwnProperty(text)) {
@@ -125,7 +120,7 @@ var max = max || {};
             var filter = self.filter();
             // Iterate through all the users returned by the query
             var selected_index = false;
-            for (i = 0; i < items.length; i++) {
+            for (var i = 0; i < items.length; i++) {
                 var prediction = items[i];
                 // Only add predictions of users that are not already in the conversation
                 // and that match the text query search, 'cause we could be reading a used request
@@ -134,7 +129,7 @@ var max = max || {};
                 var prediction_matches_query = query_matches_displayname || query_matches_username;
 
                 if (filter.indexOf(prediction.username) === -1 && prediction_matches_query) {
-                    var avatar_url = maxui.settings.avatarURLpattern.format(prediction.username);
+                    var avatar_url = self.maxui.settings.avatarURLpattern.format(prediction.username);
                     var params = {
                         username: prediction.username,
                         displayName: prediction.displayName,
@@ -142,12 +137,12 @@ var max = max || {};
                         cssclass: 'maxui-prediction' + (!selected_index && ' selected' || '')
                     };
                     // Render the conversations template and append it at the end of the rendered conversations
-                    predictions = predictions + maxui.templates.predictive.render(params);
+                    predictions = predictions + self.maxui.templates.predictive.render(params);
                     selected_index = true;
                 }
             }
             if (predictions === '') {
-                predictions = '<li>' + maxui.settings.literals.no_match_found + '</li>';
+                predictions = '<li>' + self.maxui.settings.literals.no_match_found + '</li>';
             }
             self.$list.html(predictions);
             self.$el.show();
@@ -180,22 +175,23 @@ var max = max || {};
         }
 
         MaxInput.prototype.bind = function(eventName, callback) {
-            var maxinput = this;
-            maxinput.$delegate.on(eventName, maxinput.input, callback);
+            var self = this;
+            self.$delegate.on(eventName, self.input, callback);
 
         };
 
         MaxInput.prototype.execExtraBinding= function(context, event) {
-            var maxinput = this;
-            if (this.bindings.hasOwnProperty(event.type)) {
-                this.bindings[event.type].apply(context, [event]);
+            var self = this;
+            if (self.bindings.hasOwnProperty(event.type)) {
+                self.bindings[event.type].apply(context, [event]);
             }
 
         };
 
         MaxInput.prototype.getInputValue = function() {
+            var self = this;
             var text = this.$input.val();
-            return maxui.utils.normalizeWhiteSpace(text, false);
+            return self.maxui.utils.normalizeWhiteSpace(text, false);
         };
 
         MaxInput.prototype.setBindings = function() {
@@ -253,7 +249,6 @@ var max = max || {};
             maxinput.bind('keyup', function(event) {
                 event.preventDefault();
                 event.stopPropagation();
-                var normalized = maxinput.getInputValue();
                 if (event.which === 13 && !event.shiftKey) {
                     maxinput.$input.trigger('maxui-input-submit', [event]);
                 }

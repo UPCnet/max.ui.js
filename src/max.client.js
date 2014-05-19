@@ -59,8 +59,8 @@ MaxClient.prototype.configure = function(settings) {
     };
 };
 MaxClient.prototype.POST = function(route, query, callback) {
-    maxclient = this;
-    resource_uri = '{0}{1}'.format(this.url, route);
+    var self = this;
+    var resource_uri = '{0}{1}'.format(this.url, route);
     // Get method-defined triggers
     var triggers = {};
     if (arguments.length > 3) {
@@ -69,8 +69,8 @@ MaxClient.prototype.POST = function(route, query, callback) {
     jQuery.ajax({
         url: resource_uri,
         beforeSend: function(xhr) {
-            xhr.setRequestHeader("X-Oauth-Token", maxclient.token);
-            xhr.setRequestHeader("X-Oauth-Username", maxclient.actor.username);
+            xhr.setRequestHeader("X-Oauth-Token", self.token);
+            xhr.setRequestHeader("X-Oauth-Username", self.actor.username);
             xhr.setRequestHeader("X-Oauth-Scope", 'widgetcli');
         },
         type: 'POST',
@@ -92,8 +92,8 @@ MaxClient.prototype.POST = function(route, query, callback) {
     return true;
 };
 MaxClient.prototype.PUT = function(route, query, callback) {
-    maxclient = this;
-    resource_uri = '{0}{1}'.format(this.url, route);
+    var self = this;
+    var resource_uri = '{0}{1}'.format(this.url, route);
     // Get method-defined triggers
     var triggers = {};
     if (arguments.length > 3) {
@@ -103,8 +103,8 @@ MaxClient.prototype.PUT = function(route, query, callback) {
     jQuery.ajax({
         url: resource_uri,
         beforeSend: function(xhr) {
-            xhr.setRequestHeader("X-Oauth-Token", maxclient.token);
-            xhr.setRequestHeader("X-Oauth-Username", maxclient.actor.username);
+            xhr.setRequestHeader("X-Oauth-Token", self.token);
+            xhr.setRequestHeader("X-Oauth-Username", self.actor.username);
             xhr.setRequestHeader("X-Oauth-Scope", 'widgetcli');
             xhr.setRequestHeader("X-HTTP-Method-Override", 'PUT');
         },
@@ -127,8 +127,8 @@ MaxClient.prototype.PUT = function(route, query, callback) {
     return true;
 };
 MaxClient.prototype.DELETE = function(route, query, callback) {
-    maxclient = this;
-    resource_uri = '{0}{1}'.format(this.url, route);
+    var self = this;
+    var resource_uri = '{0}{1}'.format(this.url, route);
     // Get method-defined triggers
     var triggers = {};
     if (arguments.length > 2) {
@@ -137,8 +137,8 @@ MaxClient.prototype.DELETE = function(route, query, callback) {
     jQuery.ajax({
         url: resource_uri,
         beforeSend: function(xhr) {
-            xhr.setRequestHeader("X-Oauth-Token", maxclient.token);
-            xhr.setRequestHeader("X-Oauth-Username", maxclient.actor.username);
+            xhr.setRequestHeader("X-Oauth-Token", self.token);
+            xhr.setRequestHeader("X-Oauth-Username", self.actor.username);
             xhr.setRequestHeader("X-Oauth-Scope", 'widgetcli');
             xhr.setRequestHeader("X-HTTP-Method-Override", 'DELETE');
         },
@@ -160,8 +160,8 @@ MaxClient.prototype.DELETE = function(route, query, callback) {
     return true;
 };
 MaxClient.prototype.GET = function(route, query, callback) {
-    maxclient = this;
-    resource_uri = '{0}{1}'.format(this.url, route);
+    var self = this;
+    var resource_uri = '{0}{1}'.format(this.url, route);
     // Get method-defined triggers
     var triggers = {};
     if (arguments.length > 3) {
@@ -174,8 +174,8 @@ MaxClient.prototype.GET = function(route, query, callback) {
     var ajax_options = {
         url: resource_uri,
         beforeSend: function(xhr) {
-            xhr.setRequestHeader("X-Oauth-Token", maxclient.token);
-            xhr.setRequestHeader("X-Oauth-Username", maxclient.actor.username);
+            xhr.setRequestHeader("X-Oauth-Token", self.token);
+            xhr.setRequestHeader("X-Oauth-Username", self.actor.username);
             xhr.setRequestHeader("X-Oauth-Scope", 'widgetcli');
         },
         processData: true,
@@ -262,7 +262,7 @@ MaxClient.prototype.getActivities = function(options, callback) {
 };
 
 MaxClient.prototype.getCommentsForActivity = function(activityid, callback) {
-    route = this.ROUTES.comments.format(activityid);
+    var route = this.ROUTES.comments.format(activityid);
     var query = {};
     this.GET(route, query, callback);
 };
@@ -277,12 +277,12 @@ MaxClient.prototype.addComment = function(comment, activity, callback) {
     };
     query.actor = this.actor;
     query.object.content = comment;
-    route = this.ROUTES.comments.format(activity);
+    var route = this.ROUTES.comments.format(activity);
     this.POST(route, query, callback);
 };
 
 MaxClient.prototype.addActivity = function(text, contexts, callback) {
-    query = {
+    var query = {
         "object": {
             "objectType": "note",
             "content": ""
@@ -290,7 +290,7 @@ MaxClient.prototype.addActivity = function(text, contexts, callback) {
     };
     if (contexts.length > 0) {
         query.contexts = [];
-        for (ct = 0; ct < contexts.length; ct++) {
+        for (var ct = 0; ct < contexts.length; ct++) {
             query.contexts.push({
                 'objectType': 'context',
                 'url': contexts[ct]
@@ -302,8 +302,8 @@ MaxClient.prototype.addActivity = function(text, contexts, callback) {
     if (arguments.length > 3) {
         query.generator = arguments[3];
     }
-    route = this.ROUTES.user_activities.format(this.actor.username);
-    trigger = {
+    var route = this.ROUTES.user_activities.format(this.actor.username);
+    var trigger = {
         'done': 'maxui-posted-activity',
         'fail': 'maxui-failed-activity'
     };
@@ -311,12 +311,12 @@ MaxClient.prototype.addActivity = function(text, contexts, callback) {
 };
 
 MaxClient.prototype.removeActivity = function(activity_id, callback) {
-    route = this.ROUTES.activity.format(activity_id);
+    var route = this.ROUTES.activity.format(activity_id);
     this.DELETE(route, {}, callback);
 };
 
 MaxClient.prototype.removeActivityComment = function(activity_id, comment_id, callback) {
-    route = this.ROUTES.comment.format(activity_id, comment_id);
+    var route = this.ROUTES.comment.format(activity_id, comment_id);
     this.DELETE(route, {}, callback);
 };
 
@@ -341,7 +341,7 @@ MaxClient.prototype.modifyConversation = function(chash, displayName, callback) 
     var query = {
         "displayName": displayName
     };
-    route = this.ROUTES.conversation.format(chash);
+    var route = this.ROUTES.conversation.format(chash);
     this.PUT(route, query, callback);
 };
 
@@ -375,19 +375,19 @@ MaxClient.prototype.transferConversationOwnership = function(chash, username, ca
             "username": username
         }
     };
-    route = this.ROUTES.conversation_owner.format(chash);
+    var route = this.ROUTES.conversation_owner.format(chash);
     this.PUT(route, query, callback);
 };
 
 MaxClient.prototype.getConversationsForUser = function(username, callback) {
     var route = this.ROUTES.conversations;
-    query = {};
+    var query = {};
     this.GET(route, query, callback);
 };
 
 MaxClient.prototype.getMessageImage = function(route, callback) {
-    query = {};
-    ajax_options = {
+    var query = {};
+    var ajax_options = {
         processData:false,
         dataType: undefined,
         contentType: 'application/base64'
@@ -397,12 +397,12 @@ MaxClient.prototype.getMessageImage = function(route, callback) {
 
 MaxClient.prototype.getMessagesForConversation = function(hash, params, callback) {
     var route = this.ROUTES.messages.format(hash);
-    query = params;
+    var query = params;
     this.GET(route, query, callback);
 };
 
 MaxClient.prototype.addMessageAndConversation = function(params, callback) {
-    query = {
+    var query = {
         "object": {
             "objectType": "note",
             "content": params.message
@@ -415,18 +415,18 @@ MaxClient.prototype.addMessageAndConversation = function(params, callback) {
     if (params.displayName) {
         query.contexts[0].displayName = params.displayName;
     }
-    route = this.ROUTES.conversations;
+    var route = this.ROUTES.conversations;
     this.POST(route, query, callback);
 };
 MaxClient.prototype.addMessage = function(text, chash, callback) {
-    query = {
+    var query = {
         "object": {
             "objectType": "note",
             "content": ""
         }
     };
     query.object.content = text;
-    route = this.ROUTES.messages.format(chash);
+    var route = this.ROUTES.messages.format(chash);
     this.POST(route, query, callback);
 };
 
@@ -435,33 +435,33 @@ MaxClient.prototype.addMessage = function(text, chash, callback) {
  */
 
 MaxClient.prototype.follow = function(username, callback) {
-    query = {
+    var query = {
         "object": {
             "objectType": "person",
             "username": ""
         }
     };
     query.object.username = username;
-    route = this.ROUTES.follow.format(this.actor.username, username);
-    resp = this.POST(route, query, callback);
+    var route = this.ROUTES.follow.format(this.actor.username, username);
+    this.POST(route, query, callback);
 };
 MaxClient.prototype.favoriteActivity = function(activityid, callback) {
-    query = {};
-    route = this.ROUTES.favorites.format(activityid);
-    resp = this.POST(route, query, callback);
+    var query = {};
+    var route = this.ROUTES.favorites.format(activityid);
+    this.POST(route, query, callback);
 };
 MaxClient.prototype.unfavoriteActivity = function(activityid, callback) {
-    query = {};
-    route = this.ROUTES.favorite.format(activityid, this.actor.username);
-    resp = this.DELETE(route, query, callback);
+    var query = {};
+    var route = this.ROUTES.favorite.format(activityid, this.actor.username);
+    this.DELETE(route, query, callback);
 };
 MaxClient.prototype.likeActivity = function(activityid, callback) {
-    query = {};
-    route = this.ROUTES.likes.format(activityid);
-    resp = this.POST(route, query, callback);
+    var query = {};
+    var route = this.ROUTES.likes.format(activityid);
+    this.POST(route, query, callback);
 };
 MaxClient.prototype.unlikeActivity = function(activityid, callback) {
-    query = {};
-    route = this.ROUTES.like.format(activityid, this.actor.username);
-    resp = this.DELETE(route, query, callback);
+    var query = {};
+    var route = this.ROUTES.like.format(activityid, this.actor.username);
+    this.DELETE(route, query, callback);
 };

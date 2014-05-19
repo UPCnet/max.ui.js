@@ -15,6 +15,7 @@ var max = max || {};
 
         function MaxScrollbar(options) {
             var self = this;
+            self.maxui = options.maxui;
             self.width = options.width;
             self.handle = options.handle;
             self.dragging = false;
@@ -86,7 +87,7 @@ var max = max || {};
 
         MaxScrollbar.prototype.setHeight = function(height) {
             var self = this;
-            var wrapper_top = $('#maxui-conversations .maxui-wrapper').offset().top - maxui.offset().top - 1;
+            var wrapper_top = jq('#maxui-conversations .maxui-wrapper').offset().top - self.maxui.offset().top - 1;
             self.$bar.css({
                 'height': height,
                 'top': wrapper_top
@@ -99,7 +100,7 @@ var max = max || {};
         };
         MaxScrollbar.prototype.setDraggerPosition = function(relative_pos) {
             var self = this;
-            margintop = (self.maxtop * relative_pos) / 100;
+            var margintop = (self.maxtop * relative_pos) / 100;
             self.$dragger.css({
                 'margin-top': margintop
             });

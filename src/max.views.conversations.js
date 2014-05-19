@@ -153,7 +153,7 @@ var max = max || {};
                     self.mainview.$addpeople.removeAttr('style');
                 });
 
-                widgetWidth = self.mainview.$conversations_list.width() + 11; // +2 To include border;
+                var widgetWidth = self.mainview.$conversations_list.width() + 11; // +2 To include border;
                 self.mainview.$conversations_list.animate({
                     'margin-left': 0
                 }, 400);
@@ -202,7 +202,7 @@ var max = max || {};
             }
 
             // Iterate through all the conversations
-            for (i = 0; i < self.conversations.length; i++) {
+            for (var i = 0; i < self.conversations.length; i++) {
                 var conversation = self.conversations[i];
                 var partner = conversation.participants[0];
                 var avatar_url = self.maxui.settings.conversationAvatarURLpattern.format(conversation.id);
@@ -300,7 +300,7 @@ var max = max || {};
 
         MaxConversationMessages.prototype.exists = function(message) {
             var self = this;
-            found = _.findWhere(self.messages[message.destination], {"uuid": message.uuid});
+            var found = _.findWhere(self.messages[message.destination], {"uuid": message.uuid});
             return _.isUndefined(found);
         };
 
@@ -340,7 +340,6 @@ var max = max || {};
         MaxConversationMessages.prototype.append = function(message) {
             var self = this;
             var _message;
-            update_params = [];
             // Convert activity from max to mimic rabbit response
             if (!_.has(message, 'data')) {
                 _message = {
@@ -377,6 +376,7 @@ var max = max || {};
 
         MaxConversationMessages.prototype.prepend = function(message, index) {
             var self = this;
+            var _message;
 
             // Convert activity from max to mimic rabbit response
             if (!_.has(message, 'data')) {
@@ -413,9 +413,9 @@ var max = max || {};
             // String to store the generated html pieces of each conversation item
             var messages = '';
             // Iterate through all the conversations
-            images_to_render = [];
+            var images_to_render = [];
             if (self.messages[self.mainview.active]) {
-                for (i = 0; i < self.messages[self.mainview.active].length; i++) {
+                for (var i = 0; i < self.messages[self.mainview.active].length; i++) {
                     var message = self.messages[self.mainview.active][i];
                     var avatar_url = self.maxui.settings.avatarURLpattern.format(message.user.username);
                     // Store in origin, who is the sender of the message, the authenticated user or anyone else
@@ -427,14 +427,14 @@ var max = max || {};
                     var params = {
                         id: message.uuid,
                         text: self.maxui.utils.formatText(message.data.text),
-                        date: self.maxui.utils.formatDate(message.published, maxui.language),
+                        date: self.maxui.utils.formatDate(message.published, self.maxui.language),
                         origin: origin,
                         literals: self.maxui.settings.literals,
                         avatarURL: avatar_url,
                         ack: message.ack ? origin === 'maxui-user-me' : false,
                         fileDownload: message.data.objectType === 'file',
                         filename: message.data.filename,
-                        auth: {'token': maxui.settings.oAuthToken, 'username': maxui.settings.username}
+                        auth: {'token': self.maxui.settings.oAuthToken, 'username': self.maxui.settings.username}
                     };
                     // Render the conversations template and append it at the end of the rendered covnersations
                     messages = messages + self.maxui.templates.message.render(params);
@@ -447,11 +447,11 @@ var max = max || {};
                 _.each(images_to_render, function(message, index, list) {
                     self.maxui.maxClient.getMessageImage('/messages/{0}/image/thumb'.format(message.uuid), function(encoded_image_data) {
                         var imagetag = '<img class="maxui-embedded" alt="" src="data:image/png;base64,{0}" />'.format(encoded_image_data);
-                        $('.maxui-message#{0} .maxui-body'.format(message.uuid)).after(imagetag);
+                        jq('.maxui-message#{0} .maxui-body'.format(message.uuid)).after(imagetag);
                     });
                 });
 
-                $moremessages = jq('#maxui-messages #maxui-more-messages');
+                var $moremessages = jq('#maxui-messages #maxui-more-messages');
                 if (self.remaining === "1") {
                     $moremessages.show();
                 }
@@ -467,7 +467,7 @@ var max = max || {};
             self.mainview.loadWrappers();
 
             // PLEASE CLEAN THIS SHIT
-            $button = jq('#maxui-newactivity').find('input.maxui-button');
+            var $button = jq('#maxui-newactivity').find('input.maxui-button');
             $button.removeAttr('disabled');
             $button.attr('class', 'maxui-button');
             self.mainview.$newmessagebox.find('textarea').attr('class', 'maxui-text-input');
@@ -559,6 +559,7 @@ var max = max || {};
         MaxConversations.prototype.loadScrollbar = function() {
             var self = this;
             self.scrollbar = new max.views.MaxScrollbar({
+                maxui: self.maxui,
                 width: self.maxui.settings.scrollbarWidth,
                 handle: {height: 20},
                 scrollbar: self.el + ' #maxui-scrollbar',
@@ -581,7 +582,7 @@ var max = max || {};
             self.$postbox = jq('#maxui-newactivity-box textarea');
             self.$common_header = self.$conversations.find('#maxui-common-header');
             self.$addpeople = jq('#maxui-add-people-box');
-            self.$newparticipants = $('#maxui-new-participants');
+            self.$newparticipants = jq('#maxui-new-participants');
             self.$newmessagebox = jq('#maxui-newactivity');
         };
 
@@ -635,7 +636,7 @@ var max = max || {};
         MaxConversations.prototype.send = function(text) {
             var self = this;
 
-            message = {
+            var message = {
                 data: {
                     "text": text
                 },
@@ -664,13 +665,13 @@ var max = max || {};
         MaxConversations.prototype.create = function(options) {
             var self = this;
 
-            options.participants.push(maxui.settings.username);
+            options.participants.push(self.maxui.settings.username);
 
-            maxui.maxClient.addMessageAndConversation(options, function(event) {
+            self.maxui.maxClient.addMessageAndConversation(options, function(event) {
                 var message = this;
                 var chash = message.contexts[0].id;
 
-                conversation = {
+                var conversation = {
                     'id': chash,
                     'displayName': message.contexts[0].displayName,
                     'lastMessage': {
@@ -697,7 +698,7 @@ var max = max || {};
 
         MaxConversations.prototype.updateUnreadConversations = function(data) {
             var self = this;
-            var $showconversations = $('#maxui-show-conversations .maxui-unread-conversations');
+            var $showconversations = jq('#maxui-show-conversations .maxui-unread-conversations');
             var conversations_with_unread_messages = _.filter(self.listview.conversations, function(conversation) {
                 if (conversation.unread_messages > 0) {
                     return conversation;

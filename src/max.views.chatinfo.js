@@ -14,6 +14,7 @@ var max = max || {};
 
         function MaxChatInfo (maxui) {
             var self = this;
+            self.maxui = maxui;
             self.title = maxui.settings.literals.conversations_info_title;
             self.content = '<div>Hello world</div>';
             self.panelID = 'conversation-settings-panel';
@@ -30,12 +31,10 @@ var max = max || {};
                 hide: function() {
                     var $displayNameEdit = jq(self.getOwnerSelector('> #maxui-conversation-displayname-edit'));
                     var $displayName = jq(self.getOwnerSelector('> .maxui-displayname'));
-                    var $displayNameInput = jq(self.getOwnerSelector('> #maxui-conversation-displayname-edit input.maxui-displayname'));
                     $displayName.show();
                     $displayNameEdit.hide().val('');
                 },
                 save: function() {
-                    var $displayNameEdit = jq(self.getOwnerSelector('> #maxui-conversation-displayname-edit'));
                     var $displayName = jq(self.getOwnerSelector('> .maxui-displayname'));
                     var $displayNameInput = jq(self.getOwnerSelector('> #maxui-conversation-displayname-edit input.maxui-displayname'));
                     maxui.maxClient.modifyConversation(self.data.id, $displayNameInput.val(), function(event) {
@@ -54,16 +53,16 @@ var max = max || {};
             return '#maxui-' + this.panelID + ' ' + selector;
         };
         MaxChatInfo.prototype.bind = function(overlay) {
-            self = this;
+            var self = this;
             // Clear previous overla usage bindings
             overlay.$el().unbind();
 
             // Gets fresh conversation data on overlay close, checking first if the conversation is still
             // on the list, otherwise, it means that the overlay was closed by a deletion, and so we don't reload anything
             overlay.$el().on('maxui-overlay-close', function(event) {
-                var still_exists = _.where(maxui.conversations.listview.conversations, {id: maxui.conversations.active});
+                var still_exists = _.where(self.maxui.conversations.listview.conversations, {id: self.maxui.conversations.active});
                 if (!_.isEmpty(still_exists)) {
-                    maxui.conversations.listview.loadConversation(maxui.conversations.active);
+                    self.maxui.conversations.listview.loadConversation(self.maxui.conversations.active);
                 }
             });
 
@@ -111,7 +110,7 @@ var max = max || {};
                 var $current_owner = jq(self.getSelector('.maxui-participant.maxui-owner'));
                 var $current_crown = $current_owner.find('.maxui-icon-crown');
                 var $new_crown = $new_owner.find('.maxui-icon-crown-plus');
-                maxui.maxClient.transferConversationOwnership(self.data.id, new_owner_username, function(event) {
+                self.maxui.maxClient.transferConversationOwnership(self.data.id, new_owner_username, function(event) {
                     $new_owner.find('.maxui-conversation-transfer-to').hide();
                     $current_crown.removeClass('maxui-icon-crown').addClass('maxui-icon-crown-plus');
                     $new_crown.removeClass('maxui-icon-crown-plus').addClass('maxui-icon-crown');
@@ -128,7 +127,7 @@ var max = max || {};
             overlay.$el().on('click', self.getSelector('.maxui-participant .maxui-conversation-kick-user .maxui-icon-ok-circled'), function(event) {
                 var $kicked_user = jq(event.currentTarget).closest('.maxui-participant');
                 var kicked_username = $kicked_user.attr('data-username');
-                maxui.maxClient.kickUserFromConversation(self.data.id, kicked_username, function(event) {
+                self.maxui.maxClient.kickUserFromConversation(self.data.id, kicked_username, function(event) {
                     $kicked_user.remove();
                 });
             });
@@ -144,11 +143,12 @@ var max = max || {};
 
             // Create MaxInput with predictable functionality
             self.predictive = new max.views.MaxPredictive({
+                maxui: self.maxui,
                 minchars: 3,
                 filter: function(event) {
                     return jq.map(self.data.participants, function(element, index) {return element.username;});
                 },
-                source: function(event, query, callback) { maxui.maxClient.getUsersList(query, callback);},
+                source: function(event, query, callback) { self.maxui.maxClient.getUsersList(query, callback);},
                 action: function($selected) {
                     // Action executed after a prediction item is selected, to add the user add confirmation buttons
                     var username = $selected.attr('data-username');
@@ -157,10 +157,10 @@ var max = max || {};
                         style: "opacity:0; height:0px;",
                         username: username,
                         displayName: displayName,
-                        literals: maxui.settings.literals,
-                        avatarURL: maxui.settings.avatarURLpattern.format(username)
+                        literals: self.maxui.settings.literals,
+                        avatarURL: self.maxui.settings.avatarURLpattern.format(username)
                     };
-                    var newuser = maxui.templates.participant.render(params);
+                    var newuser = self.maxui.templates.participant.render(params);
                     var $participants = jq(self.getSelector('.maxui-participants > ul'));
                     $participants.append(newuser);
                     var $participant = jq(self.getSelector('.maxui-participant:last'));
@@ -178,7 +178,7 @@ var max = max || {};
             self.newparticipant = new max.views.MaxInput({
                 input: "#maxui-new-participant .maxui-text-input",
                 delegate: overlay.el,
-                placeholder: maxui.settings.literals.conversations_info_add,
+                placeholder: self.maxui.settings.literals.conversations_info_add,
                 bindings: {
                     'maxui-input-keypress': function(event) {self.predictive.show(event);},
                     'maxui-input-submit': function(event) {self.predictive.choose(event);},
@@ -190,9 +190,9 @@ var max = max || {};
 
             // Confirmas adding a new user to the conversation
             overlay.$el().on('click', self.getOwnerSelector('.maxui-participant .maxui-conversation-add-user .maxui-icon-ok-circled'), function(event) {
-                var $participant = $(event.target).closest('.maxui-participant');
+                var $participant = jq(event.target).closest('.maxui-participant');
                 var new_username = $participant.attr('data-username');
-                maxui.maxClient.addUserToConversation(self.data.id, new_username, function(event) {
+                self.maxui.maxClient.addUserToConversation(self.data.id, new_username, function(event) {
                     $participant.animate({opacity:0}, 200, function(event) {
                         $participant.find('.maxui-conversation-add-user').remove();
                         $participant.animate({opacity:1}, 200);
@@ -203,7 +203,7 @@ var max = max || {};
 
             // Cancels adding a new user to the conversation
             overlay.$el().on('click', self.getOwnerSelector('.maxui-participant .maxui-conversation-add-user .maxui-icon-cancel-circled'), function(event) {
-                var $participant = $(event.currentTarget).closest('.maxui-participant');
+                var $participant = jq(event.currentTarget).closest('.maxui-participant');
                 $participant.animate({opacity:0}, 200, function(event) {
                     $participant.animate({height:0}, 200, function(event) {
                         $participant.remove();
@@ -213,11 +213,11 @@ var max = max || {};
 
             // User Leaves conversation
             overlay.$el().on('click', self.getSelector('#maxui-conversation-leave .maxui-button'), function(event) {
-                var leaving_username = maxui.settings.username;
-                maxui.maxClient.kickUserFromConversation(self.data.id, leaving_username, function(event) {
-                    maxui.conversations.listview.remove(self.data.id);
+                var leaving_username = self.maxui.settings.username;
+                self.maxui.maxClient.kickUserFromConversation(self.data.id, leaving_username, function(event) {
+                    self.maxui.conversations.listview.remove(self.data.id);
                     overlay.hide();
-                    $('#maxui-back-conversations a').trigger('click');
+                    jq('#maxui-back-conversations a').trigger('click');
                 });
             });
 
@@ -228,10 +228,10 @@ var max = max || {};
 
             // User confirms deleting a conversation
             overlay.$el().on('click', self.getSelector('#maxui-conversation-delete .maxui-help .maxui-confirmation-ok'), function(event) {
-                maxui.maxClient.deleteConversation(self.data.id, function(event) {
-                    maxui.conversations.listview.remove(self.data.id);
+                self.maxui.maxClient.deleteConversation(self.data.id, function(event) {
+                    self.maxui.conversations.listview.remove(self.data.id);
                     overlay.hide();
-                    $('#maxui-back-conversations a').trigger('click');
+                    jq('#maxui-back-conversations a').trigger('click');
                 });
             });
 
@@ -243,17 +243,17 @@ var max = max || {};
 
         MaxChatInfo.prototype.load = function(configurator) {
             var self = this;
-            maxui.maxClient.getConversation(maxui.conversations.active, function(data) {
-                maxui.maxClient.getConversationSubscription(maxui.conversations.active, maxui.settings.username, function(subscription) {
+            self.maxui.maxClient.getConversation(self.maxui.conversations.active, function(data) {
+                self.maxui.maxClient.getConversationSubscription(self.maxui.conversations.active, self.maxui.settings.username, function(subscription) {
                     self.data = data;
                     var participants = [];
-                    for (pt = 0; pt < self.data.participants.length; pt++) {
+                    for (var pt = 0; pt < self.data.participants.length; pt++) {
                         var participant = self.data.participants[pt];
-                        participant.avatarURL = maxui.settings.avatarURLpattern.format(participant.username);
+                        participant.avatarURL = self.maxui.settings.avatarURLpattern.format(participant.username);
                         participant.owner = participant.username === self.data.owner;
                         participants.push(participant);
                     }
-                    var avatar_url = maxui.settings.conversationAvatarURLpattern.format(self.data.id);
+                    var avatar_url = self.maxui.settings.conversationAvatarURLpattern.format(self.data.id);
                     var displayName = self.data.displayName;
                     if (self.data.participants.length <= 2) {
                         var partner = self.data.participants[0];
@@ -261,24 +261,24 @@ var max = max || {};
                         // We can't be sure that the partner is the first or the second in the array
                         if (self.data.participants.length === 1) {
                             displayName = '[Archive] ' + partner.displayName;
-                        } else if (self.data.participants[0].username === maxui.settings.username && self.data.participants.length > 1) {
+                        } else if (self.data.participants[0].username === self.maxui.settings.username && self.data.participants.length > 1) {
                             partner = self.data.participants[1];
 
                         }
                         // User the user partner's avatar as conversation avatar
-                        avatar_url = maxui.settings.avatarURLpattern.format(partner.username);
+                        avatar_url = self.maxui.settings.avatarURLpattern.format(partner.username);
                     }
                     var params = {
                         displayName: displayName,
                         conversationAvatarURL: avatar_url,
                         participants: participants,
-                        literals: maxui.settings.literals,
+                        literals: self.maxui.settings.literals,
                         panelID: self.panelID,
-                        published: maxui.utils.formatDate(self.data.published, maxui.language),
-                        canManage: maxui.settings.username === self.data.owner,
+                        published: self.maxui.utils.formatDate(self.data.published, self.maxui.language),
+                        canManage: self.maxui.settings.username === self.data.owner,
                         canAdd: _.contains(subscription.permissions, 'subscribe')
                     };
-                    self.content = maxui.templates.conversationSettings.render(params);
+                    self.content = self.maxui.templates.conversationSettings.render(params);
                     configurator(self);
                 });
             });

@@ -1,4 +1,4 @@
-/*jshint multistr: true */
+/*global Hogan *//*jshint multistr: true */
 var max = max || {};
 
 /**

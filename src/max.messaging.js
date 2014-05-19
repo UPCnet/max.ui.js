@@ -1,3 +1,7 @@
+/*global SockJS */
+/*global Stomp */
+/*global uuid */
+
 /**
 * @fileoverview
 */
@@ -12,6 +16,7 @@ var max = max || {};
 
     function MaxMessaging(maxui) {
         var self = this;
+        self.server_regex = /(?:^https?:\/\/)*(.*?)(?:\/([^\/]*)+)?\/?$/g;
         self.logtag = 'MESSAGING';
         self.maxui = maxui;
         self.active = false;
@@ -147,8 +152,7 @@ var max = max || {};
         // http://max.upcnet.es/demo/  --> domain "demo"
         // http://max.upcnet.es/subpath/demo/  --> domain "demo"
         // http://max.upcnet.es/subpath/demo  --> domain "demo"
-        server_regex = regex = /(?:^https?:\/\/)*(.*?)(?:\/([^\/]*)+)?\/?$/g;
-        groups = regex.exec(server);
+        var groups = self.server_regex.exec(server);
         if (groups[2]) {
             return groups[2];
         }
@@ -161,7 +165,7 @@ var max = max || {};
         self.connect();
         var current_try = 1;
         // Retry connection if initial failed
-        interval = setInterval(function(event) {
+        var interval = setInterval(function(event) {
             if (!self.active && current_try <= self.max_retries) {
                 self.maxui.logger.debug('Connection retry #{0}'.format(current_try), self.logtag);
                 self.ws.close();
@@ -197,7 +201,7 @@ var max = max || {};
             _.each(matched_bindings, function(binding, index, list) {
                 var unpacked = self.unpack(message);
                 // format routing key to extract first part before dot (.)
-                destination = routing_key.replace(/(\w+)\.(.*)/g, "$1");
+                var destination = routing_key.replace(/(\w+)\.(.*)/g, "$1");
                 unpacked.destination = destination;
                 binding.callback(unpacked);
             });
@@ -206,7 +210,6 @@ var max = max || {};
 
     MaxMessaging.prototype.connect = function() {
         var self = this;
-        var attempt = 0;
         self.stomp = Stomp.over(self.ws);
         self.stomp.heartbeat.outgoing = 0;
         self.stomp.heartbeat.incoming = 0;
@@ -238,7 +241,7 @@ var max = max || {};
     MaxMessaging.prototype.pack = function(message) {
         var self = this;
         var packed = {};
-        var packed_value;
+        var packed_key;
 
         _.each(message, function(value, key, list){
             var spec = self.specification[key];
@@ -278,7 +281,7 @@ var max = max || {};
     MaxMessaging.prototype.unpack = function(message) {
         var self = this;
         var unpacked = {};
-        var unpacked_value;
+        var unpacked_key;
         _.each(message, function(value, key, list){
             var spec = self._specification[key];
             if (_.isUndefined(spec)) {
@@ -322,13 +325,13 @@ var max = max || {};
         var self = this;
         var base = {
             'source': 'widget',
-            'version': maxui.version,
+            'version': self.maxui.version,
             'user': {
                 'username': self.maxui.settings.username,
                 'displayname': self.maxui.settings.displayName
             },
             'domain': self.domain,
-            'published': maxui.utils.rfc3339(maxui.utils.now()),
+            'published': self.maxui.utils.rfc3339(self.maxui.utils.now()),
             'uuid': uuid.v1()
         };
         // Overwrite any key-value pair in params already defined in base
@@ -339,7 +342,7 @@ var max = max || {};
     MaxMessaging.prototype.send = function(message, routing_key) {
         var self = this;
         var message_unpacked = self.prepare(message);
-        result = self.stomp.send('/exchange/{0}.publish/{1}'.format(self.maxui.settings.username, routing_key), {}, JSON.stringify(self.pack(message_unpacked)));
+        self.stomp.send('/exchange/{0}.publish/{1}'.format(self.maxui.settings.username, routing_key), {}, JSON.stringify(self.pack(message_unpacked)));
         return message_unpacked;
     };
 
