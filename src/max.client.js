@@ -186,23 +186,21 @@ MaxClient.prototype.GET = function(route, query, callback) {
         _.extend(ajax_options, arguments[3]);
     }
 
-    if (this.mode == 'jquery') {
-        jQuery.ajax(ajax_options)
+    jQuery.ajax(ajax_options)
 
-        .done(function(result, status, xhr) {
-            if (triggers.done) {
-                jQuery(window).trigger(triggers.done);
-            }
-            callback.apply(xhr, [result]);
-        })
+    .done(function(result, status, xhr) {
+        if (triggers.done) {
+            jQuery(window).trigger(triggers.done);
+        }
+        callback.apply(xhr, [result]);
+    })
 
-        .fail(function(xhr) {
-            jQuery(window).trigger('maxclienterror', xhr);
-            if (triggers.fail) {
-                jQuery(window).trigger(triggers.fail);
-            }
-        });
-    }
+    .fail(function(xhr) {
+        jQuery(window).trigger('maxclienterror', xhr);
+        if (triggers.fail) {
+            jQuery(window).trigger(triggers.fail);
+        }
+    });
     return true;
 };
 
