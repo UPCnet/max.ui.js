@@ -67,7 +67,7 @@ max.literals = function(language) {
         'months': ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'],
         'new_activity_text': 'Escribe algo...',
         'activity': 'actividad',
-        'conversations': 'chat',
+        'conversations': 'chats',
         'conversations_list': 'lista de chats',
         'conversations_info_title': 'Información del chat',
         'conversations_info_participants': 'Participantes',
