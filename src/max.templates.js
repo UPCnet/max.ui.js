@@ -206,7 +206,7 @@ max.templates = function() {
            <div id="maxui-conversations" style="height:0px; {{showConversations}}">\
                <div id="maxui-common-header">\
                   <div id="maxui-conversations-header" class="maxui-togglebar">\
-                      <h3 class="maxui-title">Chats</h3></a>\
+                      <h3 class="maxui-title">{{literals.conversations}}</h3></a>\
                   </div>\
                   <div id="maxui-back-conversations" class="maxui-togglebar">\
                       <a class="maxui-icon-" href="#"> {{literals.conversations_list}}\
@@ -233,7 +233,7 @@ max.templates = function() {
            </div>\
         \
             <div id="maxui-show-conversations" class="maxui-togglebar maxui-icon-" style="{{showConversationsToggle}}">\
-                <span class="maxui-unread-conversations maxui-hidden"></span> <a href="#">{{literals.conversations}}</a>\
+                <span class="maxui-unread-conversations maxui-hidden"></span> <a href="#">{{literals.conversations_lower}}</a>\
             </div>\
         \
             <div id="maxui-conversation-predictive" class="maxui-predictive" style="display:none;"><ul></ul></div>\

@@ -1417,7 +1417,7 @@
         _.each(images_to_render, function(activity, index, list) {
             maxui.maxClient.getMessageImage('/activities/{0}/image/thumb'.format(activity.id), function(encoded_image_data) {
                 var imagetag = '<img class="maxui-embedded" alt="" src="data:image/png;base64,{0}" />'.format(encoded_image_data);
-                jq('.maxui-activity#{0} .maxui-body'.format(activity.id)).after(imagetag);
+                jq('.maxui-activity#{0} .maxui-activity-message .maxui-body'.format(activity.id)).after(imagetag);
             });
         });
     };
