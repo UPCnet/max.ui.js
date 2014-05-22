@@ -1,6 +1,17 @@
 CHANGELOG
 =========
 
+4.0.6 (2014-05-22)
+------------------
+ * BUGFIX: activity image rendering on its comments [Carles Bruguera]
+ * Fix "chats" literal [Carles Bruguera]
+ * Fix content-length generation on stomp frames for ie8 [Carles Bruguera]
+ * Put IE hacks.css concatenated at the bottom og generated css[Carles Bruguera]
+ * Fix some font ie issues [Carles Bruguera]
+ * Add info and search icons [Carles Bruguera]
+ * Jshint'd all sources [Carles Bruguera]
+ * Updated Gruntfile with more strict settings [Carles Bruguera]
+
 4.0.5 (2014-05-16)
 ------------------
 
