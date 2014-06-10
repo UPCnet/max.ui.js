@@ -1722,6 +1722,7 @@
     min-height:45px \0/;
     *height:45px;
     *min-height:45px;
+    width:100%;
 }
 
 .maxui-button {*overflow: visible}
