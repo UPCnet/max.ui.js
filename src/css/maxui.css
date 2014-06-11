@@ -1722,7 +1722,10 @@
     min-height:45px \0/;
     *height:45px;
     *min-height:45px;
+    /* The good ones*/
     width:100%;
+    min-height: 48px;
+    height:48px;
 }
 
 .maxui-button {*overflow: visible}
