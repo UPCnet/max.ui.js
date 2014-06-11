@@ -1351,6 +1351,7 @@
   z-index: 50;
 }
 #maxui-container #maxui-mainpanel #maxui-newactivity #maxui-newactivity-box .maxui-error-box {
+  box-sizing: content-box;
   line-height: 18px;
   height: 15px;
   border: 1px red solid;
