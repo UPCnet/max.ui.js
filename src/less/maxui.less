@@ -153,16 +153,23 @@
             #maxui-newactivity-box {
                 margin-left:56px;
                 text-align:right;
-
+                .maxui-wrapper {
+                    overflow: visible;
+                    position:relative
+                }
+                textarea.maxui-text-input {
+                    z-index: 50;
+                }
                 .maxui-error-box {
                     height: 15px;
                     border: 1px red solid;
                     background-color: rgb(253, 90, 75);
                     color: #fff;
                     border-radius: 3px;
-                    margin-top: -26px;
+                    position:absolute;
+                    bottom:0px;
                     margin-bottom:0px;
-                    z-index: 100;
+                    z-index: 49;
                     text-align: left;
                     padding: 4px 5px;
                     text-shadow: none;

@@ -1342,15 +1342,23 @@
   margin-left: 56px;
   text-align: right;
 }
+#maxui-container #maxui-mainpanel #maxui-newactivity #maxui-newactivity-box .maxui-wrapper {
+  overflow: visible;
+  position: relative;
+}
+#maxui-container #maxui-mainpanel #maxui-newactivity #maxui-newactivity-box textarea.maxui-text-input {
+  z-index: 50;
+}
 #maxui-container #maxui-mainpanel #maxui-newactivity #maxui-newactivity-box .maxui-error-box {
   height: 15px;
   border: 1px red solid;
   background-color: #fd5a4b;
   color: #fff;
   border-radius: 3px;
-  margin-top: -26px;
+  position: absolute;
+  bottom: 0px;
   margin-bottom: 0px;
-  z-index: 100;
+  z-index: 49;
   text-align: left;
   padding: 4px 5px;
   text-shadow: none;

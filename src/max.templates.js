@@ -359,8 +359,10 @@ max.templates = function() {
                   <img src="{{avatar}}">\
               </a>\
               <div id="maxui-newactivity-box">\
-                   <textarea class="maxui-empty maxui-text-input" data-literal="{{textLiteral}}">{{textLiteral}}</textarea>\
-                   <div class="maxui-error-box"></div>\
+                   <div class="maxui-wrapper">\
+                       <textarea class="maxui-empty maxui-text-input" data-literal="{{textLiteral}}">{{textLiteral}}</textarea>\
+                       <div class="maxui-error-box"></div>\
+                   </div>\
                    <input disabled="disabled" type="button" class="maxui-button maxui-disabled" value="{{buttonLiteral}}">\
               </div>\
             '),
