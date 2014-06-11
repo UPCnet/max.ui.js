@@ -1345,11 +1345,13 @@
 #maxui-container #maxui-mainpanel #maxui-newactivity #maxui-newactivity-box .maxui-wrapper {
   overflow: visible;
   position: relative;
+  line-height: 0px;
 }
 #maxui-container #maxui-mainpanel #maxui-newactivity #maxui-newactivity-box textarea.maxui-text-input {
   z-index: 50;
 }
 #maxui-container #maxui-mainpanel #maxui-newactivity #maxui-newactivity-box .maxui-error-box {
+  line-height: 18px;
   height: 15px;
   border: 1px red solid;
   background-color: #fd5a4b;
