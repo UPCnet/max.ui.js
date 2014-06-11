@@ -1019,7 +1019,7 @@
                     $newmessagebox.find('.maxui-error-box').text(maxui.settings.literals.post_permission_missing_displayName);
                     $newmessagebox.find('.maxui-error-box').width($newmessagebox.find('textarea').width() - 4);
                     $newmessagebox.find('.maxui-error-box').animate({
-                        'bottom': -26
+                        'bottom': -25
                     }, 200);
                 }
             } else {
@@ -1049,7 +1049,7 @@
             $newmessagebox.find('.maxui-error-box').text(maxui.settings.literals.post_permission_not_enough_participants);
             $newmessagebox.find('.maxui-error-box').width($newmessagebox.find('textarea').width() - 4);
             $newmessagebox.find('.maxui-error-box').animate({
-                'bottom': -26
+                'bottom': -25
             }, 200);
             $newdisplaynamebox.hide();
             $newdisplaynamebox.find('.maxui-text-input').val('');
