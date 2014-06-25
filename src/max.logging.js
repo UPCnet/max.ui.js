@@ -30,7 +30,10 @@ var max = max || {};
     };
 
     MaxLogging.prototype.log = function(message, tag) {
-        window.console.log('{0}: {1}'.format(tag, message));
+        try {
+            window.console.log('{0}: {1}'.format(tag, message));
+        } catch(err) {
+        }
     };
 
     MaxLogging.prototype.debug = function(message) {
