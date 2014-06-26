@@ -783,7 +783,7 @@
             event.preventDefault();
             event.stopPropagation();
             var text = jq(this).val();
-            var button = jq(this).parent().find('.maxui-button');
+            var button = jq(this).closest('#maxui-newactivity-box').find('.maxui-button');
             var normalized = maxui.utils.normalizeWhiteSpace(text, false);
             if (normalized === '' && !options.ignore_button) {
                 jq(button).attr('disabled', 'disabled');
