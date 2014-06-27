@@ -1,6 +1,14 @@
 CHANGELOG
 =========
 
+4.0.10 (2014-06-27)
+------------------
+ * Fix bug with disabled comment button
+
+4.0.9 (2014-06-26)
+------------------
+ * Fix bug with disabled post button
+
 4.0.8 (2014-06-25)
 ------------------
  * Fix window.console on IE8
