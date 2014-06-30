@@ -16,7 +16,6 @@ var max = max || {};
 
     function MaxMessaging(maxui) {
         var self = this;
-        self.server_regex = /(?:^https?:\/\/)*(.*?)(?:\/([^\/]*)+)?\/?$/g;
         self.logtag = 'MESSAGING';
         self.maxui = maxui;
         self.active = false;
@@ -140,7 +139,7 @@ var max = max || {};
     }
 
     MaxMessaging.prototype.domainFromMaxServer = function(server) {
-        var self = this;
+        //var self = this;
         // Extract domain out of maxserver url, if present
         // Matches several cases, but always assumes the domain is the last
         // part of the path. SO, urls with subpaths, always will be seen as a
@@ -152,10 +151,10 @@ var max = max || {};
         // http://max.upcnet.es/demo/  --> domain "demo"
         // http://max.upcnet.es/subpath/demo/  --> domain "demo"
         // http://max.upcnet.es/subpath/demo  --> domain "demo"
-        var groups = self.server_regex.exec(server);
-        if (groups[2]) {
-            return groups[2];
-        }
+        var server_without_trailing_slash = server.replace(/\/$/, "");
+        var dummy_a = document.createElement('a');
+        dummy_a.href = server_without_trailing_slash;
+        return _.last(dummy_a.pathname.split('/'));
 
     };
 

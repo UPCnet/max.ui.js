@@ -1,6 +1,10 @@
 CHANGELOG
 =========
 
+4.0.11 (2014-06-30)
+-------------------
+ * Change domain extraction method, regex not working properly on IE8
+
 4.0.10 (2014-06-27)
 ------------------
  * Fix bug with disabled comment button
