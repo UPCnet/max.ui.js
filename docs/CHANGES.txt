@@ -1,6 +1,10 @@
 CHANGELOG
 =========
 
+4.0.12 (2014-06-30)
+-------------------
+* CORS-aware stomp url generation [Carles Bruguera]
+
 4.0.11 (2014-06-30)
 -------------------
  * Change domain extraction method, regex not working properly on IE8
