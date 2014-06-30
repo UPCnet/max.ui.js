@@ -27,11 +27,6 @@ var max = max || {};
         self.token = self.maxui.settings.oAuthToken;
         self.stompServer = self.maxui.settings.maxTalkURL;
 
-        // Sensible default for stomp server
-        if (_.isUndefined(self.stompServer)) {
-            self.stompServer = self.maxui.settings.maxServerURL + '/stomp';
-        }
-
         // Construct login merging username with domain (if any)
         // if domain explicitly specified, take it, otherwise deduce it from url
         if (maxui.settings.domain) {
