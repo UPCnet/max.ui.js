@@ -190,9 +190,10 @@ var max = max || {};
             }
         });
         if (_.isEmpty(matched_bindings)) {
-            self.maxui.logger.warning('Ignoring received message\n{0}\n No binding found for this message', self.logtag);
+            self.maxui.logger.warning('Ignoring received message\n{0}\n No binding found for this message'.format(message), self.logtag);
         } else {
             _.each(matched_bindings, function(binding, index, list) {
+                self.maxui.logger.debug('Matched binding "{1}"'.format(message, binding.key), self.logtag);
                 var unpacked = self.unpack(message);
                 // format routing key to extract first part before dot (.)
                 var destination = routing_key.replace(/(\w+)\.(.*)/g, "$1");

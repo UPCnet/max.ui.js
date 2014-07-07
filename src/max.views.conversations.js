@@ -62,7 +62,7 @@ var max = max || {};
                 self.sort();
                 self.render();
                 if (!_.isUndefined(callback)) {
-                    callback();
+                    callback.call(self.mainview);
                 }
             });
         };
@@ -308,7 +308,7 @@ var max = max || {};
 
         MaxConversationMessages.prototype.setTitle = function(title) {
             var self = this;
-            self.mainview.$common_header.find('#maxui-back-conversations h3').text(title);
+            self.mainview.$common_header.find('#maxui-back-conversations .maxui-title').text(title);
         };
 
 
@@ -417,6 +417,7 @@ var max = max || {};
             // Iterate through all the conversations
             var images_to_render = [];
             if (self.messages[self.mainview.active]) {
+                self.setTitle(self.mainview.getActive().displayName);
                 for (var i = 0; i < self.messages[self.mainview.active].length; i++) {
                     var message = self.messages[self.mainview.active][i];
                     var avatar_url = self.maxui.settings.avatarURLpattern.format(message.user.username);
@@ -741,16 +742,29 @@ var max = max || {};
         MaxConversations.prototype.ReceiveConversation = function(message) {
             var self = this;
             // Insert conversation only if the message is from another user.
-            if (message.user.username !== self.maxui.settings.username) {
+            var message_from_another_user = message.user.username !== self.maxui.settings.username;
+            var message_not_in_list = self.messagesview.exists(message);
+
+            if (message_from_another_user || message_not_in_list) {
 
                 if (self.maxui.settings.UISection === 'conversations' && self.maxui.settings.conversationsSection === 'conversations') {
                     self.active = message.destination;
                     self.listview.loadConversation(message.destination, function(event) {
-                        //self.messagesview.show(chash);
+                        this.messagesview.show(message.destination);
+                    });
+                } else if (self.maxui.settings.UISection === 'conversations' && self.maxui.settings.conversationsSection === 'messages') {
+                    self.active = message.destination;
+                    self.listview.loadConversation(message.destination, function(event) {
+                        this.messagesview.load();
+                        this.listview.resetUnread(message.destination);
+                    });
+
+                } else if (self.maxui.settings.UISection === 'timeline') {
+                    self.listview.loadConversation(message.destination, function(event) {
+                        self.updateUnreadConversations();
+                        self.listview.render();
                     });
                 }
-
-            } else {
             }
         };
 
