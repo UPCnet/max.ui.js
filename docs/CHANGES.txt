@@ -1,6 +1,16 @@
 CHANGELOG
 =========
 
+4.0.14 (2014-07-16)
+-------------------
+* Make domain reading more error-prone [Carles Bruguera]
+
+4.0.13 (2014-07-08)
+-------------------
+
+* Don't include domain in messages if not defined
+* UI reaction on new conversation on all sections
+
 4.0.12 (2014-06-30)
 -------------------
 * CORS-aware stomp url generation [Carles Bruguera]
