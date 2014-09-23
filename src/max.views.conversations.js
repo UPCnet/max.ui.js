@@ -400,7 +400,6 @@ var max = max || {};
                 };
 
                 if (_.contains(['image', 'file'], message.object.objectType)) {
-                    _message = message;
                     _message.data.fullURL = message.object.fullURL;
                     _message.data.thumbURL = message.object.thumbURL;
                 }
