@@ -203,6 +203,12 @@ var max = max || {};
         }
     };
 
+    MaxMessaging.prototype.disconnect = function() {
+        var self = this;
+        self.stomp.disconnect()
+        return
+    }
+
     MaxMessaging.prototype.connect = function() {
         var self = this;
         self.stomp = Stomp.over(self.ws);

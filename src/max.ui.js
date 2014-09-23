@@ -177,9 +177,14 @@
             }
             maxui.settings.subscriptions = userSubscriptions;
 
+
             // Start messaging only if conversations enabled
             if (!maxui.settings.disableConversations) {
                 maxui.messaging.start();
+                jq(window).on('beforeunload', function(event) {
+                    var x=maxui.messaging.disconnect();
+                    return x;
+                })
             }
 
             // render main interface
