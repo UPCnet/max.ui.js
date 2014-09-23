@@ -284,8 +284,11 @@ var max = max || {};
             var self = this;
             self.maxui.logger.info("Acknowledged Message {0} --> {1}".format(message.uuid, message.data.id), self.mainview.logtag);
             var $message = jq('#' + message.uuid);
+            var own_message = $message.hasClass('maxui-user-me')
             var $message_ack = $message.find('.maxui-icon-check');
-            if ($message_ack) {
+
+            //Set the ack check only on our messages
+            if ($message_ack && own_message) {
                 $message_ack.addClass('maxui-ack');
                 // mark currentyly stored message as ack'd
                 self.messages[self.mainview.active] = _.map(self.messages[self.mainview.active], function(stored_message) {
