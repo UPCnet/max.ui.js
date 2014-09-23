@@ -450,6 +450,7 @@ var max = max || {};
                     self.maxui.maxClient.getMessageImage('/messages/{0}/image/thumb'.format(message.uuid), function(encoded_image_data) {
                         var imagetag = '<img class="maxui-embedded" alt="" src="data:image/png;base64,{0}" />'.format(encoded_image_data);
                         jq('.maxui-message#{0} .maxui-body'.format(message.uuid)).after(imagetag);
+                        self.mainview.scrollbar.setContentPosition(100);
                     });
                 });
 
@@ -653,9 +654,11 @@ var max = max || {};
 
             sent.destination = self.active;
             self.messagesview.append(sent);
-            self.messagesview.render();
-            self.scrollbar.setContentPosition(100);
             self.messagesview.show(self.active);
+
+            // When images finish loading, setContentPosition is called again
+            // from inside render method, to adjust to new height set by the image
+            self.scrollbar.setContentPosition(100);
 
             self.listview.updateLastMessage(self.active, {'content': sent.data.text, 'published': sent.published});
 
