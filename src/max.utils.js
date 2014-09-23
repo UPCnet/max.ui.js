@@ -108,8 +108,10 @@ max.utils = function() {
         /**  Formats a date in rfc3339 format
          **/
         rfc3339: function(date) {
-            function pad(n){return n<10 ? '0'+n : n;}
-            return date.getUTCFullYear()+'-' + pad(date.getUTCMonth()+1)+'-' + pad(date.getUTCDate())+'T' + pad(date.getUTCHours())+':' + pad(date.getUTCMinutes())+':' + pad(date.getUTCSeconds())+'Z';
+            function pad(n) {
+                return n < 10 ? '0' + n : n;
+            }
+            return date.getUTCFullYear() + '-' + pad(date.getUTCMonth() + 1) + '-' + pad(date.getUTCDate()) + 'T' + pad(date.getUTCHours()) + ':' + pad(date.getUTCMinutes()) + ':' + pad(date.getUTCSeconds()) + 'Z';
         },
         /**  Returns an human readable date from a timestamp in rfc3339 format (cross-browser)
          *    @param {String} timestamp    A date represented as a string in rfc3339 format '2012-02-09T13:06:43Z'
@@ -141,19 +143,15 @@ max.utils = function() {
                 if (match[2] >= 0 && match[2] <= 99) { // 1-99 AD
                     ms -= 59958144000000;
                 }
-
-                var a_day = 1000 * 60 * 60 * 24;  // ms * seconds * minutes * hours
+                var a_day = 1000 * 60 * 60 * 24; // ms * seconds * minutes * hours
                 var three_days = a_day * 3;
                 var a_year = a_day * 365;
-
                 thisdate.setTime(ms);
-
                 // Dates in the last three days get a humanized date
                 if ((today.getTime() - ms) < three_days) {
                     formatted = jQuery.easydate.format_date(thisdate, lang);
-
-                // Dates between 3 days and a year, get a 'X of MMMMM', localized
-                // into its language
+                    // Dates between 3 days and a year, get a 'X of MMMMM', localized
+                    // into its language
                 } else {
                     if (lang === 'en') {
                         formatted = '{0} {1}'.format(match[4], settings.literals.months[match[3] - 1]);
@@ -168,7 +166,7 @@ max.utils = function() {
                     }
                     // Finally, show dd/mm/yyy if post is more than one year old
                     if ((today.getTime() - ms) > a_year) {
-                        formatted = '{0}/{1}/{2}'.format(match[4] ,match[3],match[2]);
+                        formatted = '{0}/{1}/{2}'.format(match[4], match[3], match[2]);
                     }
                 }
                 return formatted;

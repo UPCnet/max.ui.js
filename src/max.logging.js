@@ -1,21 +1,16 @@
 /**
-* @fileoverview
-*/
-
+ * @fileoverview
+ */
 var max = max || {};
-
 (function(jq) {
-
-
     /** MaxLogging
-    *
-    *
-    */
-
+     *
+     *
+     */
     var levels = {
         debug: 0,
-        info:  1,
-        warn:  2,
+        info: 1,
+        warn: 2,
         error: 3
     };
 
@@ -23,19 +18,15 @@ var max = max || {};
         var self = this;
         self.level = 0;
     }
-
     MaxLogging.prototype.setLevel = function(level) {
         var self = this;
         self.level = levels[level];
     };
-
     MaxLogging.prototype.log = function(message, tag) {
         try {
             window.console.log('{0}: {1}'.format(tag, message));
-        } catch(err) {
-        }
+        } catch (err) {}
     };
-
     MaxLogging.prototype.debug = function(message) {
         var tag = 'MAXUI';
         if (arguments.length > 1) {
@@ -46,7 +37,6 @@ var max = max || {};
             self.log(message, tag);
         }
     };
-
     MaxLogging.prototype.info = function(message) {
         var tag = 'MAXUI';
         if (arguments.length > 1) {
@@ -57,7 +47,6 @@ var max = max || {};
             self.log(message, tag);
         }
     };
-
     MaxLogging.prototype.warn = function(message) {
         var tag = 'MAXUI';
         if (arguments.length > 1) {
@@ -68,7 +57,6 @@ var max = max || {};
             self.log(message, tag);
         }
     };
-
     MaxLogging.prototype.error = function(message) {
         var tag = 'MAXUI';
         if (arguments.length > 1) {
@@ -79,9 +67,5 @@ var max = max || {};
             self.log(message, tag);
         }
     };
-
-
-
     max.MaxLogging = MaxLogging;
-
 })(jQuery);

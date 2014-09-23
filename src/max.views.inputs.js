@@ -1,19 +1,14 @@
 /*jshint multistr: true */
 /**
-* @fileoverview
-*/
+ * @fileoverview
+ */
 var max = max || {};
-
 (function(jq) {
-
     var views = function() {
-
-
         /** MaxPredictive.
-        * Provides a dropdown list with autocompletion results
-        * on top of a input, triggering events
-        */
-
+         * Provides a dropdown list with autocompletion results
+         * on top of a input, triggering events
+         */
         function MaxPredictive(options) {
             var self = this;
             self.minchars = options.minchars;
@@ -29,23 +24,19 @@ var max = max || {};
                 self.select($clicked);
                 self.choose(event);
             });
-
         }
-
         MaxPredictive.prototype.select = function($element) {
             var self = this;
             var $selected = self.$list.find('.maxui-prediction.selected');
             $selected.removeClass('selected');
             $element.addClass('selected');
         };
-
         MaxPredictive.prototype.choose = function(event) {
             var self = this;
             var $selected = self.$list.find('.maxui-prediction.selected');
             this.action.apply(self, [$selected]);
             self.hide();
         };
-
         MaxPredictive.prototype.moveup = function(event) {
             var self = this;
             var $selected = self.$list.find('.maxui-prediction.selected');
@@ -56,7 +47,6 @@ var max = max || {};
                 self.select($selected.siblings(':last'));
             }
         };
-
         MaxPredictive.prototype.movedown = function(event) {
             var self = this;
             var $selected = self.$list.find('.maxui-prediction.selected');
@@ -68,18 +58,15 @@ var max = max || {};
                 self.select($selected.siblings(':first'));
             }
         };
-
         MaxPredictive.prototype.matchingRequest = function(text) {
             var self = this;
             var previous_request;
             var previous_text = text.substr(0, text.length - 1);
-
             jq.each(self.requests, function(key, value) {
                 if (previous_text === key) {
                     previous_request = value;
                 }
             });
-
             if (previous_request && !previous_request.remaining) {
                 // We have a previous request (-1) and the server told us that there's no remaining items
                 // so we return the key of the stored request to use
@@ -103,16 +90,20 @@ var max = max || {};
                 } else if (matching_request) {
                     self.render(text, matching_request);
                 } else {
-                    this.source.apply(this, [event, text, function(data) {
-                        self.requests[text] = {text: text, data:data, remaining: this.getResponseHeader('X-Has-Remaining-Items')};
-                        self.render(text, text);
+                    this.source.apply(this, [event, text,
+                        function(data) {
+                            self.requests[text] = {
+                                text: text,
+                                data: data,
+                                remaining: this.getResponseHeader('X-Has-Remaining-Items')
+                            };
+                            self.render(text, text);
                     }]);
                 }
             } else {
                 self.hide();
             }
         };
-
         MaxPredictive.prototype.render = function(query, request) {
             var self = this;
             var predictions = '';
@@ -127,7 +118,6 @@ var max = max || {};
                 var query_matches_username = prediction.username.search(new RegExp(query, "i")) >= 0;
                 var query_matches_displayname = prediction.displayName.search(new RegExp(query, "i")) >= 0;
                 var prediction_matches_query = query_matches_displayname || query_matches_username;
-
                 if (filter.indexOf(prediction.username) === -1 && prediction_matches_query) {
                     var avatar_url = self.maxui.settings.avatarURLpattern.format(prediction.username);
                     var params = {
@@ -147,20 +137,14 @@ var max = max || {};
             self.$list.html(predictions);
             self.$el.show();
         };
-
         MaxPredictive.prototype.hide = function(event) {
-
             var self = this;
             self.$el.hide();
         };
-
-
-
         /** MaxInput.
-        * Provides common features for a input that shows/hides a placeholder on focus
-        * and triggers events on ENTER and ESC
-        */
-
+         * Provides common features for a input that shows/hides a placeholder on focus
+         * and triggers events on ENTER and ESC
+         */
         function MaxInput(options) {
             var self = this;
             self.input = options.input;
@@ -169,34 +153,26 @@ var max = max || {};
             self.$delegate = jq(options.delegate);
             self.setBindings();
             self.bindings = options.bindings;
-
             // Initialize input value with placeholder
             self.$input.val(self.placeholder);
         }
-
         MaxInput.prototype.bind = function(eventName, callback) {
             var self = this;
             self.$delegate.on(eventName, self.input, callback);
-
         };
-
-        MaxInput.prototype.execExtraBinding= function(context, event) {
+        MaxInput.prototype.execExtraBinding = function(context, event) {
             var self = this;
             if (self.bindings.hasOwnProperty(event.type)) {
                 self.bindings[event.type].apply(context, [event]);
             }
-
         };
-
         MaxInput.prototype.getInputValue = function() {
             var self = this;
             var text = this.$input.val();
             return self.maxui.utils.normalizeWhiteSpace(text, false);
         };
-
         MaxInput.prototype.setBindings = function() {
             var maxinput = this;
-
             // Erase placeholder when focusing on input and nothing written
             maxinput.bind('focusin', function(event) {
                 event.preventDefault();
@@ -207,7 +183,6 @@ var max = max || {};
                 }
                 maxinput.execExtraBinding(this, event);
             });
-
             // Put placeholder back when focusing out and nothing written
             maxinput.bind('focusout', function(event) {
                 event.preventDefault();
@@ -219,28 +194,22 @@ var max = max || {};
                 }
                 maxinput.execExtraBinding(this, event);
             });
-
             // Execute custom bindings on the events triggered by some
             // keypresses in the "keyup" binding.
-
             var binded_key_events = 'maxui-input-submit maxui-input-cancel maxui-input-up maxui-input-down maxui-input-keypress';
             maxinput.bind(binded_key_events, function(event) {
                 event.preventDefault();
                 event.stopPropagation();
                 maxinput.execExtraBinding(this, event);
             });
-
             maxinput.bind('maxui-input-clear', function(event) {
                 maxinput.$input.val(maxinput.placeholder);
-
             });
-
             // Put placeholder back when focusing out and nothing written
             maxinput.bind('keydown', function(event) {
                 if (event.which === 38) {
                     maxinput.$input.trigger('maxui-input-up', [event]);
-                }
-                else if (event.which === 40) {
+                } else if (event.which === 40) {
                     maxinput.$input.trigger('maxui-input-down', [event]);
                 }
                 maxinput.$input.toggleClass('maxui-empty', false);
@@ -251,26 +220,19 @@ var max = max || {};
                 event.stopPropagation();
                 if (event.which === 13 && !event.shiftKey) {
                     maxinput.$input.trigger('maxui-input-submit', [event]);
-                }
-                else if (event.which === 27) {
+                } else if (event.which === 27) {
                     maxinput.$input.trigger('maxui-input-cancel', [event]);
-                }
-                else if (event.which !== 38 && event.which !== 40) {
+                } else if (event.which !== 38 && event.which !== 40) {
                     maxinput.$input.trigger('maxui-input-keypress', [event]);
                 }
                 maxinput.execExtraBinding(this, event);
-
             });
-
         };
-
         return {
             MaxInput: MaxInput,
             MaxPredictive: MaxPredictive
         };
-
     };
     max.views = max.views || {};
     jq.extend(max.views, views());
-
 })(jQuery);

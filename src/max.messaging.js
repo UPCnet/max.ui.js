@@ -1,19 +1,15 @@
 /*global SockJS */
 /*global Stomp */
 /*global uuid */
-
 /**
-* @fileoverview
-*/
+ * @fileoverview
+ */
 var max = max || {};
-
 (function(jq) {
-
     /** MaxMessaging
-    *
-    *
-    */
-
+     *
+     *
+     */
     function MaxMessaging(maxui) {
         var self = this;
         self.logtag = 'MESSAGING';
@@ -26,7 +22,6 @@ var max = max || {};
         self.debug = self.maxui.settings.enableAlerts;
         self.token = self.maxui.settings.oAuthToken;
         self.stompServer = self.maxui.settings.maxTalkURL;
-
         // Construct login merging username with domain (if any)
         // if domain explicitly specified, take it, otherwise deduce it from url
         if (maxui.settings.domain) {
@@ -39,11 +34,9 @@ var max = max || {};
             self.login += self.domain + ':';
         }
         self.login += self.maxui.settings.username;
-
         // Start socket
         self.ws = new SockJS(self.stompServer);
         self.bindings = [];
-
         self.specification = {
             uuid: {
                 id: 'g',
@@ -53,27 +46,45 @@ var max = max || {};
                 id: 'u',
                 type: 'object',
                 fields: {
-                    'username': {'id': 'u'},
-                    'displayname': {'id': 'd'}
+                    'username': {
+                        'id': 'u'
+                    },
+                    'displayname': {
+                        'id': 'd'
+                    }
                 }
             },
             action: {
                 id: 'a',
                 type: 'char',
                 values: {
-                    'add': {id: 'a'},
-                    'delete': {id: 'd'},
-                    'modify': {id: 'm'},
-                    'refresh': {id: 'r'},
-                    'ack': {id: 'k'}
+                    'add': {
+                        id: 'a'
+                    },
+                    'delete': {
+                        id: 'd'
+                    },
+                    'modify': {
+                        id: 'm'
+                    },
+                    'refresh': {
+                        id: 'r'
+                    },
+                    'ack': {
+                        id: 'k'
+                    }
                 }
             },
             object: {
                 id: 'o',
                 type: 'char',
                 values: {
-                    'message': {id: 'm'},
-                    'conversation': {id: 'c'}
+                    'message': {
+                        id: 'm'
+                    },
+                    'conversation': {
+                        id: 'c'
+                    }
                 }
             },
             data: {
@@ -84,12 +95,24 @@ var max = max || {};
                 id: 's',
                 type: 'char',
                 values: {
-                    max: {id: 'm'},
-                    widget: {id: 'w'},
-                    ios: {id: 'i'},
-                    android: {id: 'a'},
-                    tweety: {id: 't'},
-                    maxbunny: {id: 'b'}
+                    max: {
+                        id: 'm'
+                    },
+                    widget: {
+                        id: 'w'
+                    },
+                    ios: {
+                        id: 'i'
+                    },
+                    android: {
+                        id: 'a'
+                    },
+                    tweety: {
+                        id: 't'
+                    },
+                    maxbunny: {
+                        id: 'b'
+                    }
                 }
             },
             domain: {
@@ -105,7 +128,6 @@ var max = max || {};
                 type: 'date'
             }
         };
-
         // invert specification to acces by packed value
         self._specification = {};
         _.each(self.specification, function(svalue, sname, slist) {
@@ -126,13 +148,11 @@ var max = max || {};
                     delete spec.fields[vvalue.id].id;
                 });
             }
-
             spec.name = sname;
             delete spec.id;
             self._specification[svalue.id] = spec;
         });
     }
-
     MaxMessaging.prototype.domainFromMaxServer = function(server) {
         //var self = this;
         // Extract domain out of maxserver url, if present
@@ -150,9 +170,7 @@ var max = max || {};
         var dummy_a = document.createElement('a');
         dummy_a.href = server_without_trailing_slash;
         return _.last(dummy_a.pathname.split('/'));
-
     };
-
     MaxMessaging.prototype.start = function() {
         var self = this;
         self.maxui.logger.info('Connecting ...', self.logtag);
@@ -172,14 +190,15 @@ var max = max || {};
                 clearInterval(interval);
             }
             current_try += 1;
-        },self.retry_interval);
+        }, self.retry_interval);
     };
-
     MaxMessaging.prototype.bind = function(params, callback) {
         var self = this;
-        self.bindings.push({'key': self.pack(params), 'callback': callback});
+        self.bindings.push({
+            'key': self.pack(params),
+            'callback': callback
+        });
     };
-
     MaxMessaging.prototype.on_message = function(message, routing_key) {
         var self = this;
         var matched_bindings = _.filter(self.bindings, function(binding) {
@@ -202,26 +221,20 @@ var max = max || {};
             });
         }
     };
-
     MaxMessaging.prototype.disconnect = function() {
         var self = this;
         self.stomp.disconnect()
         return
     }
-
     MaxMessaging.prototype.connect = function() {
         var self = this;
         self.stomp = Stomp.over(self.ws);
         self.stomp.heartbeat.outgoing = 0;
         self.stomp.heartbeat.incoming = 0;
-
         self.stomp.debug = function(message) {
             self.maxui.logger.debug(message, self.logtag);
         };
-
-        self.stomp.connect(
-            self.login,
-            self.token,
+        self.stomp.connect(self.login, self.token,
             // Define stomp stomp ON CONNECT callback
             function(x) {
                 self.stomp.subscribe('/exchange/{0}.subscribe'.format(self.maxui.settings.username), function(stomp_message) {
@@ -235,16 +248,13 @@ var max = max || {};
             // Define stomp stomp ON ERROR callback
             function(error) {
                 self.maxui.logger.error(error.body);
-            },
-            self.vhost);
+            }, self.vhost);
     };
-
     MaxMessaging.prototype.pack = function(message) {
         var self = this;
         var packed = {};
         var packed_key;
-
-        _.each(message, function(value, key, list){
+        _.each(message, function(value, key, list) {
             var spec = self.specification[key];
             if (_.isUndefined(spec)) {
                 // Raise ??
@@ -256,10 +266,9 @@ var max = max || {};
                     }
                 } else {
                     packed_value = value;
-
                     if (_.has(spec, 'fields') && spec.type === 'object' && _.isObject(packed_value)) {
                         var packed_inner = {};
-                        _.each(message[key], function(inner_value, inner_key, inner_list){
+                        _.each(message[key], function(inner_value, inner_key, inner_list) {
                             if (_.has(spec.fields, inner_key)) {
                                 packed_key = spec.fields[inner_key].id;
                             } else {
@@ -270,7 +279,6 @@ var max = max || {};
                         packed_value = packed_inner;
                     }
                 }
-
                 if (!_.isUndefined(packed_value)) {
                     packed[spec.id] = packed_value;
                 }
@@ -278,12 +286,11 @@ var max = max || {};
         });
         return packed;
     };
-
     MaxMessaging.prototype.unpack = function(message) {
         var self = this;
         var unpacked = {};
         var unpacked_key;
-        _.each(message, function(value, key, list){
+        _.each(message, function(value, key, list) {
             var spec = self._specification[key];
             if (_.isUndefined(spec)) {
                 // Raise ??
@@ -294,14 +301,13 @@ var max = max || {};
                     if (_.has(spec.values, value)) {
                         unpacked_value = spec.values[value].name;
                     }
-                // otherwise leave the raw value
+                    // otherwise leave the raw value
                 } else {
                     unpacked_value = value;
                     //change inner object keys if the field has a field keys mapping
-
                     if (_.has(spec, 'fields') && spec.type === 'object' && _.isObject(unpacked_value)) {
                         var unpacked_inner = {};
-                        _.each(message[key], function(inner_value, inner_key, inner_list){
+                        _.each(message[key], function(inner_value, inner_key, inner_list) {
                             if (_.has(spec.fields, inner_key)) {
                                 unpacked_key = spec.fields[inner_key].name;
                             } else {
@@ -312,7 +318,6 @@ var max = max || {};
                         unpacked_value = unpacked_inner;
                     }
                 }
-
                 // Include key/value only if the value is defined
                 if (!_.isUndefined(unpacked_value)) {
                     unpacked[spec.name] = unpacked_value;
@@ -321,7 +326,6 @@ var max = max || {};
         });
         return unpacked;
     };
-
     MaxMessaging.prototype.prepare = function(params) {
         var self = this;
         var base = {
@@ -341,15 +345,11 @@ var max = max || {};
         // Trim any key from params not in specification
         return _.extend(_.pick(params, _.keys(self.specification)), base);
     };
-
     MaxMessaging.prototype.send = function(message, routing_key) {
         var self = this;
         var message_unpacked = self.prepare(message);
         self.stomp.send('/exchange/{0}.publish/{1}'.format(self.maxui.settings.username, routing_key), {}, JSON.stringify(self.pack(message_unpacked)));
         return message_unpacked;
     };
-
-
     max.MaxMessaging = MaxMessaging;
-
 })(jQuery);

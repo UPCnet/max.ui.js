@@ -1,16 +1,14 @@
 /*global max */
 /*global MaxClient */
-
 (function(jq) {
     /**
      *    MaxUI plugin definition
      *    @param {Object} options    Object containing overrides for default values
      **/
-
     jq.fn.maxUI = function(options) {
         // Keep a reference of the context object
         var maxui = this;
-        maxui.version = '4.0.14';
+        maxui.version = '4.0.15';
         maxui.templates = max.templates();
         maxui.utils = max.utils();
         var defaults = {
@@ -37,12 +35,10 @@
             'maxTalkURL': "",
             'domain': ""
         };
-
         // extend defaults with user-defined settings
         maxui.settings = jq.extend(defaults, options);
         maxui.logger = new max.MaxLogging(maxui);
         maxui.logger.setLevel(maxui.settings.loglevel);
-
         // Configure maxui without CORS if CORS not available
         if (!maxui.utils.isCORSCapable()) {
             // IF it has been defined an alias, set as max server url
@@ -50,7 +46,6 @@
                 maxui.settings.maxServerURL = maxui.settings.maxServerURLAlias;
             }
         }
-
         // Normalize maxTalkURL and provide sensible default for stomp server
         // The base url for stomp url construction is based on the max url AFTER
         // checking for CORS avalability
@@ -58,13 +53,11 @@
         if (_.isUndefined(maxui.settings.maxTalkURL) || maxui.settings.maxTalkURL === "") {
             maxui.settings.maxTalkURL = maxui.settings.maxServerURL + '/stomp';
         }
-
         // Normalize domain if present, to avoid errors with unvalid values and whitespaces
         maxui.settings.domain = maxui.utils.normalizeWhiteSpace(maxui.settings.domain);
         if (maxui.settings.domain.toLowerCase() === 'none') {
             maxui.settings.domain = "";
         }
-
         // Check timeline/activities consistency
         if (maxui.settings.UISection === 'timeline' && maxui.settings.activitySource === 'timeline' && maxui.settings.readContext) {
             maxui.settings.readContext = undefined;
@@ -75,7 +68,6 @@
         maxui.language = options.language || 'en';
         var user_literals = options.literals || {};
         maxui.settings.literals = jq.extend(max.literals(maxui.language), user_literals);
-
         if (maxui.settings.readContext) {
             // Calculate readContextHash
             maxui.settings.readContextHash = maxui.utils.sha1(maxui.settings.readContext);
@@ -116,45 +108,40 @@
             token: maxui.settings.oAuthToken
         };
         maxui.maxClient.configure(maxclient_config);
-
         // Create a instance of a max messaging client
         // This needs to be before MaxConversations instance creation
         maxui.messaging = new max.MaxMessaging(maxui);
-
         // View representing the conversations section
         maxui.conversations = new max.views.MaxConversations(maxui, {});
-
         // Bind conversation message receiving
         if (!maxui.settings.disableConversations) {
-            maxui.messaging.bind(
-                {action: 'add', object: 'message'},
-                function(message) {
-                    maxui.conversations.ReceiveMessage(message);
-                }
-            );
-            maxui.messaging.bind(
-                {action: 'add', object: 'conversation'},
-                function(message) {
-                    maxui.conversations.ReceiveConversation(message);
-                }
-            );
-            maxui.messaging.bind(
-                {action: 'refresh', object: 'conversation'},
-                function(message) {
-                    maxui.conversations.messagesview.load(message.destination);
-                }
-            );
-            maxui.messaging.bind(
-                {action: 'ack', object: 'message'},
-                function(message) {
-                    maxui.conversations.messagesview.ack(message);
-                }
-            );
+            maxui.messaging.bind({
+                action: 'add',
+                object: 'message'
+            }, function(message) {
+                maxui.conversations.ReceiveMessage(message);
+            });
+            maxui.messaging.bind({
+                action: 'add',
+                object: 'conversation'
+            }, function(message) {
+                maxui.conversations.ReceiveConversation(message);
+            });
+            maxui.messaging.bind({
+                action: 'refresh',
+                object: 'conversation'
+            }, function(message) {
+                maxui.conversations.messagesview.load(message.destination);
+            });
+            maxui.messaging.bind({
+                action: 'ack',
+                object: 'message'
+            }, function(message) {
+                maxui.conversations.messagesview.ack(message);
+            });
         }
-
         // Make settings available to utils package
         maxui.utils.setSettings(maxui.settings);
-
         // Get user data and start ui rendering when completed
         this.maxClient.getUserData(maxui.settings.username, function(data) {
             //Determine if user can write in writeContexts
@@ -176,17 +163,14 @@
                 }
             }
             maxui.settings.subscriptions = userSubscriptions;
-
-
             // Start messaging only if conversations enabled
             if (!maxui.settings.disableConversations) {
                 maxui.messaging.start();
                 jq(window).on('beforeunload', function(event) {
-                    var x=maxui.messaging.disconnect();
+                    var x = maxui.messaging.disconnect();
                     return x;
                 })
             }
-
             // render main interface
             var showCT = maxui.settings.UISection === 'conversations';
             var showTL = maxui.settings.UISection === 'timeline';
@@ -205,15 +189,11 @@
             };
             var mainui = maxui.templates.mainUI.render(params);
             maxui.html(mainui);
-
-
             maxui.overlay = new max.views.MaxOverlay(maxui);
-
             // Define widths
             // XXX TODO :Read from renderer styles, not hardcoded values
             maxui.settings.widgetWidth = maxui.width();
             maxui.settings.sectionsWidth = maxui.settings.widgetWidth - maxui.settings.scrollbarWidth - maxui.settings.widgetBorder;
-
             // First-rendering of conversations list, even if it's not displayed on start
             if (!maxui.settings.disableConversations) {
                 maxui.conversations.render();
@@ -222,8 +202,7 @@
             if (maxui.settings.UISection === 'conversations') {
                 maxui.bindEvents();
                 maxui.toggleSection('conversations');
-            }
-            else if (maxui.settings.UISection === 'timeline') {
+            } else if (maxui.settings.UISection === 'timeline') {
                 maxui.printActivities({}, function(event) {
                     maxui.bindEvents();
                 });
@@ -232,10 +211,8 @@
         // allow jq chaining
         return maxui;
     };
-
     jq.fn.bindEvents = function() {
         var maxui = this;
-
         //Assign click to loadmore
         jq('#maxui-more-activities .maxui-button').click(function(event) {
             event.preventDefault();
@@ -253,8 +230,7 @@
                 jq('#maxui-search').toggleClass('folded');
                 if (jq('#maxui-search').hasClass('folded')) {
                     maxui.printActivities({});
-                }
-                else {
+                } else {
                     maxui.reloadFilters();
                 }
             }
@@ -372,7 +348,6 @@
             window.status = '';
             maxui.toggleSection('conversations');
         });
-
         //Assign activation of timeline section by its button
         jq('#maxui-show-timeline').on('click', function(event) {
             event.preventDefault();
@@ -661,7 +636,6 @@
                         options.displayName = displayName;
                     }
                     maxui.conversations.create(options);
-
                 } else {
                     maxui.conversations.send(text);
                 }
@@ -1030,10 +1004,8 @@
         jq('#maxui-new-participants').html(participants_items);
         jq('#maxui-add-people-box .maxui-label .maxui-count').text('({0}/{1})'.format(participants_box.people.length + 1, maxui.settings.maximumConversations));
         if (participants_box.people.length > 0) {
-
             var has_more_than_one_participant = participants_box.people.length > 1;
             var has_a_displayname = displayName !== '';
-
             if (has_more_than_one_participant && !has_a_displayname) {
                 $button.attr('disabled', 'disabled');
                 $button.attr('class', 'maxui-button maxui-disabled');
@@ -1054,7 +1026,6 @@
                     'bottom': 0
                 }, 200);
             }
-
             $participants_box.show();
             $newmessagebox.show();
             if (participants_box.people.length > 1) {
@@ -1063,7 +1034,6 @@
                 $newdisplaynamebox.hide();
                 $newdisplaynamebox.find('.maxui-text-input').val('');
             }
-
         } else if (message !== '' && message !== placeholder) {
             $button.attr('disabled', 'disabled');
             $button.attr('class', 'maxui-button maxui-disabled');
@@ -1153,7 +1123,6 @@
         var sectionsWidth = widgetWidth - maxui.conversations.scrollbar.width - (sectionPadding * 2) - (widgetBorder * 2);
         var height = 320;
         if (sectionToEnable === 'conversations' && maxui.settings.currentConversationSection === 'conversations') {
-
             $conversations.show();
             $common_header.removeClass('maxui-showing-messages').addClass('maxui-showing-conversations');
             $addpeople.show();
@@ -1198,7 +1167,6 @@
             });
             $search.show(400);
             $activitysort.show(400);
-
             maxui.settings.UISection = 'timeline';
             $postbutton.val(maxui.settings.literals.new_activity_post);
             textarea_literal = maxui.settings.literals.new_activity_text;
@@ -1210,7 +1178,6 @@
             if (maxui.settings.hidePostboxOnTimeline) {
                 $postbox.hide();
             }
-
         }
     };
     /**
@@ -1220,7 +1187,6 @@
         var maxui = this;
         return maxui.settings;
     };
-
     /**
      *    Sends a post when user clicks `post activity` button with
      *    the current contents of the `maxui-newactivity` textarea
@@ -1243,7 +1209,6 @@
             } else {
                 maxui.printActivities({});
             }
-
         });
         //Pass generator to activity post if defined
         if (maxui.settings.generatorName) {
@@ -1308,7 +1273,6 @@
             callback();
         }
     };
-
     /**
      *    Renders the N activities passed in items on the timeline slot. This function is
      *    meant to be called as a callback of a call to a max webservice returning a list
@@ -1322,9 +1286,7 @@
         var maxui = this;
         var activities = '';
         // Iterate through all the activities
-
         var images_to_render = [];
-
         for (var i = 0; i < items.length; i++) {
             var activity = items[i];
             // Take first context (if exists) to display in the 'published on' field
@@ -1372,11 +1334,16 @@
             }
             // Take all the latter properties and join them into an object
             // containing all the needed params to render the template
-            _.defaults(activity.object, {filename: activity.id});
+            _.defaults(activity.object, {
+                filename: activity.id
+            });
             var params = {
                 id: activity.id,
                 actor: activity.actor,
-                auth: {'token': maxui.settings.oAuthToken, 'username': maxui.settings.username},
+                auth: {
+                    'token': maxui.settings.oAuthToken,
+                    'username': maxui.settings.username
+                },
                 literals: maxui.settings.literals,
                 date: maxui.utils.formatDate(activity.published, maxui.language),
                 text: maxui.utils.formatText(activity.object.content),
@@ -1398,7 +1365,6 @@
                 comment: maxui.templates.comment
             };
             activities = activities + maxui.templates.activity.render(params, partials);
-
             if (activity.object.objectType === 'image') {
                 images_to_render.push(activity);
             }
@@ -1440,7 +1406,6 @@
         if (arguments.length > 2) {
             arguments[2].call();
         }
-
         _.each(images_to_render, function(activity, index, list) {
             maxui.maxClient.getMessageImage('/activities/{0}/image/thumb'.format(activity.id), function(encoded_image_data) {
                 var imagetag = '<img class="maxui-embedded" alt="" src="data:image/png;base64,{0}" />'.format(encoded_image_data);
@@ -1606,9 +1571,8 @@
         });
         this.maxClient.getCommentsForActivity.apply(this.maxClient, func_params);
     };
-
     jq.maxui = function() {};
-    jq.maxui.settings = function() {return this.settings;};
-
-
+    jq.maxui.settings = function() {
+        return this.settings;
+    };
 }(jQuery));

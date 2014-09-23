@@ -1,19 +1,13 @@
 /**
-* @fileoverview
-*/
-
+ * @fileoverview
+ */
 var max = max || {};
-
 (function(jq) {
-
     var views = function() {
-
-
         /** MaxViewName
-        *
-        *
-        */
-
+         *
+         *
+         */
         // Object representing an overlay wrapper
         function MaxOverlay(maxui) {
             var self = this;
@@ -61,13 +55,10 @@ var max = max || {};
                 jq(self.overlay_show_class).hide();
             });
         };
-
         return {
             MaxOverlay: MaxOverlay
         };
-
     };
     max.views = max.views || {};
     jq.extend(max.views, views());
-
 })(jQuery);

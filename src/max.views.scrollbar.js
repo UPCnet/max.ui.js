@@ -1,18 +1,13 @@
 /**
-* @fileoverview
-*/
+ * @fileoverview
+ */
 var max = max || {};
-
 (function(jq) {
-
     var views = function() {
-
-
         /** MaxScrollbar
-        *
-        *
-        */
-
+         *
+         *
+         */
         function MaxScrollbar(options) {
             var self = this;
             self.maxui = options.maxui;
@@ -26,10 +21,8 @@ var max = max || {};
             self.$target = jq(self.target_selector);
             self.bind();
         }
-
         MaxScrollbar.prototype.bind = function() {
             var self = this;
-
             self.$target.on('mousewheel', function(event, delta, deltaX, deltaY) {
                 event.preventDefault();
                 event.stopPropagation();
@@ -51,7 +44,6 @@ var max = max || {};
                     self.setDraggerPosition(relative_pos);
                 }
             });
-
             jq(document).on('mousemove', function(event) {
                 if (self.dragging) {
                     event.stopPropagation();
@@ -77,14 +69,10 @@ var max = max || {};
                 event.preventDefault();
                 self.dragging = true;
             });
-
             jq(document).on('mouseup', function(event) {
                 self.dragging = false;
             });
-
-
         };
-
         MaxScrollbar.prototype.setHeight = function(height) {
             var self = this;
             var wrapper_top = jq('#maxui-conversations .maxui-wrapper').offset().top - self.maxui.offset().top - 1;
@@ -125,14 +113,10 @@ var max = max || {};
             var self = this;
             return self.$target.height() > self.maxtop;
         };
-
         return {
             MaxScrollbar: MaxScrollbar
         };
-
     };
-
     max.views = max.views || {};
     jq.extend(max.views, views());
-
 })(jQuery);

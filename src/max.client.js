@@ -99,7 +99,6 @@ MaxClient.prototype.PUT = function(route, query, callback) {
     if (arguments.length > 3) {
         triggers = arguments[3];
     }
-
     jQuery.ajax({
         url: resource_uri,
         beforeSend: function(xhr) {
@@ -170,7 +169,6 @@ MaxClient.prototype.GET = function(route, query, callback) {
     if (Object.keys(query).length > 0) {
         resource_uri += '?' + jQuery.param(query, true);
     }
-
     var ajax_options = {
         url: resource_uri,
         beforeSend: function(xhr) {
@@ -183,21 +181,15 @@ MaxClient.prototype.GET = function(route, query, callback) {
         async: true,
         dataType: 'json'
     };
-
-    if (arguments.length>3) {
+    if (arguments.length > 3) {
         _.extend(ajax_options, arguments[3]);
     }
-
-    jQuery.ajax(ajax_options)
-
-    .done(function(result, status, xhr) {
+    jQuery.ajax(ajax_options).done(function(result, status, xhr) {
         if (triggers.done) {
             jQuery(window).trigger(triggers.done);
         }
         callback.apply(xhr, [result]);
-    })
-
-    .fail(function(xhr) {
+    }).fail(function(xhr) {
         jQuery(window).trigger('maxclienterror', xhr);
         if (triggers.fail) {
             jQuery(window).trigger(triggers.fail);
@@ -205,17 +197,14 @@ MaxClient.prototype.GET = function(route, query, callback) {
     });
     return true;
 };
-
 /*
  * People related endpoints
  */
-
 MaxClient.prototype.getUserData = function(username, callback) {
     var route = this.ROUTES.user.format(username);
     var query = {};
     this.GET(route, query, callback);
 };
-
 MaxClient.prototype.getUsersList = function(userquery, callback) {
     var route = this.ROUTES.users;
     var query = {
@@ -223,21 +212,17 @@ MaxClient.prototype.getUsersList = function(userquery, callback) {
     };
     this.GET(route, query, callback);
 };
-
 /*
  * Context related endpoints
  */
-
 MaxClient.prototype.getContext = function(chash, callback) {
     var route = this.ROUTES.context.format(chash);
     var query = {};
     this.GET(route, query, callback);
 };
-
 /*
  * Activity related endpoints
  */
-
 MaxClient.prototype.getUserTimeline = function(username, callback) {
     var route = this.ROUTES.timeline.format(username);
     var query = {};
@@ -246,7 +231,6 @@ MaxClient.prototype.getUserTimeline = function(username, callback) {
     }
     this.GET(route, query, callback);
 };
-
 MaxClient.prototype.getActivities = function(options, callback) {
     var route = this.ROUTES.activities.format(options.context);
     var query = {};
@@ -260,13 +244,11 @@ MaxClient.prototype.getActivities = function(options, callback) {
     }
     this.GET(route, query, callback);
 };
-
 MaxClient.prototype.getCommentsForActivity = function(activityid, callback) {
     var route = this.ROUTES.comments.format(activityid);
     var query = {};
     this.GET(route, query, callback);
 };
-
 MaxClient.prototype.addComment = function(comment, activity, callback) {
     var query = {
         "actor": {},
@@ -280,7 +262,6 @@ MaxClient.prototype.addComment = function(comment, activity, callback) {
     var route = this.ROUTES.comments.format(activity);
     this.POST(route, query, callback);
 };
-
 MaxClient.prototype.addActivity = function(text, contexts, callback) {
     var query = {
         "object": {
@@ -309,34 +290,27 @@ MaxClient.prototype.addActivity = function(text, contexts, callback) {
     };
     this.POST(route, query, callback, trigger);
 };
-
 MaxClient.prototype.removeActivity = function(activity_id, callback) {
     var route = this.ROUTES.activity.format(activity_id);
     this.DELETE(route, {}, callback);
 };
-
 MaxClient.prototype.removeActivityComment = function(activity_id, comment_id, callback) {
     var route = this.ROUTES.comment.format(activity_id, comment_id);
     this.DELETE(route, {}, callback);
 };
-
 /*
  * Conversation related endpoints
  */
-
 MaxClient.prototype.getConversationSubscription = function(chash, username, callback) {
     var route = this.ROUTES.user_conversation.format(username, chash);
     var query = {};
     this.GET(route, query, callback);
 };
-
-
 MaxClient.prototype.getConversation = function(chash, callback) {
     var route = this.ROUTES.conversation.format(chash);
     var query = {};
     this.GET(route, query, callback);
 };
-
 MaxClient.prototype.modifyConversation = function(chash, displayName, callback) {
     var query = {
         "displayName": displayName
@@ -344,31 +318,26 @@ MaxClient.prototype.modifyConversation = function(chash, displayName, callback) 
     var route = this.ROUTES.conversation.format(chash);
     this.PUT(route, query, callback);
 };
-
 MaxClient.prototype.addUserToConversation = function(chash, username, callback) {
     var query = {};
     var route = this.ROUTES.user_conversation.format(username, chash);
     this.POST(route, query, callback);
 };
-
 MaxClient.prototype.kickUserFromConversation = function(chash, username, callback) {
     var query = {};
     var route = this.ROUTES.user_conversation.format(username, chash);
     this.DELETE(route, query, callback);
 };
-
 MaxClient.prototype.deleteConversation = function(chash, callback) {
     var query = {};
     var route = this.ROUTES.conversation.format(chash);
     this.DELETE(route, query, callback);
 };
-
 MaxClient.prototype.leaveConversation = function(chash, username, callback) {
     var query = {};
     var route = this.ROUTES.user_conversation.format(username, chash);
     this.DELETE(route, query, callback);
 };
-
 MaxClient.prototype.transferConversationOwnership = function(chash, username, callback) {
     var query = {
         "actor": {
@@ -378,29 +347,25 @@ MaxClient.prototype.transferConversationOwnership = function(chash, username, ca
     var route = this.ROUTES.conversation_owner.format(chash);
     this.PUT(route, query, callback);
 };
-
 MaxClient.prototype.getConversationsForUser = function(username, callback) {
     var route = this.ROUTES.conversations;
     var query = {};
     this.GET(route, query, callback);
 };
-
 MaxClient.prototype.getMessageImage = function(route, callback) {
     var query = {};
     var ajax_options = {
-        processData:false,
+        processData: false,
         dataType: undefined,
         contentType: 'application/base64'
     };
     this.GET(route, query, callback, ajax_options);
 };
-
 MaxClient.prototype.getMessagesForConversation = function(hash, params, callback) {
     var route = this.ROUTES.messages.format(hash);
     var query = params;
     this.GET(route, query, callback);
 };
-
 MaxClient.prototype.addMessageAndConversation = function(params, callback) {
     var query = {
         "object": {
@@ -429,11 +394,9 @@ MaxClient.prototype.addMessage = function(text, chash, callback) {
     var route = this.ROUTES.messages.format(chash);
     this.POST(route, query, callback);
 };
-
 /*
  * Social-interactions related endpoints
  */
-
 MaxClient.prototype.follow = function(username, callback) {
     var query = {
         "object": {
