@@ -98,7 +98,7 @@ var max = max || {};
                                 remaining: this.getResponseHeader('X-Has-Remaining-Items')
                             };
                             self.render(text, text);
-                    }]);
+                        }]);
                 }
             } else {
                 self.hide();

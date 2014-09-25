@@ -169,7 +169,7 @@
                 jq(window).on('beforeunload', function(event) {
                     var x = maxui.messaging.disconnect();
                     return x;
-                })
+                });
             }
             // render main interface
             var showCT = maxui.settings.UISection === 'conversations';
