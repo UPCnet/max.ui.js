@@ -234,21 +234,35 @@ var max = max || {};
         self.stomp.debug = function(message) {
             self.maxui.logger.debug(message, self.logtag);
         };
-        self.stomp.connect(self.login, self.token,
-            // Define stomp stomp ON CONNECT callback
-            function(x) {
-                self.stomp.subscribe('/exchange/{0}.subscribe'.format(self.maxui.settings.username), function(stomp_message) {
-                    var data = JSON.parse(stomp_message.body);
-                    var routing_key = /([^/])+$/.exec(stomp_message.headers.destination)[0];
-                    self.on_message(data, routing_key);
-                });
-                self.active = true;
-                self.maxui.logger.info('Succesfully connected to {0}'.format(self.stompServer), self.logtag);
-            },
-            // Define stomp stomp ON ERROR callback
-            function(error) {
-                self.maxui.logger.error(error.body);
-            }, self.vhost);
+
+        var headers = {
+            login: self.login,
+            passcode: self.token,
+            host: self.vhost,
+            product: 'max.ui.js',
+            "product-version": self.maxui.version,
+            platform: '{0} {1} / {2} {3}'.format(
+                $.ua.browser.name,
+                $.ua.browser.version,
+                $.ua.os.name,
+                $.ua.os.version)
+        };
+
+        var connectCallback = function(x) {
+            self.stomp.subscribe('/exchange/{0}.subscribe'.format(self.maxui.settings.username), function(stomp_message) {
+                var data = JSON.parse(stomp_message.body);
+                var routing_key = /([^/])+$/.exec(stomp_message.headers.destination)[0];
+                self.on_message(data, routing_key);
+            });
+            self.active = true;
+            self.maxui.logger.info('Succesfully connected to {0}'.format(self.stompServer), self.logtag);
+        };
+
+        var errorCallback = function(error) {
+            self.maxui.logger.error(error.body);
+        };
+
+        self.stomp.connect(headers, connectCallback, errorCallback);
     };
     MaxMessaging.prototype.pack = function(message) {
         var self = this;

@@ -151,6 +151,7 @@ module.exports = function (grunt) {
                     'libs/stomp-2.3.1.js',
                     'libs/underscore-1.6.0.js',
                     'libs/uuid-1.4.1.js',
+                    'libs/ua-parser-1.1.1.js',
                     'src/max.views.inputs.js',
                     'src/max.views.overlay.js',
                     'src/max.views.chatinfo.js',
