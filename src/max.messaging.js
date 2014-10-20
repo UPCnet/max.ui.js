@@ -234,20 +234,14 @@ var max = max || {};
         self.stomp.debug = function(message) {
             self.maxui.logger.debug(message, self.logtag);
         };
-
         var headers = {
             login: self.login,
             passcode: self.token,
             host: self.vhost,
             product: 'max.ui.js',
             "product-version": self.maxui.version,
-            platform: '{0} {1} / {2} {3}'.format(
-                jq.ua.browser.name,
-                jq.ua.browser.version,
-                jq.ua.os.name,
-                jq.ua.os.version)
+            platform: '{0} {1} / {2} {3}'.format(jq.ua.browser.name, jq.ua.browser.version, jq.ua.os.name, jq.ua.os.version)
         };
-
         var connectCallback = function(x) {
             self.stomp.subscribe('/exchange/{0}.subscribe'.format(self.maxui.settings.username), function(stomp_message) {
                 var data = JSON.parse(stomp_message.body);
@@ -257,11 +251,9 @@ var max = max || {};
             self.active = true;
             self.maxui.logger.info('Succesfully connected to {0}'.format(self.stompServer), self.logtag);
         };
-
         var errorCallback = function(error) {
             self.maxui.logger.error(error.body);
         };
-
         self.stomp.connect(headers, connectCallback, errorCallback);
     };
     MaxMessaging.prototype.pack = function(message) {
