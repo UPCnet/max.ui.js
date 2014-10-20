@@ -242,10 +242,10 @@ var max = max || {};
             product: 'max.ui.js',
             "product-version": self.maxui.version,
             platform: '{0} {1} / {2} {3}'.format(
-                $.ua.browser.name,
-                $.ua.browser.version,
-                $.ua.os.name,
-                $.ua.os.version)
+                jq.ua.browser.name,
+                jq.ua.browser.version,
+                jq.ua.os.name,
+                jq.ua.os.version)
         };
 
         var connectCallback = function(x) {
