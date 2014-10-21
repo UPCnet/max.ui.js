@@ -33,6 +33,7 @@
             'loglevel': 'info',
             'hidePostboxOnTimeline': false,
             'maxTalkURL': "",
+            'generator': "",
             'domain': ""
         };
         // extend defaults with user-defined settings

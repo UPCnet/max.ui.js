@@ -37,7 +37,7 @@ jQuery().ready(function() {
 
             // Overwrite username if supplied
             if (username!="null") settings.username = username;
-
+            console.log(settings)
             // After all, fire up the widget
             jQuery('#container').maxUI(settings);
           });

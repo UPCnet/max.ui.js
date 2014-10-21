@@ -234,11 +234,17 @@ var max = max || {};
         self.stomp.debug = function(message) {
             self.maxui.logger.debug(message, self.logtag);
         };
+
+        var product = 'maxui';
+        if (self.maxui.settings.generator) {
+            product += '[{0}]'.format(self.maxui.settings.generator);
+        }
+
         var headers = {
             login: self.login,
             passcode: self.token,
             host: self.vhost,
-            product: 'max.ui.js',
+            product: product,
             "product-version": self.maxui.version,
             platform: '{0} {1} / {2} {3}'.format(jq.ua.browser.name, jq.ua.browser.version, jq.ua.os.name, jq.ua.os.version)
         };

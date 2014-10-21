@@ -1,12 +1,13 @@
 {
-    "avatarURLpattern": "http://localhost:8081/people/{0}/avatar", 
-    "generatorName": "MaxUI Devel Widget", 
-    "language": "ca", 
-    "maxServerURL": "http://localhost:8081", 
-    "maxServerURLAlias": "http://localhost:8081", 
-    "maxTalkURL": "http://localhost:8081/stomp", 
-    "oAuthGrantType": "password", 
-    "oAuthToken": "xTGrQepANsVQrtudDGmc8h2UxdchXRXS", 
-    "profileURLpattern": "#", 
+    "avatarURLpattern": "http://localhost:8081/people/{0}/avatar",
+    "generator": "DEV",
+    "generatorName": "MaxUI Devel Widget",
+    "language": "ca",
+    "maxServerURL": "http://localhost:8081",
+    "maxServerURLAlias": "http://localhost:8081",
+    "maxTalkURL": "http://localhost:8081/stomp",
+    "oAuthGrantType": "password",
+    "oAuthToken": "xTGrQepANsVQrtudDGmc8h2UxdchXRXS",
+    "profileURLpattern": "#",
     "username": "carles.bruguera"
 }
