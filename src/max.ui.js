@@ -391,6 +391,25 @@
                 });
             }
         });
+
+        //Toggle flagged status via delegating the click to the activities container
+        jq('#maxui-activities').on('click', '.maxui-action.maxui-flag', function(event) {
+            event.preventDefault();
+            var $flag = jq(this);
+            var $activity = jq(this).closest('.maxui-activity');
+            var activityid = $activity.attr('id');
+            var flagged = $flag.hasClass('maxui-flagged');
+            if (flagged) {
+                maxui.maxClient.unflagActivity(activityid, function(event) {
+                    $flag.toggleClass('maxui-flagged', false);
+                });
+            } else {
+                maxui.maxClient.flagActivity(activityid, function(event) {
+                    $flag.toggleClass('maxui-flagged', true);
+                });
+            }
+        });
+
         //Assign activity removal confirmation dialog toggle via delegating the click to the activities container
         jq('#maxui-activities').on('click', '.maxui-action.maxui-delete', function(event) {
             event.preventDefault();
@@ -1353,11 +1372,11 @@
                 likes: activity.likesCount ? activity.likesCount : 0,
                 showLikesCount: maxui.currentSortOrder === 'likes',
                 liked: activity.liked,
-                flagged: activity.liked,
+                flagged: activity.flagged,
                 avatarURL: avatar_url,
                 publishedIn: contexts,
                 canDeleteActivity: activity.deletable,
-                canFlagActivity: activity.flaggable,
+                canFlagActivity: maxui.settings.canFlagOnContext,
                 via: generator,
                 fileDownload: activity.object.objectType === 'file',
                 filename: activity.object.filename
@@ -1520,7 +1539,7 @@
                 // If we don't have a context, we're in timeline, so we can write
                 if (maxui.settings.activitySource === 'activities') {
                     maxui.maxClient.getContext(maxui.settings.readContextHash, function(context) {
-                        // Add read context if user is not subscribed to it{
+                        // Add read context if user is not subscribed to it
                         var subscriptions = maxui.settings.subscriptions;
                         if (!subscriptions[context.hash]) {
                             subscriptions[context.hash] = {};
@@ -1542,6 +1561,8 @@
                                 maxui.settings.canwrite = false;
                             }
                         }
+                        maxui.settings.canFlagOnContext = maxui.settings.username === context.owner;
+
                         maxui.renderPostbox();
                         // format the result items as activities
                         maxui.formatActivities(items, insert_at, callback);

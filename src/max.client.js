@@ -37,6 +37,7 @@ function MaxClient() {
         comment: '/activities/{0}/comments/{1}',
         likes: '/activities/{0}/likes',
         like: '/activities/{0}/likes/{1}',
+        flag: '/activities/{0}/flag',
         favorites: '/activities/{0}/favorites',
         favorite: '/activities/{0}/favorites/{1}',
         shares: '/activities/{0}/shares',
@@ -426,5 +427,15 @@ MaxClient.prototype.likeActivity = function(activityid, callback) {
 MaxClient.prototype.unlikeActivity = function(activityid, callback) {
     var query = {};
     var route = this.ROUTES.like.format(activityid, this.actor.username);
+    this.DELETE(route, query, callback);
+};
+MaxClient.prototype.flagActivity = function(activityid, callback) {
+    var query = {};
+    var route = this.ROUTES.flag.format(activityid);
+    this.POST(route, query, callback);
+};
+MaxClient.prototype.unflagActivity = function(activityid, callback) {
+    var query = {};
+    var route = this.ROUTES.flag.format(activityid);
     this.DELETE(route, query, callback);
 };
