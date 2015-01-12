@@ -9,8 +9,8 @@
         cursor:pointer;
         color: @actionLinkColor;
 
-        &:before { 
-            font-size:12px; 
+        &:before {
+            font-size:12px;
             margin-right:.22em;
         }
 
@@ -35,7 +35,14 @@
         &.maxui-favorites.maxui-favorited:hover         { color: @hoverLinkColor; }
         &.maxui-favorites.maxui-favorited:before        { content: '\e800'; color: @linkColor}
         &.maxui-favorites.maxui-favorited:hover:before  { color : favoriteColor}
-        
+
+        &.maxui-flag:before                             { content: '\e81e'; }
+        &.maxui-flag:hover:before                       { content: '\e81e'; color: @linkColor;}
+        &.maxui-flag.maxui-flagged                      { color: @linkColor; }
+        &.maxui-flag.maxui-flagged:hover                { color: @hoverLinkColor; }
+        &.maxui-flag.maxui-flagged:before               { content: '\e81d'; color: @linkColor}
+        &.maxui-flag.maxui-flagged:hover:before         { color : @hoverLinkColor}
+
         &.maxui-delete:before                           { content: '\e806'; }
     }
 }

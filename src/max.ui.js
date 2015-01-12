@@ -1353,9 +1353,11 @@
                 likes: activity.likesCount ? activity.likesCount : 0,
                 showLikesCount: maxui.currentSortOrder === 'likes',
                 liked: activity.liked,
+                flagged: activity.liked,
                 avatarURL: avatar_url,
                 publishedIn: contexts,
                 canDeleteActivity: activity.deletable,
+                canFlagActivity: activity.flaggable,
                 via: generator,
                 fileDownload: activity.object.objectType === 'file',
                 filename: activity.object.filename
