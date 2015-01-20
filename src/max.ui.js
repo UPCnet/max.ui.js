@@ -24,6 +24,7 @@
             'conversationsSection': 'conversations',
             'currentConversationSection': 'conversations',
             'activitySortOrder': 'activities',
+            'activitySortView': 'recent',
             'maximumConversations': 20,
             'contextTagsFilter': [],
             'scrollbarWidth': 10,
@@ -178,6 +179,10 @@
             var toggleTL = maxui.settings.disableTimeline === false && !showTL;
             var toggleCT = maxui.settings.disableConversations === false && !showCT;
             var containerWidth = maxui.width() - maxui.settings.scrollbarWidth;
+            var showRecentOrder = maxui.settings.activitySortView === 'recent';
+            var showLikesOrder = maxui.settings.activitySortView === 'likes';
+            var showFlaggedOrder = maxui.settings.activitySortView === 'flagged';
+
             var params = {
                 username: maxui.settings.username,
                 literals: maxui.settings.literals,
@@ -185,6 +190,9 @@
                 showConversationsToggle: toggleCT ? 'display:block;' : 'display:none;',
                 showTimeline: showTL ? 'display:block;' : 'display:none;',
                 showTimelineToggle: toggleTL ? 'display:block;' : 'display:none;',
+                orderViewRecent: showRecentOrder ? 'active' : '',
+                orderViewLikes: showLikesOrder ? 'active' : '',
+                orderViewFlagged: showFlaggedOrder ? 'active' : '',
                 messagesStyle: 'width:{0}px;left:{0}px;'.format(containerWidth),
                 hidePostbox: maxui.settings.hidePostboxOnTimeline
             };
@@ -204,8 +212,15 @@
                 maxui.bindEvents();
                 maxui.toggleSection('conversations');
             } else if (maxui.settings.UISection === 'timeline') {
-                maxui.printActivities({}, function(event) {
-                    maxui.bindEvents();
+                var sort_orders_by_view = {
+                    recent: maxui.settings.activitySortOrder,
+                    likes: 'likes',
+                    flagged: 'flagged'
+                };
+                maxui.printActivities({
+                    sortBy: sort_orders_by_view[maxui.settings.activitySortView]
+                    }, function(event) {
+                        maxui.bindEvents();
                 });
             }
         });

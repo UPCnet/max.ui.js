@@ -267,11 +267,11 @@ max.templates = function() {
            <div id="maxui-show-timeline" class="maxui-togglebar maxui-icon-" style="{{showTimelineToggle}}"><a href="#">{{literals.activity}}</a></div>\
         \
               <div id="maxui-activity-sort">\
-                <a class="maxui-sort-action maxui-most-recent active" href="#">{{literals.recent_activity}}</a>\
+                <a class="maxui-sort-action maxui-most-recent {{orderViewRecent}}" href="#">{{literals.recent_activity}}</a>\
                 /\
-                <a class="maxui-sort-action maxui-most-valued" href="#">{{literals.valued_activity}}</a>\
+                <a class="maxui-sort-action maxui-most-valued {{orderViewLikes}}" href="#">{{literals.valued_activity}}</a>\
                 /\
-                <a class="maxui-sort-action maxui-flagged" href="#">{{literals.flagged_activity}}</a>\
+                <a class="maxui-sort-action maxui-flagged {{orderViewFlagged}}" href="#">{{literals.flagged_activity}}</a>\
               </div>\
            <div id="maxui-timeline" style="{{showTimeline}}">\
               <div class="maxui-wrapper">\
