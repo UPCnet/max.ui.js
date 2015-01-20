@@ -270,6 +270,8 @@ max.templates = function() {
                 <a class="maxui-sort-action maxui-most-recent active" href="#">{{literals.recent_activity}}</a>\
                 /\
                 <a class="maxui-sort-action maxui-most-valued" href="#">{{literals.valued_activity}}</a>\
+                /\
+                <a class="maxui-sort-action maxui-flagged" href="#">{{literals.flagged_activity}}</a>\
               </div>\
            <div id="maxui-timeline" style="{{showTimeline}}">\
               <div class="maxui-wrapper">\

@@ -537,6 +537,18 @@
                 });
             }
         });
+        jq('#maxui-activity-sort').on('click', 'a.maxui-sort-action.maxui-flagged', function(event) {
+            event.preventDefault();
+            var $sortbutton = jq(this);
+            if (!$sortbutton.hasClass('active')) {
+                jq('#maxui-activity-sort .maxui-sort-action.active').toggleClass('active', false);
+                $sortbutton.toggleClass('active', true);
+                maxui.printActivities({
+                    sortBy: 'flagged'
+                });
+            }
+        });
+
         // **************************************************************************************
         //                    add people predicting
         // **************************************************************************************
@@ -1376,7 +1388,7 @@
                 avatarURL: avatar_url,
                 publishedIn: contexts,
                 canDeleteActivity: activity.deletable,
-                canFlagActivity: maxui.settings.canFlagOnContext,
+                canFlagActivity: maxui.settings.canflag,
                 via: generator,
                 fileDownload: activity.object.objectType === 'file',
                 filename: activity.object.filename
@@ -1514,6 +1526,8 @@
         if (!filters.sortBy) {
             if (jq('#maxui-activity-sort .maxui-sort-action.maxui-most-valued').hasClass('active')) {
                 filters.sortBy = 'likes';
+            } else if (jq('#maxui-activity-sort .maxui-sort-action.maxui-flagged').hasClass('active')){
+                filters.sortBy = 'flagged';
             } else {
                 filters.sortBy = maxui.settings.activitySortOrder;
             }
@@ -1557,11 +1571,18 @@
                                 if (subscriptions[write_context].permissions.write !== true) {
                                     maxui.settings.canwrite = false;
                                 }
+                                if (subscriptions[write_context].permissions.flag === true) {
+                                    maxui.settings.canflag = true;
+                                } else {
+                                    maxui.settings.canflag = false;
+                                }
+
                             } else {
                                 maxui.settings.canwrite = false;
+                                maxui.settings.canflag = false;
                             }
                         }
-                        maxui.settings.canFlagOnContext = maxui.settings.username === context.owner;
+
 
                         maxui.renderPostbox();
                         // format the result items as activities

@@ -60,6 +60,7 @@ max.literals = function(language) {
         'unlike': 'unlike',
         'recent_activity': "Latest activity",
         'valued_activity': "Most valued activity",
+        'flagged_activity': "Flagged activity",
         'recent_favorited_activity': "Latest favorites",
         'valued_favorited_activity': "Most valued favorites"
     };
@@ -119,6 +120,7 @@ max.literals = function(language) {
         'unlike': 'ya no me gusta',
         'recent_activity': "Últimas actividades",
         'valued_activity': "Actividades más valoradas",
+        'flagged_activity': "Actividades destacadas",
         'recent_favorited_activity': "Últimas favoritas",
         'valued_favorited_activity': "Favoritas más valoradas"
     };
@@ -178,6 +180,7 @@ max.literals = function(language) {
         'unlike': "ja no m'agrada",
         'recent_activity': "Darreres activitats",
         'valued_activity': "Activitats més valorades",
+        'flagged_activity': "Activitats destacades",
         'recent_favorited_activity': "Darreres favorites",
         'valued_favorited_activity': "Favorites més valorades"
     };
