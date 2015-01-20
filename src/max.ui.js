@@ -182,7 +182,6 @@
             var showRecentOrder = maxui.settings.activitySortView === 'recent';
             var showLikesOrder = maxui.settings.activitySortView === 'likes';
             var showFlaggedOrder = maxui.settings.activitySortView === 'flagged';
-
             var params = {
                 username: maxui.settings.username,
                 literals: maxui.settings.literals,
@@ -219,8 +218,8 @@
                 };
                 maxui.printActivities({
                     sortBy: sort_orders_by_view[maxui.settings.activitySortView]
-                    }, function(event) {
-                        maxui.bindEvents();
+                }, function(event) {
+                    maxui.bindEvents();
                 });
             }
         });
@@ -406,7 +405,6 @@
                 });
             }
         });
-
         //Toggle flagged status via delegating the click to the activities container
         jq('#maxui-activities').on('click', '.maxui-action.maxui-flag', function(event) {
             event.preventDefault();
@@ -424,7 +422,6 @@
                 });
             }
         });
-
         //Assign activity removal confirmation dialog toggle via delegating the click to the activities container
         jq('#maxui-activities').on('click', '.maxui-action.maxui-delete', function(event) {
             event.preventDefault();
@@ -563,7 +560,6 @@
                 });
             }
         });
-
         // **************************************************************************************
         //                    add people predicting
         // **************************************************************************************
@@ -1541,7 +1537,7 @@
         if (!filters.sortBy) {
             if (jq('#maxui-activity-sort .maxui-sort-action.maxui-most-valued').hasClass('active')) {
                 filters.sortBy = 'likes';
-            } else if (jq('#maxui-activity-sort .maxui-sort-action.maxui-flagged').hasClass('active')){
+            } else if (jq('#maxui-activity-sort .maxui-sort-action.maxui-flagged').hasClass('active')) {
                 filters.sortBy = 'flagged';
             } else {
                 filters.sortBy = maxui.settings.activitySortOrder;
@@ -1591,14 +1587,11 @@
                                 } else {
                                     maxui.settings.canflag = false;
                                 }
-
                             } else {
                                 maxui.settings.canwrite = false;
                                 maxui.settings.canflag = false;
                             }
                         }
-
-
                         maxui.renderPostbox();
                         // format the result items as activities
                         maxui.formatActivities(items, insert_at, callback);

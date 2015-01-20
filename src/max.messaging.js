@@ -234,12 +234,10 @@ var max = max || {};
         self.stomp.debug = function(message) {
             self.maxui.logger.debug(message, self.logtag);
         };
-
         var product = 'maxui';
         if (self.maxui.settings.generator) {
             product += '[{0}]'.format(self.maxui.settings.generator);
         }
-
         var headers = {
             login: self.login,
             passcode: self.token,
