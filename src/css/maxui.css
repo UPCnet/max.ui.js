@@ -1152,6 +1152,9 @@
   padding-left: 0px;
   min-height: 51px;
 }
+#maxui-container #maxui-activities .maxui-activity.maxui-flagged {
+  background-color: #f2f2f2;
+}
 #maxui-container #maxui-activities .maxui-activity .maxui-activity-content {
   margin: -5px 0 0 55px;
 }

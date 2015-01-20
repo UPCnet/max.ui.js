@@ -415,10 +415,12 @@
             if (flagged) {
                 maxui.maxClient.unflagActivity(activityid, function(event) {
                     $flag.toggleClass('maxui-flagged', false);
+                    $activity.toggleClass('maxui-flagged', false);
                 });
             } else {
                 maxui.maxClient.flagActivity(activityid, function(event) {
                     $flag.toggleClass('maxui-flagged', true);
+                    $activity.toggleClass('maxui-flagged', false);
                 });
             }
         });
