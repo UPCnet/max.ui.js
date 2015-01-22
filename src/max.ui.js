@@ -416,11 +416,13 @@
                 maxui.maxClient.unflagActivity(activityid, function(event) {
                     $flag.toggleClass('maxui-flagged', false);
                     $activity.toggleClass('maxui-flagged', false);
+                    maxui.printActivities({});
                 });
             } else {
                 maxui.maxClient.flagActivity(activityid, function(event) {
                     $flag.toggleClass('maxui-flagged', true);
                     $activity.toggleClass('maxui-flagged', false);
+                    maxui.printActivities({});
                 });
             }
         });
@@ -1240,6 +1242,11 @@
         var maxui = this;
         var text = jq('#maxui-newactivity textarea').val();
         var func_params = [];
+
+        // change to recent view before posting
+        jq('#maxui-activity-sort .maxui-sort-action.active').toggleClass('active', false);
+        jq('#maxui-activity-sort .maxui-sort-action.maxui-most-recent').toggleClass('active', true);
+
         func_params.push(text);
         func_params.push(maxui.settings.writeContexts);
         func_params.push(function() {
