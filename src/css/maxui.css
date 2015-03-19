@@ -779,7 +779,7 @@
 }
 #maxui-container textarea.error,
 #maxui-container textarea.error:focus {
-  border: 1px solid #ff0000 !important;
+  border: 1px solid red !important;
   -webkit-box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.05), 0 0 8px rgba(255, 0, 0, 0.5) !important;
   -moz-box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.05), 0 0 8px rgba(255, 0, 0, 0.5) !important;
   box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.05), 0 0 8px rgba(255, 0, 0, 0.5) !important;
@@ -972,7 +972,7 @@
 #maxui-container .maxui-predictive {
   margin-top: 50px;
   margin-left: 10px;
-  width: 200px;
+  width: 80%;
   background-color: #ffffff;
   position: absolute;
   z-index: 100;
