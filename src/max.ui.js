@@ -856,6 +856,11 @@
             if (normalized === '') {
                 jq(this).val(literal);
             }
+/*        }).on('mousedown', selector, function(event) {
+            event.preventDefault();
+            if (event.which == 3) {
+                debugger
+            }*/
         }).on('click', target + ' .maxui-button', function(event) {
             event.preventDefault();
             var $area = jq(this).parent().find('.maxui-text-input');
