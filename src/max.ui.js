@@ -848,6 +848,18 @@
             if (extra_bind !== null) {
                 extra_bind(text, this, button, event);
             }
+        }).on('paste', selector, function(event) {
+
+            var button = jq(this).parent().parent().find('.maxui-button');
+            if (maxui.settings.canwrite && !options.ignore_button) {
+                jq(button).removeAttr('disabled');
+                jq(button).attr('class', 'maxui-button');
+                jq(this).attr('class', 'maxui-text-input');
+            }
+            if (extra_bind !== null) {
+                extra_bind(text, this, button, event);
+            }
+            
         }).on('focusout', selector, function(event) {
             event.preventDefault();
             var text = jq(this).val();
