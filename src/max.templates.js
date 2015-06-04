@@ -351,10 +351,16 @@ max.templates = function() {
                   <img src="{{avatar}}">\
               </a>\
               <div id="maxui-newactivity-box">\
-                   <div class="maxui-wrapper">\
+                    <div class="maxui-wrapper">\
                        <textarea class="maxui-empty maxui-text-input" data-literal="{{textLiteral}}">{{textLiteral}}</textarea>\
                        <div class="maxui-error-box"></div>\
-                   </div>\
+                    </div>\
+                    <select id="maxui-subscriptions" style="{{showSubscriptionList}}">\
+                      <option value="timeline" class="subscription-option">Timeline</option>\
+                      {{#subscriptionList}}\
+                        <option value="{{hash}}">{{displayname}}</option>\
+                      {{/subscriptionList}}\
+                    </select>\
                    <input disabled="disabled" type="button" class="maxui-button maxui-disabled" value="{{buttonLiteral}}">\
               </div>\
             '),

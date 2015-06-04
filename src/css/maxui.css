@@ -621,6 +621,15 @@
   border-left: 3px solid transparent;
   border-right: 3px solid #edf3ff;
 }
+
+/* Subscriptions dropdown selection */
+#maxui-subscriptions{
+  font-family: Arial, "HelveticaNeue", "Helvetica Neue", Helvetica, sans-serif;
+  font-size: 13px;
+  height: 27px;
+}
+
+
 /* Button style definitions*/
 .maxui-base-button,
 #maxui-container .maxui-button,
@@ -1773,3 +1782,5 @@
 .maxui-button {*overflow: visible}
 
 #maxui-newactivity .maxui-avatar img {*position:absolute;}
+
+

@@ -35,7 +35,8 @@
             'hidePostboxOnTimeline': false,
             'maxTalkURL': "",
             'generator': "",
-            'domain': ""
+            'domain': "",
+            'showSubscriptionList': false
         };
         // extend defaults with user-defined settings
         maxui.settings = jq.extend(defaults, options);
@@ -64,6 +65,10 @@
         if (maxui.settings.UISection === 'timeline' && maxui.settings.activitySource === 'timeline' && maxui.settings.readContext) {
             maxui.settings.readContext = undefined;
             maxui.settings.writeContexts = [];
+        }
+        // Never show dropdown list context in context source.
+        if (maxui.settings.activitySource === 'activities'){
+            maxui.settings.showSubscriptionList = false;
         }
         // Get language from options or set default.
         // Set literals in the choosen language and extend from user options
@@ -149,6 +154,7 @@
             //Determine if user can write in writeContexts
             maxui.settings.displayName = data.displayName || maxui.settings.username;
             var userSubscriptions = {};
+            var subscriptionsWrite = [];
             if (data.subscribedTo) {
                 if (data.subscribedTo) {
                     if (data.subscribedTo.length > 0) {
@@ -159,11 +165,15 @@
                             for (var pm = 0; pm < subscription.permissions.length; pm++) {
                                 var permission = subscription.permissions[pm];
                                 userSubscriptions[subscription.hash].permissions[permission] = true;
+                                if (permission == 'write'){
+                                    subscriptionsWrite.push({hash:subscription.url,displayname:subscription.displayName});
+                                }
                             }
                         }
                     }
                 }
             }
+            maxui.settings.subscriptionsWrite = subscriptionsWrite;
             maxui.settings.subscriptions = userSubscriptions;
             // Start messaging only if conversations enabled
             if (!maxui.settings.disableConversations) {
@@ -301,6 +311,26 @@
                 value: jq(this).attr('value')
             });
             jq('#maxui-search').toggleClass('folded', false);
+        });
+
+        //Add to writeContexts selected subscription to post in it.
+        jq('#maxui-subscriptions').on('change',function(){
+            var $urlContext = jq('#maxui-subscriptions :selected').val();
+            if ($urlContext != 'timeline'){
+                maxui.settings.writeContexts = [];
+                maxui.settings.writeContextsHashes = [];
+
+                // Add read context to write contexts
+                maxui.settings.writeContexts.push($urlContext);
+                // Store the hashes of the write contexts
+                for (var wc = 0; wc < maxui.settings.writeContexts.length; wc++) {
+                    maxui.settings.writeContextsHashes.push(maxui.utils.sha1(maxui.settings.writeContexts[wc]));
+                }
+            }
+            else{
+                maxui.settings.writeContexts = [];
+                maxui.settings.writeContextsHashes = undefined;
+            }
         });
         //Assign filter closing via delegating the click to the filters container
         jq('#maxui-search-filters').on('click', '.maxui-close', function(event) {
@@ -874,6 +904,7 @@
                 debugger
             }*/
         }).on('click', target + ' .maxui-button', function(event) {
+            
             event.preventDefault();
             var $area = jq(this).parent().find('.maxui-text-input');
             var literal = $area.attr('data-literal');
@@ -1175,6 +1206,7 @@
         var $conversations_list = jq('#maxui-conversations #maxui-conversations-list');
         var $conversations_wrapper = jq('#maxui-conversations .maxui-wrapper');
         var $postbutton = jq('#maxui-newactivity-box .maxui-button');
+        var $subscriptionsSelect = jq('#maxui-newactivity-box #maxui-subscriptions');
         var $postbox = jq('#maxui-newactivity');
         var $postbox_text = jq('#maxui-newactivity-box textarea');
         var $conversationsbutton = jq('#maxui-show-conversations');
@@ -1187,6 +1219,7 @@
         var sectionsWidth = widgetWidth - maxui.conversations.scrollbar.width - (sectionPadding * 2) - (widgetBorder * 2);
         var height = 320;
         if (sectionToEnable === 'conversations' && maxui.settings.currentConversationSection === 'conversations') {
+            $subscriptionsSelect.attr('style','display:none');
             $conversations.show();
             $common_header.removeClass('maxui-showing-messages').addClass('maxui-showing-conversations');
             $addpeople.show();
@@ -1215,6 +1248,7 @@
             $postbox.show();
         }
         if (sectionToEnable === 'timeline') {
+            $subscriptionsSelect.attr('style','display:inline');
             maxui.conversations.listview.toggle();
             $timeline.show();
             var timeline_height = $timeline_wrapper.height();
@@ -1534,12 +1568,17 @@
             buttonLiteral: maxui.settings.literals.new_activity_post,
             textLiteral: maxui.settings.literals.new_activity_text,
             literals: maxui.settings.literals,
-            showConversationsToggle: toggleCT ? 'display:block;' : 'display:none;'
+            showConversationsToggle: toggleCT ? 'display:block;' : 'display:none;',
+            showSubscriptionList: maxui.settings.showSubscriptionList ? 'display:inline;' : 'display:none',
+            subscriptionList: maxui.settings.subscriptionsWrite
         };
         var postbox = maxui.templates.postBox.render(params);
         var $postbox = jq('#maxui-newactivity');
         $postbox.html(postbox);
     };
+
+
+
     /**
      *    Renders the timeline of the current user, defined in settings.username
      **/
