@@ -67,7 +67,7 @@
             maxui.settings.writeContexts = [];
         }
         // Never show dropdown list context in context source.
-        if (maxui.settings.activitySource === 'activities'){
+        if (maxui.settings.activitySource === 'activities') {
             maxui.settings.showSubscriptionList = false;
         }
         // Get language from options or set default.
@@ -165,8 +165,11 @@
                             for (var pm = 0; pm < subscription.permissions.length; pm++) {
                                 var permission = subscription.permissions[pm];
                                 userSubscriptions[subscription.hash].permissions[permission] = true;
-                                if (permission === 'write'){
-                                    subscriptionsWrite.push({hash:subscription.url,displayname:subscription.displayName});
+                                if (permission === 'write') {
+                                    subscriptionsWrite.push({
+                                        hash: subscription.url,
+                                        displayname: subscription.displayName
+                                    });
                                 }
                             }
                         }
@@ -312,22 +315,19 @@
             });
             jq('#maxui-search').toggleClass('folded', false);
         });
-
         //Add to writeContexts selected subscription to post in it.
-        jq('#maxui-subscriptions').on('change',function(){
+        jq('#maxui-subscriptions').on('change', function() {
             var $urlContext = jq('#maxui-subscriptions :selected').val();
-            if ($urlContext !== 'timeline'){
+            if ($urlContext !== 'timeline') {
                 maxui.settings.writeContexts = [];
                 maxui.settings.writeContextsHashes = [];
-
                 // Add read context to write contexts
                 maxui.settings.writeContexts.push($urlContext);
                 // Store the hashes of the write contexts
                 for (var wc = 0; wc < maxui.settings.writeContexts.length; wc++) {
                     maxui.settings.writeContextsHashes.push(maxui.utils.sha1(maxui.settings.writeContexts[wc]));
                 }
-            }
-            else{
+            } else {
                 maxui.settings.writeContexts = [];
                 maxui.settings.writeContextsHashes = undefined;
             }
@@ -879,7 +879,6 @@
                 extra_bind(text, this, button, event);
             }
         }).on('paste', selector, function(event) {
-
             var button = jq(this).parent().parent().find('.maxui-button');
             if (maxui.settings.canwrite && !options.ignore_button) {
                 jq(button).removeAttr('disabled');
@@ -889,7 +888,6 @@
             if (extra_bind !== null) {
                 extra_bind(text, this, button, event);
             }
-
         }).on('focusout', selector, function(event) {
             event.preventDefault();
             var text = jq(this).val();
@@ -898,13 +896,12 @@
             if (normalized === '') {
                 jq(this).val(literal);
             }
-/*        }).on('mousedown', selector, function(event) {
-            event.preventDefault();
-            if (event.which == 3) {
-                debugger
-            }*/
+            /*        }).on('mousedown', selector, function(event) {
+                        event.preventDefault();
+                        if (event.which == 3) {
+                            debugger
+                        }*/
         }).on('click', target + ' .maxui-button', function(event) {
-
             event.preventDefault();
             var $area = jq(this).parent().find('.maxui-text-input');
             var literal = $area.attr('data-literal');
@@ -1219,7 +1216,7 @@
         var sectionsWidth = widgetWidth - maxui.conversations.scrollbar.width - (sectionPadding * 2) - (widgetBorder * 2);
         var height = 320;
         if (sectionToEnable === 'conversations' && maxui.settings.currentConversationSection === 'conversations') {
-            $subscriptionsSelect.attr('style','display:none');
+            $subscriptionsSelect.attr('style', 'display:none');
             $conversations.show();
             $common_header.removeClass('maxui-showing-messages').addClass('maxui-showing-conversations');
             $addpeople.show();
@@ -1248,7 +1245,7 @@
             $postbox.show();
         }
         if (sectionToEnable === 'timeline') {
-            $subscriptionsSelect.attr('style','display:inline');
+            $subscriptionsSelect.attr('style', 'display:inline');
             maxui.conversations.listview.toggle();
             $timeline.show();
             var timeline_height = $timeline_wrapper.height();
@@ -1576,9 +1573,6 @@
         var $postbox = jq('#maxui-newactivity');
         $postbox.html(postbox);
     };
-
-
-
     /**
      *    Renders the timeline of the current user, defined in settings.username
      **/

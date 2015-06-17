@@ -40,8 +40,8 @@ var max = max || {};
             }
             self.maxui.maxClient.getConversationSubscription(conversation_hash, self.maxui.settings.username, function(data) {
                 if (_.findWhere(self.conversations, {
-                    'id': data.id
-                })) {
+                        'id': data.id
+                    })) {
                     self.conversations = _.map(self.conversations, function(conversation) {
                         if (conversation.id === data.id) {
                             return data;
@@ -222,13 +222,13 @@ var max = max || {};
          *
          */
         function MaxConversationMessages(maxconversations, options) {
-            var self = this;
-            self.messages = {};
-            self.mainview = maxconversations;
-            self.maxui = self.mainview.maxui;
-            self.remaining = true;
-        }
-        // Loads the last 10 messages of a conversation
+                var self = this;
+                self.messages = {};
+                self.mainview = maxconversations;
+                self.maxui = self.mainview.maxui;
+                self.remaining = true;
+            }
+            // Loads the last 10 messages of a conversation
         MaxConversationMessages.prototype.load = function() {
             var self = this;
             var conversation_id = self.mainview.active;
