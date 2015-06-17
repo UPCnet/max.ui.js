@@ -165,7 +165,7 @@
                             for (var pm = 0; pm < subscription.permissions.length; pm++) {
                                 var permission = subscription.permissions[pm];
                                 userSubscriptions[subscription.hash].permissions[permission] = true;
-                                if (permission == 'write'){
+                                if (permission === 'write'){
                                     subscriptionsWrite.push({hash:subscription.url,displayname:subscription.displayName});
                                 }
                             }
@@ -316,7 +316,7 @@
         //Add to writeContexts selected subscription to post in it.
         jq('#maxui-subscriptions').on('change',function(){
             var $urlContext = jq('#maxui-subscriptions :selected').val();
-            if ($urlContext != 'timeline'){
+            if ($urlContext !== 'timeline'){
                 maxui.settings.writeContexts = [];
                 maxui.settings.writeContextsHashes = [];
 
@@ -889,7 +889,7 @@
             if (extra_bind !== null) {
                 extra_bind(text, this, button, event);
             }
-            
+
         }).on('focusout', selector, function(event) {
             event.preventDefault();
             var text = jq(this).val();
@@ -904,7 +904,7 @@
                 debugger
             }*/
         }).on('click', target + ' .maxui-button', function(event) {
-            
+
             event.preventDefault();
             var $area = jq(this).parent().find('.maxui-text-input');
             var literal = $area.attr('data-literal');

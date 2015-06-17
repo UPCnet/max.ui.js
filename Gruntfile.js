@@ -186,6 +186,7 @@ module.exports = function (grunt) {
                     "jQuery": true,
                     "alert": true,
                     "module": true,
+                    "JSON": true,
                     "_" :true
                 }
             },
