@@ -9,7 +9,7 @@
 // In the example.js file lives the code that the api consumer has to insert in the host application
 //
 window.setTimeout(function() {
-    if (window._MAXUI.onReady && !window._MAXUI.hasRun) {
+    if (window._MAXUI && window._MAXUI.onReady && !window._MAXUI.hasRun) {
         window._MAXUI.hasRun = true;
         _MAXUI.onReady();
     }
