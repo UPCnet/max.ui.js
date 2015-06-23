@@ -45,6 +45,7 @@ max.templates = function() {
                        {{/via}}\
                 </div>\
                 {{/publishedIn}}\
+                <span class="maxui-publisheddate" style="clear:both">{{dateLastComment}}</span>\
                 <div class="maxui-actions">\
                     <a href="" class="maxui-action maxui-commentaction maxui-icon- {{#replies}}maxui-has-comments{{/replies}}"><strong>{{replies.length}}</strong> {{literals.toggle_comments}}</a>\
                     <a href="" class="maxui-action maxui-favorites {{#favorited}}maxui-favorited{{/favorited}} maxui-icon-">{{literals.favorite}}</a>\
@@ -356,7 +357,6 @@ max.templates = function() {
                        <div class="maxui-error-box"></div>\
                     </div>\
                     <select id="maxui-subscriptions" style="{{showSubscriptionList}}">\
-                      <option value="timeline" class="subscription-option">Timeline</option>\
                       {{#subscriptionList}}\
                         <option value="{{hash}}">{{displayname}}</option>\
                       {{/subscriptionList}}\

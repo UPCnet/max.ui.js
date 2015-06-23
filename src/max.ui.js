@@ -1413,6 +1413,7 @@
             // Take replies (if exists) and format to be included as a formatted
             // subobject ready for hogan
             var replies = [];
+            var lastComment = '';
             if (activity.replies) {
                 if (activity.replies.length > 0) {
                     for (var r = 0; r < activity.replies.length; r++) {
@@ -1428,6 +1429,7 @@
                         };
                         replies.push(reply);
                     }
+                    lastComment = 'Comentat '+replies[replies.length-1].date
                 }
             }
             // Take all the latter properties and join them into an object
@@ -1444,6 +1446,7 @@
                 },
                 literals: maxui.settings.literals,
                 date: maxui.utils.formatDate(activity.published, maxui.language),
+                dateLastComment: lastComment,
                 text: maxui.utils.formatText(activity.object.content),
                 replies: replies,
                 favorited: activity.favorited,
