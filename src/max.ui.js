@@ -1569,7 +1569,7 @@
             textLiteral: maxui.settings.literals.new_activity_text,
             literals: maxui.settings.literals,
             showConversationsToggle: toggleCT ? 'display:block;' : 'display:none;',
-            showSubscriptionList: maxui.settings.showSubscriptionList ? 'display:inline;' : 'display:none',
+            showSubscriptionList: maxui.settings.showSubscriptionList ? 'display:inline;' : 'display:none;',
             subscriptionList: maxui.settings.subscriptionsWrite
         };
         var postbox = maxui.templates.postBox.render(params);
