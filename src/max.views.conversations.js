@@ -175,7 +175,8 @@ var max = max || {};
                 buttonLiteral: self.maxui.settings.literals.new_message_post,
                 textLiteral: self.maxui.settings.literals.new_conversation_text,
                 literals: self.maxui.settings.literals,
-                showConversationsToggle: toggleCT ? 'display:block;' : 'display:none;'
+                showConversationsToggle: toggleCT ? 'display:block;' : 'display:none;',
+                showSubscriptionList: 'display:none;'
             };
             var postbox = self.maxui.templates.postBox.render(params);
             var $postbox = jq('#maxui-newactivity');
