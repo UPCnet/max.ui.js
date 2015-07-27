@@ -1,8 +1,10 @@
 /**
  * @fileoverview
  */
+"use strict";
 var max = max || {};
 (function(jq) {
+
     var views = function() {
         /** MaxChatInfo
          *
@@ -279,7 +281,7 @@ var max = max || {};
                         panelID: self.panelID,
                         published: self.maxui.utils.formatDate(self.data.published, self.maxui.language),
                         canManage: self.maxui.settings.username === self.data.owner,
-                        canAdd: _.contains(subscription.permissions, 'subscribe')
+                        canAdd: _.contains(subscription.permissions, 'invite')
                     };
                     self.content = self.maxui.templates.conversationSettings.render(params);
                     configurator(self);
