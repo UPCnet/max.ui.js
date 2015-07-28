@@ -66,10 +66,6 @@
             maxui.settings.readContext = undefined;
             maxui.settings.writeContexts = [];
         }
-        // Never show dropdown list context in context source.
-        if (maxui.settings.activitySource === 'activities') {
-            maxui.settings.showSubscriptionList = false;
-        }
         // Get language from options or set default.
         // Set literals in the choosen language and extend from user options
         maxui.language = options.language || 'en';
@@ -1216,7 +1212,7 @@
         var sectionsWidth = widgetWidth - maxui.conversations.scrollbar.width - (sectionPadding * 2) - (widgetBorder * 2);
         var height = 320;
         if (sectionToEnable === 'conversations' && maxui.settings.currentConversationSection === 'conversations') {
-            $subscriptionsSelect.attr('style', 'display:none');
+            $subscriptionsSelect.attr('style', 'display:none;');
             $conversations.show();
             $common_header.removeClass('maxui-showing-messages').addClass('maxui-showing-conversations');
             $addpeople.show();
@@ -1245,7 +1241,9 @@
             $postbox.show();
         }
         if (sectionToEnable === 'timeline') {
-            $subscriptionsSelect.attr('style', 'display:inline');
+            if (maxui.settings.showSubscriptionList === true){
+                $subscriptionsSelect.attr('style', 'display:inline;');
+            }
             maxui.conversations.listview.toggle();
             $timeline.show();
             var timeline_height = $timeline_wrapper.height();
@@ -1559,6 +1557,7 @@
      **/
     jq.fn.renderPostbox = function() {
         var maxui = this;
+
         // Render the postbox UI if user has permission
         var showCT = maxui.settings.UISection === 'conversations';
         var toggleCT = maxui.settings.disableConversations === false && !showCT;
@@ -1572,6 +1571,7 @@
             showSubscriptionList: maxui.settings.showSubscriptionList ? 'display:inline;' : 'display:none;',
             subscriptionList: maxui.settings.subscriptionsWrite
         };
+
         var postbox = maxui.templates.postBox.render(params);
         var $postbox = jq('#maxui-newactivity');
         $postbox.html(postbox);
