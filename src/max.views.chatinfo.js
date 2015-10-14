@@ -1,10 +1,9 @@
 /**
  * @fileoverview
  */
-"use strict";
 var max = max || {};
 (function(jq) {
-
+    "use strict";
     var views = function() {
         /** MaxChatInfo
          *

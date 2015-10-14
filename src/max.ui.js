@@ -881,6 +881,7 @@
                 jq(button).attr('class', 'maxui-button');
                 jq(this).attr('class', 'maxui-text-input');
             }
+            var text = jq(this).val();
             if (extra_bind !== null) {
                 extra_bind(text, this, button, event);
             }
@@ -1427,7 +1428,7 @@
                         };
                         replies.push(reply);
                     }
-                    lastComment = 'Comentat '+replies[replies.length-1].date
+                    lastComment = 'Comentat ' + replies[replies.length-1].date;
                 }
             }
             // Take all the latter properties and join them into an object
