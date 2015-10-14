@@ -1242,7 +1242,7 @@
             $postbox.show();
         }
         if (sectionToEnable === 'timeline') {
-            if (maxui.settings.showSubscriptionList === true){
+            if (maxui.settings.showSubscriptionList === true) {
                 $subscriptionsSelect.attr('style', 'display:inline;');
             }
             maxui.conversations.listview.toggle();
@@ -1428,7 +1428,7 @@
                         };
                         replies.push(reply);
                     }
-                    lastComment = 'Comentat ' + replies[replies.length-1].date;
+                    lastComment = 'Comentat ' + replies[replies.length - 1].date;
                 }
             }
             // Take all the latter properties and join them into an object
@@ -1558,7 +1558,6 @@
      **/
     jq.fn.renderPostbox = function() {
         var maxui = this;
-
         // Render the postbox UI if user has permission
         var showCT = maxui.settings.UISection === 'conversations';
         var toggleCT = maxui.settings.disableConversations === false && !showCT;
@@ -1572,7 +1571,6 @@
             showSubscriptionList: maxui.settings.showSubscriptionList ? 'display:inline;' : 'display:none;',
             subscriptionList: maxui.settings.subscriptionsWrite
         };
-
         var postbox = maxui.templates.postBox.render(params);
         var $postbox = jq('#maxui-newactivity');
         $postbox.html(postbox);

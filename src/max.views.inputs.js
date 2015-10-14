@@ -73,7 +73,6 @@ var max = max || {};
                 return previous_request.text;
             }
         };
-
         MaxPredictive.prototype.normalizeWhiteSpace = function(s, multi) {
             s = s.replace(/(^\s*)|(\s*$)/gi, "");
             s = s.replace(/\n /, "\n");
@@ -86,7 +85,6 @@ var max = max || {};
             }
             return s;
         };
-
         // Fetch new predictions from source if needed, and render them
         // Also, predictions are stored in self.requests, so we try to repeat request only when needed
         // Algorith:
@@ -170,7 +168,6 @@ var max = max || {};
             // Initialize input value with placeholder
             self.$input.val(self.placeholder);
         }
-
         MaxInput.prototype.normalizeWhiteSpace = function(s, multi) {
             s = s.replace(/(^\s*)|(\s*$)/gi, "");
             s = s.replace(/\n /, "\n");
@@ -183,7 +180,6 @@ var max = max || {};
             }
             return s;
         };
-
         MaxInput.prototype.bind = function(eventName, callback) {
             var self = this;
             self.$delegate.on(eventName, self.input, callback);
