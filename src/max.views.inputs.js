@@ -73,6 +73,20 @@ var max = max || {};
                 return previous_request.text;
             }
         };
+
+        MaxPredictive.prototype.normalizeWhiteSpace = function(s, multi) {
+            s = s.replace(/(^\s*)|(\s*$)/gi, "");
+            s = s.replace(/\n /, "\n");
+            var trimMulti = true;
+            if (arguments.length > 1) {
+                trimMulti = multi;
+            }
+            if (trimMulti === true) {
+                s = s.replace(/[ ]{2,}/gi, " ");
+            }
+            return s;
+        };
+
         // Fetch new predictions from source if needed, and render them
         // Also, predictions are stored in self.requests, so we try to repeat request only when needed
         // Algorith:
@@ -82,7 +96,7 @@ var max = max || {};
         MaxPredictive.prototype.show = function(event) {
             var self = this;
             var $input = jq(event.target);
-            var text = self.maxui.utils.normalizeWhiteSpace($input.val(), false);
+            var text = self.normalizeWhiteSpace($input.val(), false);
             if (text.length >= this.minchars) {
                 var matching_request = self.matchingRequest(text);
                 if (self.requests.hasOwnProperty(text)) {
@@ -156,6 +170,20 @@ var max = max || {};
             // Initialize input value with placeholder
             self.$input.val(self.placeholder);
         }
+
+        MaxInput.prototype.normalizeWhiteSpace = function(s, multi) {
+            s = s.replace(/(^\s*)|(\s*$)/gi, "");
+            s = s.replace(/\n /, "\n");
+            var trimMulti = true;
+            if (arguments.length > 1) {
+                trimMulti = multi;
+            }
+            if (trimMulti === true) {
+                s = s.replace(/[ ]{2,}/gi, " ");
+            }
+            return s;
+        };
+
         MaxInput.prototype.bind = function(eventName, callback) {
             var self = this;
             self.$delegate.on(eventName, self.input, callback);
@@ -169,7 +197,7 @@ var max = max || {};
         MaxInput.prototype.getInputValue = function() {
             var self = this;
             var text = this.$input.val();
-            return self.maxui.utils.normalizeWhiteSpace(text, false);
+            return self.normalizeWhiteSpace(text, false);
         };
         MaxInput.prototype.setBindings = function() {
             var maxinput = this;
