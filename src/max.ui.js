@@ -620,9 +620,9 @@
                 }
             }
             var key = event.which;
-            var matchMention = new RegExp('^\\s*([\\u00C0-\\u00FC\\w\\.]+)\\s*');
+            var matchMention = new RegExp('^\\s*([\\u00C0-\\u00FC\\w\\. ]+)\\s*');
             var match = text.match(matchMention);
-            var matchMentionEOL = new RegExp('^\\s*([\\u00C0-\\u00FC\\w\\.]+)\\s*$');
+            var matchMentionEOL = new RegExp('^\\s*([\\u00C0-\\u00FC\\w\\. ]+)\\s*$');
             var matchEOL = text.match(matchMentionEOL);
             var $selected = jq('#maxui-conversation-predictive .maxui-prediction.selected');
             var $area = jq(this);
