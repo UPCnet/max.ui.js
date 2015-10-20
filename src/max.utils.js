@@ -3,9 +3,7 @@
  *               related to UI construction
  **/
 'use strict';
-
 var max = max || {};
-
 max.utils = function() {
     var settings = {};
     return {
@@ -237,7 +235,7 @@ max.utils = function() {
                 return str;
             }
 
-            function Utf8Encode(string) {
+            function utf8Encode(string) {
                 string = string.replace(/\r\n/g, "\n");
                 var utftext = "";
                 for (var n = 0; n < string.length; n++) {
@@ -265,7 +263,7 @@ max.utils = function() {
             var H4 = 0xC3D2E1F0;
             var A, B, C, D, E;
             var temp;
-            msg = Utf8Encode(msg);
+            msg = utf8Encode(msg);
             var msg_len = msg.length;
             var word_array = [];
             for (i = 0; i < msg_len - 3; i += 4) {

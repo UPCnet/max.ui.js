@@ -2,9 +2,7 @@
  * @fileoverview Provides literals in several languages
  */
 'use strict';
-
- var max = max || {};
-
+var max = max || {};
 max.literals = function(language) {
     var maxui = {};
     maxui.en = {

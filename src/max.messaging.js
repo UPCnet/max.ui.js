@@ -5,7 +5,6 @@
  * @fileoverview
  */
 'use strict';
-
 var max = max || {};
 (function(jq) {
     /** MaxMessaging

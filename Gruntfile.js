@@ -174,6 +174,7 @@ module.exports = function (grunt) {
         // Syntax checker
         jshint: {
             options: {
+                globalstrict: true,
                 undef: true,
                 latedef: true,
                 indent: 4,

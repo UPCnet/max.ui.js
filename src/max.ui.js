@@ -1,10 +1,8 @@
 /*global max */
 /*global MaxClient */
-
 /* @fileoverview Main Activity Stream widget module
-*/
+ */
 'use strict';
-
 (function(jq) {
     /**
      *    MaxUI plugin definition
@@ -679,7 +677,7 @@
                     } else {
                         $predictive.hide();
                         $area.attr('class', 'maxui-empty maxui-text-input');
-                        if (!text.match(RegExp('^\\s*@'))) {
+                        if (!text.match(new RegExp('^\\s*@'))) {
                             $area.attr('class', 'maxui-text-input error');
                             $area.attr('title', maxui.settings.literals.post_permission_not_here);
                         }
@@ -777,7 +775,7 @@
                     } else {
                         jq(button).val(maxui.settings.literals.new_activity_post);
                         $predictive.hide();
-                        if (!text.match(RegExp('^\\s*@')) && !maxui.settings.canwrite) {
+                        if (!text.match(new RegExp('^\\s*@')) && !maxui.settings.canwrite) {
                             $area.attr('class', 'maxui-text-input error');
                             $area.attr('title', maxui.settings.literals.post_permission_unauthorized);
                         }

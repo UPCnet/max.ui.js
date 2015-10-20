@@ -3,9 +3,7 @@
  * @fileoverview
  */
 'use strict';
-
 var max = max || {};
-
 (function(jq) {
     var views = function() {
         /** MaxPredictive.
