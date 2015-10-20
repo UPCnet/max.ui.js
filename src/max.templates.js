@@ -1,9 +1,12 @@
-/*global Hogan */ /*jshint multistr: true */
-var max = max || {};
+/*global Hogan *//*jshint multistr: true */
 /**
- * @fileoverview Provides hogan compiled templates
- *               ready to render.
- */
+* @fileoverview Provides hogan compiled templates
+*               ready to render.
+*/
+'use strict';
+
+var max = max || {};
+
 max.templates = function() {
     var templates = {
         activity: Hogan.compile('\

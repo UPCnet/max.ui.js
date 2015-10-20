@@ -1,5 +1,10 @@
 /*global max */
 /*global MaxClient */
+
+/* @fileoverview Main Activity Stream widget module
+*/
+'use strict';
+
 (function(jq) {
     /**
      *    MaxUI plugin definition

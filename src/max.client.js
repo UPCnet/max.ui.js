@@ -1,3 +1,8 @@
+/**
+ * @fileoverview Client module to perform api calls
+ */
+'use strict';
+
 if (!Object.keys) {
     Object.keys = function(obj) {
         var keys = [],

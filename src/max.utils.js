@@ -1,8 +1,11 @@
-var max = max || {};
 /**
  * @fileoverview Provides support functions not directly
  *               related to UI construction
  **/
+'use strict';
+
+var max = max || {};
+
 max.utils = function() {
     var settings = {};
     return {

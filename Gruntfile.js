@@ -112,7 +112,7 @@ module.exports = function (grunt) {
             },
             templates: {
                 options: {
-                    separator: ",\n\n",
+                    separator: ",\n",
                     process: function (src, filepath) {
                         // Strip .mustache extension
                         var variable_name = filepath.substr(14, filepath.length - 23);
@@ -120,17 +120,18 @@ module.exports = function (grunt) {
                     },
                     banner: '/*global Hogan */' +
                         '/*jshint multistr: true */\n' +
-                        'var max = max || {};\n\n' +
                         '/**\n' +
                         '* @fileoverview Provides hogan compiled templates\n' +
                         '*               ready to render.\n' +
-                        '*/\n\n' +
-                        'max.templates = function() {\n\n' +
-                        '    var templates = {\n\n',
+                        '*/\n' +
+                        "'use strict';\n\n" +
+                        'var max = max || {};\n\n' +
+                        'max.templates = function() {\n' +
+                        '    var templates = {\n',
 
-                    footer: '\n\n    };\n\n' +
+                    footer: '\n    };\n' +
                         '    return templates;\n' +
-                        '};'
+                        '};\n'
                 },
                 src: ['src/templates/*.mustache'],
                 dest: 'src/max.templates.js'
