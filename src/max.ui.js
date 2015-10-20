@@ -8,7 +8,7 @@
     jq.fn.maxUI = function(options) {
         // Keep a reference of the context object
         var maxui = this;
-        maxui.version = '4.1.9';
+        maxui.version = '4.1.10';
         maxui.templates = max.templates();
         maxui.utils = max.utils();
         var defaults = {
@@ -66,12 +66,10 @@
             maxui.settings.readContext = undefined;
             maxui.settings.writeContexts = [];
         }
-
         // Check showSubscriptionList consistency
         if (maxui.settings.showSubscriptionList && maxui.settings.activitySource === 'activities') {
             maxui.settings.showSubscriptionList = false;
         }
-
         // Get language from options or set default.
         // Set literals in the choosen language and extend from user options
         maxui.language = options.language || 'en';

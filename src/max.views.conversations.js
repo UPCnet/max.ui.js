@@ -62,7 +62,6 @@ var max = max || {};
         };
         MaxConversationsList.prototype.updateLastMessage = function(conversation_id, message) {
             var self = this;
-            var increment = 0;
             self.conversations = _.map(self.conversations, function(conversation) {
                 if (conversation.id === conversation_id) {
                     conversation.lastMessage = message;
@@ -409,19 +408,14 @@ var max = max || {};
                     var others_message = true;
                     if (message.user.username === self.maxui.settings.username) {
                         origin = 'maxui-user-me';
-                        others_message = false
+                        others_message = false;
                     }
                     _.defaults(message.data, {
                         filename: message.uuid
                     });
-
-                    var is_group_conversation = _.contains(
-                        _.findWhere(
-                            self.mainview.listview.conversations,
-                            {id:self.mainview.active}
-                        ).tags,
-                        'group'
-                    )
+                    var is_group_conversation = _.contains(_.findWhere(self.mainview.listview.conversations, {
+                        id: self.mainview.active
+                    }).tags, 'group');
                     var params = {
                         id: message.uuid,
                         text: self.maxui.utils.formatText(message.data.text),
@@ -687,16 +681,13 @@ var max = max || {};
             var message_from_another_user = message.user.username !== self.maxui.settings.username;
             var message_not_in_list = self.messagesview.exists(message);
             if (message_from_another_user || message_not_in_list) {
-
                 if (message_from_another_user) {
                     self.maxui.logger.log('New message from user {0} on {1}'.format(message.user.username, message.destination), self.logtag);
                 } else {
                     self.maxui.logger.log('Updating {1} messages sent from other {0} instances'.format(message.user.username, message.destination), self.logtag);
                 }
-
                 self.messagesview.append(message);
                 self.updateUnreadConversations();
-
                 if (self.maxui.settings.UISection === 'conversations' && self.maxui.settings.conversationsSection === 'messages') {
                     self.messagesview.render(false);
                     self.scrollbar.setContentPosition(100);
