@@ -680,13 +680,13 @@ var max = max || {};
                 self.maxui.logger.log('New message from user {0} on {1}'.format(message.user.username, message.destination), self.logtag);
                 self.messagesview.append(message);
                 if (self.maxui.settings.UISection === 'conversations' && self.maxui.settings.conversationsSection === 'messages') {
-                    self.messagesview.render();
+                    self.messagesview.render(false);
                     self.scrollbar.setContentPosition(100);
                 } else if (self.maxui.settings.UISection === 'conversations' && self.maxui.settings.conversationsSection === 'conversations') {
-                    self.listview.render();
+                    self.listview.render(false);
                 } else if (self.maxui.settings.UISection === 'timeline') {
                     self.updateUnreadConversations();
-                    self.listview.render();
+                    self.listview.render(false);
                 }
             } //else {
             //  Receiving our own message after going trough rabbitmq
