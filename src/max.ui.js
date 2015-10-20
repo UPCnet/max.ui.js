@@ -66,6 +66,12 @@
             maxui.settings.readContext = undefined;
             maxui.settings.writeContexts = [];
         }
+
+        // Check showSubscriptionList consistency
+        if (maxui.settings.showSubscriptionList && maxui.settings.activitySource === 'activities') {
+            maxui.settings.showSubscriptionList = false;
+        }
+
         // Get language from options or set default.
         // Set literals in the choosen language and extend from user options
         maxui.language = options.language || 'en';
@@ -1568,7 +1574,7 @@
             textLiteral: maxui.settings.literals.new_activity_text,
             literals: maxui.settings.literals,
             showConversationsToggle: toggleCT ? 'display:block;' : 'display:none;',
-            showSubscriptionList: maxui.settings.showSubscriptionList ? 'display:inline;' : 'display:none;',
+            showSubscriptionList: maxui.settings.showSubscriptionList && maxui.settings.subscriptionsWrite.length > 0,
             subscriptionList: maxui.settings.subscriptionsWrite
         };
         var postbox = maxui.templates.postBox.render(params);

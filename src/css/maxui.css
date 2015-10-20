@@ -615,23 +615,20 @@
 #maxui-container .maxui-message.maxui-user-notme .maxui-balloon.maxui-ack {
   display: none;
 }
+#maxui-container .maxui-message.maxui-user-notme .maxui-balloon .maxui-displayname {
+  background-color: #A7ADD0;
+  padding: 2px 7px;
+  border-radius: 5px;
+  font-size: 80%;
+  text-shadow: none;
+  color: white;
+}
 #maxui-container .maxui-message.maxui-user-notme .maxui-balloon:after {
   left: 44px;
   border-top: 3px solid #edf3ff;
   border-left: 3px solid transparent;
   border-right: 3px solid #edf3ff;
 }
-
-/* Subscriptions dropdown selection */
-#maxui-subscriptions{
-  font-family: Arial, "HelveticaNeue", "Helvetica Neue", Helvetica, sans-serif;
-  font-size: 13px;
-  height: 27px;
-  max-width: 328px;
-  margin-top: 12px;
-}
-
-
 /* Button style definitions*/
 .maxui-base-button,
 #maxui-container .maxui-button,
@@ -1408,6 +1405,13 @@
   padding: 4px 5px;
   text-shadow: none;
 }
+#maxui-container #maxui-mainpanel #maxui-newactivity #maxui-newactivity-box #maxui-subscriptions {
+  font-family: Arial, "HelveticaNeue", "Helvetica Neue", Helvetica, sans-serif;
+  font-size: 13px;
+  height: 27px;
+  max-width: 328px;
+  margin-top: 12px;
+}
 #maxui-container #maxui-mainpanel #maxui-search {
   box-sizing: border-box;
   border-top: 1px #cccccc solid;
@@ -1784,5 +1788,3 @@
 .maxui-button {*overflow: visible}
 
 #maxui-newactivity .maxui-avatar img {*position:absolute;}
-
-

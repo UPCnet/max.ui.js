@@ -1,4 +1,4 @@
-<div class="maxui-message {{origin}}" id="{{id}}">
+<div class="maxui-message maxui-user-{{#othersMessage}}not{{/othersMessage}}me" id="{{id}}">
     <div class="maxui-activity-content">
         <span class="maxui-avatar maxui-little"><img src="{{avatarURL}}"></span>
         <div class="maxui-balloon">
@@ -11,6 +11,7 @@
                 <span class="maxui-icon-download"></span><input type="submit" class="maxui-download" name="submit" value="File download">
             </form>
             {{/fileDownload}}
+            {{#othersMessage}}<span class="maxui-displayname">{{displayName}}</span>{{/othersMessage}}
             <p class="maxui-body">{{&text}}</p>
             <span class="maxui-publisheddate">{{date}}</span>
             <i class="maxui-icon-check{{#ack}} maxui-ack{{/ack}}"></i>

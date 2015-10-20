@@ -405,19 +405,23 @@ var max = max || {};
                     var avatar_url = self.maxui.settings.avatarURLpattern.format(message.user.username);
                     // Store in origin, who is the sender of the message, the authenticated user or anyone else
                     var origin = 'maxui-user-notme';
+                    var others_message = true;
                     if (message.user.username === self.maxui.settings.username) {
                         origin = 'maxui-user-me';
+                        others_message = false
                     }
                     _.defaults(message.data, {
                         filename: message.uuid
                     });
+
                     var params = {
                         id: message.uuid,
                         text: self.maxui.utils.formatText(message.data.text),
                         date: self.maxui.utils.formatDate(message.published, self.maxui.language),
-                        origin: origin,
+                        othersMessage: others_message,
                         literals: self.maxui.settings.literals,
                         avatarURL: avatar_url,
+                        displayName: message.user.displayName,
                         ack: message.ack ? origin === 'maxui-user-me' : false,
                         fileDownload: message.data.objectType === 'file',
                         filename: message.data.filename,
