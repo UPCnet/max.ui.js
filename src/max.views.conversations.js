@@ -63,18 +63,15 @@ var max = max || {};
         MaxConversationsList.prototype.updateLastMessage = function(conversation_id, message) {
             var self = this;
             var increment = 0;
-            if (arguments.length > 2) {
-                if (arguments[2]) {
-                    increment = arguments[2];
-                }
-            }
             self.conversations = _.map(self.conversations, function(conversation) {
                 if (conversation.id === conversation_id) {
                     conversation.lastMessage = message;
                     _.defaults(conversation, {
                         unread_messages: 0
                     });
-                    conversation.unread_messages += increment;
+                    if (self.maxui.settings.username !== message.user) {
+                        conversation.unread_messages += 1;
+                    }
                 }
                 return conversation;
             }, self);
@@ -254,8 +251,9 @@ var max = max || {};
                 var last_message = _.last(self.messages[conversation_id]);
                 self.mainview.listview.updateLastMessage(conversation_id, {
                     'content': last_message.data.text,
-                    'published': last_message.published
-                }, set_unread);
+                    'published': last_message.published,
+                    'user': last_message.user.username
+                });
                 self.mainview.listview.render(false);
                 self.mainview.updateUnreadConversations();
                 self.render();
@@ -350,15 +348,17 @@ var max = max || {};
                 // If it's a message from max, update last message on listview
                 self.mainview.listview.updateLastMessage(_message.destination, {
                     'content': _message.data.text,
-                    'published': _message.published
+                    'published': _message.published,
+                    'user': _message.user.username
                 });
             } else {
                 _message = message;
                 // Is a message from rabbit, update last message on listview and increment unread counter
                 self.mainview.listview.updateLastMessage(_message.destination, {
                     'content': _message.data.text,
-                    'published': _message.published
-                }, true);
+                    'published': _message.published,
+                    'user': _message.user.username
+                });
             }
             self.messages[_message.destination] = self.messages[_message.destination] || [];
             self.messages[_message.destination].push(_message);
@@ -622,7 +622,8 @@ var max = max || {};
             self.scrollbar.setContentPosition(100);
             self.listview.updateLastMessage(self.active, {
                 'content': sent.data.text,
-                'published': sent.published
+                'published': sent.published,
+                'user': sent.user.username
             });
         };
         /**
@@ -677,7 +678,13 @@ var max = max || {};
             var message_from_another_user = message.user.username !== self.maxui.settings.username;
             var message_not_in_list = self.messagesview.exists(message);
             if (message_from_another_user || message_not_in_list) {
-                self.maxui.logger.log('New message from user {0} on {1}'.format(message.user.username, message.destination), self.logtag);
+
+                if (message_from_another_user) {
+                    self.maxui.logger.log('New message from user {0} on {1}'.format(message.user.username, message.destination), self.logtag);
+                } else {
+                    self.maxui.logger.log('Updating {1} messages sent from other {0} instances'.format(message.user.username, message.destination), self.logtag);
+                }
+
                 self.messagesview.append(message);
                 if (self.maxui.settings.UISection === 'conversations' && self.maxui.settings.conversationsSection === 'messages') {
                     self.messagesview.render(false);
