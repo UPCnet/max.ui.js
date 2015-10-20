@@ -695,13 +695,14 @@ var max = max || {};
                 }
 
                 self.messagesview.append(message);
+                self.updateUnreadConversations();
+
                 if (self.maxui.settings.UISection === 'conversations' && self.maxui.settings.conversationsSection === 'messages') {
                     self.messagesview.render(false);
                     self.scrollbar.setContentPosition(100);
                 } else if (self.maxui.settings.UISection === 'conversations' && self.maxui.settings.conversationsSection === 'conversations') {
                     self.listview.render(false);
                 } else if (self.maxui.settings.UISection === 'timeline') {
-                    self.updateUnreadConversations();
                     self.listview.render(false);
                 }
             } //else {
