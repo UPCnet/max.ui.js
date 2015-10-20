@@ -254,6 +254,7 @@ var max = max || {};
                     'published': last_message.published,
                     'user': last_message.user.username
                 });
+                self.mainview.listview.resetUnread(conversation_id);
                 self.mainview.listview.render(false);
                 self.mainview.updateUnreadConversations();
                 self.render();
@@ -414,6 +415,13 @@ var max = max || {};
                         filename: message.uuid
                     });
 
+                    var is_group_conversation = _.contains(
+                        _.findWhere(
+                            self.mainview.listview.conversations,
+                            {id:self.mainview.active}
+                        ).tags,
+                        'group'
+                    )
                     var params = {
                         id: message.uuid,
                         text: self.maxui.utils.formatText(message.data.text),
@@ -422,6 +430,7 @@ var max = max || {};
                         literals: self.maxui.settings.literals,
                         avatarURL: avatar_url,
                         displayName: message.user.displayName,
+                        showDisplayName: others_message && is_group_conversation,
                         ack: message.ack ? origin === 'maxui-user-me' : false,
                         fileDownload: message.data.objectType === 'file',
                         filename: message.data.filename,

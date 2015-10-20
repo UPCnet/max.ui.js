@@ -321,7 +321,7 @@ max.templates = function() {
                         <span class="maxui-icon-download"></span><input type="submit" class="maxui-download" name="submit" value="File download">\
                     </form>\
                     {{/fileDownload}}\
-                    {{#othersMessage}}<span class="maxui-displayname">{{displayName}}</span>{{/othersMessage}}\
+                    {{#showDisplayName}}<span class="maxui-displayname">{{displayName}}</span>{{/showDisplayName}}\
                     <p class="maxui-body">{{&text}}</p>\
                     <span class="maxui-publisheddate">{{date}}</span>\
                     <i class="maxui-icon-check{{#ack}} maxui-ack{{/ack}}"></i>\
