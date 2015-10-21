@@ -331,7 +331,7 @@ var max = max || {};
                     'object': 'message',
                     'user': {
                         'username': message.actor.username,
-                        'displayName': message.actor.displayName
+                        'displayname': message.actor.displayName
                     },
                     'published': message.published,
                     'data': {
@@ -374,7 +374,7 @@ var max = max || {};
                     'object': 'message',
                     'user': {
                         'username': message.actor.username,
-                        'displayName': message.actor.displayName
+                        'displayname': message.actor.displayName
                     },
                     'published': message.published,
                     'data': {
@@ -424,7 +424,7 @@ var max = max || {};
                         othersMessage: others_message,
                         literals: self.maxui.settings.literals,
                         avatarURL: avatar_url,
-                        displayName: message.user.displayName,
+                        displayName: message.user.displayname,
                         showDisplayName: others_message && is_group_conversation,
                         ack: message.ack ? origin === 'maxui-user-me' : false,
                         fileDownload: message.data.objectType === 'file',
