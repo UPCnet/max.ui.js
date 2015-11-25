@@ -173,7 +173,7 @@ var max = max || {};
                 textLiteral: self.maxui.settings.literals.new_conversation_text,
                 literals: self.maxui.settings.literals,
                 showConversationsToggle: toggleCT ? 'display:block;' : 'display:none;',
-                showSubscriptionList: 'display:none;'
+                showSubscriptionList: false
             };
             var postbox = self.maxui.templates.postBox.render(params);
             var $postbox = jq('#maxui-newactivity');
