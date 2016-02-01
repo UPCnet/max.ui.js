@@ -85,6 +85,18 @@ var max = max || {};
                     },
                     'conversation': {
                         id: 'c'
+                    },
+                    'tweet': {
+                        id: 't'
+                    },
+                    'activity': {
+                        id: 'a'
+                    },
+                    'context': {
+                        id: 'x'
+                    },
+                    'comment': {
+                        id: 't'
                     }
                 }
             },
