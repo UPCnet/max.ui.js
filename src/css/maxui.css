@@ -1788,3 +1788,16 @@
 .maxui-button {*overflow: visible}
 
 #maxui-newactivity .maxui-avatar img {*position:absolute;}
+
+maxui-conversation .maxui-avatar {
+   left: -45px;
+   top: 5px;
+}
+
+span.maxui-displayname {
+   margin-left: 10px;
+}
+
+p.maxui-body {
+   margin-left: 10px!important;
+}
