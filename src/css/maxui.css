@@ -350,7 +350,7 @@
 }
 /* Positioning for diferent avatar locations*/
 .maxui-conversation .maxui-avatar {
-  left: -55px;
+  left: -45px;
   top: 5px;
 }
 .maxui-message.maxui-user-me .maxui-avatar {
@@ -1789,15 +1789,10 @@
 
 #maxui-newactivity .maxui-avatar img {*position:absolute;}
 
-maxui-conversation .maxui-avatar {
-   left: -45px;
-   top: 5px;
-}
-
-span.maxui-displayname {
+.maxui-conversation span.maxui-displayname {
    margin-left: 10px;
 }
 
-p.maxui-body {
+.maxui-conversation p.maxui-body {
    margin-left: 10px!important;
 }
