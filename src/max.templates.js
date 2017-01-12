@@ -197,7 +197,6 @@ max.templates = function() {
 <div id="maxui-container">\
         {{#username}}\
          <div id="maxui-mainpanel">\
-        \
            <div id="maxui-conversations" style="height:0px; {{showConversations}}">\
                <div id="maxui-common-header">\
                   <div id="maxui-conversations-header" class="maxui-togglebar">\
@@ -264,6 +263,9 @@ max.templates = function() {
                 <a class="maxui-sort-action maxui-most-valued {{orderViewLikes}}" href="#">{{literals.valued_activity}}</a>\
                 /\
                 <a class="maxui-sort-action maxui-flagged {{orderViewFlagged}}" href="#">{{literals.flagged_activity}}</a>\
+              </div>\
+              <div id="maxui-news-activities" hidden>\
+                  <input type="button" class="maxui-button" value="Carrega noves entrades">\
               </div>\
            <div id="maxui-timeline" style="{{showTimeline}}">\
               <div class="maxui-wrapper">\

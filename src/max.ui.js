@@ -11,7 +11,7 @@
     jq.fn.maxUI = function(options) {
         // Keep a reference of the context object
         var maxui = this;
-        maxui.version = '4.1.15';
+        maxui.version = '4.1.16';
         maxui.templates = max.templates();
         maxui.utils = max.utils();
         var defaults = {
@@ -253,6 +253,10 @@
                 var last_result_id = jq('.maxui-activity:last').attr('id');
                 maxui.reloadFilters(last_result_id);
             }
+        });
+        //PG Assign click to load news activities
+        jq('#maxui-news-activities .maxui-button').click(function(event) {
+            maxui.loadNewsActivities();
         });
         //Assign click to toggle search filters if any search filter defined
         jq('#maxui-search-toggle').click(function(event) {
@@ -1329,6 +1333,17 @@
         var maxui = this;
         var filter = {
             before: jq('.maxui-activity:last').attr('id')
+        };
+        maxui.printActivities(filter);
+    };
+    /** PG
+     *    Loads news activities from max posted earlier than
+     *    the oldest loaded activity
+     **/
+    jq.fn.loadNewsActivities = function() {
+        var maxui = this;
+        var filter = {
+            after: jq('.maxui-activity:first').attr('id')
         };
         maxui.printActivities(filter);
     };

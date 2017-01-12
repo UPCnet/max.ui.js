@@ -42,4 +42,6 @@ jQuery().ready(function() {
           });
 
       });
+
+      setInterval(function(){$("#maxui-news-activities .maxui-button").trigger("click");}, 180000);
 });
