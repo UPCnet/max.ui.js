@@ -1342,10 +1342,7 @@
      **/
     jq.fn.loadNewsActivities = function() {
         var maxui = this;
-        var filter = {
-            after: jq('.maxui-activity:first').attr('id')
-        };
-        maxui.printActivities(filter);
+        maxui.printActivities();
     };
     /**
      *    Renders the conversations list of the current user, defined in settings.username
