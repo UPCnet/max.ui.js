@@ -3,6 +3,8 @@
 //     Copyright (c) 2010-2012 Robert Kieffer
 //     MIT License - http://opensource.org/licenses/mit-license.php
 
+var uuid;
+
 (function() {
   var _global = this;
 
@@ -217,7 +219,7 @@
   }
 
   // Export public API
-  var uuid = v4;
+  uuid = v4;
   uuid.v1 = v1;
   uuid.v4 = v4;
   uuid.parse = parse;
@@ -226,7 +228,7 @@
 
   if (typeof define === 'function' && define.amd) {
     // Publish as AMD module
-    define(function() {return uuid;});
+    define('uuid', [], function(){return uuid;});
   } else if (typeof(module) != 'undefined' && module.exports) {
     // Publish as node.js module
     module.exports = uuid;
