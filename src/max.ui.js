@@ -1266,6 +1266,7 @@
                 'height': timeline_height
             }, 400, function(event) {
                 $timeline.css('height', '');
+                _MAXUI.onReady();
             });
             $conversations.animate({
                 'height': 0
