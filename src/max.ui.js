@@ -432,14 +432,17 @@
             var $activity = jq(this).closest('.maxui-activity');
             var activityid = $activity.attr('id');
             var liked = $likes.hasClass('maxui-liked');
+            var $likes_count = $likes.children('strong');
             if (liked) {
                 maxui.maxClient.unlikeActivity(activityid, function(event) {
                     $likes.toggleClass('maxui-liked', false);
                 });
+                $likes_count.text(parseInt($likes_count.text(), 10) - 1);
             } else {
                 maxui.maxClient.likeActivity(activityid, function(event) {
                     $likes.toggleClass('maxui-liked', true);
                 });
+                $likes_count.text(parseInt($likes_count.text(), 10) + 1);
             }
         });
         //Toggle flagged status via delegating the click to the activities container
