@@ -152,6 +152,25 @@
         }
         // Make settings available to utils package
         maxui.utils.setSettings(maxui.settings);
+        /**
+         *
+         *
+         **/
+        jq.fn.hidePostbox = function() {
+            var maxui = this;
+            if (maxui.settings.activitySource == 'timeline') {
+              if (maxui.settings.subscriptionsWrite.length > 0){
+                return maxui.settings.hidePostboxOnTimeline;
+              }
+            }
+            for (var i in maxui.settings.subscriptionsWrite) {
+                var hash = maxui.settings.subscriptionsWrite[i].hash;
+                if (hash == maxui.settings.readContext) {
+                    return maxui.settings.hidePostboxOnTimeline;
+                }
+            }
+            return true;
+        }
         // Get user data and start ui rendering when completed
         this.maxClient.getUserData(maxui.settings.username, function(data) {
             //Determine if user can write in writeContexts
@@ -181,6 +200,9 @@
             }
             maxui.settings.subscriptionsWrite = subscriptionsWrite;
             maxui.settings.subscriptions = userSubscriptions;
+            if (maxui.settings.activitySource == 'timeline' && subscriptionsWrite.length > 0) {
+                maxui.settings.writeContexts.push(subscriptionsWrite[0].hash);
+            }
             // Start messaging only if conversations enabled
             if (!maxui.settings.disableConversations) {
                 maxui.messaging.start();
@@ -209,7 +231,7 @@
                 orderViewLikes: showLikesOrder ? 'active' : '',
                 orderViewFlagged: showFlaggedOrder ? 'active' : '',
                 messagesStyle: 'width:{0}px;left:{0}px;'.format(containerWidth),
-                hidePostbox: maxui.settings.hidePostboxOnTimeline
+                hidePostbox: maxui.hidePostbox()
             };
             var mainui = maxui.templates.mainUI.render(params);
             maxui.html(mainui);
@@ -1394,6 +1416,20 @@
         }
     };
     /**
+     *
+     *
+     **/
+    jq.fn.canCommentActivity = function(url) {
+        var maxui = this;
+        for (var i in maxui.settings.subscriptionsWrite) {
+            var hash = maxui.settings.subscriptionsWrite[i].hash;
+            if (hash == url) {
+                return true;
+            }
+        }
+        return false;
+    }
+    /**
      *    Renders the N activities passed in items on the timeline slot. This function is
      *    meant to be called as a callback of a call to a max webservice returning a list
      *    of activity objects
@@ -1459,6 +1495,10 @@
             _.defaults(activity.object, {
                 filename: activity.id
             });
+            var canCommentActivity = maxui.settings.canwrite;
+            if (activity.contexts) {
+                canCommentActivity = maxui.canCommentActivity(activity.contexts[0].url);
+            }
             var params = {
                 id: activity.id,
                 actor: activity.actor,
@@ -1482,7 +1522,9 @@
                 canFlagActivity: maxui.settings.canflag,
                 via: generator,
                 fileDownload: activity.object.objectType === 'file',
-                filename: activity.object.filename
+                filename: activity.object.filename,
++               canViewComments: canCommentActivity || activity.replies.length > 0;
++               canWriteComment: canCommentActivity,
             };
             // Render the activities template and append it at the end of the rendered activities
             // partials is used to render each comment found in the activities

@@ -68,17 +68,17 @@ max.templates = function() {
                 </div>\
             </div>\
         \
-            <div class="maxui-comments" style="display: none">\
+            {{#canViewComments}}<div class="maxui-comments" style="display: none">\
                 <div class="maxui-commentsbox">\
                     {{#replies}}\
                         {{> comment}}\
                     {{/replies}}\
                 </div>\
-                <div class="maxui-newcommentbox">\
+                {{#canWriteComment}}<div class="maxui-newcommentbox">\
                         <textarea class="maxui-empty maxui-text-input" id="maxui-commentBox" data-literal="{{literals.new_comment_text}}">{{literals.new_comment_text}}</textarea>\
                         <input disabled="disabled" type="button" class="maxui-button maxui-disabled" value="{{literals.new_comment_post}}"/>\
-                </div>\
-            </div>\
+                </div>{{/canWriteComment}}\
+            </div>{{/canViewComments}}\
         \
             <div class="maxui-clear"></div>\
         </div>\
