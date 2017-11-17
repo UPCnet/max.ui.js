@@ -11,7 +11,7 @@
     jq.fn.maxUI = function(options) {
         // Keep a reference of the context object
         var maxui = this;
-        maxui.version = '4.1.18';
+        maxui.version = '4.1.19';
         maxui.templates = max.templates();
         maxui.utils = max.utils();
         var defaults = {
@@ -158,19 +158,19 @@
          **/
         jq.fn.hidePostbox = function() {
             var maxui = this;
-            if (maxui.settings.activitySource == 'timeline') {
-              if (maxui.settings.subscriptionsWrite.length > 0){
-                return maxui.settings.hidePostboxOnTimeline;
-              }
+            if (maxui.settings.activitySource === 'timeline') {
+                if (maxui.settings.subscriptionsWrite.length > 0) {
+                    return maxui.settings.hidePostboxOnTimeline;
+                }
             }
             for (var i in maxui.settings.subscriptionsWrite) {
                 var hash = maxui.settings.subscriptionsWrite[i].hash;
-                if (hash == maxui.settings.readContext) {
+                if (hash === maxui.settings.readContext) {
                     return maxui.settings.hidePostboxOnTimeline;
                 }
             }
             return true;
-        }
+        };
         // Get user data and start ui rendering when completed
         this.maxClient.getUserData(maxui.settings.username, function(data) {
             //Determine if user can write in writeContexts
@@ -200,7 +200,7 @@
             }
             maxui.settings.subscriptionsWrite = subscriptionsWrite;
             maxui.settings.subscriptions = userSubscriptions;
-            if (maxui.settings.activitySource == 'timeline' && subscriptionsWrite.length > 0) {
+            if (maxui.settings.activitySource === 'timeline' && subscriptionsWrite.length > 0) {
                 maxui.settings.writeContexts.push(subscriptionsWrite[0].hash);
             }
             // Start messaging only if conversations enabled
@@ -1288,7 +1288,6 @@
                 'height': timeline_height
             }, 400, function(event) {
                 $timeline.css('height', '');
-                _MAXUI.onReady();
             });
             $conversations.animate({
                 'height': 0
@@ -1423,12 +1422,12 @@
         var maxui = this;
         for (var i in maxui.settings.subscriptionsWrite) {
             var hash = maxui.settings.subscriptionsWrite[i].hash;
-            if (hash == url) {
+            if (hash === url) {
                 return true;
             }
         }
         return false;
-    }
+    };
     /**
      *    Renders the N activities passed in items on the timeline slot. This function is
      *    meant to be called as a callback of a call to a max webservice returning a list
@@ -1523,8 +1522,8 @@
                 via: generator,
                 fileDownload: activity.object.objectType === 'file',
                 filename: activity.object.filename,
-+               canViewComments: canCommentActivity || activity.replies.length > 0;
-+               canWriteComment: canCommentActivity,
+                canViewComments: canCommentActivity || activity.replies.length > 0,
+                canWriteComment: canCommentActivity
             };
             // Render the activities template and append it at the end of the rendered activities
             // partials is used to render each comment found in the activities
