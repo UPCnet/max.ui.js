@@ -1308,6 +1308,9 @@
             if (maxui.settings.hidePostboxOnTimeline) {
                 $postbox.hide();
             }
+            if(maxui.hidePostbox()){
+                $postbox.hide();
+            }
         }
     };
     /**
