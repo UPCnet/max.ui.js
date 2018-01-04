@@ -1359,8 +1359,14 @@
      **/
     jq.fn.loadMoreActivities = function() {
         var maxui = this;
+        var lastActivity = jq('.maxui-activity:last').attr('id');
+        if (jq('#maxui-activity-sort .maxui-sort-action.maxui-most-recent').hasClass('active')) {
+            if (jq("#"+lastActivity+" .maxui-comment").length > 0) {
+                lastActivity = jq("#"+lastActivity+" .maxui-comment:last").attr('id');
+            }
+        }
         var filter = {
-            before: jq('.maxui-activity:last').attr('id')
+            before: lastActivity
         };
         maxui.printActivities(filter);
     };
