@@ -11,7 +11,7 @@
     jq.fn.maxUI = function(options) {
         // Keep a reference of the context object
         var maxui = this;
-        maxui.version = '4.1.19';
+        maxui.version = '4.1.20';
         maxui.templates = max.templates();
         maxui.utils = max.utils();
         var defaults = {
@@ -1308,7 +1308,7 @@
             if (maxui.settings.hidePostboxOnTimeline) {
                 $postbox.hide();
             }
-            if(maxui.hidePostbox()){
+            if (maxui.hidePostbox()) {
                 $postbox.hide();
             }
         }
@@ -1361,8 +1361,8 @@
         var maxui = this;
         var lastActivity = jq('.maxui-activity:last').attr('id');
         if (jq('#maxui-activity-sort .maxui-sort-action.maxui-most-recent').hasClass('active')) {
-            if (jq("#"+lastActivity+" .maxui-comment").length > 0) {
-                lastActivity = jq("#"+lastActivity+" .maxui-comment:last").attr('id');
+            if (jq("#" + lastActivity + " .maxui-comment").length > 0) {
+                lastActivity = jq("#" + lastActivity + " .maxui-comment:last").attr('id');
             }
         }
         var filter = {
