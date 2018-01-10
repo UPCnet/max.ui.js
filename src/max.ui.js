@@ -26,7 +26,7 @@
             'disableConversations': false,
             'conversationsSection': 'conversations',
             'currentConversationSection': 'conversations',
-            'activitySortOrder': 'activities',
+            'activitySortOrder': 'comments',
             'activitySortView': 'recent',
             'maximumConversations': 20,
             'contextTagsFilter': [],
