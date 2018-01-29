@@ -7,20 +7,5 @@ tmp
 .fontello-session
 dist/*
 
-node_modules/dalekjs
-node_modules/grunt-contrib-concat
-node_modules/grunt-contrib-copy
-node_modules/grunt-contrib-cssmin
-node_modules/grunt-contrib-jshint
-node_modules/grunt-contrib-less
-node_modules/grunt-contrib-uglify
-node_modules/grunt-contrib-watch
-node_modules/grunt-dalek
-node_modules/grunt-jsbeautifier
-node_modules/grunt-text-replace
-node_modules/grunt
-node_modules/.bin/
-node_modules/js-beautify/
-node_modules/lodash/
-node_modules/underscore.string/
+node_modules/
 

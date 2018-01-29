@@ -11,7 +11,7 @@
     jq.fn.maxUI = function(options) {
         // Keep a reference of the context object
         var maxui = this;
-        maxui.version = '4.1.21';
+        maxui.version = '4.1.222';
         maxui.templates = max.templates();
         maxui.utils = max.utils();
         var defaults = {
@@ -248,6 +248,9 @@
             if (maxui.settings.UISection === 'conversations') {
                 maxui.bindEvents();
                 maxui.toggleSection('conversations');
+                maxui.renderPostbox();
+                var textarea_literal = maxui.settings.literals.new_conversation_text;
+                jq('#maxui-newactivity-box textarea').val(textarea_literal).attr('data-literal', textarea_literal);
             } else if (maxui.settings.UISection === 'timeline') {
                 var sort_orders_by_view = {
                     recent: maxui.settings.activitySortOrder,
