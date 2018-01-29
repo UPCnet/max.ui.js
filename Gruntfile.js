@@ -47,6 +47,22 @@ module.exports = function (grunt) {
                 files: ['src/templates/*.mustache'],
                 // The tasks to run
                 tasks: ['concat:templates']
+            },
+            templateschat: {
+                // Genereate concatenated templates file on changing templats
+                files: [
+                          'src/templates/conversation.mustache',
+                          'src/templates/conversationSettings.mustache',
+                          'src/templates/participant.mustache',
+                          'src/templates/participants.mustache',
+                          'src/templates/postBox.mustache',
+                          'src/templates/predictive.mustache',
+                          'src/templates/filters.mustache',
+                          'src/templates/message.mustache',
+                          'src/templates/mainUIChat.mustache',
+                        ],
+                // The tasks to run
+                tasks: ['concat:templateschat']
             }
 
         },
@@ -133,8 +149,89 @@ module.exports = function (grunt) {
                         '    return templates;\n' +
                         '};\n'
                 },
-                src: ['src/templates/*.mustache'],
+                src: ['src/templates/activity.mustache',
+                      'src/templates/comment.mustache',
+                      'src/templates/conversation.mustache',
+                      'src/templates/conversationSettings.mustache',
+                      'src/templates/participant.mustache',
+                      'src/templates/participants.mustache',
+                      'src/templates/postBox.mustache',
+                      'src/templates/predictive.mustache',
+                      'src/templates/filters.mustache',
+                      'src/templates/message.mustache',
+                      'src/templates/mainUI.mustache',
+                      ],
                 dest: 'src/max.templates.js'
+            },
+            templateschat: {
+                options: {
+                    separator: ",\n",
+                    process: function (src, filepath) {
+                        // Strip .mustache extension
+                        var variable_name = filepath.substr(14, filepath.length - 23);
+                        return "        " + variable_name + ": Hogan.compile('\\\n" + src.replace(/\n/g, '\\\n        ') + "    ')";
+                    },
+                    banner: '/*global Hogan */' +
+                        '/*jshint multistr: true */\n' +
+                        '/**\n' +
+                        '* @fileoverview Provides hogan compiled templates\n' +
+                        '*               ready to render.\n' +
+                        '*/\n' +
+                        "'use strict';\n\n" +
+                        'var max = max || {};\n\n' +
+                        'max.templates = function() {\n' +
+                        '    var templates = {\n',
+
+                    footer: '\n    };\n' +
+                        '    return templates;\n' +
+                        '};\n'
+                },
+                src: [
+                      'src/templates/conversation.mustache',
+                      'src/templates/conversationSettings.mustache',
+                      'src/templates/participant.mustache',
+                      'src/templates/participants.mustache',
+                      'src/templates/postBox.mustache',
+                      'src/templates/predictive.mustache',
+                      'src/templates/filters.mustache',
+                      'src/templates/message.mustache',
+                      'src/templates/mainUIChat.mustache',
+                ],
+                dest: 'src/max.templateschat.js'
+            },
+            templatesactivity: {
+                options: {
+                    separator: ",\n",
+                    process: function (src, filepath) {
+                        // Strip .mustache extension
+                        var variable_name = filepath.substr(14, filepath.length - 23);
+                        return "        " + variable_name + ": Hogan.compile('\\\n" + src.replace(/\n/g, '\\\n        ') + "    ')";
+                    },
+                    banner: '/*global Hogan */' +
+                        '/*jshint multistr: true */\n' +
+                        '/**\n' +
+                        '* @fileoverview Provides hogan compiled templates\n' +
+                        '*               ready to render.\n' +
+                        '*/\n' +
+                        "'use strict';\n\n" +
+                        'var max = max || {};\n\n' +
+                        'max.templates = function() {\n' +
+                        '    var templates = {\n',
+
+                    footer: '\n    };\n' +
+                        '    return templates;\n' +
+                        '};\n'
+                },
+                src: [
+                      'src/templates/activity.mustache',
+                      'src/templates/comment.mustache',
+                      'src/templates/postBox.mustache',
+                      'src/templates/predictive.mustache',
+                      'src/templates/filters.mustache',
+                      'src/templates/message.mustache',
+                      'src/templates/mainUIActivity.mustache',
+                ],
+                dest: 'src/max.templatesactivity.js'
             },
             dist: {
                 options: {
@@ -168,6 +265,70 @@ module.exports = function (grunt) {
                     'src/max.loader.js'
                 ],
                 dest: 'dist/maxui.js'
+            },
+            distchat: {
+                options: {
+                    separator: '\n\n;\n\n',
+                    stripBanners: true
+                },
+                src: [
+                    'libs/hogan-2.0.0.js',
+                    'libs/jquery.easydate-0.2.4.js',
+                    'libs/jquery.iecors.js',
+                    'libs/jquery.mousewheel-3.1.9.js',
+                    'libs/sockjs-0.3.min.js',
+                    'libs/json2.js',
+                    'libs/sockjs-0.3.4.js',
+                    'libs/stomp-2.3.1.js',
+                    'libs/underscore-1.6.0.js',
+                    'libs/uuid-1.4.1.js',
+                    'libs/ua-parser-1.7.1.js',
+                    'src/max.views.inputs.js',
+                    'src/max.views.overlay.js',
+                    'src/max.views.chatinfo.js',
+                    'src/max.views.scrollbar.js',
+                    'src/max.views.conversations.js',
+                    'src/max.templateschat.js',
+                    'src/max.messaging.js',
+                    'src/max.logging.js',
+                    'src/max.literals.js',
+                    'src/max.utils.js',
+                    'src/max.client.js',
+                    'src/max.uichat.js',
+                    'src/max.loader.js'
+                ],
+                dest: 'dist/maxuichat.js'
+            },
+            distactivity: {
+                options: {
+                    separator: '\n\n;\n\n',
+                    stripBanners: true
+                },
+                src: [
+                    'libs/hogan-2.0.0.js',
+                    'libs/jquery.easydate-0.2.4.js',
+                    'libs/jquery.iecors.js',
+                    'libs/jquery.mousewheel-3.1.9.js',
+                    'libs/sockjs-0.3.min.js',
+                    'libs/json2.js',
+                    'libs/sockjs-0.3.4.js',
+                    'libs/stomp-2.3.1.js',
+                    'libs/underscore-1.6.0.js',
+                    'libs/uuid-1.4.1.js',
+                    'libs/ua-parser-1.7.1.js',
+                    'src/max.views.inputs.js',
+                    'src/max.views.overlay.js',
+                    'src/max.views.scrollbar.js',
+                    'src/max.templatesactivity.js',
+                    'src/max.messaging.js',
+                    'src/max.logging.js',
+                    'src/max.literals.js',
+                    'src/max.utils.js',
+                    'src/max.client.js',
+                    'src/max.uiactivity.js',
+                    'src/max.loader.js'
+                ],
+                dest: 'dist/maxuiactivity.js'
             }
         },
 
@@ -295,9 +456,9 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-dalek');
 
 
-    grunt.registerTask('dist', ['replace:version', 'concat:dist', 'uglify:dist', 'cssmin:dist', 'replace:fontlocation', 'copy:dist']);
+    grunt.registerTask('dist', ['replace:version', 'concat:dist', 'concat:distchat', 'uglify:dist', 'cssmin:dist', 'replace:fontlocation', 'copy:dist']);
     grunt.registerTask('build', ['copy:build']);
-    grunt.registerTask('templates', ['concat:templates']);
+    grunt.registerTask('templates', ['concat:templates','concat:templateschat']);
     grunt.registerTask('')
 
 };

@@ -1,0 +1,58 @@
+<div id="maxui-container">
+{{#username}}
+ <div id="maxui-mainpanel">
+   <div id="maxui-conversations" style="height:0px; {{showConversations}}">
+       <div id="maxui-common-header">
+          <div id="maxui-conversations-header" class="maxui-togglebar">
+              <h3 class="maxui-title">{{literals.conversations}}</h3></a>
+          </div>
+          <div id="maxui-back-conversations" class="maxui-togglebar">
+              <a class="maxui-icon-" href="#"> {{literals.conversations_list}}
+              <h3 class="maxui-title">displayName</h3></a>
+              <i id="maxui-conversation-info" class="maxui-icon-cog"/>
+          </div>
+       </div>
+       <div class="maxui-wrapper">
+           <div id="maxui-conversations-list" class="maxui-activities">
+               <span id="maxui-info">{{literals.no_chats}}<span>
+           </div>
+
+           <div id="maxui-messages" style="{{messagesStyle}}">
+               <div id="maxui-more-messages">
+                   <input type="button" class="maxui-button maxui-button-grey" value="{{literals.chats_load_older}}">
+               </div>
+               <div id="maxui-message-list">
+               </div>
+           </div>
+        </div>
+           <div id="maxui-scrollbar">
+                  <div class="maxui-dragger handle"/>
+           </div>
+   </div>
+
+    <div id="maxui-show-conversations" class="maxui-togglebar maxui-icon-" style="{{showConversationsToggle}}">
+        <span class="maxui-unread-conversations maxui-hidden"></span> <a href="#">{{literals.conversations_lower}}</a>
+    </div>
+
+    <div id="maxui-conversation-predictive" class="maxui-predictive" style="display:none;"><ul></ul></div>
+    <div id="maxui-add-people-box" style="display:none;">
+        <div>
+          <label class="maxui-label">{{literals.participants}}: <span class="maxui-count">(1/20)</span></label>
+          <input tabindex="20" type="text" data-literal="{{literals.conversations_info_add}}" value="{{literals.conversations_info_add}}" class="maxui-text-input" id="add-user-input">
+        </div>
+        <div id="maxui-new-participants" style="display:none;"></div>
+        <div id="maxui-new-displayName" style="display:none;">
+            <label class="maxui-label">{{literals.conversation_name}}: </label>
+            <input tabindex="21" type="text" class="maxui-simple-text-input"/>
+        </div>
+    </div>
+
+    <div id="maxui-newactivity" {{#hidePostbox}}style="display:none;"{{/hidePostbox}}>
+    </div>
+  </div>
+ </div>
+{{/username}}
+{{^username}}
+  No s\'ha definit cap usuari
+{{/username}}
+</div>

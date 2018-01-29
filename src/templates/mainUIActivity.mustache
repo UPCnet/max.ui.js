@@ -1,0 +1,60 @@
+<div id="maxui-container">
+{{#username}}
+ <div id="maxui-mainpanel">
+
+   <div id="maxui-newactivity" {{#hidePostbox}}style="display:none;"{{/hidePostbox}}>
+   </div>
+
+   <div id="maxui-search" class="folded">
+       <a id="maxui-search-toggle" class="maxui-disabled maxui-icon-" href="#" alt="obre-tanca"></a>
+       <a href="#" id="maxui-favorites-filter" title="{{literals.favorites_filter_hint}}"><i class="maxui-icon-star"/></a>
+       <div id="maxui-search-box">
+          <input id="maxui-search-text" type="search" data-literal="{{literals.search_text}}" class="maxui-empty maxui-text-input" value="{{literals.search_text}}" />
+       </div>
+       <div id="maxui-search-filters"></div>
+   </div>
+
+   <div id="maxui-show-timeline" class="maxui-togglebar maxui-icon-" style="{{showTimelineToggle}}"><a href="#">{{literals.activity}}</a></div>
+
+      <div id="maxui-activity-sort">
+        <a class="maxui-sort-action maxui-most-recent {{orderViewRecent}}" href="#">{{literals.recent_activity}}</a>
+        /
+        <a class="maxui-sort-action maxui-most-valued {{orderViewLikes}}" href="#">{{literals.valued_activity}}</a>
+        /
+        <a class="maxui-sort-action maxui-flagged {{orderViewFlagged}}" href="#">{{literals.flagged_activity}}</a>
+      </div>
+      <div id="maxui-news-activities" hidden>
+          <input type="button" class="maxui-button" value="Carrega noves entrades">
+      </div>
+   <div id="maxui-timeline" style="{{showTimeline}}">
+      <div class="maxui-wrapper">
+          <div id="maxui-preload" class="maxui-activities" style="height:0px;overflow:hidden">
+              <div class="maxui-wrapper">
+              </div>
+          </div>
+          <div id="maxui-activities" class="maxui-activities">
+          </div>
+          <div id="maxui-more-activities">
+              <input type="button" class="maxui-button" value="{{literals.load_more}}">
+          </div>
+      </div>
+   </div>
+   <div id="maxui-overlay-background" class="maxui-overlay">
+   </div>
+   <div id="maxui-overlay-wrapper" class="maxui-overlay">
+       <div id="maxui-overlay-panel">
+           <div id="maxui-overlay-header">
+                <h3 id="maxui-overlay-title">I\'m a overlay</h3>
+                <i class="maxui-close maxui-icon-cancel"/>
+           </div>
+           <div id="maxui-overlay-content">
+           </div>
+       </div>
+   </div>
+  </div>
+ </div>
+{{/username}}
+{{^username}}
+  No s\'ha definit cap usuari
+{{/username}}
+</div>
