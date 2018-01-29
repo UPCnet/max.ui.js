@@ -285,8 +285,8 @@ module.exports = function (grunt) {
                     'libs/ua-parser-1.7.1.js',
                     'src/max.views.inputs.js',
                     'src/max.views.overlay.js',
-                    'src/max.views.chatinfo.js',
                     'src/max.views.scrollbar.js',
+                    'src/max.views.chatinfo.js',
                     'src/max.views.conversations.js',
                     'src/max.templateschat.js',
                     'src/max.messaging.js',
@@ -295,7 +295,7 @@ module.exports = function (grunt) {
                     'src/max.utils.js',
                     'src/max.client.js',
                     'src/max.uichat.js',
-                    'src/max.loader.js'
+                    'src/max.loaderchat.js'
                 ],
                 dest: 'dist/maxuichat.js'
             },
@@ -326,7 +326,7 @@ module.exports = function (grunt) {
                     'src/max.utils.js',
                     'src/max.client.js',
                     'src/max.uiactivity.js',
-                    'src/max.loader.js'
+                    'src/max.loaderactivity.js'
                 ],
                 dest: 'dist/maxuiactivity.js'
             }
