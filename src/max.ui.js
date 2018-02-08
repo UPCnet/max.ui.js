@@ -1320,6 +1320,7 @@
         }
         var activityAdder = maxui.maxClient.addActivity;
         activityAdder.apply(maxui.maxClient, func_params);
+        jq('#maxui-subscriptions option:first-child').attr("selected", "selected");
     };
     /**
      *    Loads more activities from max posted earlier than

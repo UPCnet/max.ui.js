@@ -39,7 +39,7 @@
         <div class="maxui-actions">
             <a href="" class="maxui-action maxui-commentaction maxui-icon- {{#replies}}maxui-has-comments{{/replies}}"><strong>{{replies.length}}</strong> {{literals.toggle_comments}}</a>
             <a href="" class="maxui-action maxui-favorites {{#favorited}}maxui-favorited{{/favorited}} maxui-icon-">{{literals.favorite}}</a>
-            <a href="" class="maxui-action maxui-likes {{#liked}}maxui-liked{{/liked}} maxui-icon-">{{literals.like}}</a>
+            <a href="" class="maxui-action maxui-likes {{#liked}}maxui-liked{{/liked}} maxui-icon-"><strong>{{likes}}</strong> {{literals.like}}</a>
             {{#canFlagActivity}}
             <a href="" class="maxui-action maxui-flag {{#flagged}}maxui-flagged{{/flagged}} maxui-icon-">{{literals.flag_activity_icon}}</a>
             {{/canFlagActivity}}
@@ -58,17 +58,21 @@
         </div>
     </div>
 
+    {{#canViewComments}}
     <div class="maxui-comments" style="display: none">
         <div class="maxui-commentsbox">
             {{#replies}}
                 {{> comment}}
             {{/replies}}
         </div>
+        {{#canWriteComment}}
         <div class="maxui-newcommentbox">
                 <textarea class="maxui-empty maxui-text-input" id="maxui-commentBox" data-literal="{{literals.new_comment_text}}">{{literals.new_comment_text}}</textarea>
                 <input disabled="disabled" type="button" class="maxui-button maxui-disabled" value="{{literals.new_comment_post}}"/>
         </div>
+        {{/canWriteComment}}
     </div>
+    {{/canViewComments}}
 
     <div class="maxui-clear"></div>
 </div>

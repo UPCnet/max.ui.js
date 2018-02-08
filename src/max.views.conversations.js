@@ -653,13 +653,18 @@ var max = max || {};
                 self.listview.insert(conversation);
                 self.messagesview.remaining = 0;
                 message.ack = true;
+                self.loadWrappers();
                 self.messagesview.append(message);
                 self.messagesview.render();
                 self.messagesview.show(chash);
-                self.loadWrappers();
+                self.hideNameChat();
                 self.$newparticipants[0].people = [];
                 self.maxui.reloadPersons();
             });
+        };
+        MaxConversations.prototype.hideNameChat = function(data) {
+            $('#maxui-new-displayName input').val('');
+            $('#maxui-new-displayName').hide();
         };
         MaxConversations.prototype.updateUnreadConversations = function(data) {
             var self = this;
