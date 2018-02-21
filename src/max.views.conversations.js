@@ -663,8 +663,8 @@ var max = max || {};
             });
         };
         MaxConversations.prototype.hideNameChat = function(data) {
-            $('#maxui-new-displayName input').val('');
-            $('#maxui-new-displayName').hide();
+            jq('#maxui-new-displayName input').val('');
+            jq('#maxui-new-displayName').hide();
         };
         MaxConversations.prototype.updateUnreadConversations = function(data) {
             var self = this;
