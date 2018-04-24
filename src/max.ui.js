@@ -28,7 +28,7 @@
             'currentConversationSection': 'conversations',
             'activitySortOrder': 'comments',
             'activitySortView': 'recent',
-            'maximumConversations': 20,
+            'maximumConversations': 50,
             'contextTagsFilter': [],
             'scrollbarWidth': 10,
             'widgetWidth': '0',
